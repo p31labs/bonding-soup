@@ -1,6 +1,6 @@
 # P31 home workspace — agent notes
 
-This tree is a **multi-root** home: **BONDING Soup** at the top level, **Andromeda** under `andromeda/`, other sites, `docs/`, and tooling. It is not necessarily one git repository.
+This tree is a **multi-root** home: **BONDING Soup** at the top level, **Andromeda** under `andromeda/`, other sites, `docs/`, and tooling. The **P31 home** root may be its own git repository (e.g. Soup + `cognitive-passport` + `scripts` + `wcd33-global-archive/`; `.gitignore` excludes `andromeda/` and `phosphorus31.org/`, which have separate remotes). `andromeda/` remains the monorepo for `04_SOFTWARE` and GitHub Actions.
 
 1. **Start with** **`P31-ROOT-MAP.md`** — which directory to change for Soup vs monorepo vs static hub.
 2. **Operator and mesh context:** **`CLAUDE.md`** and **`.cursorrules`** (K₄, spoons, S.J./W.J., no naval metaphors, legal/ops).

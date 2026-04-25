@@ -1,0 +1,29 @@
+{
+  "name": "bonding-soup",
+  "version": "0.1.0",
+  "description": "BONDING Soup molecular physics engine",
+  "main": "dist/soup.js",
+  "scripts": {
+    "build": "tsc",
+    "demo": "python3 -m http.server 8080",
+    "dev": "tsc --watch",
+    "archive:dev": "npm run dev --prefix ./wcd33-global-archive",
+    "archive:deploy": "npm run deploy --prefix ./wcd33-global-archive",
+    "archive:tail": "npm run tail --prefix ./wcd33-global-archive",
+    "archive:typecheck": "npm run typecheck --prefix ./wcd33-global-archive",
+    "sync:passport": "node scripts/sync-passport-to-p31ca.mjs",
+    "verify:passport": "node scripts/verify-passport-sync.mjs",
+    "verify": "npm run verify:passport && npm run build",
+    "release:check": "npm run verify:passport && npm run build && cd andromeda/04_SOFTWARE/p31ca && npm install && npm run build",
+    "inventory:cf": "node scripts/inventory-cf.mjs"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.0",
+    "ws": "^8.14.0"
+  },
+  "files": [
+    "dist/**/*",
+    "src/**/*",
+    "soup-demo.html"
+  ]
+}

@@ -1,0 +1,9 @@
+# P31 home workspace — agent notes
+
+This tree is a **multi-root** home: **BONDING Soup** at the top level, **Andromeda** under `andromeda/`, other sites, `docs/`, and tooling. It is not necessarily one git repository.
+
+1. **Start with** **`P31-ROOT-MAP.md`** — which directory to change for Soup vs monorepo vs static hub.
+2. **Operator and mesh context:** **`CLAUDE.md`** and **`.cursorrules`** (K₄, spoons, S.J./W.J., no naval metaphors, legal/ops).
+3. **Cognitive Passport:** authoring **`cognitive-passport/index.html`**; deploy mirror **`andromeda/04_SOFTWARE/p31ca/public/passport-generator.html`**. Live short URL: **`https://p31ca.org/passport`**. After edits: **`npm run sync:passport`**, then **`npm run verify:passport`**. See **`.cursor/rules/cognitive-passport-mirror.mdc`**. Transform (canonical): **`andromeda/04_SOFTWARE/p31ca/scripts/passport-p31ca-transform.mjs`**; root re-export: **`scripts/passport-p31ca-transform.mjs`**. Do not hand-edit the mirror to diverge.
+4. **Andromeda** has its own workflows; see **`andromeda/CONTRIBUTING.md`**, **`andromeda/docs/REPOSITORY_LAYOUT.md`**, and **`andromeda/04_SOFTWARE/README.md`** (Cognitive Passport subsection for cross-workspace).
+5. **Run Task** (Cursor/VS Code): **P31: sync passport → p31ca** (`.vscode/tasks.json`), **P31: release:check** (passport + `tsc` + p31ca build), **P31: wcd33 worker tail**, **P31: Cloudflare wrangler inventory**. Root: **`npm run release:check`**, **`npm run inventory:cf`**. Andromeda **P31 Automation** manual deploy: optional **`p31ca_strict_passport`** requires `cognitive-passport` in the checkout (or fails).

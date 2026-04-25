@@ -1,0 +1,27 @@
+#!/bin/bash
+
+echo "🧪 SPIKE-02: Spatial Chat Gravity Model"
+echo "======================================="
+echo ""
+echo "Testing DOM-to-Canvas performance for orbiting chat messages"
+echo "on 2019 Android tablet target hardware."
+echo ""
+echo "📋 Test Protocol:"
+echo "1. Canvas-only: Render text directly to canvas (current approach)"
+echo "2. DOM hybrid: Use HTML elements with CSS transforms"
+echo "3. Performance comparison: FPS, memory, and smoothness"
+echo ""
+echo "🎯 Success Criteria:"
+echo "• Canvas-only: 50+ FPS with 40+ orbiting messages"
+echo "• DOM hybrid: 45+ FPS with acceptable memory usage"
+echo "• Smooth orbits: No stuttering or jank"
+echo ""
+echo "⚡ Technical Focus:"
+echo "• Elliptical orbit calculations"
+echo "• Text rendering performance"
+echo "• Memory management for message lifetime"
+echo ""
+echo "Starting test server..."
+
+cd "$(dirname "$0")"
+python3 -m http.server 8081

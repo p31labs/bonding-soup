@@ -1,0 +1,61 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "P31: sync passport → p31ca",
+      "type": "shell",
+      "command": "npm run sync:passport",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify passport mirror",
+      "type": "shell",
+      "command": "npm run verify:passport",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify (passport + tsc)",
+      "type": "shell",
+      "command": "npm run verify",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: release:check (passport + soup + p31ca build)",
+      "type": "shell",
+      "command": "npm run release:check",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: p31ca dev (Astro)",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": { "cwd": "${workspaceFolder}/andromeda/04_SOFTWARE/p31ca" },
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      "label": "P31: wcd33 worker tail",
+      "type": "shell",
+      "command": "npm run tail --prefix wcd33-global-archive",
+      "options": { "cwd": "${workspaceFolder}" },
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      "label": "P31: Cloudflare wrangler inventory (md table)",
+      "type": "shell",
+      "command": "node scripts/inventory-cf.mjs",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    }
+  ]
+}

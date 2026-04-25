@@ -1,0 +1,41 @@
+# WCD-33 Global Archive — replace placeholder id with output of:
+#   npx wrangler kv namespace create ARCHIVE_KV
+name = "wcd33-soup-archive"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+
+# Dashboard logs + traces (search JSON lines with service: wcd33 in Workers Logs)
+[observability]
+enabled = true
+
+# Production [vars] — use dashboard “Variables” or wrangler deploy + `wrangler secret` only for true secrets
+#   ARCHIVE_CORS_ALLOW = "https://your.pages.dev,https://your.domain"   (comma-separated exact origins, no * )
+# Omitted/empty = Access-Control-Allow-Origin: * (dev only)
+#
+# IP rate limits (per colo) — see Cloudflare dashboard if you need different numbers.
+# namespace_id: distinct integers you choose; change if you re-scope limits.
+
+[[ratelimits]]
+name = "RL_READ"
+namespace_id = "10001"
+simple = { limit = 200, period = 60 }
+
+[[ratelimits]]
+name = "RL_SYNTHESIS"
+namespace_id = "10002"
+simple = { limit = 20, period = 60 }
+
+[[ratelimits]]
+name = "RL_HIGHLIGHT"
+namespace_id = "10003"
+simple = { limit = 30, period = 60 }
+
+[[kv_namespaces]]
+binding = "ARCHIVE_KV"
+# Replace after `wrangler kv namespace create` for production deploy; wrangler dev uses local KV
+id = "00000000000000000000000000000000"
+preview_id = "00000000000000000000000000000000"
+
+# Example production vars (uncomment and set real origins after KV id is set):
+# [vars]
+# ARCHIVE_CORS_ALLOW = "https://example.com"

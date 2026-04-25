@@ -1,0 +1,49 @@
+# Nested remotes (their own .git)
+andromeda/
+phosphorus31.org/
+
+# Dependencies & artifacts
+node_modules/
+**/node_modules/
+dist/
+.cache/
+.npm/
+wcd33-global-archive/node_modules/
+
+# Home directory noise (if present under P31 home root)
+.Xauthority
+.bash_history
+.bash_logout
+.bashrc
+.bun/
+.claude.json
+.claude/
+.config/
+.gh.json
+.gitconfig
+.pm2/
+.profile
+.sommelierrc
+.sudo_as_admin_successful
+.wrangler/
+signal-*.gpg
+signal-*.sources
+
+# Local / secrets
+.env
+.env.*
+*.local
+
+# IDE / agent caches
+.cursor/
+.kilo/
+**/.kilo/
+
+# Test artifacts
+playwright/test-results/
+playwright/report/
+coverage/
+
+# Logs
+*.log
+npm-debug.log*

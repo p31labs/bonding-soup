@@ -36,6 +36,8 @@
       "note": "Hub ships JSON contracts; schema p31.publicSurface/1.0.0"
     },
     "featuredPublicPaths": [
+      { "path": "/demos", "note": "Demo labs index (static demos)" },
+      { "path": "/fleet", "note": "Live fleet map (sites + Workers)" },
       { "path": "/delta", "note": "Wye→Delta narrative" },
       { "path": "/why", "note": "short redirect" },
       { "path": "/connect.html", "note": "K₄ Three.js navigator" },

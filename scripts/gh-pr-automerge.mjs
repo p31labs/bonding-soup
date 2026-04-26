@@ -2,6 +2,7 @@
 /**
  * P31 home: push → open PR if needed → enable auto-merge.
  *   npm run gh:pr:automerge -- --base main --title "…" [--dir andromeda]
+ * Requires git remote (default name **origin**): run **`npm run git:remotes`**; **`P31_GIT_REMOTE`** to override remote name.
  * Strips a literal "--" (pnpm may inject it). Auth check uses `gh api user` to avoid
  * spurious "gitci" errors from a broken git credential helper on `gh auth status`.
  * If you see: unknown command "gitci" for "gh auth" — fix: git config credential.helper '!gh auth git-credential'
@@ -55,6 +56,18 @@ function prNumberIfExists(cwd) {
   }
 }
 
+function getRemoteUrl(cwd, name) {
+  try {
+    return execSync(`git remote get-url ${name}`, {
+      cwd,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+  } catch {
+    return null;
+  }
+}
+
 function sh(cmd) {
   if (dry) {
     console.log(`[DRY] cd ${workdir} && ${cmd}`);
@@ -82,7 +95,14 @@ function run() {
     body = "Automated PR (npm run gh:pr:automerge).";
   }
 
-  sh(`git push -u origin ${branch}`);
+  const remote = process.env.P31_GIT_REMOTE || "origin";
+  if (!getRemoteUrl(workdir, remote)) {
+    console.error(`gh-pr-automerge: no git remote "${remote}" in ${workdir}`);
+    console.error("  Fix: npm run git:remotes   (set p31-github.json homeRepository or P31_HOME_GITHUB=org/repo)");
+    process.exit(1);
+  }
+
+  sh(`git push -u ${remote} ${branch}`);
 
   if (dry) {
     console.log("[DRY] gh pr view|create; gh pr merge --auto");

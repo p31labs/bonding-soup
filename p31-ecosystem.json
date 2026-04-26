@@ -1,7 +1,8 @@
 {
-  "_comment": "Deploy targets + glass-box URLs. Templates: {{mesh.*}}, {{bonding.*}}, {{payment.*}} from p31-constants.json. After edits: npm run verify:ecosystem",
+  "_comment": "Deploy targets + glass-box URLs. Templates: {{mesh.*}}, {{bonding.*}}, {{payment.*}} from p31-constants.json. Consolidated live sites + Workers: p31-live-fleet.json. After edits: npm run verify:ecosystem",
   "schema": "p31.ecosystem/1.0.0",
   "updated": "2026-04-26",
+  "_deployNote": "Ordered runbook + probe meanings: docs/ECOSYSTEM-PRODUCTION-11.md",
   "glassProbes": [
     {
       "id": "k4-personal-api-health",
@@ -26,6 +27,14 @@
       "url": "{{mesh.k4HubsWorkerUrl}}/health",
       "group": "mesh",
       "note": "Hub fusion liveness"
+    },
+    {
+      "id": "p31ca-passkey-register-begin",
+      "url": "https://p31ca.org{{mesh.passkeyApiBasePath}}/register-begin",
+      "method": "POST",
+      "expectJsonKey": "challenge",
+      "group": "mesh",
+      "note": "WebAuthn register-begin; 200 + challenge when p31-passkey zone route is live"
     },
     {
       "id": "geodesic-room-worker",
@@ -64,6 +73,12 @@
       "note": "Technical hub (HTML)"
     },
     {
+      "id": "p31ca-passport-short",
+      "url": "https://p31ca.org/passport",
+      "group": "pages",
+      "note": "301 → passport-generator.html; AGENTS canonical /passport"
+    },
+    {
       "id": "p31ca-mesh-start-page",
       "url": "https://p31ca.org/mesh-start.html",
       "group": "pages",
@@ -82,22 +97,46 @@
       "note": "301/302 → initial-build.html (Cloudflare _redirects); client follows redirect in glass + browsers"
     },
     {
+      "id": "p31ca-family-sovereign-pack",
+      "url": "https://p31ca.org/family-pack",
+      "group": "pages",
+      "note": "Household delivery handoff; 301 → family-sovereign-pack.html; prose in docs/FAMILY-SOVEREIGN-PACK.md"
+    },
+    {
+      "id": "p31ca-public-surface-json",
+      "url": "https://p31ca.org/p31-public-surface.json",
+      "group": "contracts",
+      "note": "p31.publicSurface/1.0.0 — trust/legal index + machine endpoints"
+    },
+    {
+      "id": "p31ca-privacy-page",
+      "url": "https://p31ca.org/privacy",
+      "group": "pages",
+      "note": "301 → privacy.html; generic public deliverable"
+    },
+    {
+      "id": "p31ca-security-txt",
+      "url": "https://p31ca.org/.well-known/security.txt",
+      "group": "pages",
+      "note": "RFC 9116 security.txt; mailto contact"
+    },
+    {
       "id": "bonding-soup",
       "url": "{{bonding.publicUrl}}/",
       "group": "pages",
       "note": "BONDING vertical"
     },
     {
-      "id": "stripe-api-health",
-      "url": "{{payment.stripeApiHealthUrl}}",
-      "group": "monetary",
-      "note": "Main API / Stripe Worker (p31-constants payment.stripeWorkerHost); glass liveness"
-    },
-    {
       "id": "donate-api-health",
       "url": "{{payment.donateApiHealthUrl}}",
       "group": "monetary",
       "note": "Stripe checkout Worker liveness; CWP-P31-MAP-2026-01 as-built"
+    },
+    {
+      "id": "donate-api-health-workers-dev",
+      "url": "{{payment.donateApiWorkersDevUrl}}/health",
+      "group": "monetary",
+      "note": "Same Worker as donate-api-health; default workers.dev subdomain (DNS-independent check)"
     },
     {
       "id": "creator-economy-contract",
@@ -111,7 +150,49 @@
       "id": "p31ca-pages",
       "cwd": "andromeda/04_SOFTWARE/p31ca",
       "command": "npm run deploy",
-      "description": "p31ca.org Pages + Astro hub"
+      "description": "p31ca.org Pages + Astro hub (deploy after Workers when changing mesh URLs)"
+    },
+    {
+      "id": "p31-passkey-worker",
+      "cwd": "andromeda/04_SOFTWARE/p31ca/workers/passkey",
+      "command": "npx wrangler deploy --env production",
+      "description": "WebAuthn — zone route p31ca.org/api/passkey/*"
+    },
+    {
+      "id": "geodesic-room-worker",
+      "cwd": "andromeda/04_SOFTWARE/geodesic-room",
+      "command": "npx wrangler deploy",
+      "description": "GeodesicRoom DO (WS + shared shapes)"
+    },
+    {
+      "id": "k4-cage-worker",
+      "cwd": "andromeda/04_SOFTWARE/k4-cage",
+      "command": "npx wrangler deploy",
+      "description": "k4-cage Worker"
+    },
+    {
+      "id": "k4-hubs-worker",
+      "cwd": "andromeda/04_SOFTWARE/k4-hubs",
+      "command": "npx wrangler deploy",
+      "description": "k4-hubs fusion — align PERSONAL_MESH_URL with p31-constants mesh.k4PersonalWorkerUrl"
+    },
+    {
+      "id": "p31-agent-hub-worker",
+      "cwd": "andromeda/04_SOFTWARE/p31-agent-hub",
+      "command": "npx wrangler deploy",
+      "description": "p31-agent-hub Worker"
+    },
+    {
+      "id": "p31-google-bridge-worker",
+      "cwd": "andromeda/04_SOFTWARE/p31-google-bridge",
+      "command": "npx wrangler deploy",
+      "description": "Google OAuth bridge (auth.html)"
+    },
+    {
+      "id": "p31-orchestrator-worker",
+      "cwd": "andromeda/04_SOFTWARE/workers",
+      "command": "npx wrangler deploy --config wrangler-orchestrator.toml",
+      "description": "p31-orchestrator.trimtab-signal.workers.dev — mesh.orchestratorWorkerUrl"
     },
     {
       "id": "command-center-worker",

@@ -61,6 +61,7 @@
 
 | File | What it is |
 |------|------------|
+| **`p31-live-fleet.json`** (home root) | **Bundled live sites + all Workers** (verified mesh URLs, allowlist fleet, hub paths) — hand to collaborators as one JSON |
 | **`p31-constants.json`** (home root) | Operator-locked EIN, mesh Worker URLs, payment health URLs, Larmor Hz, paper DOIs |
 | **`p31-ecosystem.json`** (home root) | Glass probe list + deployables; templates `{{mesh.*}}`, `{{payment.*}}` |
 | **`andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json`** | Hub routes, redirects contract, canonical numbering slice |

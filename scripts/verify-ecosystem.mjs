@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Validates p31-ecosystem.json: JSON parse, required keys for template URLs, deployable paths,
- * monetary invariants (donate probe ↔ payment.donateApiHealthUrl, canonical creator-economy URL).
+ * monetary invariants (donate-api health URLs; stripeApiHealthUrl must match donateApiHealthUrl until a separate API host exists; creator-economy URL).
+ * Also checks p31-live-fleet.json mesh/payment block matches p31-constants.json (no drift).
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -12,6 +13,7 @@ const root = path.join(__dirname, "..");
 
 const manifestPath = path.join(root, "p31-ecosystem.json");
 const constantsPath = path.join(root, "p31-constants.json");
+const liveFleetPath = path.join(root, "p31-live-fleet.json");
 const githubConfigPath = path.join(root, "p31-github.json");
 
 function fail(msg) {
@@ -47,6 +49,16 @@ for (const k of keysNeeded) {
   }
 }
 
+for (const p of manifest.glassProbes || []) {
+  const m = p.method;
+  if (m != null && m !== "GET" && m !== "POST") {
+    fail(`glass probe ${p.id}: method must be GET or POST (got ${JSON.stringify(m)})`);
+  }
+  if (p.expectJsonKey != null && typeof p.expectJsonKey !== "string") {
+    fail(`glass probe ${p.id}: expectJsonKey must be a string`);
+  }
+}
+
 const CREATOR_ECONOMY_URL = "https://p31ca.org/creator-economy.json";
 
 function expandProbeUrl(url) {
@@ -66,27 +78,56 @@ if (pay && typeof pay.donateApiHealthUrl === "string" && pay.donateApiHealthUrl)
     fail("payment.donateApiHealthUrl must be https and end with /health (canonical donate-api liveness)");
   }
 }
+if (pay && typeof pay.donateApiWorkersDevUrl === "string" && pay.donateApiWorkersDevUrl) {
+  try {
+    const u = new URL(pay.donateApiWorkersDevUrl);
+    if (u.protocol !== "https:") {
+      fail("payment.donateApiWorkersDevUrl must use https");
+    }
+    if (u.hostname !== "donate-api.trimtab-signal.workers.dev") {
+      fail("payment.donateApiWorkersDevUrl hostname must be donate-api.trimtab-signal.workers.dev");
+    }
+    if (u.pathname.replace(/\/$/, "") !== "" || u.search || u.hash) {
+      fail("payment.donateApiWorkersDevUrl must be origin only (no path, query, or hash) for glass {{…}}/health");
+    }
+  } catch (e) {
+    fail("payment.donateApiWorkersDevUrl is not a valid URL: " + (e && e.message ? e.message : e));
+  }
+}
 if (pay && typeof pay.stripeApiHealthUrl === "string" && pay.stripeApiHealthUrl) {
   const u = pay.stripeApiHealthUrl;
   if (!u.startsWith("https://") || !/\/health\/?$/.test(u.replace(/\/$/, ""))) {
     fail("payment.stripeApiHealthUrl must be https and end with /health (Stripe/API Worker liveness)");
   }
 }
+if (
+  pay &&
+  typeof pay.stripeApiHealthUrl === "string" &&
+  pay.stripeApiHealthUrl &&
+  typeof pay.donateApiHealthUrl === "string" &&
+  pay.donateApiHealthUrl &&
+  pay.stripeApiHealthUrl !== pay.donateApiHealthUrl
+) {
+  fail(
+    "payment.stripeApiHealthUrl must equal payment.donateApiHealthUrl — single deployed Stripe Worker is donate-api (no separate api.phosphorus31.org until DNS + Worker exist)"
+  );
+}
 
 for (const p of manifest.glassProbes || []) {
   const id = p.id;
   const expanded = expandProbeUrl(p.url);
-  if (id === "stripe-api-health" && pay?.stripeApiHealthUrl) {
-    if (expanded !== pay.stripeApiHealthUrl) {
-      fail(
-        `probe stripe-api-health expands to ${JSON.stringify(expanded)} but p31-constants payment.stripeApiHealthUrl is ${JSON.stringify(pay.stripeApiHealthUrl)} — keep them equal`
-      );
-    }
-  }
   if (id === "donate-api-health" && pay?.donateApiHealthUrl) {
     if (expanded !== pay.donateApiHealthUrl) {
       fail(
         `probe donate-api-health expands to ${JSON.stringify(expanded)} but p31-constants payment.donateApiHealthUrl is ${JSON.stringify(pay.donateApiHealthUrl)} — keep them equal`
+      );
+    }
+  }
+  if (id === "donate-api-health-workers-dev" && pay?.donateApiWorkersDevUrl) {
+    const want = `${String(pay.donateApiWorkersDevUrl).replace(/\/$/, "")}/health`;
+    if (expanded !== want) {
+      fail(
+        `probe donate-api-health-workers-dev expands to ${JSON.stringify(expanded)} but expected ${JSON.stringify(want)} from payment.donateApiWorkersDevUrl`
       );
     }
   }
@@ -104,6 +145,46 @@ for (const d of manifest.deployables || []) {
   const full = path.join(root, d.cwd);
   if (!fs.existsSync(full)) {
     console.warn("verify-ecosystem: optional tree missing, skip path check:", d.cwd);
+  }
+}
+
+if (fs.existsSync(liveFleetPath)) {
+  const fleet = JSON.parse(fs.readFileSync(liveFleetPath, "utf8"));
+  const fm = fleet.meshAndPayments?.mesh;
+  const cm = constants.mesh;
+  if (fm && cm) {
+    for (const k of Object.keys(cm)) {
+      if (k.startsWith("_")) continue;
+      if (fm[k] !== cm[k]) {
+        fail(
+          `p31-live-fleet.json mesh.${k} (${JSON.stringify(fm[k])}) !== p31-constants.json (${JSON.stringify(cm[k])})`
+        );
+      }
+    }
+  }
+  const fp = fleet.meshAndPayments?.payment;
+  const cp = constants.payment;
+  if (fp && cp) {
+    for (const k of ["donateApiHealthUrl", "donateApiWorkersDevUrl", "stripeWorkerHost"]) {
+      if (fp[k] !== undefined && fp[k] !== cp[k]) {
+        fail(
+          `p31-live-fleet.json payment.${k} (${JSON.stringify(fp[k])}) !== p31-constants (${JSON.stringify(cp[k])})`
+        );
+      }
+    }
+  }
+  for (const w of fleet.workersVerified || []) {
+    const ck = w.constantsKey;
+    if (!ck) continue;
+    const want = getNested(constants, ck);
+    if (want === undefined) {
+      fail(`p31-live-fleet workersVerified ${w.id}: unknown constantsKey ${ck}`);
+    }
+    if (w.workersDev !== undefined && w.workersDev !== want) {
+      fail(
+        `p31-live-fleet workersVerified ${w.id}: workersDev ${JSON.stringify(w.workersDev)} !== constants ${ck} ${JSON.stringify(want)}`
+      );
+    }
   }
 }
 

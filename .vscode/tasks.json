@@ -58,6 +58,22 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
+      "label": "P31: git auto-push (status)",
+      "type": "shell",
+      "command": "npm run git:autopush:status",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: git auto-push (enable .p31 marker)",
+      "type": "shell",
+      "command": "npm run git:autopush:on",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
       "label": "P31: apply constants (JSON → ground-truth, passport, generated TS)",
       "type": "shell",
       "command": "npm run apply:constants",
@@ -141,6 +157,30 @@
       "label": "P31: Cloudflare wrangler inventory (md table)",
       "type": "shell",
       "command": "node scripts/inventory-cf.mjs",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: git remotes (origin + andromeda via p31-github.json)",
+      "type": "shell",
+      "command": "npm run git:remotes",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: pr (ship branch — PR + auto-merge, low friction)",
+      "type": "shell",
+      "command": "npm run pr",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      "label": "P31: fix gh / git credentials (gh auth setup-git)",
+      "type": "shell",
+      "command": "npm run fix:gh",
       "options": { "cwd": "${workspaceFolder}" },
       "group": "build",
       "presentation": { "reveal": "always", "panel": "shared" }

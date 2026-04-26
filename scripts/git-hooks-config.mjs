@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Point this repo at .githooks/ so the monetary pre-commit runs after `npm run setup` or `npm run git:hooks`.
- * No-op if not a git work tree or .githooks/pre-commit is missing. Safe to run repeatedly.
+ * Point this repo at .githooks/ (pre-commit: monetary; post-commit: opt-in auto-push).
+ * No-op if not a git work tree. Safe to run repeatedly. chmod +x for hooks on *nix.
  */
 import { execSync } from "node:child_process";
 import fs from "node:fs";
@@ -10,10 +10,11 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
-const pre = path.join(root, ".githooks", "pre-commit");
+const hooksDir = path.join(root, ".githooks");
+const pre = path.join(hooksDir, "pre-commit");
 
-if (!fs.existsSync(pre)) {
-  console.log("git-hooks-config: no .githooks/pre-commit — skip");
+if (!fs.existsSync(hooksDir) || !fs.existsSync(pre)) {
+  console.log("git-hooks-config: no .githooks (or missing pre-commit) — skip");
   process.exit(0);
 }
 
@@ -31,5 +32,24 @@ try {
   process.exit(1);
 }
 
-console.log("git-hooks-config: core.hooksPath = .githooks  (P31_SKIP_MONETARY_HOOK=1 to bypass on commit)");
+try {
+  for (const name of fs.readdirSync(hooksDir)) {
+    const p = path.join(hooksDir, name);
+    if (fs.statSync(p).isFile() && !name.startsWith(".")) {
+      try {
+        fs.chmodSync(p, 0o755);
+      } catch {
+        /* Windows or permissions */
+      }
+    }
+  }
+} catch {
+  /* */
+}
+
+console.log(
+  "git-hooks-config: core.hooksPath = .githooks\n" +
+    "  pre-commit: verify:monetary on payment paths (P31_SKIP_MONETARY_HOOK=1 to bypass)\n" +
+    "  post-commit: auto-push when P31_AUTO_PUSH=1 or .p31/auto-push (npm run git:autopush:on) — P31_NO_AUTO_PUSH=1 off"
+);
 process.exit(0);

@@ -14,7 +14,9 @@ Use **Node 20** (see `.nvmrc`). One command aligns dependencies, regenerates ope
 npm run setup
 ```
 
-This also sets **`core.hooksPath`** to **`.githooks`** when possible so commits that touch payment or creator-economy files run **`npm run verify:monetary`** (bypass: **`P31_SKIP_MONETARY_HOOK=1 git commit …`**). To set hooks only: **`npm run git:hooks`**.
+This also sets **`core.hooksPath`** to **`.githooks`** when possible so commits that touch payment or creator-economy files run **`npm run verify:monetary`** (bypass: **`P31_SKIP_MONETARY_HOOK=1 git commit …`**). To set hooks only: **`npm run git:hooks`**. **Opt-in auto-push after each commit:** **`npm run git:autopush:on`** (or **`export P31_AUTO_PUSH=1`**) with **`P31_NO_AUTO_PUSH=1`** to skip; main/master stay manual unless **`P31_AUTO_PUSH_MAIN=1`**.
+
+**Git remotes (automation):** **`npm run git:remotes`** reads **`p31-github.json`** and sets **`origin`** for the home repo when configured, and ensures nested **`andromeda/`** points at **`p31labs/andromeda`**. **PR + auto-merge:** **`pnpm pr`** in **`andromeda/`**, or **`npm run pr`** at P31 home (uses **`andromeda/`** when present); **`npm run fix:gh`** if **`gh`** and Git credentials conflict. Full flags: **`gh:pr:automerge`** in **`package.json`**.
 
 For the **whole Andromeda pnpm workspace** (optional, large): `npm run setup:andromeda`. Release parity before merge: `npm run release:check` (includes p31ca build when the hub tree exists). Quick check after fee/URL changes: **`npm run verify:monetary`**.
 

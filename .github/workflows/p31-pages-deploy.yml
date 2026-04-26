@@ -1,0 +1,72 @@
+# Cloudflare Pages deploy for p31ca + optional production Playwright smoke.
+# Triggers: manual only (avoids duplicating p31-ci.yml on every push).
+#
+# Secrets: CLOUDFLARE_API_TOKEN (Pages:Edit). Optional: CLOUDFLARE_ACCOUNT_ID.
+#
+# After deploy, waits 45s for edge propagation then hits https://p31ca.org (disable via input).
+name: P31 Pages deploy + prod smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_prod_smoke:
+        description: "After deploy, run Playwright against https://p31ca.org"
+        type: boolean
+        default: true
+      propagation_wait_seconds:
+        description: "Seconds to wait before prod smoke"
+        type: number
+        default: 45
+
+concurrency:
+  group: p31-pages-deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Verify + build (p31-ci)
+        env:
+          CI: "true"
+        run: node scripts/p31-ci.mjs
+
+      - name: Deploy to Cloudflare Pages
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        working-directory: andromeda/04_SOFTWARE/p31ca
+        run: npx wrangler pages deploy dist --project-name p31ca --branch=main --commit-dirty=true
+
+      - name: No deploy token
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN == '' }}
+        run: echo "::warning::CLOUDFLARE_API_TOKEN missing — configure secret to deploy."
+
+      - name: Wait for CDN propagation
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && inputs.run_prod_smoke }}
+        run: sleep ${{ inputs.propagation_wait_seconds }}
+
+      - name: Install Playwright (chromium)
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && inputs.run_prod_smoke }}
+        working-directory: andromeda/04_SOFTWARE/p31ca
+        run: npx playwright install --with-deps chromium
+
+      - name: Production smoke (p31ca.org)
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && inputs.run_prod_smoke }}
+        working-directory: andromeda/04_SOFTWARE/p31ca
+        env:
+          PLAYWRIGHT_BASE_URL: https://p31ca.org
+          PLAYWRIGHT_SKIP_WEBSERVER: "1"
+        run: npx playwright test e2e/prod-smoke.spec.ts

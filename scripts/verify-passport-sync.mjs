@@ -21,8 +21,10 @@ if (!fs.existsSync(src)) {
   process.exit(1);
 }
 if (!fs.existsSync(dest)) {
-  console.error("verify-passport: missing mirror — run npm run sync:passport");
-  process.exit(1);
+  console.log(
+    "verify-passport: skip — no p31ca mirror (partial clone or andromeda/ not in checkout). Run sync:passport before hub deploy when tree is present."
+  );
+  process.exit(0);
 }
 
 let expected;

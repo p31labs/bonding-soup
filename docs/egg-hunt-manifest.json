@@ -1,0 +1,147 @@
+{
+  "schema": "p31.quantumEggHunt/1.0.0",
+  "narrative": "SIC-POVM metaphor: each entry is a rank-1 effect in a 4-vertex (K₄) product story. Coherence enforces the canonical 31P Larmor Hz from p31-constants.json against the dome + hub UI.",
+  "coherence": {
+    "larmor": {
+      "fromConstants": "physics.larmorHz",
+      "requireDisplay": "{value}Hz",
+      "files": [
+        "andromeda/04_SOFTWARE/p31ca/src/pages/dome.astro",
+        "andromeda/04_SOFTWARE/p31ca/src/pages/index.astro"
+      ]
+    }
+  },
+  "entries": [
+    {
+      "id": "SOUP-DBG-WS",
+      "operator": "parametric-superposition",
+      "vertex": 1,
+      "file": "soup-demo.html",
+      "require": [
+        "urlParams.get('ws')",
+        "urlParams.has('debug')",
+        "debug: isDebug"
+      ],
+      "trigger": "URL phases ?debug, ?ws — BONDING demo prepared state."
+    },
+    {
+      "id": "SOUP-ARCHIVE",
+      "operator": "parametric-superposition",
+      "vertex": 1,
+      "file": "soup-demo.html",
+      "require": [
+        "BONDING_ARCHIVE_URL"
+      ],
+      "trigger": "window.BONDING_ARCHIVE_URL (WCD-33) couples demo to the archive sector."
+    },
+    {
+      "id": "DOME",
+      "operator": "povm-measurement",
+      "vertex": 2,
+      "file": "andromeda/04_SOFTWARE/p31ca/src/pages/dome.astro",
+      "require": [
+        "location.search.includes('dev=true')",
+        "axe-core",
+        "keyboard-shortcuts-overlay",
+        "id=\"layer0\"",
+        "Hold ESC for 3 seconds to disengage"
+      ],
+      "trigger": "/dome: dev=true superposes axe; projective measurement via / Tab Esc; Layer 0 = POVM effect."
+    },
+    {
+      "id": "HUB-LAYER0",
+      "operator": "povm-measurement",
+      "vertex": 2,
+      "file": "andromeda/04_SOFTWARE/p31ca/src/pages/index.astro",
+      "require": [
+        "id=\"trimtab-trigger\"",
+        "activateLayer0",
+        "Hold ESC to exit"
+      ],
+      "trigger": "Hub: trim control prepares Layer 0 readout; Esc = inverse measurement path."
+    },
+    {
+      "id": "ORCH-PAGE",
+      "operator": "dark-eigenstate",
+      "vertex": 3,
+      "file": "andromeda/04_SOFTWARE/p31ca/src/pages/orchestrator.astro",
+      "require": [
+        "OrchestratorDashboard",
+        "Sovereign Cockpit · Orchestrator"
+      ],
+      "trigger": "/orchestrator — not coupled to the hub-landing subspace (see Pauli assertion)."
+    },
+    {
+      "id": "ORCH-WORKER",
+      "operator": "entangled-channel",
+      "vertex": 3,
+      "file": "andromeda/04_SOFTWARE/p31ca/src/components/OrchestratorDashboard.astro",
+      "require": [
+        "p31-orchestrator.trimtab-signal.workers.dev",
+        "/api/orchestrator/status"
+      ],
+      "trigger": "Nonlocal Bell-type fetch to the orchestrator sector (CORS as deployed)."
+    },
+    {
+      "id": "LEGACY-LATTICE-LINK",
+      "operator": "weak-coupling",
+      "vertex": 4,
+      "file": "andromeda/04_SOFTWARE/p31ca/public/legacy-mvp-hub.html",
+      "require": [
+        "<a href=\"lattice.html\"",
+        "hover:opacity-100 transition-opacity\">Lattice</a>"
+      ],
+      "trigger": "Low-transition-amplitude path from legacy hub to lattice (footer)."
+    },
+    {
+      "id": "LATTICE-WONKY",
+      "operator": "weak-coupling",
+      "vertex": 4,
+      "file": "andromeda/04_SOFTWARE/p31ca/public/lattice.html",
+      "require": [
+        "id: 'mission-control'",
+        "url: 'wonky.html'"
+      ],
+      "trigger": "lattice node graph: mission-control id → wonky static sector."
+    },
+    {
+      "id": "ONBOARD-ARCHETYPE",
+      "operator": "parametric-superposition",
+      "vertex": 1,
+      "file": "andromeda/04_SOFTWARE/p31ca/public/planetary-onboard.html",
+      "require": [
+        "const archetype",
+        "elder",
+        "child",
+        "elder-mode",
+        "child-mode"
+      ],
+      "trigger": "?a=child (haptic preset, diamond sphere layout, Phase 5 auto-skip) or ?a=elder (110px spheres, larger touch targets). Default is 'default'."
+    },
+    {
+      "id": "CONNECT-DIAL",
+      "operator": "parametric-superposition",
+      "vertex": 1,
+      "file": "andromeda/04_SOFTWARE/p31ca/public/connect.html",
+      "require": [
+        "_params.get('dial')",
+        "_fromOnboard",
+        "welcome-toast"
+      ],
+      "trigger": "?dial=N on /connect.html is the post-onboarding handoff signal from planetary-onboard.html. Shows welcome toast, then cleans the URL via history.replaceState."
+    }
+  ],
+  "assertions": [
+    {
+      "id": "HUB-PAULI-ORCH",
+      "principle": "pauli-exclusion",
+      "file": "andromeda/04_SOFTWARE/p31ca/src/data/hub-landing.json",
+      "mustNotInclude": "/orchestrator"
+    }
+  ],
+  "outOfScope": [
+    "Discord slash commands (different Hilbert space)",
+    "phosphorus31.org",
+    "First-class hub features (Passport, connect) — not dark-sector"
+  ]
+}

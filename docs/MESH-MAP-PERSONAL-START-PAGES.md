@@ -17,7 +17,8 @@ This is **not** “one chatbot for everyone.” It is **one agent instance per s
 | Piece | Location / behavior |
 |--------|---------------------|
 | **Personal agent (DO)** | `andromeda/04_SOFTWARE/k4-personal` — `PersonalAgent` with `/chat`, `/state`, `/reminders`, `/energy`, `/bio`, etc. Router: **`/agent/:userId/...`** maps to `PERSONAL_AGENT.idFromName(userId)`. |
-| **Archetype onboarding (static)** | `p31ca/public/planetary-onboard.html` — `?a=child \| elder \| default` adjusts layout and copy (starting-page *variant*, not yet per-user persistence). |
+| **Archetype onboarding (static)** | `p31ca/public/planetary-onboard.html` — `?a=child \| elder \| default`; Phase 5 persists `p31_subject_id` + `p31_onboard_meta` in `localStorage` and redirects to **`/mesh-start.html`** (short **`/start`**). |
+| **Personal landing (MVP)** | `p31ca/public/mesh-start.html` — probes `k4-personal` `/health`, `/agent/:id/health`, `/energy`; seeds `PUT .../state`; simple `POST .../chat`; `?agent=` overrides worker origin (default prod worker URL). |
 | **Family cage (shared)** | `k4-cage` and related workers — **shared** topology and edges; distinct from **personal** scope. |
 | **Passport / advocacy** | Cognitive Passport generator (`p31ca.org/passport`) — portable **human** context; complements the **machine** agent profile in DO `state.profile`. |
 | **Agent rules (docs)** | `CLAUDE.md` / tools: *personal K₄ mesh (pillars a–d), isolated KV* — same **shape** as cage personal scope; implementation path may be KV + DO together over time. |
@@ -41,14 +42,14 @@ This is **not** “one chatbot for everyone.” It is **one agent instance per s
 
 ## Phased delivery
 
-**Phase 1 — Contract**  
-Document and freeze: `subject_id` derivation, allowed paths on `k4-personal`, CORS, and what `planetary-onboard` POSTs to after Phase 5 (passkey worker stub today).
+**Phase 1 — Contract** *(in progress)*  
+`subject_id` derivation (passkey `rawId` hash → `u_<hex>`, skip/guest → `guest_<random>`), `k4-personal` CORS for p31ca / bonding / phosphorus31 / localhost / `*.pages.dev`, onboard redirect target **`/mesh-start.html`**. Ground truth: `meshStart` route + **`/start`** redirect in `p31.ground-truth.json` / `_redirects`.
 
-**Phase 2 — Personal landing MVP**  
-One HTML (or Astro) page template + **KV** `START_CONFIG:{subject_id}` JSON: `{ archetype, title, links[], dial }`. Edge Worker or p31ca **Route** serves merged page. Deep link from onboard: `?continue=/start/...`.
+**Phase 2 — Personal landing MVP** *(partial)*  
+**Shipped:** static `mesh-start.html` + dial query param; **next:** KV `START_CONFIG:{subject_id}` and edge merge for per-user copy beyond localStorage.
 
-**Phase 3 — Bind onboard → agent**  
-After authentication, client stores `subject_id`, loads start config, and shows **one** thread to `.../agent/{subject_id}/chat` (cognitive prosthetic copy already in system prompt).
+**Phase 3 — Bind onboard → agent** *(partial)*  
+Onboard → localStorage → mesh-start → `.../agent/{subject_id}/chat` wired; deepen pact → profile sync and thread UX.
 
 **Phase 4 — Cage bridge (optional)**  
 CWP / mesh-bridge pattern: copy `integration-handoff/CWP-30/mesh-bridge.ts` ideas into `phosphorus31.org` or cage only when SUPER-CENTAUR doc says so.

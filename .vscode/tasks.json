@@ -18,7 +18,7 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
-      "label": "P31: verify (passport + tsc)",
+      "label": "P31: verify (passport + constants + p31ca contracts + tsc)",
       "type": "shell",
       "command": "npm run verify",
       "options": { "cwd": "${workspaceFolder}" },
@@ -26,7 +26,39 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
-      "label": "P31: release:check (passport + soup + p31ca build)",
+      "label": "P31: verify constants (JSON vs ground-truth)",
+      "type": "shell",
+      "command": "npm run verify:constants",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify p31ca contracts (ground-truth + synergetic)",
+      "type": "shell",
+      "command": "npm run verify:p31ca-contracts",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: apply constants (JSON → ground-truth, passport, generated TS)",
+      "type": "shell",
+      "command": "npm run apply:constants",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: validate full (local + live mesh audits)",
+      "type": "shell",
+      "command": "npm run validate:full",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      "label": "P31: release:check (npm run verify + p31ca build)",
       "type": "shell",
       "command": "npm run release:check",
       "options": { "cwd": "${workspaceFolder}" },
@@ -40,6 +72,22 @@
       "options": { "cwd": "${workspaceFolder}/andromeda/04_SOFTWARE/p31ca" },
       "isBackground": true,
       "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      "label": "P31: p31ca verify:ground-truth",
+      "type": "shell",
+      "command": "npm run verify:ground-truth",
+      "options": { "cwd": "${workspaceFolder}/andromeda/04_SOFTWARE/p31ca" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: p31ca hub:ci (registry → about + verify + build)",
+      "type": "shell",
+      "command": "npm run hub:ci",
+      "options": { "cwd": "${workspaceFolder}/andromeda/04_SOFTWARE/p31ca" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
       "label": "P31: wcd33 worker tail",

@@ -1,0 +1,133 @@
+# P31 Security Suite — CI job
+# Runs on push/PR to main + weekly schedule + manual dispatch.
+# Policy: exits 1 on P0 only (unsuppressed prod-runtime vulns, broken PQC tests).
+# P1 warnings are printed but don't block merges.
+#
+# Required secrets (optional — job gracefully skips if absent):
+#   CLOUDFLARE_API_TOKEN — for optional wrangler dry-run in future phases
+
+name: P31 Security
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+    paths:
+      - "andromeda/04_SOFTWARE/p31ca/scripts/security/**"
+      - "andromeda/04_SOFTWARE/p31ca/security/**"
+      - "andromeda/04_SOFTWARE/p31ca/workers/**"
+      - "andromeda/04_SOFTWARE/p31ca/src/**"
+      - "andromeda/04_SOFTWARE/p31ca/package.json"
+      - "andromeda/04_SOFTWARE/p31ca/package-lock.json"
+      - "andromeda/04_SOFTWARE/packages/quantum-core/**"
+      - ".github/workflows/p31-security.yml"
+  pull_request:
+    paths:
+      - "andromeda/04_SOFTWARE/p31ca/scripts/security/**"
+      - "andromeda/04_SOFTWARE/p31ca/security/**"
+      - "andromeda/04_SOFTWARE/p31ca/workers/**"
+      - "andromeda/04_SOFTWARE/p31ca/src/**"
+      - "andromeda/04_SOFTWARE/p31ca/package.json"
+      - "andromeda/04_SOFTWARE/p31ca/package-lock.json"
+      - ".github/workflows/p31-security.yml"
+  schedule:
+    # Weekly on Monday 09:00 UTC — catches newly-disclosed CVEs against pinned deps
+    - cron: "0 9 * * 1"
+
+concurrency:
+  group: p31-security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  security:
+    name: Security (SCA + Workers + Crypto)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Sparse checkout: only need p31ca tree and quantum-core if present
+          sparse-checkout: |
+            andromeda/04_SOFTWARE/p31ca
+            andromeda/04_SOFTWARE/packages/quantum-core
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: andromeda/04_SOFTWARE/p31ca/package-lock.json
+
+      - name: Install p31ca deps
+        run: npm ci
+        working-directory: andromeda/04_SOFTWARE/p31ca
+
+      - name: Install quantum-core deps (if present)
+        run: |
+          if [ -f andromeda/04_SOFTWARE/packages/quantum-core/package.json ]; then
+            npm ci
+            echo "quantum-core: deps installed"
+          else
+            echo "quantum-core: not in checkout — PQC gate will skip"
+          fi
+        working-directory: andromeda/04_SOFTWARE/packages/quantum-core
+        continue-on-error: true
+
+      - name: Phase B — SCA (npm audit)
+        run: node scripts/security/run.mjs --ci --only=B
+        working-directory: andromeda/04_SOFTWARE/p31ca
+
+      - name: Phase C — Worker inventory + CORS scan
+        run: node scripts/security/run.mjs --ci --only=C
+        working-directory: andromeda/04_SOFTWARE/p31ca
+
+      - name: Phase E — Crypto surface (PQC gate + passkey boundary)
+        run: node scripts/security/run.mjs --ci --only=E
+        working-directory: andromeda/04_SOFTWARE/p31ca
+
+      - name: Upload security inventory
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-inventory-${{ github.run_id }}
+          path: |
+            andromeda/04_SOFTWARE/p31ca/build/security-inventory.json
+            andromeda/04_SOFTWARE/p31ca/build/security-report.json
+          retention-days: 30
+
+  # Semgrep SAST — report-only (uploads SARIF to GitHub Security tab)
+  # Promoted to blocking after noise is triaged.
+  sast:
+    name: SAST (Semgrep)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      security-events: write
+    if: github.event_name != 'schedule'  # Skip scheduled run to reduce noise
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            andromeda/04_SOFTWARE/p31ca/src
+            andromeda/04_SOFTWARE/p31ca/workers
+          sparse-checkout-cone-mode: false
+
+      - name: Semgrep scan
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: >-
+            p/javascript
+            p/typescript
+            p/security-audit
+          generateSarif: "1"
+          auditOn: push
+        continue-on-error: true  # Report-only until noise is triaged
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: semgrep.sarif
+        continue-on-error: true

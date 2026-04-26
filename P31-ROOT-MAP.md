@@ -7,6 +7,7 @@ This file is the **single map of record** for what lives under **`/home/p31`**: 
 | Layer | Idea |
 |--------|------|
 | **Mission** | Build, create, connect — decentralized family / community mesh (see `CLAUDE.md`, `.cursorrules`). |
+| **p31ca.org contract (machine-routable)** | **`andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json`** — must stay in lockstep with `p31ca/public/_redirects`, invariants in `scripts/hub/registry.mjs`, and pinned 3D entry files. Verify: from **`p31ca`**, `npm run verify:ground-truth` (also part of `prebuild`). **Multi-dome surfaces (Three pins + PWA):** same folder **`synergetic-manifest.json`** — `npm run verify:synergetic` (also `prebuild`). **`docs/CANONICAL-NUMBERING.md`** defines version **namespaces** (ground-truth semver vs CogPass edition vs WCD, etc.). |
 | **Edge** | Cloudflare Workers, KV, DO where needed; rate limits and CORS at the door. |
 | **WCD lineage** | `docs/` — WCD-31 physics, WCD-32 ghosts/WS, WCD-33 archive; implementation may live in more than one tree. |
 
@@ -42,9 +43,27 @@ This file is the **single map of record** for what lives under **`/home/p31`**: 
 
 **Owns:** a **separate** site / engine / packages tree (e.g. UI, SUPER-CENTAUR, shared packages). Same **brand orbit**, **different** root `package.json` and deploy story. Treat as its own product unless you explicitly unify.
 
+**Parallel shipping:** updates here do **not** go through the **p31ca** or **Andromeda `04_SOFTWARE/p31ca`** pipeline. If two agents (or you + automation) are moving fast, use **separate PRs / deploy targets** so `p31ca.org` and `phosphorus31.org` stay independent unless you **intentionally** coordinate a single release.
+
+## 4a. Site update tracks (bake into workflow, not a one-off)
+
+| Track | What ships | Default commands / CI (when applicable) |
+|--------|------------|----------------------------------------|
+| **A — Technical hub** | **`p31ca.org`** (Astro hub, `*-about.html`, passport mirror) | `andromeda/04_SOFTWARE/p31ca`: `npm run hub:ci`, passport verify/sync, `npm run deploy`; workflows **`p31ca-hub.yml`**, **P31 Automation** / Pages. Registry: `p31ca/scripts/hub/`. |
+| **B — Public org / programs site** | **`phosphorus31.org`** | That repo’s own `package.json`, CI, and `DEPLOY` docs — **not** the p31ca path above. |
+| **C — P31 home vertical** | Soup, passport authoring, wcd33 archive | Root `npm run verify` / `release:check`, `wcd33-global-archive` per its `DEPLOY.md`. |
+
+**Rule:** “Site update” in standups means: pick **A**, **B**, or **C** (or more than one **explicitly**), run the matching checks, then deploy the matching project name on Cloudflare — never assume one build updates every domain.
+
 ## 5. Narrative & spec — **`docs/`** (this root)
 
 Design notes, WCD readiness, websocket spec, roadmap, affective-chemistry spec. **Source of intent**; implementation may be in **root** `src/`, **andromeda**, or both.
+
+**External model / handoff review (Gemini, Opus, etc.):** start at **`docs/README-REVIEW-DOCS.md`** — index to **`docs/GEMINI-OPUS-REVIEW-BUNDLE.md`**, workflow / Workers / CWP supplements, and **`docs/MVP-DELIVERABLES-INVENTORY.md`** (tiered LIVE/MVP + grant summary). **Updated 2026-04-25:** see **`p31-constants.json`** for operator-locked numbers; **`docs/CANONICAL-NUMBERING.md`** for namespaces. **`npm run apply:constants`** / **`verify:constants`** keep `ground-truth` aligned.
+
+**Multi-dome / Spaceship Earth synthesis:** **`docs/WORK-PACKAGE-SYNERGETIC-GEODESIC-STACK.md`** — proposed epics: synergetic manifest + CI verifier, shared icosa / panel geometry, tensegrity seam in the observatory stack, p31ca ↔ PWA deep links, optional ethical “Fate 20” layer.
+
+**p31ca GEODESIC (static builder) on-ramp + K4 live room:** **`docs/GEODESIC-CAMPAIGN.md`** — progressive 5-track coach, tool locks, Durable Object room, `p31.ground-truth` route `geodesic`.
 
 ## 6. Operator & agent context (not application code)
 
@@ -53,10 +72,10 @@ Design notes, WCD readiness, websocket spec, roadmap, affective-chemistry spec. 
 | `AGENTS.md` | Short **multi-root** agent orientation (read this, then `P31-ROOT-MAP`, passport sync rules) |
 | `CLAUDE.md` / `.cursorrules` | Mesh, Spoons, legal/ops ground truth for agents |
 | `.cursor/rules/cognitive-passport-mirror.mdc` | When editing the passport HTML or p31ca mirror: sync/verify, no hand-diverging mirror |
-| `P31 COGNITIVE PASSPORT — v5.md` | Full human/operator life context document (source of record for the narrative) |
+| `P31 COGNITIVE PASSPORT — v5.md` | Full human/operator life context (source of record). **Authoritative edition = H1** (e.g. v5.1); see **`docs/CANONICAL-NUMBERING.md`**. |
 | `cognitive-passport/index.html` | **Generator** (machine slice: MD + JSON + agent block). Local: `npm run demo` → `/cognitive-passport/index.html`. **Does not** replace the v5 doc. Deploy mirror: `p31ca/public/passport-generator.html`; live: **https://p31ca.org/passport** |
 | `Neuro-Inclusive Mesh Dashboard Design.txt`, … | Product / onboarding design drafts |
-| `validate-p31-full.sh`, `audit_runner.py` | Validation / audit automation |
+| `validate-p31-full.sh`, `audit_runner.py` | Extended validation: local passport + constants + p31ca contracts, then live mesh audits + report JSON (`/tmp/p31_validation_report.json`). Faster path: **`npm run verify`**. |
 | `playwright/` | Browser tests (e.g. `visual.test.ts`) |
 
 ## 7. When to work where

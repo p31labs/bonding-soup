@@ -4,6 +4,8 @@
  * Manages molecule chords, zone audio, and 8-oscillator limit
  */
 
+import { P31_CONSTANTS } from "./p31-constants-generated";
+
 export interface AudioZone {
   name: string;
   x: number;
@@ -50,7 +52,7 @@ export class SoundtrackEngine {
       filterCutoff: 2000
     },
     deep: {
-      baseFrequency: 863, // Larmor frequency
+      baseFrequency: P31_CONSTANTS.physics.larmorHz,
       reverbLevel: 0.8,
       filterCutoff: 800
     },

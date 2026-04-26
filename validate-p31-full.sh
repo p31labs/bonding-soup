@@ -60,6 +60,37 @@ else
   add_check "Local" "Passport_p31ca_Mirror" "FAIL" "Run: npm run sync:passport (from P31 workspace root)"
 fi
 
+# ---- Local: p31-constants vs ground-truth + synergetic manifest ----
+echo "=== Local: Constants + synergetic contracts ==="
+if node "$SCRIPT_DIR/scripts/verify-constants.mjs"; then
+  add_check "Local" "P31_Constants_GroundTruth" "PASS" "p31-constants.json aligns with p31.ground-truth.json + generated TS"
+else
+  add_check "Local" "P31_Constants_GroundTruth" "FAIL" "Run: npm run apply:constants && npm run verify:constants"
+fi
+if node "$SCRIPT_DIR/scripts/verify-p31ca-contracts.mjs"; then
+  add_check "Local" "P31ca_Contracts" "PASS" "ground-truth + synergetic manifest match on-disk pins (skipped if no p31ca tree)"
+else
+  add_check "Local" "P31ca_Contracts" "FAIL" "Run: npm run verify:p31ca-contracts (from root when andromeda present)"
+fi
+
+# ---- Local: quantum egg hunt (manifest anchors + Larmor vs p31-constants) ----
+echo "=== Local: Quantum egg hunt ==="
+if node "$SCRIPT_DIR/scripts/verify-egg-hunt.mjs"; then
+  add_check "Local" "Quantum_Egg_Hunt" "PASS" "docs/egg-hunt-manifest.json + Pauli assert + Larmor coherence (skips andromeda-only if tree missing)"
+else
+  add_check "Local" "Quantum_Egg_Hunt" "FAIL" "Run: npm run verify:egg-hunt — see docs/EGG-HUNT.md"
+fi
+
+# ---- Local: Lattice Oracle (magic-crystal / /oracle contract) ----
+echo "=== Local: Lattice Oracle ==="
+if [ -f "$SCRIPT_DIR/andromeda/04_SOFTWARE/p31ca/scripts/verify-lattice-oracle.mjs" ] && node "$SCRIPT_DIR/andromeda/04_SOFTWARE/p31ca/scripts/verify-lattice-oracle.mjs" 2>/dev/null; then
+  add_check "Local" "Lattice_Oracle" "PASS" "magic-crystal + _redirects + lattice node + ground-truth (p31ca)"
+elif [ ! -d "$SCRIPT_DIR/andromeda/04_SOFTWARE/p31ca" ]; then
+  add_check "Local" "Lattice_Oracle" "SKIP" "no p31ca tree"
+else
+  add_check "Local" "Lattice_Oracle" "FAIL" "Run: npm run verify:lattice-oracle in andromeda/04_SOFTWARE/p31ca"
+fi
+
 # ---- P0: Comprehensive P31 Mesh Network Audit ----
 echo "=== P0: P31 Mesh Network Audit ==="
 
@@ -282,7 +313,8 @@ echo ""
 echo "=== Runbook ==="
 echo "  Manual re-sync:  curl -X POST https://k4-cage.trimtab-signal.workers.dev/api/sync"
 echo "  Force link reset: curl -X POST https://k4-cage.trimtab-signal.workers.dev/api/links/reset"
-echo "  Verify integrity: bash validate-p31-full.sh   (from workspace root; includes passport mirror check)"
+echo "  Verify integrity: bash validate-p31-full.sh   (from workspace root; passport + constants + p31ca contracts + mesh audits)"
+echo "  Same checks without mesh: npm run verify   (root; skips p31ca contracts if tree missing)"
 echo "  Passport mirror only: npm run verify:passport"
 echo "  Agent orientation:  AGENTS.md  →  P31-ROOT-MAP.md"
 

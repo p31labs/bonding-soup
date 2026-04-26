@@ -28,6 +28,12 @@
       "note": "Hub fusion liveness"
     },
     {
+      "id": "geodesic-room-worker",
+      "url": "https://geodesic-room.trimtab-signal.workers.dev/",
+      "group": "mesh",
+      "note": "GeodesicRoom DO v0.2 — JSON { service, version, ok }; WS /api/geodesic/:id/ws; see docs/GEODESIC-GAME-ENGINE-INTEGRATION.md"
+    },
+    {
       "id": "agent-hub-health",
       "url": "{{mesh.agentHubWorkerUrl}}/api/health",
       "group": "mesh",
@@ -82,6 +88,12 @@
       "note": "BONDING vertical"
     },
     {
+      "id": "stripe-api-health",
+      "url": "{{payment.stripeApiHealthUrl}}",
+      "group": "monetary",
+      "note": "Main API / Stripe Worker (p31-constants payment.stripeWorkerHost); glass liveness"
+    },
+    {
       "id": "donate-api-health",
       "url": "{{payment.donateApiHealthUrl}}",
       "group": "monetary",
@@ -118,6 +130,12 @@
       "cwd": "wcd33-global-archive",
       "command": "npm run deploy",
       "description": "WCD-33 global archive Worker"
+    },
+    {
+      "id": "donate-api",
+      "cwd": "andromeda/04_SOFTWARE/donate-api",
+      "command": "npx wrangler deploy",
+      "description": "MAP donate-api Worker (donate-api.phosphorus31.org checkout bridge)"
     }
   ]
 }

@@ -64,6 +64,25 @@ function main() {
         fail = 1;
       }
     }
+    const stripeH = c.payment.stripeApiHealthUrl;
+    const host = c.payment.stripeWorkerHost;
+    if (typeof stripeH === "string" && stripeH && typeof host === "string" && host) {
+      try {
+        const u = new URL(stripeH);
+        if (u.protocol !== "https:") {
+          console.error("verify-constants: payment.stripeApiHealthUrl must use https");
+          fail = 1;
+        } else if (u.hostname !== host || u.pathname.replace(/\/$/, "") !== "/health") {
+          console.error(
+            "verify-constants: payment.stripeApiHealthUrl must be https://" + host + "/health (MAP / API Worker liveness)"
+          );
+          fail = 1;
+        }
+      } catch {
+        console.error("verify-constants: payment.stripeApiHealthUrl is not a valid URL");
+        fail = 1;
+      }
+    }
   }
   if (buildMissionSnippet(c) !== gt.mission) {
     console.error("verify-constants: mission string out of date — run: npm run apply:constants");
@@ -78,6 +97,11 @@ function main() {
     const payHealth = c.payment?.donateApiHealthUrl;
     if (typeof payHealth === "string" && payHealth && !ts.includes(payHealth)) {
       console.error("verify-constants: src/p31-constants-generated.ts missing payment.donateApiHealthUrl — run: npm run apply:constants");
+      fail = 1;
+    }
+    const stripeHealth = c.payment?.stripeApiHealthUrl;
+    if (typeof stripeHealth === "string" && stripeHealth && !ts.includes(stripeHealth)) {
+      console.error("verify-constants: src/p31-constants-generated.ts missing payment.stripeApiHealthUrl — run: npm run apply:constants");
       fail = 1;
     }
     for (const key of ["orchestratorWorkerUrl", "agentHubWorkerUrl"]) {

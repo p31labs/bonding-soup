@@ -66,10 +66,23 @@ if (pay && typeof pay.donateApiHealthUrl === "string" && pay.donateApiHealthUrl)
     fail("payment.donateApiHealthUrl must be https and end with /health (canonical donate-api liveness)");
   }
 }
+if (pay && typeof pay.stripeApiHealthUrl === "string" && pay.stripeApiHealthUrl) {
+  const u = pay.stripeApiHealthUrl;
+  if (!u.startsWith("https://") || !/\/health\/?$/.test(u.replace(/\/$/, ""))) {
+    fail("payment.stripeApiHealthUrl must be https and end with /health (Stripe/API Worker liveness)");
+  }
+}
 
 for (const p of manifest.glassProbes || []) {
   const id = p.id;
   const expanded = expandProbeUrl(p.url);
+  if (id === "stripe-api-health" && pay?.stripeApiHealthUrl) {
+    if (expanded !== pay.stripeApiHealthUrl) {
+      fail(
+        `probe stripe-api-health expands to ${JSON.stringify(expanded)} but p31-constants payment.stripeApiHealthUrl is ${JSON.stringify(pay.stripeApiHealthUrl)} — keep them equal`
+      );
+    }
+  }
   if (id === "donate-api-health" && pay?.donateApiHealthUrl) {
     if (expanded !== pay.donateApiHealthUrl) {
       fail(

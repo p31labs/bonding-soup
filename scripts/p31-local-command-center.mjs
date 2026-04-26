@@ -28,6 +28,7 @@ const actions = {
   "home-git-autopush-off": { title: "Auto-push: OFF", cwd: root, cmd: "npm", args: ["run", "git:autopush:off"] },
   "home-git-autopush-status": { title: "Auto-push: status", cwd: root, cmd: "npm", args: ["run", "git:autopush:status"] },
   "home-verify-monetary": { title: "Verify monetary (ecosystem + economy)", cwd: root, cmd: "npm", args: ["run", "verify:monetary"] },
+  "home-verify-map": { title: "Verify MAP only (donate-api + donate page scan)", cwd: root, cmd: "npm", args: ["run", "verify:map-pipeline"] },
   "home-git-remotes": { title: "Git remotes (origin + andromeda)", cwd: root, cmd: "npm", args: ["run", "git:remotes"] },
   "home-pr": { title: "PR + auto-merge (P31 home)", cwd: root, cmd: "npm", args: ["run", "pr"] },
   "home-fix-gh": { title: "fix:gh (credential helper)", cwd: root, cmd: "npm", args: ["run", "fix:gh"] },
@@ -119,7 +120,7 @@ const html = `<!DOCTYPE html>
     const andromeda = ${hasAndromeda() ? "true" : "false"};
     const homeActions = [
       "home-git-hooks", "home-git-autopush-status", "home-git-autopush-on", "home-git-autopush-off",
-      "home-verify-monetary", "home-git-remotes", "home-pr", "home-fix-gh"
+      "home-verify-monetary", "home-verify-map", "home-git-remotes", "home-pr", "home-fix-gh"
     ];
     const aActions = [ "andromeda-git-hooks", "andromeda-prepush", "andromeda-pr", "andromeda-fix-gh" ];
     async function go(id) {
@@ -141,7 +142,8 @@ const html = `<!DOCTYPE html>
       "home-git-autopush-status": "Auto-push: show status",
       "home-git-autopush-on": "Auto-push: turn ON",
       "home-git-autopush-off": "Auto-push: turn OFF",
-      "home-verify-monetary": "Verify monetary pipeline",
+      "home-verify-monetary": "Verify monetary pipeline (full)",
+      "home-verify-map": "Verify MAP / donate pipeline (fast, Andromeda)",
       "home-git-remotes": "Set / check git remotes",
       "home-pr": "Open PR + auto-merge (npm run pr)",
       "home-fix-gh": "fix:gh (gh auth / credentials)",

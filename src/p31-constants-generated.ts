@@ -20,6 +20,7 @@ export const P31_CONSTANTS = {
   },
   "payment": {
     "stripeWorkerHost": "api.phosphorus31.org",
+    "stripeApiHealthUrl": "https://api.phosphorus31.org/health",
     "donateApiHealthUrl": "https://donate-api.phosphorus31.org/health",
     "hcbReference": "4XDUXX",
     "hcbStatus": "unresponsive_pivot_to_stripe"

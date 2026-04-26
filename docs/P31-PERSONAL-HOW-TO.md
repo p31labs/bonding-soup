@@ -34,7 +34,7 @@ You are not juggling twenty products—you are juggling **three layers**:
 | **Payment / creator-economy files only (fast)** | `npm run verify:monetary` | Ecosystem + constants + Andromeda MAP + `verify:economy` in p31ca. |
 | **MAP only (donate-api + donate page + secret scan)** | `npm run verify:map-pipeline` | Part of default `verify`; use alone for a quick Andromeda-only check. |
 | **Mesh (k4-personal bundle + live API)** | `npm run verify:mesh` | Dry-run + optional live `MESH_LIVE_STRICT`. |
-| **Clickable local buttons (hooks, verify, PR)** | `npm run command-center` | Opens **http://127.0.0.1:3131** (keep terminal open; Ctrl+C stops). |
+| **Clickable local buttons (hooks, verify, mesh, glass, PR)** | `npm run command-center` | Opens **http://127.0.0.1:3131** — **`verify`**, **`verify:mesh`**, **`ecosystem:glass`**, **`operator:shift-status`**, monetary/MAP, **`release:public`**, git/PR (keep terminal open; Ctrl+C stops). |
 | **Install git hooks (home)** | `npm run git:hooks` | `core.hooksPath=.githooks` (monetary pre-commit, optional auto-push). |
 | **PR + auto-merge (low friction)** | `npm run pr` at home **or** `pnpm pr` **inside** `andromeda/` | See `AGENTS.md` for `fix:gh` / credentials. |
 | **Remotes (origin + andromeda)** | `npm run git:remotes` | Uses `p31-github.json` when present. |
@@ -60,7 +60,7 @@ Run **`pnpm install`** from **`andromeda/04_SOFTWARE`** (or follow that tree’s
 
 These are **different** trust boundaries; together they are the **G.O.D. pattern** (local + hub + edge):
 
-1. **Local (this computer):** **http://127.0.0.1:3131** after `npm run command-center` — runs **whitelisted** npm actions only on your machine.
+1. **Local (this computer):** **http://127.0.0.1:3131** after `npm run command-center` — runs **whitelisted** npm actions only on your machine (includes **`verify`**, **`ecosystem:glass`**, **`verify:mesh`**).
 2. **Public hub glass:** **https://p31ca.org/ops/** — read-mostly health table; no secrets.
 3. **Edge EPCP:** **https://command-center.trimtab-signal.workers.dev/** — fleet / operator glass; Access for sensitive actions.
 

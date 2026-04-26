@@ -14,6 +14,7 @@
     "gh:pr:automerge": "node scripts/gh-pr-automerge.mjs",
     "pr": "node scripts/pr.mjs",
     "fix:gh": "node scripts/gh-setup-git.mjs",
+    "command-center": "node scripts/p31-local-command-center.mjs",
     "build": "tsc",
     "demo": "python3 -m http.server 8080",
     "dev": "tsc --watch",

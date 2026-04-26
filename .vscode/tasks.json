@@ -2,6 +2,30 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "P31: local command center (clickable buttons; Ctrl+C to stop server)",
+      "type": "shell",
+      "command": "npm run command-center",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true }
+    },
+    {
+      "label": "P31: install git hooks (core.hooksPath = .githooks)",
+      "type": "shell",
+      "command": "npm run git:hooks",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: Andromeda — install git hooks",
+      "type": "shell",
+      "command": "if [ -f andromeda/package.json ]; then (cd andromeda && npm run git:hooks); else echo 'No andromeda/ — skip'; fi",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
       "label": "P31: sync passport → p31ca",
       "type": "shell",
       "command": "npm run sync:passport",

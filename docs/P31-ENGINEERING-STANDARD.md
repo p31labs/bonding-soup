@@ -67,7 +67,17 @@ Never paste tokens into issues, commits, or agent chat; revoke and rotate if exp
 
 ---
 
-## 6. Definition of done (summary)
+## 6. GitHub Actions and pull requests
+
+**Andromeda** (`p31labs/andromeda`): many workflows use **`on: pull_request`**. Pushes to a branch **do not** substitute for an **open PR** against `main` if that workflow only lists `pull_request`. Keep a PR open (e.g. [**#49**](https://github.com/p31labs/andromeda/pull/49) for `ci/phosphorus31-workflow`) while iterating; merge when required checks are green.
+
+**P31 home** (BONDING Soup root): add **`git remote add origin <url>`** if missing, push a branch, then **`gh pr create`** so **`.github/workflows/`** runs on PRs to `main`.
+
+**CLI:** use the **official** GitHub CLI (\`apt install gh\` on Debian). The npm package name **`gh`** is **not** GitHub CLI — uninstall it (\`npm uninstall -g gh\`) if it shadows `/usr/bin/gh`.
+
+---
+
+## 7. Definition of done (summary)
 
 - [ ] **`npm run verify`** green on home root (full checkout).
 - [ ] **`npm run release:check`** green when Andromeda + p31ca present.

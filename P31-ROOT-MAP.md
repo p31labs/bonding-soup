@@ -7,7 +7,7 @@ This file is the **single map of record** for what lives under **`/home/p31`**: 
 | Layer | Idea |
 |--------|------|
 | **Ship bar** | **`docs/P31-ENGINEERING-STANDARD.md`** (home) + **`andromeda/docs/ENTERPRISE_QUALITY.md`** (monorepo): `verify`, `release:check`, no secrets in git, single canon JSON. **New clone:** `npm run setup` (root + `apply:constants` + `verify` + p31ca install + optional **`git:hooks`**, when present — see `README.md`). |
-| **Ecosystem + monetary gates** | **`p31-ecosystem.json`** (glass deploy templates), **`npm run verify:monetary`**, **`npm run ecosystem:glass`**. **`.githooks/pre-commit`** runs `verify:monetary` on staged payment/creator-economy paths. Full **`p31ca`** contract checks (incl. **`verify:economy`**, **ground-truth** ↔ **public** `creator-economy.json`) ship from the [Andromeda](https://github.com/p31labs/andromeda) repo; `andromeda/` is often **gitignored** in this home checkout—land hub-side verifier edits there. |
+| **Ecosystem + monetary gates** | **`p31-ecosystem.json`** (glass deploy templates), **`npm run verify:map-pipeline`** (Andromeda MAP, part of default **`npm run verify`** when andromeda exists), **`npm run verify:monetary`** (full: ecosystem + constants + MAP + economy), **`npm run ecosystem:glass`**. **`.githooks/pre-commit`** runs `verify:monetary` on staged payment/creator-economy paths. Full **`p31ca`** contract checks (incl. **`verify:economy`**, **ground-truth** ↔ **public** `creator-economy.json`) ship from the [Andromeda](https://github.com/p31labs/andromeda) repo; `andromeda/` is often **gitignored** in this home checkout—land hub-side verifier edits there. |
 | **Mission** | Build, create, connect — decentralized family / community mesh (see `CLAUDE.md`, `.cursorrules`). |
 | **p31ca.org contract (machine-routable)** | **`andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json`** — must stay in lockstep with `p31ca/public/_redirects`, invariants in `scripts/hub/registry.mjs`, and pinned 3D entry files. Verify: from **`p31ca`**, `npm run verify:ground-truth` (also part of `prebuild`). **Multi-dome surfaces (Three pins + PWA):** same folder **`synergetic-manifest.json`** — `npm run verify:synergetic` (also `prebuild`). **`docs/CANONICAL-NUMBERING.md`** defines version **namespaces** (ground-truth semver vs CogPass edition vs WCD, etc.). |
 | **Edge** | Cloudflare Workers, KV, DO where needed; rate limits and CORS at the door. |
@@ -67,7 +67,7 @@ Design notes, WCD readiness, websocket spec, roadmap, affective-chemistry spec. 
 
 **Multi-dome / Spaceship Earth synthesis:** **`docs/WORK-PACKAGE-SYNERGETIC-GEODESIC-STACK.md`** — proposed epics: synergetic manifest + CI verifier, shared icosa / panel geometry, tensegrity seam in the observatory stack, p31ca ↔ PWA deep links, optional ethical “Fate 20” layer.
 
-**p31ca GEODESIC (static builder) on-ramp + K4 live room:** **`docs/GEODESIC-CAMPAIGN.md`** — progressive 5-track coach, tool locks, Durable Object room, `p31.ground-truth` route `geodesic`.
+**p31ca GEODESIC (static builder) on-ramp + K4 live room:** **`docs/GEODESIC-CAMPAIGN.md`** — progressive 5-track coach, tool locks, Durable Object room, `p31.ground-truth` route `geodesic`. **External engines (Unity, Godot, …):** **`docs/GEODESIC-GAME-ENGINE-INTEGRATION.md`** — same `wss` + JSON as the browser; package **`andromeda/04_SOFTWARE/geodesic-room/`**.
 
 ## 6. Operator & agent context (not application code)
 

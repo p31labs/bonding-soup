@@ -81,6 +81,23 @@ if node "$SCRIPT_DIR/scripts/verify-constants.mjs"; then
 else
   add_check "Local" "P31_Constants_GroundTruth" "FAIL" "Run: npm run apply:constants && npm run verify:constants"
 fi
+
+# ---- p31-ecosystem.json (templates + donate/creator-economy invariants) ----
+echo "=== Local: p31-ecosystem (glass + monetary) ==="
+if node "$SCRIPT_DIR/scripts/verify-ecosystem.mjs"; then
+  add_check "Local" "P31_Ecosystem" "PASS" "Probe {{templates}} + monetary rows vs p31-constants.json"
+else
+  add_check "Local" "P31_Ecosystem" "FAIL" "Run: npm run verify:ecosystem"
+fi
+
+# ---- Andromeda MAP (donate-api, donate.astro, secret scan) ----
+echo "=== Local: MAP monetary pipeline (Andromeda) ==="
+if node "$SCRIPT_DIR/scripts/verify-map-pipeline.mjs"; then
+  add_check "Local" "MAP_Monetary_Surface" "PASS" "verify-monetary-surface (skips if no andromeda/scripts/)"
+else
+  add_check "Local" "MAP_Monetary_Surface" "FAIL" "Run: npm run verify:map-pipeline — see CWP MAP / donate-api"
+fi
+
 if node "$SCRIPT_DIR/scripts/verify-p31ca-contracts.mjs"; then
   add_check "Local" "P31ca_Contracts" "PASS" "ground-truth + synergetic manifest match on-disk pins (skipped if no p31ca tree)"
 else

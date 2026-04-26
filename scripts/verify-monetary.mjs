@@ -16,8 +16,6 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const p31ca = path.join(root, "andromeda", "04_SOFTWARE", "p31ca");
-const andromeda = path.join(root, "andromeda");
-const mapSurface = path.join(andromeda, "scripts", "verify-monetary-surface.mjs");
 
 function run(title, command, cwd = root) {
   console.log(`\n\x1b[36m▶\x1b[0m ${title}`);
@@ -27,11 +25,7 @@ function run(title, command, cwd = root) {
 run("verify:ecosystem", "npm run verify:ecosystem");
 run("verify:constants", "npm run verify:constants");
 
-if (fs.existsSync(mapSurface)) {
-  run("verify-monetary-surface (Andromeda MAP)", "node scripts/verify-monetary-surface.mjs", andromeda);
-} else {
-  console.log("verify-monetary: skip verify-monetary-surface — no", path.relative(root, mapSurface));
-}
+run("verify-map-pipeline (Andromeda MAP)", "node scripts/verify-map-pipeline.mjs", root);
 
 if (fs.existsSync(p31ca)) {
   run("verify:economy (p31ca)", "npm run verify:economy", p31ca);

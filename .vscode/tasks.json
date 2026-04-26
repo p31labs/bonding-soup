@@ -74,6 +74,14 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
+      "label": "P31: verify MAP pipeline (Andromeda donate + secrets scan only)",
+      "type": "shell",
+      "command": "npm run verify:map-pipeline",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
       "label": "P31: verify monetary (ecosystem + constants + economy mirror)",
       "type": "shell",
       "command": "npm run verify:monetary",

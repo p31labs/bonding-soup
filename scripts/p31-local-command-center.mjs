@@ -66,7 +66,7 @@ const html = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>P31 — local command center</title>
+  <title>G.O.D. / local P31 command center</title>
   <style>
     :root {
       --bg: #0c0c12;
@@ -106,8 +106,8 @@ const html = `<!DOCTYPE html>
   </style>
 </head>
 <body>
-  <h1>Local command center</h1>
-  <p class="sub">Runs on <code>${host}:${port}</code> only. Stop the terminal to exit. <strong>Andromeda</strong> row is hidden if the folder is missing.</p>
+  <h1>G.O.D. — local command center</h1>
+  <p class="sub">Grounded Operator Deck: same machine, whitelisted only. Binds <code>${host}:${port}</code> only. Stop the terminal to exit. <strong>Andromeda</strong> is hidden if <code>../andromeda</code> is missing. <strong>Edge EPCP</strong> (fleet): <a href="https://command-center.trimtab-signal.workers.dev/" rel="noopener" target="_blank" style="color:var(--accent)">G.O.D. / EPCP</a> · <strong>Hub</strong>: <a href="https://p31ca.org/ops/" rel="noopener" target="_blank" style="color:var(--accent)">p31ca/ops</a></p>
 
   <h2>P31 home (repo root)</h2>
   <div class="grid" id="home"></div>

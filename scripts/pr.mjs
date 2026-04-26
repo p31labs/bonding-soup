@@ -8,9 +8,10 @@
  *   else: git top-level of process.cwd() — if andromeda, use it; if home root, use bonding-soup
  *   else: legacy — prefer andromeda when .git + script exist (old default)
  * Title = last commit on that branch unless --title. base = main unless --base.
+ * Bonding-soup: if **origin** (or P31_GIT_REMOTE) is missing and **homeRepository** / P31_HOME_GITHUB is set, runs **git-ensure-remotes** once before push.
  * Help: npm run pr -- -h
  */
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { execFileSync, execSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -67,6 +68,18 @@ function hasValue(flag) {
   return i >= 0 && extra[i + 1] && !String(extra[i + 1]).startsWith("-");
 }
 
+function getRemoteUrl(cwd, name) {
+  try {
+    return execSync(`git remote get-url ${name}`, {
+      cwd,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+  } catch {
+    return "";
+  }
+}
+
 if (extra[0] === "-h" || extra[0] === "--help") {
   const repoLabel = useAndromeda ? "andromeda (monorepo)" : "bonding-soup home";
   console.log(`npm run pr
@@ -86,6 +99,29 @@ if (!existsSync(targetScript)) {
     "— install script or clone tree; for home-only: ensure scripts/gh-pr-automerge.mjs exists"
   );
   process.exit(1);
+}
+
+const remoteName = process.env.P31_GIT_REMOTE || "origin";
+if (!useAndromeda && !getRemoteUrl(homeRoot, remoteName)) {
+  let canEnsure = !!process.env.P31_HOME_GITHUB;
+  if (!canEnsure) {
+    const cfgPath = path.join(homeRoot, "p31-github.json");
+    if (existsSync(cfgPath)) {
+      try {
+        const cfg = JSON.parse(readFileSync(cfgPath, "utf8"));
+        canEnsure = !!(cfg && cfg.homeRepository);
+      } catch {
+        /* gh-pr-automerge preflight will explain */
+      }
+    }
+  }
+  if (canEnsure) {
+    console.log("pr: no git remote — running git-ensure-remotes (p31-github.json / P31_HOME_GITHUB)\n");
+    execFileSync(process.execPath, [path.join(homeRoot, "scripts/git-ensure-remotes.mjs")], {
+      cwd: homeRoot,
+      stdio: "inherit",
+    });
+  }
 }
 
 const argv = [targetScript];

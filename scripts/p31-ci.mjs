@@ -21,6 +21,8 @@
  *   --skip-soup-tsc   Skip root `npm run build` (tsc only for bonding-soup)
  *   --skip-install    Do not run npm install / npm ci in p31ca
  *   --install, -i     (local) Force `npm install` in p31ca even if node_modules exists
+ *   --skip-root-verify   Skip `npm run verify` (split CI: a prior job already passed it)
+ *   --skip-npm-ci        Skip root `npm ci` (split CI: a prior step already ran it)
  *
  * In **CI** (GITHUB_ACTIONS/CI), when p31ca is present, the security suite runs after hub verify unless
  * `--no-security` is set.
@@ -41,6 +43,8 @@ const withSecurity =
   (args.has("--security") || args.has("-s")) &&
   !args.has("--no-security");
 const skipRootTsc = args.has("--skip-soup-tsc");
+const skipRootVerify = args.has("--skip-root-verify");
+const skipRootNpmCi = args.has("--skip-npm-ci");
 const skipInstall = args.has("--skip-install");
 const forceInstall = args.has("--install") || args.has("-i");
 const isCI = process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
@@ -75,21 +79,29 @@ function maybeK4Personal() {
 }
 
 function main() {
-  if (isCI) {
+  if (isCI && !skipRootNpmCi) {
     run("root: npm ci (workspace)", "npm ci", root);
+  } else if (isCI && skipRootNpmCi) {
+    console.log("\n\x1b[36m▶\x1b[0m p31-ci: skip root npm ci (--skip-npm-ci; workflow preflight already installed deps)\n");
   }
 
-  if (!skipRootTsc) {
-    run(
-      "Root verify (passport + constants + p31ca-contracts + quantum egg + tsc)",
-      "npm run verify",
-      root
-    );
+  if (!skipRootVerify) {
+    if (!skipRootTsc) {
+      run(
+        "Root verify (passport + constants + p31ca-contracts + quantum egg + tsc)",
+        "npm run verify",
+        root
+      );
+    } else {
+      run("Passport mirror (root → p31ca)", "npm run verify:passport", root);
+      run("P31 constants vs ground-truth", "npm run verify:constants", root);
+      run("p31ca contracts (ground-truth + synergetic)", "npm run verify:p31ca-contracts", root);
+      run("quantum egg hunt (manifest + Larmor)", "npm run verify:egg-hunt", root);
+    }
   } else {
-    run("Passport mirror (root → p31ca)", "npm run verify:passport", root);
-    run("P31 constants vs ground-truth", "npm run verify:constants", root);
-    run("p31ca contracts (ground-truth + synergetic)", "npm run verify:p31ca-contracts", root);
-    run("quantum egg hunt (manifest + Larmor)", "npm run verify:egg-hunt", root);
+    console.log(
+      "\n\x1b[36m▶\x1b[0m p31-ci: skip root verify (--skip-root-verify; preflight or split CI job already passed `npm run verify`)\n"
+    );
   }
 
   maybeK4Personal();

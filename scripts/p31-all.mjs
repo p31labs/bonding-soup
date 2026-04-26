@@ -11,6 +11,8 @@
  *  6. Semgrep SAST — same rules as p31-security.yml sast job, if `semgrep` is on PATH (CI installs via workflow step)
  *
  * Flags: --skip-validate, --skip-fleet, --skip-e2e, --skip-sast, --skip-lint, --skip-ecosystem-glass
+ * Env: P31_CI_USE_PREFLIGHT=1 — call p31-ci with --skip-root-verify --skip-npm-ci (GitHub Actions
+ *   job 2 after job 1 already ran `npm ci` + `npm run verify`).
  */
 import { execSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -74,11 +76,23 @@ function run(title, command, opts = {}) {
   }
 }
 
+function buildP31CiCommand() {
+  const usePreflight = process.env.P31_CI_USE_PREFLIGHT === "1";
+  if (usePreflight) {
+    return "node scripts/p31-ci.mjs --security --skip-root-verify --skip-npm-ci";
+  }
+  return "node scripts/p31-ci.mjs --security";
+}
+
 function main() {
   const ciEnv = { MESH_LIVE_STRICT: "1" };
-  run("P31 CI (root verify, mesh, p31ca build, security)", "node scripts/p31-ci.mjs --security", {
-    env: ciEnv,
-  });
+  run(
+    "P31 CI (root verify, mesh, p31ca build, security)",
+    buildP31CiCommand(),
+    {
+      env: ciEnv,
+    }
+  );
 
   if (!skipValidate) {
     if (!fs.existsSync(validateScript)) {

@@ -1,6 +1,6 @@
 # Quantum egg hunt
 
-**Meaning (not marketing):** These are the repo’s **intentional off-path states**—extra routes, dev-phase URLs, and weak links. The manifest uses a **SIC-POVM** metaphor: each row behaves like a rank-1 effect in a 4-vertex (K₄) product story, with **Larmor frequency** **locked** to `p31-constants.json` → `physics.larmorHz` in the **dome** and **hub** trim UI.
+**Meaning (not marketing):** These are the repo’s **intentional off-path states**—extra routes, dev-phase URLs, and weak links. The manifest uses a **SIC-POVM** metaphor: each row behaves like a rank-1 effect in a 4-vertex (K₄) product story, with **Larmor frequency** **locked** to `p31-constants.json` → `physics.larmorHz` in the **dome** and **hub** trim UI. For a compact **four-vector** map (physical / network / compliance / UX) without prose bloat, see **`docs/SIC-POVM-K4-ARCHITECTURE.md`**.
 
 **What runs in CI** (`docs/egg-hunt-manifest.json`, schema **`p31.quantumEggHunt/1.0.0`):
 

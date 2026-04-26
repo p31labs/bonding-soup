@@ -1,7 +1,8 @@
-# P31 home: `p31:all` = CI chain + validate-p31-full + fleet (soft) + Playwright E2E + security:lint (soft) + Semgrep (soft).
-# Default remote often omits gitignored andromeda/ — job still passes (home-only chain only).
-# No path filters: every push/PR to main or master runs this workflow (cannot miss CI by file path).
-# workflow_dispatch: manual. Ad-hoc: see package.json and docs/P31-ENGINEERING-STANDARD.md.
+# P31 home: two-stage automation — fast root `verify`, then `p31:all` (no duplicate root verify when preflight=1).
+# Andromeda/ often absent from checkout — first job still enforces the home bar; second job is best-effort.
+# No path filters: every push/PR to main or master runs (cannot miss CI by file path).
+# Branch protection: require check "P31 / root verify" (required) and "P31 / full stack" (recommended).
+# workflow_dispatch: manual.
 name: P31 CI
 
 on:
@@ -9,14 +10,41 @@ on:
   push:
     branches: [main, master]
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     branches: [main, master]
 
 concurrency:
-  group: p31-ci-${{ github.workflow }}-${{ github.ref }}
+  group: p31-ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
-  verify:
+  root-verify:
+    name: P31 / root verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Root verify
+        run: npm run verify
+        env:
+          CI: "true"
+
+  p31-all:
+    name: P31 / full stack
+    needs: root-verify
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -24,18 +52,22 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version-file: .nvmrc
           cache: npm
           cache-dependency-path: package-lock.json
 
-      - name: Semgrep CLI (p31:all SAST)
-        if: ${{ hashFiles('andromeda/04_SOFTWARE/p31ca/package.json') != '' }}
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Semgrep CLI (p31:all SAST when p31ca present)
+        if: hashFiles('andromeda/04_SOFTWARE/p31ca/package.json') != ''
         run: |
           python3 -m pip install --user semgrep || python3 -m pip install --user --break-system-packages semgrep
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
-      - name: P31 all (CI + validate:full + fleet + e2e + lint + SAST)
+      - name: P31 all (validate, mesh, hub, e2e, glass; root verify skipped — preflight passed)
         env:
           CI: "true"
           MESH_LIVE_STRICT: "1"
+          P31_CI_USE_PREFLIGHT: "1"
         run: node scripts/p31-all.mjs

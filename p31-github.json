@@ -1,0 +1,6 @@
+{
+  "_comment": "Used by: npm run git:remotes. Set homeRepository to org/name when the P31 home root should use origin (e.g. p31labs/bonding-soup). Leave null to skip; override with P31_HOME_GITHUB=org/name.",
+  "schema": "p31.github/1.0.0",
+  "homeRepository": null,
+  "andromedaRepository": "p31labs/andromeda"
+}

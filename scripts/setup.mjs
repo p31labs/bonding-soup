@@ -60,3 +60,9 @@ try {
 } catch {
   /* not a git checkout or git missing */
 }
+
+try {
+  execSync("node scripts/git-ensure-remotes.mjs", { cwd: root, stdio: "inherit" });
+} catch {
+  /* optional; P31_HOME_GITHUB or p31-github.json homeRepository configures origin */
+}

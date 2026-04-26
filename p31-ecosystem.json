@@ -135,7 +135,7 @@
       "id": "donate-api",
       "cwd": "andromeda/04_SOFTWARE/donate-api",
       "command": "npx wrangler deploy",
-      "description": "MAP donate-api Worker (donate-api.phosphorus31.org checkout bridge)"
+      "description": "MAP donate-api Worker — custom domain donate-api.phosphorus31.org/*; default workers.dev donate-api.trimtab-signal.workers.dev (see donate-api/DEPLOY.md)"
     }
   ]
 }

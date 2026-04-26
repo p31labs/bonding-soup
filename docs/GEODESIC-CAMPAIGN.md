@@ -135,6 +135,7 @@ The campaign is defined **inline** in `geodesic.html` as `CAMPAIGN.tracks[]`. Ea
 
 ## 11. Related P31 documents
 
+- **Game engine (Unity, Godot, Unreal, …) + same WebSocket wire:** `docs/GEODESIC-GAME-ENGINE-INTEGRATION.md` — `wss` + JSON, `GET /state`, limits; `geodesic-room/README.md`  
 - **Synergetic / dome stack (product epics, not the same as this on-ramp):** `docs/WORK-PACKAGE-SYNERGETIC-GEODESIC-STACK.md`  
 - **BONDING** reference implementation (React): `andromeda/04_SOFTWARE/bonding` — `TutorialOverlay.tsx`, `QuestHUD`, `store/gameStore`, `engine/tutorial`, `engine/quests`  
 - **Root map (where this doc lives):** `P31-ROOT-MAP.md` §5

@@ -197,6 +197,23 @@
         <a href="https://p31ca.org/ops/" target="_blank" rel="noopener">p31ca /ops (glass)</a>
         <a href="https://command-center.trimtab-signal.workers.dev/" target="_blank" rel="noopener">Edge EPCP</a>
       </div>
+      <div class="card" style="margin-top: 0.75rem;">
+        <p style="margin:0 0 0.5rem; font-size:0.8rem; color: var(--muted);">Local deck can trigger the same action as <code>npm run verify:map-pipeline</code> (Andromedia MAP + optional parent <code>p31-constants</code> checks).</p>
+        <table>
+          <tbody>
+            <tr data-cmd="command-center">
+              <td>Start local deck</td>
+              <td class="cmd">npm run command-center <button type="button" class="copy" data-copy="npm run command-center">copy</button></td>
+              <td>Then <em>home-verify-map</em> in the list, or the line below from any shell</td>
+            </tr>
+            <tr data-cmd="verify:map-pipeline">
+              <td>MAP (CLI)</td>
+              <td class="cmd">npm run verify:map-pipeline <button type="button" class="copy" data-copy="npm run verify:map-pipeline">copy</button></td>
+              <td>From P31 home; nest <code>andromeda/</code> to pick up parent <code>p31-constants</code> in the verifier</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section id="panel-git" role="tabpanel" aria-labelledby="tab-git" hidden>

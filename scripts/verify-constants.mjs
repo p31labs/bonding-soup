@@ -45,6 +45,26 @@ function main() {
     console.error("verify-constants: ground-truth .version should be", c.groundTruth.fileVersion, "got", gt.version);
     fail = 1;
   }
+  if (c.payment) {
+    const d = c.payment.donateApiHealthUrl;
+    if (typeof d === "string" && d) {
+      try {
+        const u = new URL(d);
+        if (u.protocol !== "https:") {
+          console.error("verify-constants: payment.donateApiHealthUrl must use https");
+          fail = 1;
+        } else if (u.hostname !== "donate-api.phosphorus31.org" || u.pathname.replace(/\/$/, "") !== "/health") {
+          console.error(
+            "verify-constants: payment.donateApiHealthUrl must be https://donate-api.phosphorus31.org/health (MAP CWP-31 liveness contract)"
+          );
+          fail = 1;
+        }
+      } catch {
+        console.error("verify-constants: payment.donateApiHealthUrl is not a valid URL");
+        fail = 1;
+      }
+    }
+  }
   if (buildMissionSnippet(c) !== gt.mission) {
     console.error("verify-constants: mission string out of date — run: npm run apply:constants");
     fail = 1;

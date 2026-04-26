@@ -15,7 +15,7 @@ if [[ -z "$FILES" ]]; then
   exit 0
 fi
 
-PATTERN='^(p31-constants\.json|p31-ecosystem\.json|scripts/verify-(monetary|constants|ecosystem)\.mjs|andromeda/04_SOFTWARE/p31ca/ground-truth/creator-economy\.json|andromeda/04_SOFTWARE/p31ca/public/creator-economy\.json|andromeda/04_SOFTWARE/p31ca/scripts/verify-creator-economy\.mjs)$'
+PATTERN='^(p31-constants\.json|p31-ecosystem\.json|scripts/verify-(monetary|constants|ecosystem)\.mjs|andromeda/scripts/verify-monetary-surface\.mjs|andromeda/04_SOFTWARE/donate-api/.*|andromeda/04_SOFTWARE/p31ca/ground-truth/creator-economy\.json|andromeda/04_SOFTWARE/p31ca/public/creator-economy\.json|andromeda/04_SOFTWARE/p31ca/scripts/verify-creator-economy\.mjs)$'
 if ! printf '%s\n' "$FILES" | grep -qE "$PATTERN"; then
   exit 0
 fi

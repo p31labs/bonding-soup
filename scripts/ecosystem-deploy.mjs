@@ -4,6 +4,7 @@
  *   node scripts/ecosystem-deploy.mjs plan
  *   node scripts/ecosystem-deploy.mjs dry-run
  *   P31_ECOSYSTEM_DEPLOY=I_UNDERSTAND node scripts/ecosystem-deploy.mjs execute
+ * Optional: P31_ECOSYSTEM_CONTINUE=1 runs all steps and exits non-zero if any failed (default: stop on first failure).
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -41,9 +42,11 @@ function runShell(title, command, cwd) {
 
 if (cmd === "plan" || cmd === "dry-run") {
   console.log("P31 ecosystem deploy order (from p31-ecosystem.json)\n");
+  let n = 0;
   for (const d of deployables) {
     const ok = exists(d.cwd);
-    console.log(`- [${ok ? "ok" : "SKIP"}] ${d.id}: ${d.description || ""}`);
+    n += 1;
+    console.log(`- [${n}/${deployables.length}] [${ok ? "ok" : "SKIP"}] ${d.id}: ${d.description || ""}`);
     console.log(`    ${d.cwd} → ${d.command}`);
   }
   if (cmd === "dry-run") {
@@ -61,19 +64,29 @@ if (cmd === "execute") {
     );
     process.exit(1);
   }
+  const continueOnError = process.env.P31_ECOSYSTEM_CONTINUE === "1";
   let code = 0;
+  let i = 0;
   for (const d of deployables) {
+    i += 1;
     if (!exists(d.cwd)) {
-      console.log(`Skip ${d.id} — missing path ${d.cwd}`);
+      console.log(`[${i}/${deployables.length}] Skip ${d.id} — missing path ${d.cwd}`);
       continue;
     }
     const cwd = path.join(root, d.cwd);
-    const c = runShell(d.id, d.command, cwd);
+    const label = `[${i}/${deployables.length}] ${d.id}`;
+    const c = runShell(label, d.command, cwd);
     if (c !== 0) {
       code = c;
-      console.error(`Stopped: ${d.id} failed with exit ${c}`);
-      process.exit(code);
+      console.error(`${label} failed with exit ${c}`);
+      if (!continueOnError) {
+        process.exit(code);
+      }
     }
+  }
+  if (code !== 0 && continueOnError) {
+    console.error("ecosystem-deploy: finished with errors (P31_ECOSYSTEM_CONTINUE=1)");
+    process.exit(code);
   }
   console.log("ecosystem-deploy: all steps completed");
   process.exit(0);

@@ -64,6 +64,24 @@ function main() {
         fail = 1;
       }
     }
+    const wd = c.payment.donateApiWorkersDevUrl;
+    if (typeof wd === "string" && wd) {
+      try {
+        const u = new URL(wd);
+        if (u.protocol !== "https:") {
+          console.error("verify-constants: payment.donateApiWorkersDevUrl must use https");
+          fail = 1;
+        } else if (u.hostname !== "donate-api.trimtab-signal.workers.dev" || u.pathname.replace(/\/$/, "") !== "") {
+          console.error(
+            "verify-constants: payment.donateApiWorkersDevUrl must be https://donate-api.trimtab-signal.workers.dev (no path; MAP fleet default subdomain)"
+          );
+          fail = 1;
+        }
+      } catch {
+        console.error("verify-constants: payment.donateApiWorkersDevUrl is not a valid URL");
+        fail = 1;
+      }
+    }
     const stripeH = c.payment.stripeApiHealthUrl;
     const host = c.payment.stripeWorkerHost;
     if (typeof stripeH === "string" && stripeH && typeof host === "string" && host) {
@@ -97,6 +115,13 @@ function main() {
     const payHealth = c.payment?.donateApiHealthUrl;
     if (typeof payHealth === "string" && payHealth && !ts.includes(payHealth)) {
       console.error("verify-constants: src/p31-constants-generated.ts missing payment.donateApiHealthUrl — run: npm run apply:constants");
+      fail = 1;
+    }
+    const payWd = c.payment?.donateApiWorkersDevUrl;
+    if (typeof payWd === "string" && payWd && !ts.includes(payWd)) {
+      console.error(
+        "verify-constants: src/p31-constants-generated.ts missing payment.donateApiWorkersDevUrl — run: npm run apply:constants"
+      );
       fail = 1;
     }
     const stripeHealth = c.payment?.stripeApiHealthUrl;
@@ -144,6 +169,7 @@ function main() {
   }
   if (c.mesh && Object.keys(c.mesh).length > 0) {
     const meshJsonPath = path.join(root, "andromeda/04_SOFTWARE/p31ca/src/data/p31-mesh-constants.json");
+    const meshPublicPath = path.join(root, "andromeda/04_SOFTWARE/p31ca/public/p31-mesh-constants.json");
     if (fs.existsSync(meshJsonPath)) {
       const mj = JSON.parse(fs.readFileSync(meshJsonPath, "utf8"));
       for (const k of Object.keys(c.mesh)) {
@@ -151,6 +177,21 @@ function main() {
         if (mj[k] !== c.mesh[k]) {
           console.error(
             `verify-constants: p31ca/src/data/p31-mesh-constants.json field ${k} out of date — run: npm run apply:constants`
+          );
+          fail = 1;
+        }
+      }
+      if (!fs.existsSync(meshPublicPath)) {
+        console.error(
+          "verify-constants: missing p31ca/public/p31-mesh-constants.json — run: npm run apply:constants"
+        );
+        fail = 1;
+      } else {
+        const pub = fs.readFileSync(meshPublicPath, "utf8");
+        const src = fs.readFileSync(meshJsonPath, "utf8");
+        if (pub !== src) {
+          console.error(
+            "verify-constants: public/p31-mesh-constants.json must match src/data/p31-mesh-constants.json — run: npm run apply:constants"
           );
           fail = 1;
         }

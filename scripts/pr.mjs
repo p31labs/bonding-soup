@@ -87,6 +87,7 @@ if (extra[0] === "-h" || extra[0] === "--help") {
   Flags after --: npm run pr -- --base master --title "…"
   P31_PR_IN_HOME=1        → force bonding-soup
   P31_PR_IN_ANDROMEDA=1   → force andromeda
+  P31_PR_NO_AUTO_BRANCH=1 → on main/master, do not auto-create pr/<slug>-<sha> (gh-pr-automerge)
   npm run fix:gh          → gh auth setup-git (credential noise / gitci)
 `);
   process.exit(0);

@@ -19,17 +19,18 @@ export const P31_CONSTANTS = {
     "kofiUrl": "https://ko-fi.com/trimtab69420"
   },
   "payment": {
-    "stripeWorkerHost": "api.phosphorus31.org",
-    "stripeApiHealthUrl": "https://api.phosphorus31.org/health",
+    "stripeWorkerHost": "donate-api.phosphorus31.org",
+    "stripeApiHealthUrl": "https://donate-api.phosphorus31.org/health",
     "donateApiHealthUrl": "https://donate-api.phosphorus31.org/health",
+    "donateApiWorkersDevUrl": "https://donate-api.trimtab-signal.workers.dev",
     "hcbReference": "4XDUXX",
     "hcbStatus": "unresponsive_pivot_to_stripe"
   },
   "bonding": {
     "shippedDate": "2026-03-10",
     "testBaseline": {
-      "tests": 413,
-      "suites": 30
+      "tests": 424,
+      "suites": 32
     },
     "publicUrl": "https://bonding.p31ca.org"
   },
@@ -164,12 +165,13 @@ export const P31_CONSTANTS = {
     ]
   },
   "mesh": {
-    "_comment": "Canonical worker URLs for K₄ edge; keep in sync with k4-hubs PERSONAL_MESH_URL and mesh-start default. orchestrator + agent URLs: OrchestratorDashboard.astro, public/dev-workbench.html, src/data/p31-mesh-constants.json (from npm run apply:constants).",
+    "_comment": "Canonical worker URLs for K₄ edge; keep in sync with k4-hubs PERSONAL_MESH_URL and mesh-start default. orchestrator + agent URLs: OrchestratorDashboard.astro, public/dev-workbench.html, src/data/p31-mesh-constants.json (from npm run apply:constants). passkeyApiBasePath: same-origin API mounted by Cloudflare Worker zone route p31ca.org/api/passkey/* (workers/passkey/wrangler.toml); static pages use fetch(passkeyApiBasePath + '/register-begin', …).",
     "k4PersonalWorkerUrl": "https://k4-personal.trimtab-signal.workers.dev",
     "k4CageWorkerUrl": "https://k4-cage.trimtab-signal.workers.dev",
     "k4HubsWorkerUrl": "https://k4-hubs.trimtab-signal.workers.dev",
     "agentHubWorkerUrl": "https://p31-agent-hub.trimtab-signal.workers.dev",
-    "orchestratorWorkerUrl": "https://p31-orchestrator.trimtab-signal.workers.dev"
+    "orchestratorWorkerUrl": "https://p31-orchestrator.trimtab-signal.workers.dev",
+    "passkeyApiBasePath": "/api/passkey"
   },
   "operations": {
     "masterOpsManual": {

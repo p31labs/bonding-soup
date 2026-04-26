@@ -12,7 +12,8 @@
 | Step | Command / action | Notes |
 |------|------------------|--------|
 | 1 | `npm run verify` (P31 home root) | Passport, constants, p31-style, p31ca contracts, egg-hunt, `tsc`. |
-| 2 | `npm run release:check` or `npm run p31:ci` | Adds p31ca build when tree present. |
+| 2 | `npm run release:public` | **One-shot public prep:** root **`verify`** → strict mesh + k4-personal → **`p31ca` `hub:ci`** (regenerates about pages + full build) → **`security:check`**. Optional: **`npm run release:public -- --content`** (runs **`hub:about:enrich`**). **`--no-security`** skips the security suite. |
+| 2b | `npm run release:check` or `npm run p31:ci` | Adds p31ca build when tree present (no `hub:about:generate`). For CI parity without about regen: **`npm run release:all`** (strict mesh + p31ca **`verify`** + **`security:check`**). |
 | 3 | `npm run validate:full` | Optional: live mesh audits + extended shell checks (needs network). |
 | 4 | `npm run fleet:probe` / `fleet:probe:strict` (from `p31ca/`) | Worker fleet health. |
 
@@ -58,7 +59,7 @@ After any `p31-constants.json` edit: **`npm run apply:constants`** && **`npm run
 |---------|--------|
 | **p31ca.org** | `p31ca` **`hub:ci`** / Pages deploy per `p31ca/DEPLOY.md`; ground-truth + redirects. |
 | **phosphorus31.org** | Parallel repo; SUPER-CENTAUR bridge per CWP / `mesh-bridge.ts` handoff. |
-| **BONDING** | `bonding.p31ca.org`; test baseline 413 / 30 in `p31-constants.json`. |
+| **BONDING** | `bonding.p31ca.org`; test baseline 424 / 32 in `p31-constants.json`. |
 
 ---
 

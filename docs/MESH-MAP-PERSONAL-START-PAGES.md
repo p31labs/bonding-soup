@@ -43,7 +43,7 @@ This is **not** “one chatbot for everyone.” It is **one agent instance per s
 ## Phased delivery
 
 **Phase 1 — Contract** *(in progress)*  
-`subject_id` derivation (passkey `rawId` hash → `u_<hex>`, skip/guest → `guest_<random>`), `k4-personal` CORS for p31ca / bonding / phosphorus31 / localhost / `*.pages.dev`, onboard redirect target **`/mesh-start.html`**. Ground truth: `meshStart` route + **`/start`** redirect in `p31.ground-truth.json` / `_redirects`.
+`subject_id` derivation (passkey `rawId` hash → `u_<hex>`, skip/guest → `guest_<random>`), `k4-personal` CORS for p31ca / bonding / phosphorus31 / localhost / `*.pages.dev`, onboard redirect target **`/mesh-start.html`**. Ground truth: `meshStart` route + **`/start`** redirect; **`cognitivePassportGenerator`** + **`/passport`** → `passport-generator.html` in `p31.ground-truth.json` / `_redirects`.
 
 **Phase 2 — Personal landing MVP** *(partial)*  
 **Shipped:** static `mesh-start.html` + dial query param; **next:** KV `START_CONFIG:{subject_id}` and edge merge for per-user copy beyond localStorage.
@@ -62,7 +62,7 @@ CWP / mesh-bridge pattern: copy `integration-handoff/CWP-30/mesh-bridge.ts` idea
 
 ## Related docs
 
-- **`docs/FAMILY-SOVEREIGN-PACK.md`** — printable household handoff (URLs, per-person checklist, verify command) companion to **`https://p31ca.org/p31-super-centaur-pack.json`**.
+- **`docs/FAMILY-SOVEREIGN-PACK.md`** — printable household handoff; live **`https://p31ca.org/family-pack`** (301 → **`family-sovereign-pack.html`**) companion to **`https://p31ca.org/p31-super-centaur-pack.json`**.
 - **BONDING Soup dev:** root **`soup-demo.html`** (with **`npm run demo`**) links to **`andromeda/04_SOFTWARE/p31ca/public/planetary-onboard.html`** and **`mesh-start.html`** so the engine demo and PAR front door share one local static server.  
 - `docs/MVP-DELIVERABLES-INVENTORY.md` — what is live today.  
 - `P31-ROOT-MAP.md` — site tracks (p31ca vs phosphorus31.org vs home vertical).  

@@ -92,7 +92,7 @@ The Cognitive Passport (**CogPass**, long-form edition **5.1** per H1 in `P31 CO
 
 ### 4.4 Dual-site architecture
 
-**Dual-site** pattern: `phosphorus31.org` (public narrative) + `p31ca.org` (technical hub). A Cloudflare Worker at **`api.phosphorus31.org`** supports the **Stripe direct** payment path (pivot from HCB fiscal sponsorship, confirmed unresponsive). Treat monetary wiring as **documented in deploy/secrets** for that worker, not in this bundle alone.
+**Dual-site** pattern: `phosphorus31.org` (public narrative) + `p31ca.org` (technical hub). **Stripe Checkout** runs on **`donate-api.phosphorus31.org`** (Worker `donate-api`; pivot from HCB fiscal sponsorship, confirmed unresponsive). No separate **`api.phosphorus31.org`** host is in fleet until deployed.
 
 ---
 
@@ -163,7 +163,7 @@ The Cognitive Passport (**CogPass**, long-form edition **5.1** per H1 in `P31 CO
 | **genesis-gate** | Governance / telemetry | Worker |
 | **p31-agent-hub** | Agent ↔ cage | Service bindings |
 | **donate-api** | Monetary | Worker + tests |
-| **api.phosphorus31.org** | Stripe direct (pivot) | Worker project per deploy config |
+| **donate-api.phosphorus31.org** | Stripe Checkout (pivot) | `04_SOFTWARE/donate-api` |
 | **telemetry** | Ingest | telemetry-worker, etc. |
 | **p31-cortex** | Cortex | Worker package |
 
@@ -236,7 +236,7 @@ The Cognitive Passport (**CogPass**, long-form edition **5.1** per H1 in `P31 CO
 | **Tag-out** | Agent lockout / lane enforcement. |
 | **EPCP** | Edge / Zero Trust control panel — EPCP Worker command surface. |
 | **CogPass** | Cognitive Passport long-form; edition **5.1**; machine JSON uses **`p31.cognitivePassport/1.0.0`**. |
-| **BONDING** | Shipped Mar 10, 2026; **413 tests / 30 suites** canonical. |
+| **BONDING** | Shipped Mar 10, 2026; **424 tests / 32 suites** canonical. |
 | **Node Zero** | ESP32-S3 + LVGL + QSPI display stack; firmware sprint. |
 | **GRAY_ROCK** | Preserved UI skin. |
 
@@ -273,7 +273,7 @@ The Cognitive Passport (**CogPass**, long-form edition **5.1** per H1 in `P31 CO
 - [ ] No submarine/naval/military metaphor copy.
 - [ ] Ground truth + hub updated if product status changed.
 - [ ] Passport sync verified if passport authoring changed.
-- [ ] BONDING test counts: **413 tests / 30 suites** (not ad-hoc numbers from chat).
+- [ ] BONDING test counts: **424 tests / 32 suites** (not ad-hoc numbers from chat).
 - [ ] Larmor: **863 Hz** in P31 copy unless a cited exception exists.
 - [ ] L.O.V.E. expansion exact when expanded in user-facing text.
 
@@ -292,13 +292,13 @@ The Cognitive Passport (**CogPass**, long-form edition **5.1** per H1 in `P31 CO
 
 ### 12.1 Entity
 
-P31 Labs, Inc. — Georgia domestic nonprofit (inc. Apr 3, 2026). EIN 42-1888158 (Apr 13, CP 575E). HCB fiscal sponsorship (ref 4XDUXX) unresponsive; **Stripe direct** via `api.phosphorus31.org` Worker. EIN enables direct 501(c)(3) **application** path; determination is a separate step.
+P31 Labs, Inc. — Georgia domestic nonprofit (inc. Apr 3, 2026). EIN 42-1888158 (Apr 13, CP 575E). HCB fiscal sponsorship (ref 4XDUXX) unresponsive; **Stripe Checkout** via **`donate-api.phosphorus31.org`** Worker. EIN enables direct 501(c)(3) **application** path; determination is a separate step.
 
 ### 12.2 Products (snapshot)
 
 | Product | Status | Notes |
 |---------|--------|-------|
-| **BONDING** | Shipped Mar 10 | 413/30; relay, R3F, Zustand, etc. per product docs |
+| **BONDING** | Shipped Mar 10 | 424/32; relay, R3F, Zustand, etc. per product docs |
 | **Node Zero** | Firmware sprint | Waveshare ESP32-S3-Touch-LCD-3.5B; ESP-IDF 5.5.3; LVGL 8.4; AXS15231B QSPI; LoRa on SPI3_HOST pins per validated map; **avoid** Octal PSRAM kill zone (GPIO 33–37) |
 | **Buffer** | ~85% | Per operator inventory |
 | **Spaceship Earth** | In progress | PWA / dashboard narrative |

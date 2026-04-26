@@ -30,7 +30,7 @@ renumber, Triad + KwaiPilot.
    in `CI` also root + p31ca **`npm ci`**). **Updated 2026-04-25.** The Triad includes **KwaiPilot**
    (Node Zero FW execution). WCD Batch 3 (WCDs 26–32) closed; CogPass long-form **5.1** (see **`CANONICAL-NUMBERING.md`**);
    P31 Labs, Inc. incorporated Apr 3, 2026; EIN 42-1888158; Stripe direct via
-   `api.phosphorus31.org` (HCB unresponsive). See review bundle **§12** for snapshot.
+   **`donate-api.phosphorus31.org`** (HCB unresponsive; `api.phosphorus31.org` not deployed). See review bundle **§12** for snapshot.
 ```
 
 ---
@@ -40,7 +40,7 @@ renumber, Triad + KwaiPilot.
 | Area | Previous (generic) | Updated (2026-04-25) |
 |------|--------------------|------------------------|
 | Entity | HCB / sponsor narrative varied | P31 Labs, Inc. Apr 3; EIN Apr 13; HCB dead path → **Stripe** Worker |
-| BONDING | In-flight | **Shipped** Mar 10; **413 / 30** canonical |
+| BONDING | In-flight | **Shipped** Mar 10; **424 / 32** canonical (raised 2026-04-26; see `p31-constants.json`) |
 | Research | I–III + defensive | I–IV + **Paper IV DOI**; **Paper XII** gated |
 | Node Zero | Concept | **Firmware sprint** — hardware + ESP-IDF + LVGL + QSPI + LoRa / PSRAM rules |
 | Edge fleet | Generic | **10** Worker fleet, telemetry + KV + spoons (per operator snapshot) |

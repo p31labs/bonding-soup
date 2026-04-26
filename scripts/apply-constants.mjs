@@ -42,8 +42,13 @@ function main() {
   const p31caMeshJson = path.join(p31caRoot, "src/data/p31-mesh-constants.json");
   if (c.mesh && fs.existsSync(p31caRoot)) {
     fs.mkdirSync(path.dirname(p31caMeshJson), { recursive: true });
-    fs.writeFileSync(p31caMeshJson, JSON.stringify(c.mesh, null, 2) + "\n", "utf8");
+    const meshBody = JSON.stringify(c.mesh, null, 2) + "\n";
+    fs.writeFileSync(p31caMeshJson, meshBody, "utf8");
     console.log("Wrote", path.relative(root, p31caMeshJson));
+    const meshPublic = path.join(p31caRoot, "public/p31-mesh-constants.json");
+    fs.mkdirSync(path.dirname(meshPublic), { recursive: true });
+    fs.writeFileSync(meshPublic, meshBody, "utf8");
+    console.log("Wrote", path.relative(root, meshPublic));
   } else if (c.mesh) {
     console.warn("apply-constants: skip p31-mesh-constants (no p31ca tree):", p31caMeshJson);
   }

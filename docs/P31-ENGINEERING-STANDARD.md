@@ -27,6 +27,7 @@ Applies to the repo that contains `p31-constants.json`, `cognitive-passport/`, a
 | Payment / creator-economy (fast) | **`npm run verify:monetary`** | Full gate: re-runs ecosystem + constants + **MAP** + **`verify:economy`**. Use after edits to **`p31-constants.json`** `payment.*` (donate + **Stripe API** health URLs), **`p31-ecosystem.json`** monetary/probe rows, or creator-economy JSON. Skips p31ca steps on partial clone. |
 | Git pre-commit (optional) | **`npm run git:hooks`** | Sets **`core.hooksPath`** to **`.githooks`**. When payment/economy paths are staged, **`.githooks/pre-commit`** runs **`verify:monetary`**. Bypass: **`P31_SKIP_MONETARY_HOOK=1 git commit`**. Also runs at end of **`npm run setup`**. |
 | Release | **`npm run release:check`** | Before merge or tag; includes **p31ca** build when `andromeda/04_SOFTWARE/p31ca` exists. Match GitHub mesh strictness: **`MESH_LIVE_STRICT=1 npm run p31:ci`** (or `release:check` with CI env). Optional before hub release: **`npm run security:check`** in **p31ca** (triage P1 inventory warnings). |
+| Public hub cut | **`npm run release:public`** | Root **`verify`** + strict mesh + **`p31ca` `hub:ci`** (about HTML regen) + **`security:check`**. Does not deploy. Flags: **`--content`** (enrich about pages), **`--no-security`**, **`--skip-install`**. |
 | Extended | **`npm run validate:full`** | Optional; network + live audits (see `validate-p31-full.sh`). Report includes **P31 Ecosystem** + **MAP monetary surface** when Andromeda is present. Cage live checks use **`mesh.k4CageWorkerUrl`** from `p31-constants.json` (override env **`CAGE_BASE`** if needed). |
 
 **GitHub `p31-ci.yml` (home):** runs on **every** push/PR to **`main`/`master`** (no path filters). **Root `npm run verify`** does **not** run **`verify:mesh`**; use **`npm run verify:mesh`** when changing k4-personal or live mesh URLs (`p31-constants.json` → `mesh.*`). For strict mesh parity with CI, **`MESH_LIVE_STRICT=1 node scripts/p31-ci.mjs`** or **`npm run release:check`**. When `andromeda/` is **not** in the checkout, the job is still a **home-only** pass (as before).
@@ -57,6 +58,7 @@ When that tree is present, it has its **own** git remote and **production bar** 
 
 ## 4. Launch and operations
 
+- **`docs/ECOSYSTEM-PRODUCTION-11.md`** — full-fleet “everything connected” matrix: glass probes, deploy order, 11/10 Definition of Done across hub + K₄ + operator + monetary.
 - **`docs/ENTERPRISE-LAUNCH-PREP.md`** — secrets rotation, CI merge path, deploy surfaces, post-Zenodo housekeeping.
 - **`docs/MVP-DELIVERABLES-INVENTORY.md`** — what is LIVE vs adjacent vs concept (grant-facing).
 

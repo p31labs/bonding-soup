@@ -65,7 +65,7 @@
 | Monetary CWP | `andromeda/04_SOFTWARE/docs/CONTROLLED-WORK-PACKAGE-MONETARY-PIPELINE.md` |
 | donate-api | `andromeda/04_SOFTWARE/donate-api/` |
 | verify-monetary-surface | `andromeda/scripts/verify-monetary-surface.mjs` (as referenced from monorepo verify) |
-| Stripe direct / API | `api.phosphorus31.org` Worker (deploy name per operator) — **HCB pivot** April 2026 |
+| Stripe Checkout | **`donate-api.phosphorus31.org`** (`donate-api` Worker) — **HCB pivot** April 2026 |
 | Ko-fi | `ko-fi.com/trimtab69420` |
 
 ---

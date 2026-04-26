@@ -30,6 +30,8 @@ This file is the **single map of record** for what lives under **`/home/p31`**: 
 
 ## 3. Parallel path — **`andromeda/04_SOFTWARE/`** (P31 Labs monorepo)
 
+**GitHub:** [https://github.com/p31labs/andromeda](https://github.com/p31labs/andromeda) (separate remote from this home repo; `andromeda/` is often gitignored here).
+
 **Owns:** the **large** pnpm workspace (Turbo, multiple apps and workers). **Not** the same package as root `bonding-soup`, but **thematically aligned** (BONDING app, K₄ cages, command centers, telemetry, donate API, etc.).
 
 **Entry:** `andromeda/04_SOFTWARE/README.md`, `SETUP.md`, `pnpm-workspace.yaml`. The **Cognitive Passport** subsection in `04_SOFTWARE/README.md` explains how the p31ca mirror relates to root `cognitive-passport/` when both trees exist.

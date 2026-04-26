@@ -36,6 +36,8 @@ Applies to the repo that contains `p31-constants.json`, `cognitive-passport/`, a
 
 ## 3. Andromeda monorepo (`andromeda/`)
 
+**Canonical remote:** [https://github.com/p31labs/andromeda](https://github.com/p31labs/andromeda)
+
 When that tree is present, it has its **own** git remote and **production bar** defined in **`andromeda/docs/ENTERPRISE_QUALITY.md`**:
 
 - Root **`pnpm install`**, **`pnpm run quality`**, **`pnpm run build`**, **`pnpm run test`**.

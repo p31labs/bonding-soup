@@ -5,6 +5,8 @@
 
 ---
 
+**Normative ship bar:** **`docs/P31-ENGINEERING-STANDARD.md`**.
+
 ## A. Truth and gates (local)
 
 | Step | Command / action | Notes |

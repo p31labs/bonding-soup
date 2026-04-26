@@ -6,6 +6,7 @@ This file is the **single map of record** for what lives under **`/home/p31`**: 
 
 | Layer | Idea |
 |--------|------|
+| **Ship bar** | **`docs/P31-ENGINEERING-STANDARD.md`** (home) + **`andromeda/docs/ENTERPRISE_QUALITY.md`** (monorepo): `verify`, `release:check`, no secrets in git, single canon JSON. |
 | **Mission** | Build, create, connect — decentralized family / community mesh (see `CLAUDE.md`, `.cursorrules`). |
 | **p31ca.org contract (machine-routable)** | **`andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json`** — must stay in lockstep with `p31ca/public/_redirects`, invariants in `scripts/hub/registry.mjs`, and pinned 3D entry files. Verify: from **`p31ca`**, `npm run verify:ground-truth` (also part of `prebuild`). **Multi-dome surfaces (Three pins + PWA):** same folder **`synergetic-manifest.json`** — `npm run verify:synergetic` (also `prebuild`). **`docs/CANONICAL-NUMBERING.md`** defines version **namespaces** (ground-truth semver vs CogPass edition vs WCD, etc.). |
 | **Edge** | Cloudflare Workers, KV, DO where needed; rate limits and CORS at the door. |

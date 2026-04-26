@@ -4,6 +4,8 @@ TypeScript molecular / affective sim (`src/`), built to `dist/`. Entry for local
 
 **Workspace context:** this directory also holds **Andromeda**, **phosphorus31.org**, spikes, and docs. For how those paths relate without merging repos, read **`P31-ROOT-MAP.md`**. For agents/IDE: **`AGENTS.md`**.
 
+**Engineering standard:** before merge or deploy, follow **`docs/P31-ENGINEERING-STANDARD.md`** (`npm run verify`, `npm run release:check` when the full tree is present). Andromeda monorepo bar: **`andromeda/docs/ENTERPRISE_QUALITY.md`**.
+
 ## Local run
 
 ```bash

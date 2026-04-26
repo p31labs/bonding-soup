@@ -1,11 +1,12 @@
 # Review documentation for Gemini / Opus (and humans)
 
-**Last updated:** 2026-04-26 — enterprise launch prep doc added; MVP inventory reflects Zenodo V–XX batch.
+**Last updated:** 2026-04-26 — **`P31-ENGINEERING-STANDARD.md`** added as normative ship bar; MVP inventory reflects Zenodo V–XX batch.
 
 This folder contains **handoff-quality** documentation for external model review of the P31 workspace. Read in this order:
 
 | Order | File | Purpose |
 |-------|------|---------|
+| − | **`P31-ENGINEERING-STANDARD.md`** | **Ship bar** — verify/release commands, secrets, canon/constants, Andromeda `ENTERPRISE_QUALITY` pointer |
 | 0 | **`CANONICAL-NUMBERING.md`** | **Normative** — what each kind of “v1 / 5.1 / WCD-33 / DOI” means (read before reconciling version drift) |
 | 1 | **`GEMINI-OPUS-REVIEW-BUNDLE.md`** | **Primary** — orientation, architecture, commands, edge surface, agent rules, glossary |
 | 2 | **`REVIEW-SUPPLEMENT-A-WORKFLOWS.md`** | GitHub Actions inventory (home root + Andromeda); what each file is for |

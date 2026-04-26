@@ -1,6 +1,7 @@
 # P31 personal how-to (commands + repositories)
 
 **For:** you, on your machine, when “which folder is this again?” hits.  
+**Interactive HTML (tabs + search + copy):** open **`p31-personal-howto.html`** in the browser (with **`npm run demo`:** `http://127.0.0.1:8080/p31-personal-howto.html`).  
 **Normative ship bar still lives in** **`docs/P31-ENGINEERING-STANDARD.md`**. **Repo topology** (which tree owns what): **`P31-ROOT-MAP.md`**. **Agent/IDE defaults:** **`AGENTS.md`**.
 
 ---

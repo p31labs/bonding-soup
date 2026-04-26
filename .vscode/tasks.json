@@ -114,6 +114,14 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
+      "label": "P31: polish (apply:constants + sync live-fleet + release:local + security)",
+      "type": "shell",
+      "command": "npm run polish",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
       "label": "P31: validate full (local + live mesh audits)",
       "type": "shell",
       "command": "npm run validate:full",
@@ -128,6 +136,14 @@
       "options": { "cwd": "${workspaceFolder}" },
       "group": "test",
       "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: release:public (verify + strict mesh + hub:ci + security)",
+      "type": "shell",
+      "command": "npm run release:public",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "dedicated" }
     },
     {
       "label": "P31: release:all (strict mesh + hub + p31ca security suite)",

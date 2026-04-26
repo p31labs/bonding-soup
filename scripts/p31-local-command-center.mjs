@@ -30,6 +30,12 @@ const actions = {
   "home-verify-monetary": { title: "Verify monetary (ecosystem + economy)", cwd: root, cmd: "npm", args: ["run", "verify:monetary"] },
   "home-verify-map": { title: "Verify MAP only (donate-api + donate page scan)", cwd: root, cmd: "npm", args: ["run", "verify:map-pipeline"] },
   "home-verify": { title: "Full verify (passport + constants + ecosystem + contracts + egg + tsc)", cwd: root, cmd: "npm", args: ["run", "verify"] },
+  "home-polish": {
+    title: "Polish (apply:constants + sync live-fleet + release:local + security — slow)",
+    cwd: root,
+    cmd: "npm",
+    args: ["run", "polish"],
+  },
   "home-ecosystem-glass": {
     title: "Ecosystem glass (live probes → table + /tmp/p31_glass_report.json)",
     cwd: root,
@@ -55,7 +61,13 @@ const actions = {
   "andromeda-git-hooks": { title: "Install git hooks (Andromeda)", cwd: andromeda, cmd: "npm", args: ["run", "git:hooks"] },
   "andromeda-prepush": { title: "Andromeda: prepush:check (gitci scrub)", cwd: andromeda, cmd: "npm", args: ["run", "prepush:check"] },
   "andromeda-pr": { title: "Andromeda: pnpm pr", cwd: andromeda, cmd: "pnpm", args: ["pr"] },
-  "andromeda-fix-gh": { title: "Andromeda: fix:gh", cwd: andromeda, cmd: "npm", args: ["run", "fix:gh"] }
+  "andromeda-fix-gh": { title: "Andromeda: fix:gh", cwd: andromeda, cmd: "npm", args: ["run", "fix:gh"] },
+  "andromeda-polish": {
+    title: "Andromeda: polish (quality + p31ca hub:ci + security — slow)",
+    cwd: andromeda,
+    cmd: "npm",
+    args: ["run", "polish"],
+  },
 };
 
 function runAction(id) {
@@ -140,10 +152,10 @@ const html = `<!DOCTYPE html>
     const andromeda = ${hasAndromeda() ? "true" : "false"};
     const homeActions = [
       "home-git-hooks", "home-git-autopush-status", "home-git-autopush-on", "home-git-autopush-off",
-      "home-verify", "home-verify-monetary", "home-verify-map", "home-verify-mesh", "home-ecosystem-glass",
+      "home-verify", "home-polish", "home-verify-monetary", "home-verify-map", "home-verify-mesh", "home-ecosystem-glass",
       "home-operator-shift-status", "home-release-public", "home-git-remotes", "home-pr", "home-fix-gh"
     ];
-    const aActions = [ "andromeda-git-hooks", "andromeda-prepush", "andromeda-pr", "andromeda-fix-gh" ];
+    const aActions = [ "andromeda-git-hooks", "andromeda-prepush", "andromeda-polish", "andromeda-pr", "andromeda-fix-gh" ];
     async function go(id) {
       const out = document.getElementById("out");
       document.querySelectorAll("button").forEach((b) => (b.disabled = true));
@@ -164,6 +176,7 @@ const html = `<!DOCTYPE html>
       "home-git-autopush-on": "Auto-push: turn ON",
       "home-git-autopush-off": "Auto-push: turn OFF",
       "home-verify": "Full npm run verify (default CI bar)",
+      "home-polish": "Polish: apply:constants + live-fleet sync + release:local + security",
       "home-verify-monetary": "Verify monetary pipeline (full)",
       "home-verify-map": "Verify MAP / donate pipeline (fast, Andromeda)",
       "home-verify-mesh": "Verify mesh (k4-personal bundle + live health)",
@@ -176,6 +189,7 @@ const html = `<!DOCTYPE html>
       "andromeda-git-hooks": "Install git hooks (Andromeda repo)",
       "andromeda-prepush": "prepush:check (gitci scrub)",
       "andromeda-pr": "pnpm pr (Andromeda)",
+      "andromeda-polish": "Andromeda: quality + hub:ci + security",
       "andromeda-fix-gh": "Andromeda fix:gh"
     };
     function addList(rootEl, ids) {

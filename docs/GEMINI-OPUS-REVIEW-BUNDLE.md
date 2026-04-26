@@ -2,9 +2,11 @@
 
 **Purpose:** One primary document for model or human review of the **P31 home** workspace: multi-root layout, P31 Labs entity status, technical hub (p31ca), automation, edge Workers, and operator/agent conventions.  
 **Not:** Legal advice, medical advice, or guaranteed production URLs — see §11.  
-**Last updated:** 2026-04-25
+**Last updated:** 2026-04-26
 
 **Companion files:** `REVIEW-SUPPLEMENT-A-WORKFLOWS.md`, `REVIEW-SUPPLEMENT-B-WORKERS-AND-PACKAGES.md`, `REVIEW-SUPPLEMENT-C-ECO-CWP-AND-INTEGRATIONS.md`, `MVP-DELIVERABLES-INVENTORY.md` (tiered LIVE/MVP list + grant bullets), `README-REVIEW-DOCS.md` (reading order).
+
+**Architecture spine (same as `AGENTS.md`):** `SIC-POVM-K4-ARCHITECTURE.md`, `AGENTIC-VIBE-INFRASTRUCTURE.md`, `PLAN-KIDS-VIBE-CODING.md`, `EGG-HUNT.md`.
 
 ---
 

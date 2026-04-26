@@ -69,4 +69,5 @@ jobs:
         env:
           PLAYWRIGHT_BASE_URL: https://p31ca.org
           PLAYWRIGHT_SKIP_WEBSERVER: "1"
+        # Canon demo, Initial Build /build + lib/p31-initial-build-bake.js (CWP-P31-IB-2026-01)
         run: npx playwright test e2e/prod-smoke.spec.ts

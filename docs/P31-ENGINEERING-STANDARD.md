@@ -22,9 +22,14 @@ Applies to the repo that contains `p31-constants.json`, `cognitive-passport/`, a
 
 | Gate | Command | When |
 |------|---------|------|
+| First clone / new machine | **`npm run setup`** | Installs root + p31ca deps, `apply:constants` (+ `apply:p31-style` when design tokens exist), then **`verify`**. |
 | Default CI | **`npm run verify`** | Every change that touches passport, constants, style, egg-hunt, or `src/**/*.ts`. |
-| Release | **`npm run release:check`** | Before merge or tag; includes **p31ca** build when `andromeda/04_SOFTWARE/p31ca` exists. |
-| Extended | **`npm run validate:full`** | Optional; network + live audits (see `validate-p31-full.sh`). |
+| Payment / creator-economy (fast) | **`npm run verify:monetary`** | After edits to payment URLs in `p31-constants.json`, monetary rows in `p31-ecosystem.json`, or p31ca `ground-truth/creator-economy.json` (mirrors `public/creator-economy.json` in **`verify:economy`**). Skips economy if `andromeda` is missing. |
+| Git pre-commit (optional) | **`npm run git:hooks`** | Sets **`core.hooksPath`** to **`.githooks`**. When payment/economy paths are staged, **`.githooks/pre-commit`** runs **`verify:monetary`**. Bypass: **`P31_SKIP_MONETARY_HOOK=1 git commit`**. Also runs at end of **`npm run setup`**. |
+| Release | **`npm run release:check`** | Before merge or tag; includes **p31ca** build when `andromeda/04_SOFTWARE/p31ca` exists. Match GitHub mesh strictness: **`MESH_LIVE_STRICT=1 npm run p31:ci`** (or `release:check` with CI env). Optional before hub release: **`npm run security:check`** in **p31ca** (triage P1 inventory warnings). |
+| Extended | **`npm run validate:full`** | Optional; network + live audits (see `validate-p31-full.sh`). Cage live checks use **`mesh.k4CageWorkerUrl`** from `p31-constants.json` (override env **`CAGE_BASE`** if needed). |
+
+**GitHub `p31-ci.yml` (home):** runs on **every** push/PR to **`main`/`master`** (no path filters). **Root `npm run verify`** does **not** run **`verify:mesh`**; use **`npm run verify:mesh`** when changing k4-personal or live mesh URLs (`p31-constants.json` → `mesh.*`). For strict mesh parity with CI, **`MESH_LIVE_STRICT=1 node scripts/p31-ci.mjs`** or **`npm run release:check`**. When `andromeda/` is **not** in the checkout, the job is still a **home-only** pass (as before).
 
 **Operator-locked values:** edit **`p31-constants.json`**, then **`npm run apply:constants`** and **`npm run verify:constants`**.
 

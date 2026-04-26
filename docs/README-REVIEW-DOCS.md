@@ -11,7 +11,7 @@ This folder contains **handoff-quality** documentation for external model review
 | 1 | **`GEMINI-OPUS-REVIEW-BUNDLE.md`** | **Primary** — orientation, architecture, commands, edge surface, agent rules, glossary |
 | 2 | **`REVIEW-SUPPLEMENT-A-WORKFLOWS.md`** | GitHub Actions inventory (home root + Andromeda); what each file is for |
 | 3 | **`REVIEW-SUPPLEMENT-B-WORKERS-AND-PACKAGES.md`** | Cloudflare `wrangler.toml` packages under `andromeda/04_SOFTWARE` + mental map |
-| 4 | **`REVIEW-SUPPLEMENT-C-ECO-CWP-AND-INTEGRATIONS.md`** | ECO CWP, SUPER-CENTAUR handoff, monetary CWP, EPCP report paths |
+| 4 | **`REVIEW-SUPPLEMENT-C-ECO-CWP-AND-INTEGRATIONS.md`** | ECO CWP, **CWP-P31-UI-2026-01** (operator shell `/ops/`), **CWP-P31-PAR-2026-01** (PAR + `soup-demo`), **CWP-P31-IB-2026-01** (Initial Build, `p31ca.org/build`), SUPER-CENTAUR handoff, monetary CWP, EPCP report paths |
 | 5 | **`MVP-DELIVERABLES-INVENTORY.md`** | Tiered MVP list — LIVE hub/products, 10-worker fleet, adjacent sprint items, active dev, concepts; grant-ready five-bullet summary |
 | 6 | **`ENTERPRISE-LAUNCH-PREP.md`** | **Launch** — verify gates, secret rotation, Andromeda merge/deploy path, Zenodo/constants alignment vs Genesis SOPs |
 

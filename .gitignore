@@ -34,6 +34,9 @@ signal-*.sources
 .env.*
 *.local
 
+# Operator shift log if kept under repo root (canonical: ~/.p31/ per AGENTS)
+.p31/
+
 # IDE / agent caches
 .cursor/
 .kilo/

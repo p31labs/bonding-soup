@@ -38,6 +38,45 @@ function main() {
     console.warn("apply-constants: skip ground-truth (missing):", gtPath);
   }
 
+  const p31caRoot = path.join(root, "andromeda/04_SOFTWARE/p31ca");
+  const p31caMeshJson = path.join(p31caRoot, "src/data/p31-mesh-constants.json");
+  if (c.mesh && fs.existsSync(p31caRoot)) {
+    fs.mkdirSync(path.dirname(p31caMeshJson), { recursive: true });
+    fs.writeFileSync(p31caMeshJson, JSON.stringify(c.mesh, null, 2) + "\n", "utf8");
+    console.log("Wrote", path.relative(root, p31caMeshJson));
+  } else if (c.mesh) {
+    console.warn("apply-constants: skip p31-mesh-constants (no p31ca tree):", p31caMeshJson);
+  }
+
+  /** dev-workbench `URLS` prop name → p31-constants.json `mesh` key */
+  const devWorkbenchMeshKeys = [
+    ["k4Personal", "k4PersonalWorkerUrl"],
+    ["k4Cage", "k4CageWorkerUrl"],
+    ["k4Hubs", "k4HubsWorkerUrl"],
+    ["agentHub", "agentHubWorkerUrl"],
+    ["orchestrator", "orchestratorWorkerUrl"],
+  ];
+  const devWorkbench = path.join(root, "andromeda/04_SOFTWARE/p31ca/public/dev-workbench.html");
+  if (fs.existsSync(devWorkbench) && c.mesh) {
+    let html = fs.readFileSync(devWorkbench, "utf8");
+    let replaced = 0;
+    for (const [prop, meshKey] of devWorkbenchMeshKeys) {
+      const u = c.mesh[meshKey];
+      if (!u) continue;
+      const re = new RegExp(`(${prop}:\\s*")https?:\\/\\/[^"]+(")`, "m");
+      if (!re.test(html)) {
+        console.warn(`apply-constants: dev-workbench missing line for ${prop} — skip replace`);
+        continue;
+      }
+      html = html.replace(re, `$1${u}$2`);
+      replaced++;
+    }
+    if (replaced > 0) {
+      fs.writeFileSync(devWorkbench, html, "utf8");
+      console.log("Wrote", path.relative(root, devWorkbench));
+    }
+  }
+
   if (fs.existsSync(passportHtml)) {
     let html = fs.readFileSync(passportHtml, "utf8");
     html = html.replace(
@@ -70,6 +109,7 @@ function main() {
     groundTruth: c.groundTruth,
     edge: c.edge,
     research: c.research,
+    ...(c.mesh != null ? { mesh: c.mesh } : {}),
     ...(c.operations != null ? { operations: c.operations } : {}),
     ...(c.documentation != null ? { documentation: c.documentation } : {}),
   };

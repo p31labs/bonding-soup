@@ -1,0 +1,123 @@
+{
+  "_comment": "Deploy targets + glass-box URLs. Templates: {{mesh.*}}, {{bonding.*}}, {{payment.*}} from p31-constants.json. After edits: npm run verify:ecosystem",
+  "schema": "p31.ecosystem/1.0.0",
+  "updated": "2026-04-26",
+  "glassProbes": [
+    {
+      "id": "k4-personal-api-health",
+      "url": "{{mesh.k4PersonalWorkerUrl}}/api/health",
+      "group": "mesh",
+      "note": "Canonical k4-personal liveness"
+    },
+    {
+      "id": "k4-personal-api-mesh",
+      "url": "{{mesh.k4PersonalWorkerUrl}}/api/mesh",
+      "group": "mesh",
+      "note": "Personal mesh JSON"
+    },
+    {
+      "id": "k4-cage-health",
+      "url": "{{mesh.k4CageWorkerUrl}}/api/health",
+      "group": "mesh",
+      "note": "Cage worker"
+    },
+    {
+      "id": "k4-hubs-health",
+      "url": "{{mesh.k4HubsWorkerUrl}}/health",
+      "group": "mesh",
+      "note": "Hub fusion liveness"
+    },
+    {
+      "id": "agent-hub-health",
+      "url": "{{mesh.agentHubWorkerUrl}}/api/health",
+      "group": "mesh",
+      "note": "Agent hub"
+    },
+    {
+      "id": "orchestrator-status",
+      "url": "{{mesh.orchestratorWorkerUrl}}/api/orchestrator/status",
+      "group": "orchestrator",
+      "note": "May return 401/403 without Access — still 'edge up'"
+    },
+    {
+      "id": "command-center-health",
+      "url": "https://command-center.trimtab-signal.workers.dev/api/health",
+      "group": "command-center",
+      "note": "EPCP operator glass"
+    },
+    {
+      "id": "operator-shift-public",
+      "url": "https://command-center.trimtab-signal.workers.dev/api/operator/shift",
+      "group": "command-center",
+      "note": "GET public operator shift (PII-free); POST requires Access (CWP-P31-UI Phase C)"
+    },
+    {
+      "id": "p31ca-hub-root",
+      "url": "https://p31ca.org/",
+      "group": "pages",
+      "note": "Technical hub (HTML)"
+    },
+    {
+      "id": "p31ca-mesh-start-page",
+      "url": "https://p31ca.org/mesh-start.html",
+      "group": "pages",
+      "note": "PAR personal landing (CWP-P31-PAR); repo dev: soup-demo.html → andromeda/.../p31ca/public/mesh-start.html"
+    },
+    {
+      "id": "p31ca-initial-build-page",
+      "url": "https://p31ca.org/initial-build.html",
+      "group": "pages",
+      "note": "Initial Build CWP-P31-IB-2026-01; short /build; intake→tetra bake (phased WBS)"
+    },
+    {
+      "id": "p31ca-build-shorturl",
+      "url": "https://p31ca.org/build",
+      "group": "pages",
+      "note": "301/302 → initial-build.html (Cloudflare _redirects); client follows redirect in glass + browsers"
+    },
+    {
+      "id": "bonding-soup",
+      "url": "{{bonding.publicUrl}}/",
+      "group": "pages",
+      "note": "BONDING vertical"
+    },
+    {
+      "id": "donate-api-health",
+      "url": "{{payment.donateApiHealthUrl}}",
+      "group": "monetary",
+      "note": "Stripe checkout Worker liveness; CWP-P31-MAP-2026-01 as-built"
+    },
+    {
+      "id": "creator-economy-contract",
+      "url": "https://p31ca.org/creator-economy.json",
+      "group": "contracts",
+      "note": "Public JSON contract (verify:economy in p31ca)"
+    }
+  ],
+  "deployables": [
+    {
+      "id": "p31ca-pages",
+      "cwd": "andromeda/04_SOFTWARE/p31ca",
+      "command": "npm run deploy",
+      "description": "p31ca.org Pages + Astro hub"
+    },
+    {
+      "id": "command-center-worker",
+      "cwd": "andromeda/04_SOFTWARE/cloudflare-worker/command-center",
+      "command": "npx wrangler deploy",
+      "description": "EPCP command-center Worker"
+    },
+    {
+      "id": "k4-personal-worker",
+      "cwd": "andromeda/04_SOFTWARE",
+      "command": "pnpm --filter k4-personal deploy",
+      "description": "Personal K4 Worker (requires pnpm install in 04_SOFTWARE)"
+    },
+    {
+      "id": "wcd33-archive",
+      "cwd": "wcd33-global-archive",
+      "command": "npm run deploy",
+      "description": "WCD-33 global archive Worker"
+    }
+  ]
+}

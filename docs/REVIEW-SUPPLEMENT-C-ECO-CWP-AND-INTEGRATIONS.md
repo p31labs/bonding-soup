@@ -2,7 +2,7 @@
 
 **Purpose:** Route reviewers to **controlled work packages** and **integration** docs. Does **not** duplicate full CWP text.
 
-**Last updated:** 2026-04-25
+**Last updated:** 2026-04-26 (C.1b PAR / Soup; C.1c Initial Build CWP)
 
 ---
 
@@ -11,8 +11,39 @@
 | Document | Path | Role |
 |----------|------|------|
 | ECO CWP | `andromeda/04_SOFTWARE/p31ca/docs/CONTROLLED-WORK-PACKAGE-ECOSYSTEM-INTEGRATION.md` | `CWP-P31-ECO-2026-01` — hub, registry, ground truth, Cockpit; **excludes** merging `phosphorus31.org` without a separate CWP. |
+| Operator UI CWP | `andromeda/04_SOFTWARE/p31ca/docs/CONTROLLED-WORK-PACKAGE-INTERACTIVE-OPERATOR-UI.md` | `CWP-P31-UI-2026-01` — `/ops/` shell, glass box, tag in/out, cognitive load; **sister** to ECO (Ring A); **excludes** Worker security in static HTML. Home pointer: `docs/CWP-POINTER-INTERACTIVE-OPERATOR-UI.md`. |
 | Parallel agents | `andromeda/04_SOFTWARE/p31ca/docs/PARALLEL_AGENT_COORDINATION.md` | Coordination for `index.astro`, ground truth, parallel tracks. |
 | ECO snapshot | `andromeda/04_SOFTWARE/p31ca/docs/ECO-P0-1-SNAPSHOT.md` | Drift / console expectations (e.g. mvpData vs Cockpit). |
+
+---
+
+## C.1b Personal Agent Room (PAR) — BONDING Soup + k4-personal
+
+**Sister** to ECO (catalog) and SUPER-CENTAUR (Ring D); **does not** merge those tracks. Owns stable `subject_id` → `k4-personal` Durable Object + p31ca static onboard/mesh-start.
+
+| Document | Path |
+|----------|------|
+| PAR CWP | `andromeda/04_SOFTWARE/integration-handoff/CONTROLLED-WORK-PACKAGE-PERSONAL-AGENT-ROOM.md` |
+| Handoff bundle | `andromeda/04_SOFTWARE/integration-handoff/CWP-31/README.md` |
+| Mesh / start pages | `docs/MESH-MAP-PERSONAL-START-PAGES.md` |
+| Dev entry (home) | `soup-demo.html` → links to `andromeda/04_SOFTWARE/p31ca/public/planetary-onboard.html` and `mesh-start.html` under **`npm run demo`** |
+
+**Verify from P31 home:** `npm run verify:mesh` (k4-personal wrangler dry-run + live API vs `p31-constants.json`).
+
+---
+
+## C.1c Initial Build (IB) — CWP (production)
+
+**Issued** `CWP-P31-IB-2026-01` — first-run: intake → cryptographic `subject_id` → `PUT` profile + `PUT` personal tetra (`p31.personalTetra/1.0.0`) → handoff to `mesh-start` / PAR. **Sister** to ECO, PAR, and SC; **excludes** cage bridge and Super-Centaur server work.
+
+| Document | Path |
+|----------|------|
+| IB CWP | `andromeda/04_SOFTWARE/integration-handoff/CONTROLLED-WORK-PACKAGE-INITIAL-BUILD.md` |
+| Strict plan (appendix) | `andromeda/04_SOFTWARE/integration-handoff/INITIAL-BUILD-SITE-STRICT-PLAN.md` |
+| Handoff | `andromeda/04_SOFTWARE/integration-handoff/CWP-32/README.md` |
+| Public shell | `andromeda/04_SOFTWARE/p31ca/public/initial-build.html` — **https://p31ca.org/build** (301) |
+
+**Verify:** `npm run verify:ground-truth` (p31ca) includes `initialBuild` route and `/build` redirect; see `CWP-32/deliverables-matrix.json` for D-IB*.
 
 ---
 

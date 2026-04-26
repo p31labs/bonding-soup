@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Runs p31ca verify:ground-truth + verify:synergetic + verify:lattice-oracle when the tree exists.
- * Skips on partial clone (no andromeda). Does not run astro build.
+ * Runs p31ca verify:ground-truth + economy + super-centaur + synergetic + lattice-oracle when the tree exists.
+ * Skips on partial clone (no andromeda). Does not run astro build. Economy verifier enforces p31.creatorEconomy/1.0.0 fee invariants.
  */
 import { execSync } from "node:child_process";
 import fs from "node:fs";
@@ -22,6 +22,7 @@ function run(cmd) {
 }
 
 run("npm run verify:ground-truth");
+run("npm run verify:economy");
 run("npm run verify:super-centaur-pack");
 run("npm run verify:synergetic");
 run("npm run verify:lattice-oracle");

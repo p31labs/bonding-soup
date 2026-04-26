@@ -6,7 +6,8 @@ This file is the **single map of record** for what lives under **`/home/p31`**: 
 
 | Layer | Idea |
 |--------|------|
-| **Ship bar** | **`docs/P31-ENGINEERING-STANDARD.md`** (home) + **`andromeda/docs/ENTERPRISE_QUALITY.md`** (monorepo): `verify`, `release:check`, no secrets in git, single canon JSON. |
+| **Ship bar** | **`docs/P31-ENGINEERING-STANDARD.md`** (home) + **`andromeda/docs/ENTERPRISE_QUALITY.md`** (monorepo): `verify`, `release:check`, no secrets in git, single canon JSON. **New clone:** `npm run setup` (root + `apply:constants` + `verify` + p31ca install + optional **`git:hooks`**, when present — see `README.md`). |
+| **Ecosystem + monetary gates** | **`p31-ecosystem.json`** (glass deploy templates), **`npm run verify:monetary`**, **`npm run ecosystem:glass`**. **`.githooks/pre-commit`** runs `verify:monetary` on staged payment/creator-economy paths. Full **`p31ca`** contract checks (incl. **`verify:economy`**, **ground-truth** ↔ **public** `creator-economy.json`) ship from the [Andromeda](https://github.com/p31labs/andromeda) repo; `andromeda/` is often **gitignored** in this home checkout—land hub-side verifier edits there. |
 | **Mission** | Build, create, connect — decentralized family / community mesh (see `CLAUDE.md`, `.cursorrules`). |
 | **p31ca.org contract (machine-routable)** | **`andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json`** — must stay in lockstep with `p31ca/public/_redirects`, invariants in `scripts/hub/registry.mjs`, and pinned 3D entry files. Verify: from **`p31ca`**, `npm run verify:ground-truth` (also part of `prebuild`). **Multi-dome surfaces (Three pins + PWA):** same folder **`synergetic-manifest.json`** — `npm run verify:synergetic` (also `prebuild`). **`docs/CANONICAL-NUMBERING.md`** defines version **namespaces** (ground-truth semver vs CogPass edition vs WCD, etc.). |
 | **Edge** | Cloudflare Workers, KV, DO where needed; rate limits and CORS at the door. |
@@ -20,7 +21,7 @@ This file is the **single map of record** for what lives under **`/home/p31`**: 
 |------|------|
 | `package.json` | `bonding-soup` — `npm run build` → `tsc` → `dist/` |
 | `src/` | Engine (`soup.ts`, `soupPhysics.ts`, `reactions.ts`, …), persistence, memory panel, demo glue |
-| `soup-demo.html` | Browser entry; `?ws=` / `?debug` |
+| `soup-demo.html` | Browser entry; `?ws=` / `?debug` — same **`npm run demo`** server as **Cognitive Passport**; also links to **p31ca** `planetary-onboard.html`, `initial-build.html`, and `mesh-start.html` (under `andromeda/04_SOFTWARE/p31ca/public/`) for **Personal Agent Room** (`CWP-P31-PAR-2026-01`, `CWP-31/`) and **Initial Build** (`CWP-P31-IB-2026-01`, `CWP-32/`; live **https://p31ca.org/build**). |
 | `dist/` | Compiled JS (regenerate after `src/` edits) |
 | `wcd33-global-archive/` | WCD-33 Worker (KV, rate limits, CORS). See `wcd33-global-archive/DEPLOY.md` |
 | `spikes/` | Time-boxed harnesses (mock WS `8082`, Posner spike, interpolation, spatial chat) |

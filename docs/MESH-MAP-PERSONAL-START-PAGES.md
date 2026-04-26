@@ -16,9 +16,9 @@ This is **not** “one chatbot for everyone.” It is **one agent instance per s
 
 | Piece | Location / behavior |
 |--------|---------------------|
-| **Personal agent (DO)** | `andromeda/04_SOFTWARE/k4-personal` — `PersonalAgent` with `/chat`, `/state`, `/reminders`, `/energy`, `/bio`, etc. Router: **`/agent/:userId/...`** maps to `PERSONAL_AGENT.idFromName(userId)`. |
+| **Personal agent (DO)** | `andromeda/04_SOFTWARE/k4-personal` — `PersonalAgent` with `/chat`, `/state`, `/reminders`, `/energy`, `/bio`, etc. Router: **`/agent/:userId/...`** maps to `PERSONAL_AGENT.idFromName(userId)`. **SOULSAFE tetra:** optional `soulsafe: true` on `/chat` — see **`docs/SOULSAFE-TETRA-SPEC.md`**. |
 | **Archetype onboarding (static)** | `p31ca/public/planetary-onboard.html` — `?a=child \| elder \| default`; Phase 5 persists `p31_subject_id` + `p31_onboard_meta` in `localStorage` and redirects to **`/mesh-start.html`** (short **`/start`**). |
-| **Personal landing (MVP)** | `p31ca/public/mesh-start.html` — probes `k4-personal` `/health`, `/agent/:id/health`, `/energy`; seeds `PUT .../state`; simple `POST .../chat`; `?agent=` overrides worker origin (default prod worker URL). |
+| **Personal landing (MVP)** | `p31ca/public/mesh-start.html` — probes `k4-personal` `/health`, `/agent/:id/health`, `/energy`; seeds `PUT .../state` (including **`soulsafe_prefs`** for SOULSAFE); optional SOULSAFE checkbox on chat + `p31_mesh_soulsafe` in `localStorage`; simple `POST .../chat` with `soulsafe: true` when enabled; `?agent=` overrides worker origin. |
 | **Family cage (shared)** | `k4-cage` and related workers — **shared** topology and edges; distinct from **personal** scope. |
 | **Passport / advocacy** | Cognitive Passport generator (`p31ca.org/passport`) — portable **human** context; complements the **machine** agent profile in DO `state.profile`. |
 | **Agent rules (docs)** | `CLAUDE.md` / tools: *personal K₄ mesh (pillars a–d), isolated KV* — same **shape** as cage personal scope; implementation path may be KV + DO together over time. |
@@ -62,7 +62,10 @@ CWP / mesh-bridge pattern: copy `integration-handoff/CWP-30/mesh-bridge.ts` idea
 
 ## Related docs
 
+- **BONDING Soup dev:** root **`soup-demo.html`** (with **`npm run demo`**) links to **`andromeda/04_SOFTWARE/p31ca/public/planetary-onboard.html`** and **`mesh-start.html`** so the engine demo and PAR front door share one local static server.  
 - `docs/MVP-DELIVERABLES-INVENTORY.md` — what is live today.  
 - `P31-ROOT-MAP.md` — site tracks (p31ca vs phosphorus31.org vs home vertical).  
 - `docs/GEODESIC-CAMPAIGN.md` — progressive on-ramp pattern to mirror on **start pages** (short steps, skip OK).  
-- `andromeda/04_SOFTWARE/integration-handoff/` — SUPER-CENTAUR / mesh bridge handoff.
+- `andromeda/04_SOFTWARE/integration-handoff/` — SUPER-CENTAUR / mesh bridge handoff.  
+- `andromeda/04_SOFTWARE/integration-handoff/CONTROLLED-WORK-PACKAGE-PERSONAL-AGENT-ROOM.md` — **CWP-P31-PAR-2026-01** (Personal Agent Room: identity, k4-personal, p31ca onboard/mesh-start); handoff `integration-handoff/CWP-31/`.  
+- `andromeda/04_SOFTWARE/integration-handoff/CONTROLLED-WORK-PACKAGE-INITIAL-BUILD.md` — **CWP-P31-IB-2026-01** (Initial Build: intake → `subject_id` → bake `p31.personalTetra/1.0.0`); `p31ca.org/build` → `initial-build.html`; normative `INITIAL-BUILD-SITE-STRICT-PLAN.md`; handoff `integration-handoff/CWP-32/`.

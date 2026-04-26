@@ -1,0 +1,141 @@
+#!/usr/bin/env node
+/**
+ * P31 "everything" gate — one command for the full local/CI bar:
+ *  1. `p31-ci.mjs` with MESH_LIVE_STRICT=1 + `--security` (root verify, k4-personal + mesh, p31ca build, security B+C+E)
+ *  2. `validate-p31-full.sh` — scorecard + extended audits (report under /tmp/p31_validation_report.json)
+ *  3. p31ca `fleet:probe` — soft (non-fatal; matches p31-ci.yml fleet step)
+ *  3b. `ecosystem-glass.mjs` — soft; live GETs in p31-ecosystem.json, writes /tmp/p31_glass_report.json
+ *  4. Playwright E2E — if `p31ca/playwright.config.ts` exists; subprocess sets **CI=true** so `astro preview`
+ *     starts a fresh webServer (avoids reusing a stale 127.0.0.1:4321 from a prior run)
+ *  5. p31ca `security:lint` — soft (script uses || true)
+ *  6. Semgrep SAST — same rules as p31-security.yml sast job, if `semgrep` is on PATH (CI installs via workflow step)
+ *
+ * Flags: --skip-validate, --skip-fleet, --skip-e2e, --skip-sast, --skip-lint, --skip-ecosystem-glass
+ */
+import { execSync, spawnSync } from "node:child_process";
+import fs from "node:fs";
+import { homedir } from "node:os";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const root = path.join(__dirname, "..");
+const p31ca = path.join(root, "andromeda/04_SOFTWARE/p31ca");
+
+const args = new Set(process.argv.slice(2));
+const skipValidate = args.has("--skip-validate");
+const skipFleet = args.has("--skip-fleet");
+const skipE2e = args.has("--skip-e2e");
+const skipSast = args.has("--skip-sast");
+const skipLint = args.has("--skip-lint");
+const skipEcosystemGlass = args.has("--skip-ecosystem-glass");
+const hasP31ca = fs.existsSync(p31ca);
+
+const validateScript = path.join(root, "validate-p31-full.sh");
+
+function shOk(script) {
+  return spawnSync("sh", ["-c", script], { stdio: "ignore" }).status === 0;
+}
+
+function semgrepCommand() {
+  if (shOk("command -v semgrep")) {
+    return "semgrep";
+  }
+  // pip install --user (CI step adds ~/.local/bin to GITHUB_PATH)
+  const userBin = path.join(homedir(), ".local/bin/semgrep");
+  if (fs.existsSync(userBin)) {
+    return userBin;
+  }
+  return null;
+}
+
+/**
+ * @param {string} title
+ * @param {string} command
+ * @param {object} [opts]
+ * @param {string} [opts.cwd]
+ * @param {Record<string,string>} [opts.env]
+ * @param {boolean} [opts.soft] non-fatal
+ */
+function run(title, command, opts = {}) {
+  const { cwd = root, env, soft = false } = opts;
+  const merged = env ? { ...process.env, ...env } : process.env;
+  console.log(`\n\x1b[36m▶\x1b[0m ${title}`);
+  try {
+    execSync(command, { cwd, stdio: "inherit", env: merged, shell: true });
+    return true;
+  } catch (e) {
+    if (soft) {
+      const msg = e instanceof Error ? e.message : String(e);
+      console.log(`\x1b[33m⚠\x1b[0m ${title} — non-fatal: ${msg}`);
+      return false;
+    }
+    throw e;
+  }
+}
+
+function main() {
+  const ciEnv = { MESH_LIVE_STRICT: "1" };
+  run("P31 CI (root verify, mesh, p31ca build, security)", "node scripts/p31-ci.mjs --security", {
+    env: ciEnv,
+  });
+
+  if (!skipValidate) {
+    if (!fs.existsSync(validateScript)) {
+      throw new Error(`validate: missing ${validateScript}`);
+    }
+    run("validate-p31-full (mesh scorecard + audits)", `bash "${validateScript}"`);
+  }
+
+  if (hasP31ca && !skipFleet) {
+    run("p31ca mesh fleet health probe (informational)", "npm run fleet:probe", { cwd: p31ca, soft: true });
+  }
+
+  if (hasP31ca && !skipE2e) {
+    const pw = path.join(p31ca, "playwright.config.ts");
+    if (fs.existsSync(pw)) {
+      run("Playwright install (chromium)", "npx playwright install --with-deps chromium", { cwd: p31ca });
+      // Force same behavior as GitHub: fresh `astro preview` (reuseExistingServer off when CI is set)
+      run("Playwright E2E (preview + tests)", "npm run test:e2e", {
+        cwd: p31ca,
+        env: { CI: "true" },
+      });
+    } else {
+      console.log("\n\x1b[33m▶\x1b[0m Playwright: no playwright.config.ts — skipped");
+    }
+  }
+
+  if (hasP31ca && !skipLint) {
+    run("p31ca security:lint (eslint, non-blocking)", "npm run security:lint", { cwd: p31ca, soft: true });
+  }
+
+  if (hasP31ca && !skipSast) {
+    const bin = semgrepCommand();
+    if (bin) {
+      // Matches .github/workflows/p31-security.yml sast job (report-only, soft exit)
+      const q = (s) => `"${s.replace(/"/g, '\\"')}"`;
+      const argsLine = [q("p/javascript"), q("p/typescript"), q("p/security-audit")].map(
+        (c) => `--config ${c}`
+      );
+      const safeBin = JSON.stringify(bin);
+      const cmd = `${safeBin} scan ${argsLine.join(" ")} src workers`;
+      run("Semgrep SAST (p/javascript + p/typescript + p/security-audit)", cmd, { cwd: p31ca, soft: true });
+    } else {
+      console.log(
+        "\n\x1b[33m▶\x1b[0m Semgrep: CLI not in PATH (install: pip install semgrep or brew install semgrep) — skipped"
+      );
+    }
+  }
+
+  if (!skipEcosystemGlass) {
+    run(
+      "Ecosystem glass box (live probes + /tmp/p31_glass_report.json)",
+      "node scripts/ecosystem-glass.mjs",
+      { soft: true }
+    );
+  }
+
+  console.log("\n\x1b[32m✓ p31:all complete\x1b[0m\n");
+}
+
+main();

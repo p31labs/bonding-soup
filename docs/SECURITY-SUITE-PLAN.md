@@ -64,7 +64,7 @@ These are **fast**, deterministic, and “P31-native.”
    - **Long-term:** move to build-time Tailwind and add CSP headers in `_headers` (Pages) — **P2** program.
 3. **Passkey worker** — document **trust boundary** (classical **ECDSA/ RSA** for WebAuthn is **expected**; PQC is for **app-layer** packages like `quantum-core`, not authenticator wire format). Optional **rate-limit** + **auth** on orchestrator as already noted in EGG-HUNT.
 
-**Deliverable D:** `docs/EDGE-SECURITY.md` (operator-facing) + optional `wrangler` dry-run in CI for **one** canary worker.
+**Deliverable D:** `andromeda/04_SOFTWARE/p31ca/docs/EDGE-SECURITY.md` (operator-facing; p31ca tree) + optional `wrangler` dry-run in CI for **one** canary worker.
 
 ---
 

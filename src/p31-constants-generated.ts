@@ -20,6 +20,7 @@ export const P31_CONSTANTS = {
   },
   "payment": {
     "stripeWorkerHost": "api.phosphorus31.org",
+    "donateApiHealthUrl": "https://donate-api.phosphorus31.org/health",
     "hcbReference": "4XDUXX",
     "hcbStatus": "unresponsive_pivot_to_stripe"
   },
@@ -160,6 +161,14 @@ export const P31_CONSTANTS = {
         "published": "2026-04-26"
       }
     ]
+  },
+  "mesh": {
+    "_comment": "Canonical worker URLs for K₄ edge; keep in sync with k4-hubs PERSONAL_MESH_URL and mesh-start default. orchestrator + agent URLs: OrchestratorDashboard.astro, public/dev-workbench.html, src/data/p31-mesh-constants.json (from npm run apply:constants).",
+    "k4PersonalWorkerUrl": "https://k4-personal.trimtab-signal.workers.dev",
+    "k4CageWorkerUrl": "https://k4-cage.trimtab-signal.workers.dev",
+    "k4HubsWorkerUrl": "https://k4-hubs.trimtab-signal.workers.dev",
+    "agentHubWorkerUrl": "https://p31-agent-hub.trimtab-signal.workers.dev",
+    "orchestratorWorkerUrl": "https://p31-orchestrator.trimtab-signal.workers.dev"
   },
   "operations": {
     "masterOpsManual": {

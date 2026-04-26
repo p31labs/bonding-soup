@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# P31: when payment / creator-economy paths are staged, run a fast machine gate before the commit.
+# Bypass: P31_SKIP_MONETARY_HOOK=1 git commit
+# Install: npm run git:hooks   (sets core.hooksPath to .githooks)
+set -euo pipefail
+ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+cd "$ROOT"
+
+if [[ "${P31_SKIP_MONETARY_HOOK:-}" == "1" ]]; then
+  exit 0
+fi
+
+FILES=$(git diff --cached --name-only --diff-filter=ACMR 2>/dev/null || true)
+if [[ -z "$FILES" ]]; then
+  exit 0
+fi
+
+PATTERN='^(p31-constants\.json|p31-ecosystem\.json|scripts/verify-(monetary|constants|ecosystem)\.mjs|andromeda/04_SOFTWARE/p31ca/ground-truth/creator-economy\.json|andromeda/04_SOFTWARE/p31ca/public/creator-economy\.json|andromeda/04_SOFTWARE/p31ca/scripts/verify-creator-economy\.mjs)$'
+if ! printf '%s\n' "$FILES" | grep -qE "$PATTERN"; then
+  exit 0
+fi
+
+echo "P31 pre-commit: npm run verify:monetary (payment/economy files staged)"
+exec npm run verify:monetary

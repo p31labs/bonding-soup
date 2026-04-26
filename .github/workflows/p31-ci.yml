@@ -1,63 +1,15 @@
-# P31 home: root npm verify (+ optional p31ca Astro when andromeda/ is present in checkout).
+# P31 home: `p31:all` = CI chain + validate-p31-full + fleet (soft) + Playwright E2E + security:lint (soft) + Semgrep (soft).
 # Default remote often omits gitignored andromeda/ — job still passes (home-only chain only).
-# Triggers when hub, passport, constants, soup, egg-hunt, or CI driver change.
+# No path filters: every push/PR to main or master runs this workflow (cannot miss CI by file path).
+# workflow_dispatch: manual. Ad-hoc: see package.json and docs/P31-ENGINEERING-STANDARD.md.
 name: P31 CI
 
 on:
   workflow_dispatch:
   push:
     branches: [main, master]
-    paths:
-      - "andromeda/04_SOFTWARE/p31ca/**"
-      - "cognitive-passport/**"
-      - "p31-constants.json"
-      - "tsconfig.json"
-      - "src/**/*.ts"
-      - "scripts/p31-ci.mjs"
-      - "scripts/verify-passport-sync.mjs"
-      - "scripts/verify-constants.mjs"
-      - "scripts/apply-constants.mjs"
-      - "scripts/verify-p31ca-contracts.mjs"
-      - "scripts/verify-egg-hunt.mjs"
-      - "docs/egg-hunt-manifest.json"
-      - "docs/EGG-HUNT.md"
-      - "soup-demo.html"
-      - "validate-p31-full.sh"
-      - "scripts/lib/**"
-      - "scripts/passport-p31ca-transform.mjs"
-      - "scripts/sync-passport-to-p31ca.mjs"
-      - "package.json"
-      - "package-lock.json"
-      - "andromeda/04_SOFTWARE/design-tokens/**"
-      - "scripts/apply-p31-style.mjs"
-      - "scripts/verify-p31-style.mjs"
-      - ".github/workflows/p31-ci.yml"
   pull_request:
-    paths:
-      - "andromeda/04_SOFTWARE/p31ca/**"
-      - "cognitive-passport/**"
-      - "p31-constants.json"
-      - "tsconfig.json"
-      - "src/**/*.ts"
-      - "scripts/p31-ci.mjs"
-      - "scripts/verify-passport-sync.mjs"
-      - "scripts/verify-constants.mjs"
-      - "scripts/apply-constants.mjs"
-      - "scripts/verify-p31ca-contracts.mjs"
-      - "scripts/verify-egg-hunt.mjs"
-      - "docs/egg-hunt-manifest.json"
-      - "docs/EGG-HUNT.md"
-      - "soup-demo.html"
-      - "validate-p31-full.sh"
-      - "scripts/lib/**"
-      - "scripts/passport-p31ca-transform.mjs"
-      - "scripts/sync-passport-to-p31ca.mjs"
-      - "package.json"
-      - "package-lock.json"
-      - "andromeda/04_SOFTWARE/design-tokens/**"
-      - "scripts/apply-p31-style.mjs"
-      - "scripts/verify-p31-style.mjs"
-      - ".github/workflows/p31-ci.yml"
+    branches: [main, master]
 
 concurrency:
   group: p31-ci-${{ github.workflow }}-${{ github.ref }}
@@ -66,7 +18,7 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
@@ -76,20 +28,14 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
 
-      - name: Full P31 verification
+      - name: Semgrep CLI (p31:all SAST)
+        if: ${{ hashFiles('andromeda/04_SOFTWARE/p31ca/package.json') != '' }}
+        run: |
+          python3 -m pip install --user semgrep || python3 -m pip install --user --break-system-packages semgrep
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: P31 all (CI + validate:full + fleet + e2e + lint + SAST)
         env:
           CI: "true"
-        run: node scripts/p31-ci.mjs
-
-      - name: Live mesh fleet probe (informational)
-        if: ${{ hashFiles('andromeda/04_SOFTWARE/p31ca/package.json') != '' && hashFiles('andromeda/04_SOFTWARE/p31ca/scripts/fleet-health-probe.mjs') != '' }}
-        working-directory: andromeda/04_SOFTWARE/p31ca
-        continue-on-error: true
-        run: npm run fleet:probe
-
-      - name: Playwright E2E (preview build)
-        if: ${{ hashFiles('andromeda/04_SOFTWARE/p31ca/package.json') != '' && hashFiles('andromeda/04_SOFTWARE/p31ca/playwright.config.ts') != '' }}
-        working-directory: andromeda/04_SOFTWARE/p31ca
-        run: |
-          npx playwright install --with-deps chromium
-          npm run test:e2e
+          MESH_LIVE_STRICT: "1"
+        run: node scripts/p31-all.mjs

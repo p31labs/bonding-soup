@@ -2,6 +2,10 @@
 /**
  * P31 home verification and optional p31ca build.
  *
+ * - **k4-personal:** after root `verify`, if `andromeda/04_SOFTWARE/k4-personal` exists,
+ *   runs `verify-k4-personal.mjs` then `verify-mesh-live.mjs`. In **CI**, `MESH_LIVE_STRICT=1`
+ *   (fails if prod URL in `p31-constants.json` does not serve /api/health + /api/mesh).
+ *   Locally, strict defaults **off** unless `MESH_LIVE_STRICT=1` or you run `npm run verify:mesh`.
  * - **Full tree** (`andromeda/04_SOFTWARE/p31ca` present): `npm run verify` at root, then
  *   p31ca `npm run verify` (prebuild + Astro build). Optional --content.
  * - **Home-only** (no p31ca): root `npm run verify` only (passport, constants, p31ca
@@ -12,9 +16,14 @@
  *
  * Flags:
  *   --content, -c     Run hub:about:generate + hub:about:enrich before p31ca build (mutates public/*-about.html)
+ *   --security, -s    After p31ca `verify`, run p31ca `security:check` (B+C+E; Phase A skipped — verify already ran)
+ *   --no-security     In CI, skip the security suite (p31ca must exist; rare escape hatch)
  *   --skip-soup-tsc   Skip root `npm run build` (tsc only for bonding-soup)
  *   --skip-install    Do not run npm install / npm ci in p31ca
  *   --install, -i     (local) Force `npm install` in p31ca even if node_modules exists
+ *
+ * In **CI** (GITHUB_ACTIONS/CI), when p31ca is present, the security suite runs after hub verify unless
+ * `--no-security` is set.
  */
 import { execSync } from "node:child_process";
 import fs from "node:fs";
@@ -24,18 +33,45 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const p31ca = path.join(root, "andromeda/04_SOFTWARE/p31ca");
+const k4Personal = path.join(root, "andromeda/04_SOFTWARE/k4-personal");
 
 const args = new Set(process.argv.slice(2));
 const withContent = args.has("--content") || args.has("-c");
+const withSecurity =
+  (args.has("--security") || args.has("-s")) &&
+  !args.has("--no-security");
 const skipRootTsc = args.has("--skip-soup-tsc");
 const skipInstall = args.has("--skip-install");
 const forceInstall = args.has("--install") || args.has("-i");
 const isCI = process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
+/** In CI, gate on live k4-personal unless explicitly disabled */
+const strictMeshDefault = isCI ? "1" : "0";
 const hasP31ca = fs.existsSync(p31ca);
+/** After hub verify, run p31ca `security:check` (B+C+E; skip-A). On in CI when p31ca exists; local needs `--security`. */
+const runSecuritySuite =
+  hasP31ca && !args.has("--no-security") && (withSecurity || isCI);
 
-function run(title, command, cwd = root) {
+function run(title, command, cwd = root, extraEnv) {
   console.log(`\n\x1b[36m▶\x1b[0m ${title}`);
-  execSync(command, { cwd, stdio: "inherit", env: process.env });
+  const env = extraEnv ? { ...process.env, ...extraEnv } : process.env;
+  execSync(command, { cwd, stdio: "inherit", env });
+}
+
+function maybeK4Personal() {
+  if (!fs.existsSync(k4Personal)) {
+    return;
+  }
+  run("k4-personal bundle (wrangler dry-run)", "node scripts/verify-k4-personal.mjs", root);
+  const strict =
+    process.env.MESH_LIVE_STRICT !== undefined
+      ? process.env.MESH_LIVE_STRICT
+      : strictMeshDefault;
+  run(
+    `mesh live vs p31-constants (MESH_LIVE_STRICT=${strict})`,
+    "node scripts/verify-mesh-live.mjs",
+    root,
+    { MESH_LIVE_STRICT: strict }
+  );
 }
 
 function main() {
@@ -55,6 +91,8 @@ function main() {
     run("p31ca contracts (ground-truth + synergetic)", "npm run verify:p31ca-contracts", root);
     run("quantum egg hunt (manifest + Larmor)", "npm run verify:egg-hunt", root);
   }
+
+  maybeK4Personal();
 
   if (!hasP31ca) {
     console.log(
@@ -80,7 +118,18 @@ function main() {
   }
 
   run("p31ca verify (passport:verify + prebuild + astro build)", "npm run verify", p31ca);
-  console.log("\n\x1b[32m✓ p31 ci complete (full)\x1b[0m\n");
+
+  if (runSecuritySuite) {
+    run(
+      "p31ca security suite (SCA + workers/CORS + crypto; Phase A skipped — verify already passed)",
+      "npm run security:check",
+      p31ca
+    );
+  }
+
+  const tail =
+    runSecuritySuite ? " (hub + security)\n" : " (full)\n";
+  console.log("\n\x1b[32m✓ p31 ci complete" + tail);
 }
 
 main();

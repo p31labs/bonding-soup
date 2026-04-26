@@ -63,7 +63,9 @@ This file is the **single map of record** for what lives under **`/home/p31`**: 
 
 Design notes, WCD readiness, websocket spec, roadmap, affective-chemistry spec. **Source of intent**; implementation may be in **root** `src/`, **andromeda**, or both.
 
-**External model / handoff review (Gemini, Opus, etc.):** start at **`docs/README-REVIEW-DOCS.md`** — index to **`docs/GEMINI-OPUS-REVIEW-BUNDLE.md`**, workflow / Workers / CWP supplements, and **`docs/MVP-DELIVERABLES-INVENTORY.md`** (tiered LIVE/MVP + grant summary). **Updated 2026-04-25:** see **`p31-constants.json`** for operator-locked numbers; **`docs/CANONICAL-NUMBERING.md`** for namespaces. **`npm run apply:constants`** / **`verify:constants`** keep `ground-truth` aligned.
+**K₄ / SIC-POVM metaphor, vibe+agentic workflow, youth path:** **`docs/SIC-POVM-K4-ARCHITECTURE.md`**, **`docs/AGENTIC-VIBE-INFRASTRUCTURE.md`**, **`docs/PLAN-KIDS-VIBE-CODING.md`**. **Quantum egg + Larmor UI coherence (CI: `verify:egg-hunt`):** **`docs/EGG-HUNT.md`**, manifest **`docs/egg-hunt-manifest.json`**.
+
+**External model / handoff review (Gemini, Opus, etc.):** start at **`docs/README-REVIEW-DOCS.md`** — index to **`docs/GEMINI-OPUS-REVIEW-BUNDLE.md`**, workflow / Workers / CWP supplements, and **`docs/MVP-DELIVERABLES-INVENTORY.md`** (tiered LIVE/MVP + grant summary). **Human onboarding (Tyler / collaborators):** **`docs/HANDOFF-TYLER-P31.md`** — live URLs, both repos, PR pointer, verify commands, operator triangle. **Updated 2026-04-25:** see **`p31-constants.json`** for operator-locked numbers; **`docs/CANONICAL-NUMBERING.md`** for namespaces. **`npm run apply:constants`** / **`verify:constants`** keep `ground-truth` aligned.
 
 **Multi-dome / Spaceship Earth synthesis:** **`docs/WORK-PACKAGE-SYNERGETIC-GEODESIC-STACK.md`** — proposed epics: synergetic manifest + CI verifier, shared icosa / panel geometry, tensegrity seam in the observatory stack, p31ca ↔ PWA deep links, optional ethical “Fate 20” layer.
 

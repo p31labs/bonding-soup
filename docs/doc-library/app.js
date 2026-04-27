@@ -14,8 +14,18 @@
   const searchBlock = document.getElementById("search-block");
   const footHint = document.getElementById("foot-hint");
   const tryChips = document.getElementById("try-chips");
+  const comfortLine = document.getElementById("comfort-line");
 
   const baseTitle = document.title;
+
+  /** One line per “session day” (UTC) so it feels personal but not noisy. */
+  const COMFORT_PHRASES = [
+    "No rush. One word, one chip, or plain browsing — all valid.",
+    "The chips are a soft on-ramp if picking a search word feels like work.",
+    "All of this is for you. Search is a shortcut; scrolling is not failure.",
+    "Tired? Tap one chip. That still counts as progress.",
+    "Nothing here is timed or graded. Find one link that helps, that is enough.",
+  ];
   let worker = null;
   let workerReady = false;
   let searchSeq = 0;
@@ -98,7 +108,7 @@
         (total === 1 ? "" : "s") +
         " — " +
         indexBit +
-        ". Type to filter, or try a chip.";
+        ". Type a word, or try a chip — flow your own way.";
       document.title = baseTitle;
       setFootHint(total > 3);
       return;
@@ -108,12 +118,9 @@
       meta.textContent =
         "No match for \u201c" +
         qSafe +
-        "\u201d — try another word or a chip. · " +
+        "\u201d · " +
         indexBit +
-        " · " +
-        total +
-        " document" +
-        (total === 1 ? "" : "s");
+        " — try a chip or a shorter word.";
     } else {
       meta.innerHTML =
         "Found <strong>" +
@@ -140,6 +147,14 @@
 
   function setFootHint(visible) {
     if (footHint) footHint.hidden = !visible;
+  }
+
+  function showComfort() {
+    if (!comfortLine || !COMFORT_PHRASES.length) return;
+    const day = Math.floor(Date.now() / 86400000);
+    const idx = (day + (total | 0)) % COMFORT_PHRASES.length;
+    comfortLine.textContent = COMFORT_PHRASES[idx];
+    comfortLine.hidden = false;
   }
 
   function showResultSkeleton() {
@@ -214,9 +229,12 @@
     if (!items.length) {
       if (q) {
         resultsEl.innerHTML =
-          '<p class="empty" role="status">No results for <strong>' +
+          '<div class="empty-state" role="status">' +
+          '<h2 class="empty-lead">Nothing with that exact shape</h2>' +
+          "<p class=\"empty-sub\">No direct hits for <strong>" +
           esc(q) +
-          "</strong>. <button type=\"button\" class=\"btn-inline-clear\" data-empty-clear>Clear search</button> to browse all.</p>";
+          "</strong> — a shorter word, a chip above, or " +
+          '<button type="button" class="btn-inline-clear" data-empty-clear>clear the box</button> to see everything.</p></div>';
         const clearEmpty = resultsEl.querySelector("[data-empty-clear]");
         if (clearEmpty) clearEmpty.addEventListener("click", clearSearch, { once: true });
         return;
@@ -254,6 +272,8 @@
         "<article class=\"hit-inner\">" +
         "<a class=\"title\" href=\"" +
         esc(href) +
+        '" title="Open: ' +
+        esc(d.title).replace(/"/g, "&quot;") +
         '">' +
         titleHtml +
         "</a>" +
@@ -296,6 +316,7 @@
       urlReplaceForQuery(qS);
     }
     setClearVisible(true);
+    setSearchBusy(true);
     const myId = ++searchSeq;
     activeSearchId = myId;
     worker.postMessage({ type: "search", q: qS, reqId: myId });
@@ -332,23 +353,60 @@
   }
 
   function scheduleQuery() {
+    setSearchBusy(true);
     clearTimeout(debounceT);
     debounceT = setTimeout(runQuery, 120);
+  }
+
+  function focusFirstHitLink() {
+    const a = document.querySelector("#results ol.hits a.title");
+    if (a) a.focus();
   }
 
   if (input) {
     input.addEventListener("input", scheduleQuery);
     input.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown" && !e.shiftKey && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        focusFirstHitLink();
+        return;
+      }
       if (e.key === "Enter" && !e.shiftKey && !e.metaKey && !e.ctrlKey) {
         e.preventDefault();
         historyPushOnEnter();
         clearTimeout(debounceT);
+        setSearchBusy(true);
         runQuery();
       }
     });
   }
   if (clearBtn) {
     clearBtn.addEventListener("click", clearSearch);
+  }
+
+  if (resultsEl) {
+    resultsEl.addEventListener("keydown", function (e) {
+      if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+      const t = e.target;
+      if (!t || t.tagName !== "A" || !t.classList.contains("title")) return;
+      const li = t.closest("li.hit");
+      if (!li) return;
+      const list = li.parentElement;
+      if (!list || list.tagName !== "OL") return;
+      const items = list.querySelectorAll("li.hit a.title");
+      const i = Array.prototype.indexOf.call(items, t);
+      if (i === -1) return;
+      if (e.key === "ArrowUp" && i === 0) {
+        e.preventDefault();
+        if (input) input.focus();
+        return;
+      }
+      const next = e.key === "ArrowDown" ? items[i + 1] : items[i - 1];
+      if (next) {
+        e.preventDefault();
+        next.focus();
+      }
+    });
   }
 
   document.addEventListener("keydown", function (e) {
@@ -364,11 +422,22 @@
       e.preventDefault();
       if (input) input.focus();
     }
-    if (e.key === "Escape" && input && document.activeElement === input) {
-      if (input.value) {
-        e.preventDefault();
-        clearSearch();
+    if (e.key === "Escape" && input && String(input.value).trim()) {
+      const t = e.target;
+      const tag = t && t.tagName;
+      const inEditable =
+        t &&
+        (tag === "INPUT" || tag === "TEXTAREA" || t.isContentEditable === true);
+      if (inEditable && t !== input) return;
+      if (document.activeElement === input) {
+        if (input.value) {
+          e.preventDefault();
+          clearSearch();
+        }
+        return;
       }
+      e.preventDefault();
+      clearSearch();
     }
   });
 
@@ -387,6 +456,9 @@
 
   function onLoadFailure(text) {
     if (mainEl) mainEl.setAttribute("aria-busy", "false");
+    setSearchBusy(false);
+    setFootHint(false);
+    document.body.classList.add("lib-ready");
     meta.innerHTML =
       '<span class="err">Search index could not be built. ' + esc(text) + "</span>";
   }
@@ -408,6 +480,8 @@
       if (m.type === "ready") {
         workerReady = true;
         if (mainEl) mainEl.setAttribute("aria-busy", "false");
+        document.body.classList.add("lib-ready");
+        showComfort();
         const params = new URLSearchParams(window.location.search);
         const q0 = params.get("q");
         if (q0 != null && String(q0) !== "" && input) {
@@ -429,28 +503,75 @@
     });
   }
 
+  if (tryChips) {
+    tryChips.addEventListener("click", function (e) {
+      const btn = e.target && e.target.closest && e.target.closest("button.chip");
+      if (!btn || !input) return;
+      const t = btn.getAttribute("data-try");
+      if (t == null) return;
+      e.preventDefault();
+      input.value = t;
+      input.focus();
+      clearTimeout(debounceT);
+      setSearchBusy(true);
+      if (window.matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+        btn.classList.add("chip-joy");
+        const onEnd = function () {
+          btn.classList.remove("chip-joy");
+          btn.removeEventListener("animationend", onEnd);
+        };
+        btn.addEventListener("animationend", onEnd);
+        setTimeout(function () {
+          btn.removeEventListener("animationend", onEnd);
+          btn.classList.remove("chip-joy");
+        }, 600);
+      }
+      runQuery();
+    });
+  }
+
+  function onIndexPathFailure() {
+    if (mainEl) mainEl.setAttribute("aria-busy", "false");
+    setSearchBusy(false);
+    setFootHint(false);
+    document.body.classList.add("lib-ready");
+  }
+
   document.addEventListener("DOMContentLoaded", async function () {
     wireWorker();
     if (!worker) return;
+    showResultSkeleton();
 
     let res;
     try {
       res = await fetch("index.json", { cache: "no-store" });
     } catch (e) {
-      if (mainEl) mainEl.setAttribute("aria-busy", "false");
+      onIndexPathFailure();
+      if (resultsEl) {
+        resultsEl.innerHTML =
+          '<p class="empty" role="status">Could not load <code>index.json</code>. Use <code>npm run demo</code> from the repo root (not <code>file://</code>).</p>';
+      }
       meta.innerHTML =
         '<span class="err">Could not fetch index.json.</span> Use <code>npm run demo</code> from the repo root, not file://. Run <code>npm run build:doc-index</code> if the file is missing.';
       return;
     }
     if (!res.ok) {
-      if (mainEl) mainEl.setAttribute("aria-busy", "false");
+      onIndexPathFailure();
+      if (resultsEl) {
+        resultsEl.innerHTML =
+          '<p class="empty" role="status">Missing <code>index.json</code> — run <code>npm run build:doc-index</code> from the repo root.</p>';
+      }
       meta.innerHTML =
         'Missing <code>index.json</code> — run <code>npm run build:doc-index</code> from the repo root.';
       return;
     }
     const data = await res.json();
     if (data.schema !== "p31.docLibrary/1.0.0") {
-      if (mainEl) mainEl.setAttribute("aria-busy", "false");
+      onIndexPathFailure();
+      if (resultsEl) {
+        resultsEl.innerHTML =
+          '<p class="empty" role="status">This page needs a current document index. Run <code>npm run build:doc-index</code>.</p>';
+      }
       meta.textContent = "Invalid index.json schema.";
       return;
     }
@@ -459,8 +580,15 @@
     total = data.count || 0;
     const when = (data.generatedAt || "").replace("T", " ");
     indexWhen = when.length >= 19 ? when.slice(0, 19) : when || "—";
-    meta.textContent = "Loading index… " + `Index ${indexWhen} · ${total} document${total === 1 ? "" : "s"}`;
+    meta.textContent =
+      "Preparing " +
+      total +
+      " document" +
+      (total === 1 ? "" : "s") +
+      " for search — " +
+      indexWhen;
 
+    showResultSkeleton();
     worker.postMessage({ type: "load", documents: docs });
   });
 })();

@@ -15,7 +15,7 @@
     html { scroll-behavior: smooth; }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      .hits .hit, .skel-bone, .header-glow, .chips, #q, .try-chips, .search-block { animation: none !important; transition: none !important; }
+      .hits .hit, .skel-bone, .header-glow, .chips, .chip.chip-joy, #q, .try-chips, .search-block, .comfort-line { animation: none !important; transition: none !important; }
     }
     body {
       margin: 0;
@@ -132,6 +132,36 @@
       max-width: 36rem;
       line-height: 1.55;
     }
+    .comfort-line {
+      margin: var(--p31-space-3) 0 0;
+      max-width: 40rem;
+      font-size: var(--p31-text-sm);
+      line-height: 1.6;
+      color: color-mix(in srgb, var(--p31-butter, #cda852) 45%, var(--p31-muted, #6b7280) 55%);
+      font-style: italic;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .comfort-line:not([hidden]) {
+        animation: comfortIn 0.55s var(--p31-ease-decelerate, cubic-bezier(0, 0, 0.2, 1)) 1;
+      }
+    }
+    @keyframes comfortIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @supports not (color: color-mix(in srgb, red, blue)) {
+      .comfort-line { color: #9a9185; }
+    }
+    .heart-mark {
+      display: inline-block;
+      margin-left: 0.2em;
+      color: color-mix(in srgb, var(--p31-cyan, #4db8a8) 55%, var(--p31-butter, #cda852) 45%);
+      font-size: 0.95em;
+      line-height: 0;
+    }
+    @supports not (color: color-mix(in srgb, red, blue)) {
+      .heart-mark { color: var(--p31-cyan, #4db8a8); }
+    }
     header .lede {
       margin: var(--p31-space-3) 0 0;
       font-size: var(--p31-text-xs);
@@ -199,6 +229,19 @@
     }
     .chip:focus-visible {
       box-shadow: 0 0 0 2px var(--p31-focus-color-hub, rgba(77, 184, 168, 0.45));
+    }
+    .chip:active {
+      transform: scale(0.97);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .chip.chip-joy {
+        animation: chipNudge 0.45s var(--p31-ease-decelerate, ease-out) 1;
+      }
+    }
+    @keyframes chipNudge {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.04); }
+      100% { transform: scale(1); }
     }
     .search-label {
       display: block;
@@ -393,7 +436,7 @@
     @supports not (background: color-mix(in srgb, red, blue)) {
       .empty-state { background: var(--p31-surface, #161920); }
     }
-    .empty-state .empty-lead { font-size: 1.35rem; margin: 0 0 0.35em; color: var(--p31-cloud, #d8d6d0); }
+    .empty-state .empty-lead { font-size: 1.35rem; font-weight: 600; margin: 0 0 0.35em; color: var(--p31-cloud, #d8d6d0); }
     .empty-state .empty-sub { font-size: var(--p31-text-sm); margin: 0; opacity: 0.9; }
     .err { color: #fca5a5; }
     mark.hi {
@@ -412,6 +455,9 @@
       font-size: 0.75rem;
       color: var(--p31-muted, #6b7280);
       text-align: center;
+      max-width: 28rem;
+      margin-left: auto;
+      margin-right: auto;
     }
   </style>
   <script src="app.js" defer></script>
@@ -423,8 +469,10 @@
     <header>
       <div class="header-glow" aria-hidden="true"></div>
       <h1><span class="word-mark">Document library</span> <span class="pill" title="All processing happens in your browser">Local · private</span></h1>
-      <p class="tagline">Maps, standards, and notes — in one place. Nothing leaves your machine until you open a file.</p>
-      <p class="lede">From the repo root: <code>npm run demo</code> then this folder. Refresh the index: <code>npm run build:doc-index</code>.</p>
+      <p class="tagline">Your maps, standards, and handbooks — in one quiet view. Stays in this tab until you open a file.</p>
+      <p class="comfort-line" id="comfort-line" role="status" aria-live="polite" hidden></p>
+      <p class="lede">From the repo root: <code>npm run demo</code> then <code>…/docs/doc-library/</code>. Refresh the index: <code>npm run build:doc-index</code>.</p>
+      <p class="lede lede-below" style="margin-top:0.4rem;opacity:0.92"><em>As above, so below:</em> the same <code>demo</code> / <code>build:doc-index</code> bar is one click from BONDING Soup, the interactive how-to, and the local command center — your prose in the tree, a quiet full-text read in the tab. <span class="heart-mark" aria-hidden="true" title="love">&#9829;</span></p>
       <ul class="quick" aria-label="Quick links">
         <li><a href="../../P31-ROOT-MAP.md">P31-ROOT-MAP</a></li>
         <li><a href="../../AGENTS.md">AGENTS</a></li>
@@ -433,7 +481,7 @@
         <li><a href="../../p31-personal-howto.html">How-to (UI)</a></li>
       </ul>
       <div class="try-chips" id="try-chips" role="group" aria-label="Example searches — tap to try">
-        <span class="chips-label" id="chips-lbl">Try a search</span>
+        <span class="chips-label" id="chips-lbl">Try a gentle search</span>
         <div class="chips" aria-labelledby="chips-lbl">
           <button type="button" class="chip" data-try="mesh" title="Search for mesh">mesh</button>
           <button type="button" class="chip" data-try="K4" title="Cage / K₄">K4</button>
@@ -449,7 +497,7 @@
             type="search"
             id="q"
             name="q"
-            placeholder="Maps, how-tos, standards, or one word you remember"
+            placeholder="One word: mesh, verify, passport… or tap a chip for a nudge"
             autocomplete="off"
             enterkeyhint="search"
             spellcheck="false"
@@ -457,14 +505,14 @@
           />
           <button type="button" id="clear-q" class="btn-clear" hidden aria-label="Clear search">Clear</button>
         </div>
-        <p class="kbd-hint" id="kbd-hint"><kbd>/</kbd> focus search · <kbd>Esc</kbd> clear · <kbd>↓</kbd> first result · <kbd>Enter</kbd> save step for <kbd>Back</kbd></p>
+        <p class="kbd-hint" id="kbd-hint"><kbd>/</kbd> search · <kbd>Esc</kbd> clear (almost anywhere) · <kbd>↓</kbd> <kbd>↑</kbd> in results (first <kbd>↑</kbd> back to the box) · <kbd>Enter</kbd> save a history step</p>
       </div>
     </header>
     <main id="main" tabindex="-1" aria-label="Search results" aria-busy="true">
       <p class="meta-line" id="meta" aria-live="polite">Loading your index…</p>
-      <p class="meta-hint" id="meta-hint" hidden>The address bar follows your query so you can bookmark or share. <kbd>Enter</kbd> after a search adds a browser-history step (use <kbd>Back</kbd> to undo a query).</p>
+      <p class="meta-hint" id="meta-hint" hidden>The address line keeps your query so you can bookmark it or paste it to a teammate. <kbd>Enter</kbd> saves a step in your browser’s Back stack.</p>
       <div id="results" class="results" role="region" aria-label="Document hits" aria-describedby="meta"></div>
-      <p class="foot" id="foot-hint" hidden>End of list. Change the search or pick another “Try” chip to explore.</p>
+      <p class="foot" id="foot-hint" hidden>End of the list — same library, two altitudes. Tweak a word or tap a chip; there is no wrong path.</p>
     </main>
   </div>
 </body>

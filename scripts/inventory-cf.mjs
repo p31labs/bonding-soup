@@ -2,6 +2,7 @@
 /**
  * Scan for wrangler.toml and print a markdown-friendly table of Workers / Pages.
  * Run from P31 home: node scripts/inventory-cf.mjs
+ * (Deployable inventory — not the same as p31-alignment.json source/sink graph; use both when auditing.)
  */
 import fs from "fs";
 import path from "path";

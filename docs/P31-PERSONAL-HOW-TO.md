@@ -25,7 +25,7 @@ You are not juggling twenty products—you are juggling **three layers**:
 | Goal | Command | Notes |
 |------|---------|--------|
 | **New machine / clean clone** | `npm run setup` | Installs, `apply:constants`, `verify`, p31ca deps when tree exists, optional git hooks. |
-| **Sanity check (same bar as CI root job)** | `npm run verify` | Includes ecosystem, MAP pipeline (if `andromeda/` present), p31ca contract checks, egg-hunt, `tsc`. |
+| **Sanity check (same bar as CI root job)** | `npm run verify` | Includes ecosystem, MAP pipeline (if `andromeda/` present), p31ca contract checks, egg-hunt, **doc index** (`build:doc-index` → `verify:doc-index`), `tsc`. |
 | **Full local + live audits** | `npm run validate:full` | Shell script + report under `/tmp/`; stricter than `verify` alone. |
 | **Release-style check (verify + hub build when p31ca exists)** | `npm run release:check` | Uses `scripts/p31-ci.mjs`. |
 | **Everything including mesh strict + glass (when configured)** | `npm run p31:all` | Heavier; see `AGENTS.md`. |
@@ -38,7 +38,8 @@ You are not juggling twenty products—you are juggling **three layers**:
 | **Install git hooks (home)** | `npm run git:hooks` | `core.hooksPath=.githooks` (monetary pre-commit, optional auto-push). |
 | **PR + auto-merge (low friction)** | `npm run pr` at home **or** `pnpm pr` **inside** `andromeda/` | See `AGENTS.md` for `fix:gh` / credentials. |
 | **Remotes (origin + andromeda)** | `npm run git:remotes` | Uses `p31-github.json` when present. |
-| **Soup + passport in browser** | `npm run demo` → open **`soup-demo.html`**, **`cognitive-passport/index.html`** | Port **8080** default. |
+| **Search home docs (full-text)** | `npm run demo` → **http://127.0.0.1:8080/docs/doc-library/** | After editing `docs/*.md`: `npm run build:doc-index` (or rely on `npm run verify`). |
+| **Soup + passport in browser** | `npm run demo` → **`soup.html`**, **`cognitive-passport/index.html`** | Port **8080** default. |
 
 ---
 

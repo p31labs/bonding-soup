@@ -42,7 +42,23 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
-      "label": "P31: verify (passport + constants + p31ca contracts + tsc)",
+      "label": "P31: build doc index (markdown → docs/doc-library/index.json)",
+      "type": "shell",
+      "command": "npm run build:doc-index",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify doc index",
+      "type": "shell",
+      "command": "npm run verify:doc-index",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify (full root ship bar incl. doc index + tsc)",
       "type": "shell",
       "command": "npm run verify",
       "options": { "cwd": "${workspaceFolder}" },

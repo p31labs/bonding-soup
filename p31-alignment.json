@@ -1,0 +1,178 @@
+{
+  "schema": "p31.alignment/1.0.0",
+  "name": "P31 home alignment registry",
+  "ephemeralization": "One canonical source per concern; generate or verify downstream artefacts. No parallel lore. A change in a source is intentionally coupled to its sinks: CI and this file tell you which command heals or proves alignment.",
+  "sources": [
+    {
+      "id": "p31-constants",
+      "path": "p31-constants.json",
+      "role": "Operator-locked numbers, mission snippet, ground-truth version/schema pins, mesh URLs"
+    },
+    {
+      "id": "p31-universal-canon",
+      "path": "andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json",
+      "role": "Colors, type scale, motion, focus — hub/org appearances",
+      "optional": true
+    },
+    {
+      "id": "p31-ground-truth",
+      "path": "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json",
+      "role": "p31.ground-truth/1.0.0 — redirects, registry invariants, Three pins",
+      "optional": true
+    },
+    {
+      "id": "cognitive-passport-source",
+      "path": "cognitive-passport/index.html",
+      "role": "Cognitive Passport authoring (canonical); p31ca mirror is generated"
+    },
+    {
+      "id": "soup-entry",
+      "path": "soup.html",
+      "role": "BONDING Soup browser entry; bonding deploy copy via sync"
+    },
+    {
+      "id": "p31-hub-card-ecosystem",
+      "path": "docs/P31-HUB-CARD-ECOSYSTEM.md",
+      "role": "Normative: p31ca registry ids = hub-app-ids HUB_ALL_CARD_ORDER; one card, one about, one appUrl"
+    },
+    {
+      "id": "p31ca-hub-registry",
+      "path": "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs",
+      "role": "p31ca product list (copy, appUrl, related[])",
+      "optional": true
+    },
+    {
+      "id": "p31ca-hub-app-ids",
+      "path": "andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs",
+      "role": "Home / prototype id order; id set must match registry",
+      "optional": true
+    },
+    {
+      "id": "p31-live-fleet",
+      "path": "p31-live-fleet.json",
+      "role": "Sites + mesh/payment snapshot; `sources[]` and mesh URLs must match `p31-constants.json` and worker-allowlist names"
+    },
+    {
+      "id": "p31ca-worker-allowlist",
+      "path": "andromeda/04_SOFTWARE/p31ca/security/worker-allowlist.json",
+      "role": "p31.workerAllowlist/1.0.0 — named Workers + paths; inventory compares to all `wrangler.toml` under andromeda/04_SOFTWARE",
+      "optional": true
+    },
+    {
+      "id": "p31-integrations-bridge-doc",
+      "path": "docs/P31-INTEGRATIONS-BRIDGE.md",
+      "role": "Normative: OSS smart home / wearables / operator bridge; pairs with p31-constants integrations"
+    },
+    {
+      "id": "doc-index-manifest",
+      "path": "docs/doc-index.manifest.json",
+      "role": "Allowlist of markdown roots for docs/doc-library search index (p31.docIndexManifest/1.0.0)"
+    }
+  ],
+  "derivations": [
+    {
+      "id": "constants-to-ground-truth-numbering",
+      "from": ["p31-constants.json"],
+      "to": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"],
+      "apply": "npm run apply:constants (regenerates fragments / mirrors as implemented in apply-constants.mjs)",
+      "verify": "npm run verify:constants",
+      "note": "canonicalNumbering and schema version must match p31-constants"
+    },
+    {
+      "id": "canon-to-style-css",
+      "from": ["andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json"],
+      "to": [
+        "cognitive-passport/p31-style.css",
+        "andromeda/04_SOFTWARE/p31ca/public/p31-style.css"
+      ],
+      "apply": "npm run apply:p31-style",
+      "verify": "npm run verify:p31-style",
+      "note": "Passport and p31ca public CSS must be identical after apply"
+    },
+    {
+      "id": "passport-to-p31ca-mirror",
+      "from": ["cognitive-passport/index.html"],
+      "to": ["andromeda/04_SOFTWARE/p31ca/public/passport-generator.html"],
+      "apply": "npm run sync:passport",
+      "verify": "npm run verify:passport",
+      "note": "Transform: andromeda/04_SOFTWARE/p31ca/scripts/passport-p31ca-transform.mjs"
+    },
+    {
+      "id": "soup-to-bonding",
+      "from": ["soup.html", "soup-quantum.css", "p31-constants.json", "dist/"],
+      "to": ["andromeda/04_SOFTWARE/bonding/public/soup/"],
+      "apply": "npm run sync:soup-bonding",
+      "verify": "implicit in bonding build; run hub build after sync when shipping",
+      "note": "scripts/sync-soup-to-bonding.mjs — bonding.p31ca.org/soup"
+    },
+    {
+      "id": "hub-landing-data",
+      "from": [
+        "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs",
+        "andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs"
+      ],
+      "to": ["andromeda/04_SOFTWARE/p31ca/src/data/hub-landing.json"],
+      "apply": "postinstall / p31ca: hub:build (scripts/hub/build-landing-data.mjs)",
+      "verify": "p31ca prebuild: scripts/hub/verify.mjs",
+      "note": "Joint constraint: same id set in both from[] files. index.astro grid is data-driven. Spec: docs/P31-HUB-CARD-ECOSYSTEM.md"
+    },
+    {
+      "id": "mesh-urls-constants-to-live-fleet",
+      "from": ["p31-constants.json"],
+      "to": ["p31-live-fleet.json"],
+      "apply": "When `mesh` or `payment` URLs change in p31-constants, update `p31-live-fleet.json` `meshAndPayments` (and `sources` if needed) so the bundle matches",
+      "verify": "npm run verify:ecosystem",
+      "note": "verify-ecosystem.mjs compares `p31-ecosystem.json` templates, then asserts live-fleet mesh/payment block tracks constants"
+    },
+    {
+      "id": "cf-workers-allowlist",
+      "from": ["andromeda/04_SOFTWARE/p31ca/security/worker-allowlist.json"],
+      "to": ["andromeda/04_SOFTWARE/p31ca/build/security-inventory.json"],
+      "apply": "New Worker: add `wrangler.toml` under andromeda/04_SOFTWARE, add allowlist entry (`name` = wrangler `name`). If mesh URL: p31-constants + apply:constants, then p31-live-fleet. See p31ca docs/EDGE-SECURITY.md, SECURITY-RUNBOOK.md",
+      "verify": "from p31ca: npm run security:workers (also in npm run security:check after hub build in release paths)",
+      "note": "verify-worker-inventory.mjs walks wrangler files; unlisted → P1. Excludes */docs/files/*. CORS heuristics in same script"
+    },
+    {
+      "id": "integrations-constants-to-p31ca",
+      "from": ["p31-constants.json"],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/src/data/p31-integrations.json",
+        "andromeda/04_SOFTWARE/p31ca/public/p31-integrations.json"
+      ],
+      "apply": "npm run apply:constants",
+      "verify": "npm run verify:constants (integrations schema, openCatalog https, src/public/json parity)",
+      "note": "Human doc: docs/P31-INTEGRATIONS-BRIDGE.md; route /integrations; ground-truth routes.integrationsBridge"
+    },
+    {
+      "id": "markdown-to-doc-library-index",
+      "from": ["docs/doc-index.manifest.json", "docs/**/*.md", "README.md", "AGENTS.md", "P31-ROOT-MAP.md", "CLAUDE.md"],
+      "to": [
+        "docs/doc-library/index.json",
+        "docs/doc-library/app.js",
+        "docs/doc-library/index.html",
+        "docs/doc-library/doc-search-worker.js",
+        "docs/doc-library/vendor/minisearch-6.3.0.umd.min.js"
+      ],
+      "apply": "npm run build:doc-index",
+      "verify": "npm run verify:doc-index (after build:doc-index in root verify; Node uses npm minisearch, browser uses vendor UMD + worker)",
+      "note": "index.json is generated; UI/worker/vendor are hand-maintained. Schema p31.docLibrary/1.0.0; p31ca public mirror = Phase 3 (PLAN-DOCUMENT-LIBRARY.md)"
+    }
+  ],
+  "verifyPipeline": {
+    "description": "Root `package.json` `verify` = prelude + scripts in order. Update this file whenever `verify` changes.",
+    "prelude": "verify:alignment",
+    "preludeNote": "Fast guard (verify-alignment.mjs): JSON + required sources. Not re-run inside `npm run verify:alignment -- --verify`.",
+    "scripts": [
+      "verify:passport",
+      "verify:constants",
+      "verify:ecosystem",
+      "verify:map-pipeline",
+      "verify:p31-style",
+      "verify:p31ca-contracts",
+      "verify:egg-hunt",
+      "build:doc-index",
+      "verify:doc-index",
+      "build"
+    ]
+  }
+}

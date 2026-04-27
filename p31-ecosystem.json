@@ -82,7 +82,7 @@
       "id": "p31ca-mesh-start-page",
       "url": "https://p31ca.org/mesh-start.html",
       "group": "pages",
-      "note": "PAR personal landing (CWP-P31-PAR); repo dev: soup-demo.html → andromeda/.../p31ca/public/mesh-start.html"
+      "note": "PAR personal landing (CWP-P31-PAR); repo: soup.html → andromeda/.../p31ca/public/mesh-start.html"
     },
     {
       "id": "p31ca-initial-build-page",
@@ -143,6 +143,13 @@
       "url": "https://p31ca.org/creator-economy.json",
       "group": "contracts",
       "note": "Public JSON contract (verify:economy in p31ca)"
+    },
+    {
+      "id": "home-assistant-lan-optional",
+      "url": "{{integrations.endpoints.homeAssistantLanBase}}",
+      "group": "integrations",
+      "note": "Set integrations.endpoints.homeAssistantLanBase in p31-constants (e.g. http://hass:8123). Omitted from CLI + /ops/ when empty. LAN-only; same network as HA.",
+      "skipIfEmpty": true
     }
   ],
   "deployables": [

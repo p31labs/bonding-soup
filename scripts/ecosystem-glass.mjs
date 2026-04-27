@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Glass box: live fetch each probe in p31-ecosystem.json, expand {{mesh.*}} from p31-constants.json.
- * Probes default to GET. Optional fields per probe: method "POST", body (JSON string), expectJsonKey (require key in JSON body when HTTP OK).
+ * Probes default to GET. Optional: skipIfEmpty — omit probe when expanded URL is empty or not http(s) (optional LAN URLs from p31-constants). method "POST", body, expectJsonKey as before.
  * Prints a table + writes /tmp/p31_glass_report.json (and optional --json stdout only).
  * Exit: 0 by default. P31_GLASS_STRICT=1 → exit 1 if any probe is "down" (not auth/warn).
  */
@@ -153,15 +153,26 @@ async function main() {
 
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
   const constants = JSON.parse(fs.readFileSync(constantsPath, "utf8"));
-  const probes = (manifest.glassProbes || []).map((p) => ({
-    id: p.id,
-    group: p.group || "other",
-    note: p.note,
-    url: expandUrl(p.url, constants),
-    method: p.method || "GET",
-    body: p.body,
-    expectJsonKey: p.expectJsonKey,
-  }));
+  const raw = manifest.glassProbes || [];
+  /** @type {Array<{id: string, group: string, note?: string, url: string, method: string, body?: string, expectJsonKey?: string}>} */
+  const probes = [];
+  for (const p of raw) {
+    const url = expandUrl(p.url, constants);
+    if (p.skipIfEmpty) {
+      if (!url || !/^https?:/i.test(String(url))) {
+        continue;
+      }
+    }
+    probes.push({
+      id: p.id,
+      group: p.group || "other",
+      note: p.note,
+      url,
+      method: p.method || "GET",
+      body: p.body,
+      expectJsonKey: p.expectJsonKey,
+    });
+  }
 
   const bad = probes.filter((p) => !p.url || !p.url.startsWith("http"));
   if (bad.length) {

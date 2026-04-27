@@ -26,7 +26,7 @@
 | PAR CWP | `andromeda/04_SOFTWARE/integration-handoff/CONTROLLED-WORK-PACKAGE-PERSONAL-AGENT-ROOM.md` |
 | Handoff bundle | `andromeda/04_SOFTWARE/integration-handoff/CWP-31/README.md` |
 | Mesh / start pages | `docs/MESH-MAP-PERSONAL-START-PAGES.md` |
-| Dev entry (home) | `soup-demo.html` → links to `andromeda/04_SOFTWARE/p31ca/public/planetary-onboard.html` and `mesh-start.html` under **`npm run demo`** |
+| Dev entry (home) | `soup.html` → links to `andromeda/04_SOFTWARE/p31ca/public/planetary-onboard.html` and `mesh-start.html` under **`npm run demo`** |
 
 **Verify from P31 home:** `npm run verify:mesh` (k4-personal wrangler dry-run + live API vs `p31-constants.json`).
 

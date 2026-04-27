@@ -63,7 +63,7 @@ CWP / mesh-bridge pattern: copy `integration-handoff/CWP-30/mesh-bridge.ts` idea
 ## Related docs
 
 - **`docs/FAMILY-SOVEREIGN-PACK.md`** — printable household handoff; live **`https://p31ca.org/family-pack`** (301 → **`family-sovereign-pack.html`**) companion to **`https://p31ca.org/p31-super-centaur-pack.json`**.
-- **BONDING Soup dev:** root **`soup-demo.html`** (with **`npm run demo`**) links to **`andromeda/04_SOFTWARE/p31ca/public/planetary-onboard.html`** and **`mesh-start.html`** so the engine demo and PAR front door share one local static server.  
+- **BONDING Soup dev:** root **`soup.html`** (with **`npm run demo`**) links to **`andromeda/04_SOFTWARE/p31ca/public/planetary-onboard.html`** and **`mesh-start.html`** so the engine demo and PAR front door share one local static server.  
 - `docs/MVP-DELIVERABLES-INVENTORY.md` — what is live today.  
 - `P31-ROOT-MAP.md` — site tracks (p31ca vs phosphorus31.org vs home vertical).  
 - `docs/GEODESIC-CAMPAIGN.md` — progressive on-ramp pattern to mirror on **start pages** (short steps, skip OK).  

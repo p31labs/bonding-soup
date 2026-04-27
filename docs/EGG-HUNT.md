@@ -10,8 +10,8 @@
 
 | ID | Operator (basis tag) | Vertex | Trigger | Source file |
 |----|----------------------|--------|---------|-------------|
-| SOUP-DBG-WS | parametric-superposition | 1 | `?debug`, `?ws=` | `soup-demo.html` |
-| SOUP-ARCHIVE | parametric-superposition | 1 | `BONDING_ARCHIVE_URL` | `soup-demo.html` |
+| SOUP-DBG-WS | parametric-superposition | 1 | `?debug`, `?ws=` | `soup.html` |
+| SOUP-ARCHIVE | parametric-superposition | 1 | `BONDING_ARCHIVE_URL` | `soup.html` |
 | DOME | povm-measurement | 2 | `/dome` + Layer 0, axe, shortcuts | `p31ca/…/dome.astro` |
 | HUB-LAYER0 | povm-measurement | 2 | Hub `/` trim → Layer 0 | `p31ca/…/index.astro` |
 | ORCH-PAGE | dark-eigenstate | 3 | `GET /orchestrator` | `p31ca/…/orchestrator.astro` |
@@ -22,7 +22,7 @@
 
 **Path prefix:** `andromeda/04_SOFTWARE/p31ca/` in full checkouts. **Base URL** for the shipped hub: `https://p31ca.org`.
 
-**Operator map (p31ca.org, no surprise — static routes exist):** `/` hub · `/dome` · `/orchestrator` (not on hub-landing) · `legacy-mvp-hub.html` · `lattice.html` · `wonky.html` · `soup-demo.html` is repo-local (BONDING demo, not the hub). Passport generator: `passport-generator.html` and root `cognitive-passport/`.
+**Operator map (p31ca.org, no surprise — static routes exist):** `/` hub · `/dome` · `/orchestrator` (not on hub-landing) · `legacy-mvp-hub.html` · `lattice.html` · `wonky.html` · `soup.html` is repo-local (BONDING demo, not the hub). Passport generator: `passport-generator.html` and root `cognitive-passport/`.
 
 **Risk / hardening:** The **orchestrator** static page is **unlisted**, not private: anyone with the URL can load it. Treat **`p31-orchestrator` worker** APIs as the trust boundary: enforce **auth / rate limits / audit** on the Worker, not in static HTML. `entangled-channel` remains **nonlocal** (browser → worker); CORS and deployment own exposure.
 

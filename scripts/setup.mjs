@@ -53,7 +53,7 @@ if (exists(path.join(p31ca, "package.json"))) {
   );
 }
 
-console.log("Local demo:  npm run demo  →  http://127.0.0.1:8080/soup-demo.html\n");
+console.log("Local demo:  npm run demo  →  http://127.0.0.1:8080/soup.html\n");
 
 try {
   execSync("node scripts/git-hooks-config.mjs", { cwd: root, stdio: "inherit" });

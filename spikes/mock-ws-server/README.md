@@ -2,10 +2,13 @@
 
 ## Purpose
 Test the WCD-32 multiplayer implementation with a simulated multiplayer environment. This server provides:
-- 8 mock players with 2-4 molecules each (total ~20-32 molecules)
-- 2Hz molecule position updates with realistic movement
-- Social event broadcasting (pings, reactions)
-- Connection management and heartbeat monitoring
+- 8 mock players with 2-4 molecules each (total ~20-32 molecules) in **`room=mock`** (or default)
+- **Family / explicit `room=…`** (not `mock`): no NPCs, **`playerState`** from each browser, `moleculeStateUpdate` with `fullSnapshot` to peers
+- A **roster** (who else is in the room) on every **`connectionInit`** and **`heartbeat`**
+- 2Hz molecule position updates (mock) + 500ms family rebroadcasts
+- Social event broadcasting (pings) and **per-room** event log tails
+- **Port:** set **`MOCK_WS_PORT`** (default `8082`). Root repo: **`npm run test:mock-ws`** spawns a random port and runs an integration probe.
+- **As above / so below:** every **`connectionInit`** includes **`localRunbook`** (echo `as-above-so-below`, live **port**, same **lines** as startup `console.log`) so docs, UI, and terminal stay aligned.
 
 ## Usage
 
@@ -16,7 +19,7 @@ node server.js
 ```
 
 ### Connect from Demo
-1. Open `soup-demo.html` in your browser
+1. Open `soup.html` in your browser
 2. The demo will automatically connect to `ws://localhost:8082`
 3. Watch ghost molecules appear and move smoothly
 4. Send pings to test social event broadcasting

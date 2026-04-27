@@ -5,6 +5,8 @@
 **Normative “everything connected” bar:** `docs/ECOSYSTEM-PRODUCTION-11.md`  
 **Unifying home verify:** `npm run verify` (bonding-soup) + `npm run p31:converge` +, when p31ca changes, `andromeda/04_SOFTWARE/p31ca` `npm run deploy` after `npm run verify`.
 
+**Convergence scorecard (2026-04-28):** **9 of 11** with a clear end state: **8 CLOSED** (03, 04, 05, 06, 07, 09, 10, 11), **1 ONGOING** (08 — recurring security gate, not a calendar close), **2 OPEN** by design — [01 E3+](CWP-01-EDU-E3-PORTAL.md) (policy: [EDU-E3-POLICY-2026-01.md](../EDU-E3-POLICY-2026-01.md)), [02 Node Zero](CWP-02-NODE-ZERO.md) (hardware). **Mobile ops (6 phases):** [MOBILE-OPS-PHASE2.md](../MOBILE-OPS-PHASE2.md) through [PHASE6.md](../MOBILE-OPS-PHASE6.md) + `npm run morning` / `npm run mobile-ops:full` on `main`.
+
 ---
 
 ## How to read this set

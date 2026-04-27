@@ -2,6 +2,7 @@
 /**
  * Optional live probe: k4-personal /api/health + /api/mesh vs p31-constants.json mesh.k4PersonalWorkerUrl.
  * Default: exit 0 even on failure (informational). Set MESH_LIVE_STRICT=1 to fail CI on drift.
+ * GET retries: meshGet retries once on 502/503/504/429 or a single TypeError; disable: P31_MESH_RETRY_GET=0
  * Implementation: @p31/mesh (packages/p31-mesh).
  */
 import path from "node:path";

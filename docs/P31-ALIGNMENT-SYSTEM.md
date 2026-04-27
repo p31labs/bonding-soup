@@ -41,7 +41,7 @@
 | `soup.html` + assets | `bonding/public/soup/` | `npm run sync:soup-bonding` | Bonding build + deploy discipline |
 | Hub `registry.mjs` + `hub-app-ids.mjs` | `hub-landing.json` | p31ca `hub:build` / postinstall | p31ca `prebuild` hub verify (`scripts/hub/verify.mjs`) |
 | `p31-constants.json` (`mesh` / `payment` URLs) | `p31-live-fleet.json` | Edit live-fleet to mirror operator-locked URLs | `npm run verify:ecosystem` |
-| `docs/doc-index.manifest.json` + allowlisted `.md` | `docs/doc-library/index.json` | `npm run build:doc-index` | `npm run verify:doc-index` (runs after `build:doc-index` in root `verify`) |
+| `docs/doc-index.manifest.json` + allowlisted `.md` | `docs/doc-library/index.json` | `npm run build:doc-index` | `npm run verify:doc-index` (runs after `build:doc-index` in root `verify`); headless e2e `npm run test:doc-library:e2e` in `p31:all` unless `--skip-e2e` |
 | `p31ca/security/worker-allowlist.json` | In-repo `wrangler.toml` set + `build/security-inventory.json` | Add allowlist row when adding a Worker; align `p31-constants` / live-fleet if new mesh URL | p31ca `npm run security:workers` (in `security:check`) |
 
 ## Cloudflare Workers (alignment)

@@ -1,6 +1,6 @@
 # Plan: documentation cleanup + interactive document library
 
-**Status:** MVP **shipped** (static search UI + `build:doc-index` / `verify:doc-index` on root `verify`). Optional p31ca `public/doc-library/` deploy remains Phase 3. **Audience:** operators and agents. **Version:** 0.2.0
+**Status:** MVP **shipped** — static UI + worker + vendored Minisearch, `build:doc-index` / `verify:doc-index` on root `verify`, `npm run test:doc-library:e2e` (Playwright) and in **`p31:all`** unless `--skip-e2e`. CI: Playwright cache + 60m timeout (`.github/workflows/p31-ci.yml`). **Phase 3** (optional p31ca `public/doc-library/` deploy) not started. **Audience:** operators and agents. **Version:** 0.3.0
 
 ---
 

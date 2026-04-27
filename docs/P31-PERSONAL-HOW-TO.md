@@ -38,7 +38,7 @@ You are not juggling twenty products—you are juggling **three layers**:
 | **Install git hooks (home)** | `npm run git:hooks` | `core.hooksPath=.githooks` (monetary pre-commit, optional auto-push). |
 | **PR + auto-merge (low friction)** | `npm run pr` at home **or** `pnpm pr` **inside** `andromeda/` | See `AGENTS.md` for `fix:gh` / credentials. |
 | **Remotes (origin + andromeda)** | `npm run git:remotes` | Uses `p31-github.json` when present. |
-| **Search home docs (full-text)** | `npm run demo` → **http://127.0.0.1:8080/docs/doc-library/** | After editing `docs/*.md`: `npm run build:doc-index` (or rely on `npm run verify`). |
+| **Search home docs (full-text)** | `npm run demo` → **http://127.0.0.1:8080/docs/doc-library/** | After editing `docs/*.md`: `npm run build:doc-index` (or rely on `npm run verify`). **Headless browser check:** `npm run test:doc-library:e2e` (first machine: `npx playwright install chromium`); also runs in **`npm run p31:all`** unless `--skip-e2e`. |
 | **Soup + passport in browser** | `npm run demo` → **`soup.html`**, **`cognitive-passport/index.html`** | Port **8080** default. |
 
 ---

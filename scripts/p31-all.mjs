@@ -108,6 +108,7 @@ function main() {
 
   if (!skipE2e) {
     const homeE2e = fs.existsSync(path.join(root, "scripts", "doc-library-e2e.mjs"));
+    const p31caE2e = hasP31ca && fs.existsSync(path.join(p31ca, "playwright.config.ts"));
     if (homeE2e) {
       run("Playwright install (chromium) — home doc library", "npx playwright install --with-deps chromium", { cwd: root });
       run("Doc library E2E (static server + /docs/doc-library/)", "npm run test:doc-library:e2e", {
@@ -115,17 +116,14 @@ function main() {
         env: { ...process.env, CI: "true" },
       });
     }
-    if (hasP31ca) {
-      const pw = path.join(p31ca, "playwright.config.ts");
-      if (fs.existsSync(pw)) {
-        run("Playwright install (chromium) — p31ca", "npx playwright install --with-deps chromium", { cwd: p31ca });
-        run("Playwright E2E (p31ca preview + tests)", "npm run test:e2e", {
-          cwd: p31ca,
-          env: { ...process.env, CI: "true" },
-        });
-      } else {
-        console.log("\n\x1b[33m▶\x1b[0m Playwright: no playwright.config.ts in p31ca — skipped");
-      }
+    if (p31caE2e) {
+      run("Playwright install (chromium) — p31ca (test:e2e:install)", "npm run test:e2e:install", { cwd: p31ca });
+      run("Playwright E2E (p31ca preview + tests)", "npm run test:e2e", {
+        cwd: p31ca,
+        env: { ...process.env, CI: "true" },
+      });
+    } else if (hasP31ca) {
+      console.log("\n\x1b[33m▶\x1b[0m Playwright: no playwright.config.ts in p31ca — skipped");
     }
   }
 

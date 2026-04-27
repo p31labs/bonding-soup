@@ -1,15 +1,27 @@
 #!/usr/bin/env node
 /**
  * Headless E2E: static server from repo root → doc-library loads, worker returns hits.
- * Requires: npm i playwright  &&  npx playwright install chromium
+ * Requires: root `playwright` devDependency, then `npx playwright install --with-deps chromium` (or rely on p31:all / CI).
  */
 import net from "node:net";
-import { spawn } from "node:child_process";
+import { execFileSync, spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const pageUrl = (port) => `http://127.0.0.1:${port}/docs/doc-library/index.html`;
+
+function resolvePython() {
+  for (const c of ["python3", "python"]) {
+    try {
+      execFileSync(c, ["-V"], { stdio: "ignore" });
+      return c;
+    } catch (e) {
+      void e;
+    }
+  }
+  throw new Error("doc-library-e2e: need python3 or python on PATH for http.server");
+}
 
 function getPort() {
   return new Promise((resolve, reject) => {
@@ -51,7 +63,8 @@ async function main() {
 
   const port = await getPort();
   const base = `http://127.0.0.1:${port}/`;
-  server = spawn("python3", ["-m", "http.server", String(port), "-b", "127.0.0.1"], {
+  const py = resolvePython();
+  server = spawn(py, ["-m", "http.server", String(port), "-b", "127.0.0.1"], {
     cwd: root,
     stdio: "ignore",
     env: { ...process.env, PYTHONUNBUFFERED: "1" },
@@ -77,7 +90,7 @@ async function main() {
       throw new Error("expected >= 1 hit, got " + n);
     }
     const metaText = await page.locator("#meta").textContent();
-    if (!metaText || !/match|Browse all/i.test(metaText)) {
+    if (!metaText || !/Found|match|All \d+ document|Index /i.test(metaText)) {
       throw new Error("unexpected meta: " + metaText);
     }
   } finally {

@@ -8,9 +8,9 @@
  *   Locally, strict defaults **off** unless `MESH_LIVE_STRICT=1` or you run `npm run verify:mesh`.
  * - **Full tree** (`andromeda/04_SOFTWARE/p31ca` present): `npm run verify` at root, then
  *   p31ca `npm run verify` (prebuild + Astro build). Optional --content.
- * - **Home-only** (no p31ca): root `npm run verify` only (passport, constants, p31ca
- *   contracts + egg-hunt skip as implemented in those scripts) + tsc. No failure — hub
- *   build is skipped. Same as local partial clone.
+ * - **Home-only** (no p31ca): root `npm run verify` only (alignment, passport, constants,
+ *   ecosystem, map pipeline, p31-style; p31ca-contracts/egg-hunt skip inside scripts;
+ *   doc index + tsc). No hub build. Same as local partial clone.
  *
  * Root install: **npm** + `package-lock.json` in CI. `pnpm-lock.yaml` at repo root is not used here.
  *
@@ -88,7 +88,7 @@ function main() {
   if (!skipRootVerify) {
     if (!skipRootTsc) {
       run(
-        "Root verify (passport + constants + p31ca-contracts + quantum egg + tsc)",
+        "Root verify (full ship bar — see root package.json `verify`)",
         "npm run verify",
         root
       );

@@ -10,7 +10,7 @@
 
 | File | Purpose |
 |------|---------|
-| `p31-ci.yml` | Path-filtered CI + **`workflow_dispatch`**: runs `node scripts/p31-ci.mjs` on push/PR to `main`/`master` when `andromeda/04_SOFTWARE/p31ca/**`, passport, **`p31-constants.json`**, **`tsconfig.json`**, **`src/**/*.ts`**, constants scripts (`verify-constants`, `apply-constants`, `verify-p31ca-contracts`, `scripts/lib/**`), **`validate-p31-full.sh`**, or CI scripts change. Driver runs root **`npm ci`** then **`npm run verify`** (passport + constants + p31ca contracts + `tsc`) then p31ca **`npm ci`** + verify/build. |
+| `p31-ci.yml` | **No path filters** — every push/PR to **`main`/`master`** runs. Job 1: **`npm ci`** + **`npm run verify`** (full root bar: alignment, passport, constants, ecosystem, map pipeline, p31-style, p31ca contracts when `andromeda/` present, egg-hunt, doc index, `tsc`). Job 2 (`p31:all` / full stack): runs after job 1 with **`MESH_LIVE_STRICT=1`**, preflight to skip duplicate root verify. **`workflow_dispatch`** supported. |
 
 **Local equivalent:** `npm run p31:ci` (or `npm run verify:all`, `npm run release:check` — aliases).
 

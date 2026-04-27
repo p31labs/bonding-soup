@@ -11,6 +11,9 @@
   const metaHint = document.getElementById("meta-hint");
   const clearBtn = document.getElementById("clear-q");
   const mainEl = document.getElementById("main");
+  const searchBlock = document.getElementById("search-block");
+  const footHint = document.getElementById("foot-hint");
+  const tryChips = document.getElementById("try-chips");
 
   const baseTitle = document.title;
   let worker = null;
@@ -85,18 +88,40 @@
 
   function updateMeta(visible, q) {
     const qSafe = q ? safeQuery(q) : "";
-    const base = `Index ${indexWhen} · ${total} document${total === 1 ? "" : "s"}`;
+    const indexBit = "Index " + indexWhen;
     if (metaHint) metaHint.hidden = !qSafe;
     if (!qSafe) {
-      meta.textContent = `Browse all · ${base}`;
+      meta.textContent =
+        "All " +
+        total +
+        " document" +
+        (total === 1 ? "" : "s") +
+        " — " +
+        indexBit +
+        ". Type to filter, or try a chip.";
       document.title = baseTitle;
+      setFootHint(total > 3);
       return;
     }
+    setFootHint(false);
     if (visible === 0) {
-      meta.textContent = "No matches for \u201c" + qSafe + "\u201d · " + base;
-    } else {
       meta.textContent =
-        visible + " match" + (visible === 1 ? "" : "es") + " of " + total + " · " + base;
+        "No match for \u201c" +
+        qSafe +
+        "\u201d — try another word or a chip. · " +
+        indexBit +
+        " · " +
+        total +
+        " document" +
+        (total === 1 ? "" : "s");
+    } else {
+      meta.innerHTML =
+        "Found <strong>" +
+        visible +
+        "</strong> of " +
+        total +
+        " · " +
+        indexBit;
     }
     const short = qSafe.length > 48 ? qSafe.slice(0, 45) + "…" : qSafe;
     document.title = short + " · " + baseTitle;
@@ -104,6 +129,23 @@
 
   function setClearVisible(on) {
     if (clearBtn) clearBtn.hidden = !on;
+  }
+
+  function setSearchBusy(on) {
+    if (searchBlock) {
+      if (on) searchBlock.classList.add("is-searching");
+      else searchBlock.classList.remove("is-searching");
+    }
+  }
+
+  function setFootHint(visible) {
+    if (footHint) footHint.hidden = !visible;
+  }
+
+  function showResultSkeleton() {
+    const bones = '<div class="skel-bone" aria-hidden="true"></div>'.repeat(4);
+    resultsEl.innerHTML =
+      '<div class="skel" role="status" aria-label="Preparing the index">' + bones + "</div>";
   }
 
   function highlightPlain(raw, terms, q) {
@@ -182,7 +224,7 @@
       resultsEl.innerHTML = '<p class="empty" role="status">No documents in index.</p>';
       return;
     }
-    const rows = items.map((d) => {
+    const rows = items.map((d, i) => {
       const href = fileHref(d.path);
       const hm = hmap.get(d.id);
       const tlist = (hm && hm.terms) || [];
@@ -197,8 +239,18 @@
       const body = q
         ? makeSnippetBody(d.text || "", tlist, q)
         : { html: esc(d.preview || ""), plain: 1 };
+      const rank = i + 1;
       return (
-        "<li class=\"hit\" role=\"listitem\">" +
+        "<li class=\"hit\" style=\"--stagger: " +
+        i +
+        "\" role=\"listitem\" aria-label=\"Result " +
+        rank +
+        " of " +
+        items.length +
+        '">' +
+        '<span class="hit-badge" aria-hidden="true">' +
+        rank +
+        "</span>" +
         "<article class=\"hit-inner\">" +
         "<a class=\"title\" href=\"" +
         esc(href) +
@@ -219,7 +271,10 @@
   }
 
   function runQuery() {
-    if (!workerReady || !worker) return;
+    if (!workerReady || !worker) {
+      setSearchBusy(false);
+      return;
+    }
     const q = input && input.value != null ? String(input.value).trim() : "";
     const qS = q ? safeQuery(q) : "";
     if (q && !qS && input) input.value = qS;
@@ -232,6 +287,7 @@
       setClearVisible(false);
       renderList(docs, "", null);
       updateMeta(docs.length, "");
+      setSearchBusy(false);
       return;
     }
     if (skipUrl) {
@@ -249,6 +305,7 @@
     if (m.reqId != null && m.reqId !== activeSearchId) return;
     if (m.type === "searchError") {
       meta.textContent = "Search error: " + (m.message || "unknown");
+      setSearchBusy(false);
       return;
     }
     if (m.type !== "results" || m.q == null) return;
@@ -265,6 +322,7 @@
     }
     renderList(out, m.q, metas);
     updateMeta(out.length, m.q);
+    setSearchBusy(false);
   }
 
   function clearSearch() {

@@ -2,7 +2,7 @@
 
 **Purpose:** One primary document for model or human review of the **P31 home** workspace: multi-root layout, P31 Labs entity status, technical hub (p31ca), automation, edge Workers, and operator/agent conventions.  
 **Not:** Legal advice, medical advice, or guaranteed production URLs — see §11.  
-**Last updated:** 2026-04-26
+**Last updated:** 2026-04-27
 
 **Companion files:** `REVIEW-SUPPLEMENT-A-WORKFLOWS.md`, `REVIEW-SUPPLEMENT-B-WORKERS-AND-PACKAGES.md`, `REVIEW-SUPPLEMENT-C-ECO-CWP-AND-INTEGRATIONS.md`, `MVP-DELIVERABLES-INVENTORY.md` (tiered LIVE/MVP list + grant bullets), `README-REVIEW-DOCS.md` (reading order).
 
@@ -78,11 +78,11 @@ The Cognitive Passport (**CogPass**, long-form edition **5.1** per H1 in `P31 CO
 
 **Hard rule:** Never use submarine, naval, or military metaphors. The operator was a DoD **civilian** engineer, not military.
 
-### 4.3 p31ca scripts
+### 4.3 p31ca scripts (run from `andromeda/04_SOFTWARE/p31ca/`)
 
 | Script | Action |
 |--------|--------|
-| `npm run verify` | `passport:verify` + `build` |
+| `npm run verify` | `passport:verify` + `build` (prebuild chain + Astro) |
 | `npm run ci` | Alias of `verify` |
 | `npm run ci:content` | `generate` + `enrich` + `verify` (see `package.json` for exact `hub:about:*` names) |
 | `npm run hub:build` | Regenerates hub-landing and related prebuild chain inputs |
@@ -98,33 +98,35 @@ The Cognitive Passport (**CogPass**, long-form edition **5.1** per H1 in `P31 CO
 
 ## 5. Automation and CI
 
-### 5.1 Home root CI driver
+### 5.1 `scripts/p31-ci.mjs` (local / release:check driver)
 
-**`scripts/p31-ci.mjs`** runs, in order:
+Runs when you use **`npm run release:check`**, **`npm run p31:ci`**, **`npm run verify:all`**, or invoke the script directly. Order:
 
-1. In GitHub Actions (`CI=true`): `npm ci` at repo root first.
-2. **`npm run verify`** at root → `verify:passport` → `verify:constants` → **`verify:p31ca-contracts`** (ground-truth + synergetic when `p31ca/` present) → **`npm run build`** (`tsc`). With `--skip-soup-tsc`, step 2 is only the three verifies (no `tsc`).
-3. `npm ci` in p31ca when `CI=true`; locally `npm install` in p31ca if `node_modules` missing (or `--install` / `--skip-install`).
-4. Optional `--content`: `hub:about:generate` + `hub:about:enrich` (p31ca).
-5. **`npm run verify` in p31ca** → `passport:verify` + `build` (**prebuild** repeats ground-truth + synergetic + hub scripts + Astro build).
+1. In CI (`CI=true`): **`npm ci`** at repo root (unless `--skip-npm-ci`).
+2. **`npm run verify`** at root — **full** home ship bar: `verify:alignment` → `verify:passport` → `verify:constants` → `verify:ecosystem` → `verify:map-pipeline` → `verify:p31-style` → `verify:p31ca-contracts` (skips p31ca-only steps if no tree) → `verify:egg-hunt` → `build:doc-index` → `verify:doc-index` → `build` (`tsc`).  
+   - With **`--skip-soup-tsc`**, root runs a **reduced** chain (`verify:passport`, `verify:constants`, `verify:p31ca-contracts`, `verify:egg-hunt` only) — not equivalent to full **`npm run verify`**; avoid for merge gates.
+3. Optional **k4-personal** dry-run + **mesh live** when `andromeda/04_SOFTWARE/k4-personal` exists (`MESH_LIVE_STRICT=1` in CI by default).
+4. If **`andromeda/04_SOFTWARE/p31ca` exists:** `npm ci` / `npm install` in p31ca, optional **`--content`** (hub about generate/enrich), then **`npm run verify` in p31ca** (prebuild + Astro build), then **`security:check`** in CI unless `--no-security`.
 
-**Flags:** `--content` / `-c`, `--skip-soup-tsc`, `--skip-install`, `--install` / `-i`
+**Flags:** `--content` / `-c`, `--security` / `--skip-soup-tsc` / `--skip-install` / `--install` / `--skip-root-verify` / `--no-security` (see script header).
 
-### 5.2 Root `package.json` scripts
+### 5.2 Root `package.json` scripts (home)
 
 | Script | Action |
 |--------|--------|
-| `npm run verify` | Passport + constants + p31ca contracts + bonding-soup `tsc` |
-| `npm run p31:ci` | Full CI driver (`verify` + p31ca build) |
+| `npm run verify` | Full bar — see **§5.1** step 2 (alignment through doc index + `tsc`) |
+| `npm run p31:ci` | `p31-ci.mjs` — root verify + p31ca verify/build (+ security in CI) |
 | `npm run p31:ci:content` | Same + about generate/enrich |
 | `npm run verify:all` | Runs `p31:ci` |
 | `npm run release:check` | Same as `p31:ci` |
 
-### 5.3 GitHub Actions (high level)
+### 5.3 GitHub Actions — home `.github/workflows/p31-ci.yml`
 
-- **Home:** `.github/workflows/p31-ci.yml` — path-filtered (`p31ca`, passport, **`p31-constants.json`**, **`tsconfig.json`**, **`src/**/*.ts`**, constants/soup scripts); `node scripts/p31-ci.mjs` with `CI=true`. **`workflow_dispatch`** for manual runs.
-- **Andromeda:** see **Supplement A** for the full file list.
-- **04_SOFTWARE:** product-specific workflows (Spaceship, grant-radar, social-dispatch, etc.).
+- **No path filters** — every push/PR to `main`/`master` runs.
+- **Job 1 — “P31 / root verify”:** `npm ci` + **`npm run verify`** (same full bar as local — includes doc index, not `p31-ci.mjs` in this job).
+- **Job 2 — “P31 / full stack”** (after job 1): **`node scripts/p31-all.mjs`** with `MESH_LIVE_STRICT=1` and preflight so root verify is not duplicated — extended scorecard, mesh, doc-library E2E, p31ca e2e, glass, Semgrep soft, etc. (see `p31-all.mjs` header).
+- **`workflow_dispatch`** for manual runs.
+- **Andromeda** workflows: see **Supplement A**; **04_SOFTWARE** also has product-specific workflows.
 
 ### 5.4 Andromeda workflow highlights
 
@@ -141,8 +143,8 @@ The Cognitive Passport (**CogPass**, long-form edition **5.1** per H1 in `P31 CO
 
 | Command | Scope |
 |---------|--------|
-| **`npm run verify`** | Passport mirror, **`p31-constants`** vs ground-truth + generated TS, **p31ca** ground-truth + synergetic pins (skips if no tree), bonding-soup **`tsc`**. |
-| **`./validate-p31-full.sh`** | Same local checks as above **plus** JSON report and **live** mesh / operator audits (curl to edge — needs network; may fail offline). |
+| **`npm run verify`** | Full home bar — **§5.1** step 2 (alignment, passport, constants, ecosystem, MAP, p31-style, p31ca contracts when present, egg-hunt, doc index, `tsc`). |
+| **`./validate-p31-full.sh`** | Scorecard: local gates (incl. doc index) **plus** live mesh / operator audits, JSON report under `/tmp/` — needs network for live rows; may fail offline. |
 
 ---
 

@@ -1,7 +1,7 @@
 # P31 engineering standard
 
 **Status:** normative for this workspace.  
-**Last updated:** 2026-04-26
+**Last updated:** 2026-04-27
 
 This document is the **single checklist** agents and humans use before calling work “merge-ready” or “shipped.” Package READMEs and WCDs add detail; **this file wins** when a quick rule is needed.
 
@@ -23,7 +23,7 @@ Applies to the repo that contains `p31-constants.json`, `cognitive-passport/`, a
 | Gate | Command | When |
 |------|---------|------|
 | First clone / new machine | **`npm run setup`** | Installs root + p31ca deps, `apply:constants` (+ `apply:p31-style` when design tokens exist), then **`verify`**. |
-| Default CI | **`npm run verify`** | Passport, constants, **ecosystem** (probe templates + monetary invariants), **Andromeda MAP** (**`verify:map-pipeline`** — donate-api + donate page + no `sk_*` in public trees; skips if `andromeda/` missing), style, p31ca contracts, egg-hunt, `tsc`. |
+| Default CI | **`npm run verify`** | Alignment registry, passport, constants, **ecosystem** (probe templates + monetary invariants), **Andromeda MAP** (**`verify:map-pipeline`** — donate-api + donate page + no `sk_*` in public trees; skips if `andromeda/` missing), style, p31ca contracts (when `andromeda/` present), egg-hunt, **doc index** (**`build:doc-index`** → **`verify:doc-index`**), `tsc`. |
 | Payment / creator-economy (fast) | **`npm run verify:monetary`** | Full gate: re-runs ecosystem + constants + **MAP** + **`verify:economy`**. Use after edits to **`p31-constants.json`** `payment.*` (donate + **Stripe API** health URLs), **`p31-ecosystem.json`** monetary/probe rows, or creator-economy JSON. Skips p31ca steps on partial clone. |
 | Git pre-commit (optional) | **`npm run git:hooks`** | Sets **`core.hooksPath`** to **`.githooks`**. When payment/economy paths are staged, **`.githooks/pre-commit`** runs **`verify:monetary`**. Bypass: **`P31_SKIP_MONETARY_HOOK=1 git commit`**. Also runs at end of **`npm run setup`**. |
 | Release | **`npm run release:check`** | Before merge or tag; includes **p31ca** build when `andromeda/04_SOFTWARE/p31ca` exists. Match GitHub mesh strictness: **`MESH_LIVE_STRICT=1 npm run p31:ci`** (or `release:check` with CI env). Optional before hub release: **`npm run security:check`** in **p31ca** (triage P1 inventory warnings). |

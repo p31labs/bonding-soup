@@ -81,7 +81,7 @@ Design notes, WCD readiness, websocket spec, roadmap, affective-chemistry spec. 
 | `P31 COGNITIVE PASSPORT — v5.md` | Full human/operator life context (source of record). **Authoritative edition = H1** (e.g. v5.1); see **`docs/CANONICAL-NUMBERING.md`**. |
 | `cognitive-passport/index.html` | **Generator** (machine slice: MD + JSON + agent block). Local: `npm run demo` → `/cognitive-passport/index.html`. **Does not** replace the v5 doc. Deploy mirror: `p31ca/public/passport-generator.html`; live: **https://p31ca.org/passport** |
 | `Neuro-Inclusive Mesh Dashboard Design.txt`, … | Product / onboarding design drafts |
-| `validate-p31-full.sh`, `audit_runner.py` | Extended validation: local passport + constants + p31ca contracts, then live mesh audits + report JSON (`/tmp/p31_validation_report.json`). Faster path: **`npm run verify`**. |
+| `validate-p31-full.sh`, `audit_runner.py` | Extended validation: same local gates as **`npm run verify`**, plus doc-library rebuild/verify in scorecard, then live mesh audits + report JSON (`/tmp/p31_validation_report.json`). Faster path: **`npm run verify`**. |
 | `playwright/` | Browser tests (e.g. `visual.test.ts`) |
 
 ## 7. When to work where

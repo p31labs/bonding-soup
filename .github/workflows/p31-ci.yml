@@ -46,7 +46,8 @@ jobs:
     name: P31 / full stack
     needs: root-verify
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # p31-all = validate:full + home doc-library Playwright + p31ca e2e (when present) + glass + SAST, etc.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
@@ -58,6 +59,14 @@ jobs:
 
       - name: Install root dependencies
         run: npm ci
+
+      - name: Cache Playwright browsers (~/.cache/ms-playwright)
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: play-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            play-${{ runner.os }}-
 
       - name: Semgrep CLI (p31:all SAST when p31ca present)
         if: hashFiles('andromeda/04_SOFTWARE/p31ca/package.json') != ''

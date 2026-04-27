@@ -1,6 +1,15 @@
 /**
- * Minisearch in a Web Worker — keeps main thread free for input + render.
- * UMD: global MiniSearch (minisearch@6.3.0).
+ * P31 document library — MiniSearch in a Web Worker.
+ *
+ * Wire protocol (structured clone):
+ *   IN  `{ type: "load", documents: IndexDocument[] }` → build index, `ready` | `loadError`
+ *   IN  `{ type: "search", q: string, reqId?: number }`  → `results` | `searchError`
+ *   OUT `{ type: "ready" }`
+ *   OUT `{ type: "loadError", message: string }`
+ *   OUT `{ type: "results", q, reqId, hits: { id, terms, score, match }[] }` (capped 100)
+ *   OUT `{ type: "searchError", reqId, message }`
+ *
+ * UMD: `global MiniSearch` (minisearch@6.3.0). Field boosts live here only.
  */
 /* global self, MiniSearch */
 importScripts("vendor/minisearch-6.3.0.umd.min.js");

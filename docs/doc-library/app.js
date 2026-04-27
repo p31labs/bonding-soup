@@ -1,9 +1,27 @@
 /**
- * P31 document library: Minisearch in a Web Worker, snippets, URL sync, Enter to snapshot history.
- * Index: p31.docLibrary/1.0.0 (docs/doc-library/index.json).
+ * P31 document library — static HTML + Web Worker. No client bundle, no vDOM.
+ *
+ * Data path:  `index.json` (schema `p31.docLibrary/1.0.0`, built at repo root)
+ * Search path: main thread debounces input → `doc-search-worker.js` (MiniSearch)
+ *              → `results` with term lists for snippet highlighting
+ * Markup:     with an active query, row 0 → `hit--prime`; each row shows a `--p` bar =
+ *              MiniSearch score / max score in the current list (not an absolute 0–1).
+ * Motion:     `--stagger` capped via `maxStaggerIndex` so 100+ hits don’t queue heavy CSS.
  */
 (function () {
   "use strict";
+
+  /** @typedef {{ id: string, path: string, title: string, text?: string, preview?: string, h2?: string[] }} IndexDocument */
+  /** @typedef {{ id: string, terms: string[], score?: number, match?: unknown }} SearchHitMeta */
+
+  const CONFIG = Object.freeze({
+    queryDebounceMs: 120,
+    maxQueryLength: 200,
+    /** Capped list index for `--stagger` × --doclib-stagger-ms in CSS. */
+    maxStaggerIndex: 24,
+    schema: "p31.docLibrary/1.0.0",
+    worker: "doc-search-worker.js",
+  });
 
   const input = document.getElementById("q");
   const resultsEl = document.getElementById("results");
@@ -15,16 +33,23 @@
   const footHint = document.getElementById("foot-hint");
   const tryChips = document.getElementById("try-chips");
   const comfortLine = document.getElementById("comfort-line");
+  const specCountEl = document.getElementById("spec-count");
+  const specTimeEl = document.getElementById("spec-time");
 
   const baseTitle = document.title;
 
-  /** One line per “session day” (UTC) so it feels personal but not noisy. */
+  /** `generatedAt` from index.json for `<time datetime>` (ISO-8601). */
+  let indexIso = "";
+
+  /** One line per session (day + count–seeded index). */
   const COMFORT_PHRASES = [
     "No rush. One word, one chip, or plain browsing — all valid.",
     "The chips are a soft on-ramp if picking a search word feels like work.",
     "All of this is for you. Search is a shortcut; scrolling is not failure.",
     "Tired? Tap one chip. That still counts as progress.",
     "Nothing here is timed or graded. Find one link that helps, that is enough.",
+    "What you curate in the tree meets you here in the tab — as above, so below.",
+    "Same repository, gentler altitude: the words below echo the work above.",
   ];
   let worker = null;
   let workerReady = false;
@@ -49,7 +74,26 @@
   }
 
   function safeQuery(q) {
-    return String(q).replace(/[\n\r\u2028\u2029]+/g, " ").slice(0, 200);
+    return String(q)
+      .replace(/[\n\r\u2028\u2029]+/g, " ")
+      .slice(0, CONFIG.maxQueryLength);
+  }
+
+  function updateSpecStrip() {
+    if (specCountEl) specCountEl.textContent = total > 0 ? String(total) : "—";
+    if (specTimeEl) {
+      specTimeEl.textContent = indexWhen && indexWhen !== "—" ? indexWhen : "—";
+      if (indexIso) specTimeEl.setAttribute("datetime", indexIso);
+      else specTimeEl.removeAttribute("datetime");
+    }
+  }
+
+  function setSpecStripDash() {
+    if (specCountEl) specCountEl.textContent = "—";
+    if (specTimeEl) {
+      specTimeEl.textContent = "—";
+      specTimeEl.removeAttribute("datetime");
+    }
   }
 
   /** Word-like runs (Unicode) with ASCII fallback for engines without \\p. */
@@ -101,14 +145,36 @@
     const indexBit = "Index " + indexWhen;
     if (metaHint) metaHint.hidden = !qSafe;
     if (!qSafe) {
-      meta.textContent =
-        "All " +
-        total +
-        " document" +
-        (total === 1 ? "" : "s") +
-        " — " +
-        indexBit +
-        ". Type a word, or try a chip — flow your own way.";
+      let seenBrowseHi = true;
+      try {
+        seenBrowseHi = sessionStorage.getItem("p31.doclib.browseHi") === "1";
+      } catch (e) {
+        seenBrowseHi = false;
+      }
+      if (!seenBrowseHi) {
+        try {
+          sessionStorage.setItem("p31.doclib.browseHi", "1");
+        } catch (e) {
+          void e;
+        }
+        meta.textContent =
+          "All " +
+          total +
+          " document" +
+          (total === 1 ? "" : "s") +
+          " — " +
+          indexBit +
+          ". At your own pace: type, a chip, or scroll.";
+      } else {
+        meta.textContent =
+          "All " +
+          total +
+          " document" +
+          (total === 1 ? "" : "s") +
+          " — " +
+          indexBit +
+          ". Type a word, or try a chip.";
+      }
       document.title = baseTitle;
       setFootHint(total > 3);
       return;
@@ -223,18 +289,24 @@
     return { html: prefix + highlightPlain(slice, terms, q) + suffix, plain: 1 };
   }
 
+  /**
+   * Renders the hit list. Stagger is capped so long lists do not block first paint.
+   * @param {IndexDocument[]} items
+   * @param {string} query
+   * @param {SearchHitMeta[] | null} hitMetas
+   */
   function renderList(items, query, hitMetas) {
     const q = query ? safeQuery(query) : "";
     const hmap = hitMetas ? new Map(hitMetas.map((h) => [h.id, h])) : new Map();
     if (!items.length) {
       if (q) {
         resultsEl.innerHTML =
-          '<div class="empty-state" role="status">' +
-          '<h2 class="empty-lead">Nothing with that exact shape</h2>' +
-          "<p class=\"empty-sub\">No direct hits for <strong>" +
+          '<div class="empty empty-state" role="status" aria-live="polite">' +
+          '<h2 class="empty-lead display-font">No matching documents</h2>' +
+          "<p class=\"empty-sub\">No hits for <strong>" +
           esc(q) +
-          "</strong> — a shorter word, a chip above, or " +
-          '<button type="button" class="btn-inline-clear" data-empty-clear>clear the box</button> to see everything.</p></div>';
+          "</strong> — try a chip, a shorter word, or " +
+          '<button type="button" class="btn-inline-clear" data-empty-clear>clear the search</button> to browse the full set.</p></div>';
         const clearEmpty = resultsEl.querySelector("[data-empty-clear]");
         if (clearEmpty) clearEmpty.addEventListener("click", clearSearch, { once: true });
         return;
@@ -242,10 +314,20 @@
       resultsEl.innerHTML = '<p class="empty" role="status">No documents in index.</p>';
       return;
     }
+    let maxScore = 0;
+    if (q && hmap.size) {
+      for (let j = 0; j < items.length; j++) {
+        const hm0 = hmap.get(items[j].id);
+        if (hm0 && typeof hm0.score === "number" && hm0.score > maxScore) {
+          maxScore = hm0.score;
+        }
+      }
+    }
     const rows = items.map((d, i) => {
       const href = fileHref(d.path);
       const hm = hmap.get(d.id);
       const tlist = (hm && hm.terms) || [];
+      const stagger = Math.min(i, CONFIG.maxStaggerIndex);
       const h2s =
         Array.isArray(d.h2) && d.h2.length
           ? d.h2.slice(0, 6).join(" · ") + (d.h2.length > 6 ? "…" : "")
@@ -258,9 +340,22 @@
         ? makeSnippetBody(d.text || "", tlist, q)
         : { html: esc(d.preview || ""), plain: 1 };
       const rank = i + 1;
+      const isPrime = Boolean(q && i === 0);
+      const rel =
+        maxScore > 0 && hm && typeof hm.score === "number"
+          ? Math.min(1, Math.max(0, hm.score / maxScore))
+          : 0;
+      const relv =
+        q && maxScore > 0
+          ? '<div class="hit-relv" title="Relevance within this result set (MiniSearch score ÷ top hit)"><div class="hit-relv__track" aria-hidden="true"><div class="hit-relv__fill" style="--p:' +
+            rel.toFixed(6) +
+            '"></div></div></div>'
+          : "";
       return (
-        "<li class=\"hit\" style=\"--stagger: " +
-        i +
+        "<li class=\"hit" +
+        (isPrime ? " hit--prime" : "") +
+        "\" style=\"--stagger: " +
+        stagger +
         "\" role=\"listitem\" aria-label=\"Result " +
         rank +
         " of " +
@@ -284,6 +379,7 @@
         '<p class="preview">' +
         body.html +
         "</p>" +
+        relv +
         "</article></li>"
       );
     });
@@ -355,7 +451,7 @@
   function scheduleQuery() {
     setSearchBusy(true);
     clearTimeout(debounceT);
-    debounceT = setTimeout(runQuery, 120);
+    debounceT = setTimeout(runQuery, CONFIG.queryDebounceMs);
   }
 
   function focusFirstHitLink() {
@@ -459,6 +555,7 @@
     setSearchBusy(false);
     setFootHint(false);
     document.body.classList.add("lib-ready");
+    setSpecStripDash();
     meta.innerHTML =
       '<span class="err">Search index could not be built. ' + esc(text) + "</span>";
   }
@@ -469,7 +566,7 @@
       return;
     }
     try {
-      worker = new Worker("doc-search-worker.js");
+      worker = new Worker(CONFIG.worker);
     } catch (e) {
       onLoadFailure((e && e.message) || String(e));
       return;
@@ -535,6 +632,7 @@
     setSearchBusy(false);
     setFootHint(false);
     document.body.classList.add("lib-ready");
+    setSpecStripDash();
   }
 
   document.addEventListener("DOMContentLoaded", async function () {
@@ -566,7 +664,7 @@
       return;
     }
     const data = await res.json();
-    if (data.schema !== "p31.docLibrary/1.0.0") {
+    if (data.schema !== CONFIG.schema) {
       onIndexPathFailure();
       if (resultsEl) {
         resultsEl.innerHTML =
@@ -580,6 +678,8 @@
     total = data.count || 0;
     const when = (data.generatedAt || "").replace("T", " ");
     indexWhen = when.length >= 19 ? when.slice(0, 19) : when || "—";
+    indexIso = typeof data.generatedAt === "string" ? data.generatedAt : "";
+    updateSpecStrip();
     meta.textContent =
       "Preparing " +
       total +
@@ -588,7 +688,6 @@
       " for search — " +
       indexWhen;
 
-    showResultSkeleton();
     worker.postMessage({ type: "load", documents: docs });
   });
 })();

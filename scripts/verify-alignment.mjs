@@ -40,6 +40,30 @@ function main() {
     die(`expected schema p31.alignment/1.0.0, got ${data.schema || "(none)"}`, 1);
   }
 
+  /** Bonding-soup CI has no `andromeda/` tree (ignored submodule path); optional skips missing files. */
+  function pathUnderAndromeda(rel) {
+    if (!rel || typeof rel !== "string") return false;
+    let n = rel.replace(/\\/g, "/").trim();
+    if (n.startsWith("./")) n = n.slice(2);
+    return n === "andromeda" || n.startsWith("andromeda/");
+  }
+
+  const badAndromeda = [];
+  for (const s of data.sources || []) {
+    if (!s.path) continue;
+    if (pathUnderAndromeda(s.path) && !s.optional) badAndromeda.push(s);
+  }
+  if (badAndromeda.length) {
+    console.error(
+      'verify-alignment: FAIL — every source whose path is under andromeda/ must set "optional": true (bonding-soup CI partial clone):'
+    );
+    for (const s of badAndromeda) console.error("  -", s.id, "→", s.path);
+    console.error(
+      'verify-alignment: fix — add "optional": true to those registry rows, or move the canonical path under this repo root.'
+    );
+    process.exit(1);
+  }
+
   let fail = 0;
   const missing = [];
 

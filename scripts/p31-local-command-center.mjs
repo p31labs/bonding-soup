@@ -413,6 +413,9 @@ function buildPageHtml() {
     .lead { color: var(--muted); font-size: 0.9rem; max-width: 44rem; margin-bottom: 1.25rem; }
     .lead code { color: var(--warn); }
     .lead a { color: var(--accent); }
+    .aaso-ribbon { font-size: 0.88rem; color: #9a9ab8; max-width: 44rem; margin: 0.4rem 0 0.85rem; line-height: 1.5; }
+    .aaso-ribbon a { color: var(--accent); }
+    .aaso-ribbon .heart { color: #f0abfc; }
     .tags-legend { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 1rem; }
     .tags-legend span { margin-right: 1rem; }
     .tag-slow { color: var(--warn); }
@@ -451,12 +454,16 @@ function buildPageHtml() {
 </head>
 <body>
   <h1>G.O.D. — local command center</h1>
+  <p class="aaso-ribbon"><em>As above, so below</em> — the same <code>demo</code> / <code>build:doc-index</code> handoff as
+  <a href="http://127.0.0.1:8080/soup.html" rel="noopener" target="_blank">BONDING Soup</a> ·
+  <a href="http://127.0.0.1:8080/p31-personal-howto.html" rel="noopener" target="_blank">How-to (UI)</a> ·
+  <a href="http://127.0.0.1:8080/docs/doc-library/index.html" rel="noopener" target="_blank">Document library</a> (e.g. <a href="http://127.0.0.1:8080/docs/doc-library/index.html?q=mesh" rel="noopener" target="_blank"><code>?q=mesh</code></a>).
+  <span class="heart" title="love">&#9829;</span> <span title="&lt;3" aria-label="less than three">&lt;3</span></p>
   <p class="lead">Whitelisted <code>npm</code> / <code>pnpm</code> on this machine only · <code>${host}:${port}</code> · Ctrl+C stops the server.
   <a href="https://command-center.trimtab-signal.workers.dev/" rel="noopener" target="_blank">EPCP edge</a> ·
   <a href="https://p31ca.org/ops/" rel="noopener" target="_blank">p31ca /ops</a> ·
-  <a href="https://p31ca.org/integrations/" rel="noopener" target="_blank">Integrations bridge</a> (OSS smart home / wearables catalog) ·
-  <a href="http://127.0.0.1:8080/docs/doc-library/" rel="noopener" target="_blank">Document library</a> (with <code>npm run demo</code> on 8080)</p>
-  <p class="lead" style="margin-top:-0.5rem;font-size:0.85rem">Passport: edit <code>cognitive-passport/</code> then run <strong>sync:passport</strong> in Diagnostics below (or Task P31: sync passport). After editing home <code>docs/*.md</code>, run <strong>build:doc-index</strong> in Verify slices (or full <code>verify</code>).</p>
+  <a href="https://p31ca.org/integrations/" rel="noopener" target="_blank">Integrations bridge</a> (OSS smart home / wearables catalog).</p>
+  <p class="lead" style="margin-top:-0.5rem;font-size:0.85rem">Passport: edit <code>cognitive-passport/</code> then run <strong>sync:passport</strong> in Diagnostics below (or Task P31: sync passport). After editing home <code>docs/*.md</code>, run <strong>build:doc-index</strong> in Verify slices (or full <code>verify</code>). In the doc library: <kbd>/</kbd> focus search, <kbd>↓</kbd> first result, try chips.</p>
   <p class="tags-legend">
     <span class="tag-slow">slow</span> = minutes ·
     <span class="tag-net">net</span> = live HTTP ·

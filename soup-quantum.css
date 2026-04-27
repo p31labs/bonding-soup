@@ -187,6 +187,34 @@ html.soup-app body::after {
   background: var(--p31-phosphorus);
 }
 
+.soup-aaso {
+  margin: var(--p31-space-3) 0 0;
+  font-size: var(--p31-text-sm);
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--p31-cloud) 78%, var(--p31-muted) 22%);
+  max-width: 42rem;
+}
+@supports not (color: color-mix(in srgb, red, blue)) {
+  .soup-aaso {
+    color: #b5b3ad;
+  }
+}
+.soup-aaso a {
+  color: var(--p31-cyan, #4db8a8);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--p31-cyan) 32%, transparent);
+}
+.soup-aaso a:hover {
+  color: var(--p31-butter, #cda852);
+  border-bottom-color: color-mix(in srgb, var(--p31-butter) 50%, transparent);
+}
+.soup-aaso .aaso-love,
+.soup-aaso .aaso-3 {
+  color: var(--p31-coral, #cc6247);
+  font-style: normal;
+  white-space: nowrap;
+}
+
 .soup-app-header__title {
   margin: 0;
   font-size: var(--p31-text-xl);

@@ -79,58 +79,61 @@ export async function runSingleHealthProbe(baseUrl, path, validator, opts = {}) 
  */
 export async function runMeshFleetProbe(opts) {
   const { endpoints, fetch: fetchImpl, timeoutMs } = opts;
-  const errors = [];
+  const pass = { fetch: fetchImpl, timeoutMs };
+
   /** @type {MeshFleetProbeResult} */
   const out = { ok: true, errors: [] };
+  /** @type {Promise<void>[]} */
+  const pending = [];
 
   if (endpoints.personal) {
-    const r = await runK4PersonalMeshProbe({
-      baseUrl: endpoints.personal,
-      fetch: fetchImpl,
-      timeoutMs,
-    });
-    out.personal = r;
-    if (!r.ok) {
-      out.ok = false;
-      for (const e of r.errors) {
-        const line = `personal: ${e}`;
-        errors.push(line);
-        out.errors.push(line);
-      }
-    }
+    pending.push(
+      runK4PersonalMeshProbe({
+        baseUrl: /** @type {string} */ (endpoints.personal),
+        ...pass,
+      }).then((r) => {
+        out.personal = r;
+        if (!r.ok) {
+          out.ok = false;
+          for (const e of r.errors) {
+            const line = `personal: ${e}`;
+            out.errors.push(line);
+          }
+        }
+      })
+    );
   }
 
   if (endpoints.cage) {
-    const r = await runSingleHealthProbe(endpoints.cage, "/api/health", validateK4CageHealth, {
-      fetch: fetchImpl,
-      timeoutMs,
-    });
-    out.cage = r;
-    if (!r.ok) {
-      out.ok = false;
-      for (const e of r.errors) {
-        const line = `cage: ${e}`;
-        errors.push(line);
-        out.errors.push(line);
-      }
-    }
+    pending.push(
+      runSingleHealthProbe(endpoints.cage, "/api/health", validateK4CageHealth, pass).then((r) => {
+        out.cage = r;
+        if (!r.ok) {
+          out.ok = false;
+          for (const e of r.errors) {
+            const line = `cage: ${e}`;
+            out.errors.push(line);
+          }
+        }
+      })
+    );
   }
 
   if (endpoints.hubs) {
-    const r = await runSingleHealthProbe(endpoints.hubs, "/health", validateK4HubsHealth, {
-      fetch: fetchImpl,
-      timeoutMs,
-    });
-    out.hubs = r;
-    if (!r.ok) {
-      out.ok = false;
-      for (const e of r.errors) {
-        const line = `hubs: ${e}`;
-        errors.push(line);
-        out.errors.push(line);
-      }
-    }
+    pending.push(
+      runSingleHealthProbe(endpoints.hubs, "/health", validateK4HubsHealth, pass).then((r) => {
+        out.hubs = r;
+        if (!r.ok) {
+          out.ok = false;
+          for (const e of r.errors) {
+            const line = `hubs: ${e}`;
+            out.errors.push(line);
+          }
+        }
+      })
+    );
   }
 
+  await Promise.all(pending);
   return out;
 }

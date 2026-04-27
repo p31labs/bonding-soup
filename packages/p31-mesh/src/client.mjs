@@ -2,6 +2,11 @@
  * Minimal HTTP helpers for mesh Workers (GET + JSON parse + timeout).
  */
 
+/** @param {string} baseUrl */
+function baseNoSlash(baseUrl) {
+  return baseUrl.replace(/\/+$/, "");
+}
+
 /**
  * @param {string} baseUrl - Origin, no trailing slash preferred
  * @param {string} suffix - Path e.g. /api/health
@@ -9,12 +14,19 @@
  */
 export async function meshGet(baseUrl, suffix, opts = {}) {
   const { fetch: fetchImpl = globalThis.fetch, timeoutMs = 20_000 } = opts;
-  const u = new URL(suffix.startsWith("/") ? suffix : `/${suffix}`, baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl);
+  const u = new URL(
+    suffix.startsWith("/") ? suffix : `/${suffix}`,
+    baseNoSlash(baseUrl)
+  );
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
   let r;
   try {
-    r = await fetchImpl(u, { method: "GET", signal: ctrl.signal });
+    r = await fetchImpl(u, {
+      method: "GET",
+      headers: { accept: "application/json" },
+      signal: ctrl.signal,
+    });
   } finally {
     clearTimeout(t);
   }
@@ -36,9 +48,8 @@ export async function meshGet(baseUrl, suffix, opts = {}) {
  */
 export async function meshPost(baseUrl, suffix, body, opts = {}) {
   const { fetch: fetchImpl = globalThis.fetch, timeoutMs = 20_000 } = opts;
-  const base = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
   const path = suffix.startsWith("/") ? suffix : `/${suffix}`;
-  const u = new URL(path, base);
+  const u = new URL(path, baseNoSlash(baseUrl));
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
   let r;

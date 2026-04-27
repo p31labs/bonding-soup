@@ -161,7 +161,8 @@
     {
       "id": "p31ca-education-curriculum",
       "path": "andromeda/04_SOFTWARE/p31ca/public/education/curriculum.json",
-      "role": "p31.labsEducationCurriculum/0.2.0 — tracks, modules, labs; verify:education"
+      "role": "p31.labsEducationCurriculum/0.2.0 — tracks, modules, labs; verify:education",
+      "optional": true
     },
     {
       "id": "adr-eco-mvpdata-cockpit",

@@ -103,7 +103,7 @@ Work in **waves**; do not block the library on a full dedupe of 1,600+ files.
 | `docs/doc-library/app.js` | Load `index.json`, run client search, render results |
 | `docs/doc-index.manifest.json` | List of glob roots + weights + `exclude` patterns |
 | `scripts/build-doc-index.mjs` | Read manifest → find files → parse md → output `index.json` |
-| `docs/doc-library/index.json` | Generated: `{ id, path, title, text, tags, h2[] }` entries (shape TBD) |
+| `docs/doc-library/index.json` | Generated: schema **`p31.docLibrary/1.0.0`** — `schema`, `generatedAt`, `fingerprint`, `count`, `documents[]` with `{ id, path, title, text, tags, h2[] }` per **`scripts/build-doc-index.mjs`** |
 
 ### 4.2 `package.json` scripts
 

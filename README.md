@@ -4,7 +4,7 @@ TypeScript molecular / affective sim (`src/`), built to `dist/`. Entry for local
 
 **Workspace context:** this directory also holds **Andromeda**, **phosphorus31.org**, spikes, and docs. For how those paths relate without merging repos, read **`P31-ROOT-MAP.md`**. For agents/IDE: **`AGENTS.md`**. **Personal command/repo cheat sheet:** **`docs/P31-PERSONAL-HOW-TO.md`** (interactive UI: **`p31-personal-howto.html`**, e.g. with **`npm run demo`**).
 
-**Engineering standard:** before merge or deploy, follow **`docs/P31-ENGINEERING-STANDARD.md`** (`npm run verify`, `npm run release:check` when the full tree is present). Andromeda monorepo bar: **`andromeda/docs/ENTERPRISE_QUALITY.md`**.
+**Engineering standard:** before merge or deploy, follow **`docs/P31-ENGINEERING-STANDARD.md`** (`npm run verify`, `npm run release:check` when the full tree is present). **Facts contract (machine invariants):** `npm run verify:facts` — see **`docs/DELIVERABLE-P31-FACTS.md`**. Andromeda monorepo bar: **`andromeda/docs/ENTERPRISE_QUALITY.md`**.
 
 ## First-time / clean machine setup
 
@@ -41,6 +41,8 @@ Then open **http://127.0.0.1:8080/soup.html** (or the path your server shows).
 - **`?debug`** — append to the demo URL to enable verbose engine logs (WebSocket, LOD). Example: `soup.html?debug`
 
 ## Multiplayer / mock WebSocket (WCD-32)
+
+**Scale:** room → mesh growth (bounded groups, edge budgets, honest presence) — **`docs/PLAN-BONDING-SOUP-WHEN-SCALE.md`**. **Phase 1 gate:** **`npm run soup:room-scale`** (protocol probe) + manual **`docs/SOUP-ROOM-SCALE-RUNBOOK.md`**. Wire spec: **`docs/wcd-32-websocket-spec.md`**. Client: **`src/soup.ts`** (reconnect + heartbeat + `data-soup-*` in **`soup.html`**).
 
 Terminal 1: `npm run demo` from the repo root. Terminal 2:
 

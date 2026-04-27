@@ -1093,3 +1093,16 @@ html.soup-app.kids-mode .soup-app-header__welcome {
     scroll-behavior: auto !important;
   }
 }
+
+/* Mobile mesh: larger tap targets in family + dev link rows (uses canon --p31-touch-min from p31-style) */
+.soup-tap a[href],
+.soup-tap button {
+  min-height: max(2.75rem, var(--p31-touch-min, 2.75rem));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  box-sizing: border-box;
+  padding: 0.2em 0.5em;
+  -webkit-tap-highlight-color: rgba(77, 184, 168, 0.18);
+}

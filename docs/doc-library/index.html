@@ -2,9 +2,13 @@
 <html lang="en" data-p31-appearance="hub" data-p31-doclib="1.2.0">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description" content="Search home Markdown: maps, standards, and handbooks. Local: npm run demo." />
   <meta name="theme-color" content="#0f1115" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="P31 home" />
+  <link rel="manifest" href="../../p31-bonding.webmanifest" crossorigin="anonymous" />
+  <link rel="apple-touch-icon" href="../../p31-bonding-icons/p31-icon.svg" />
   <title>P31 — document library</title>
   <link rel="stylesheet" href="../../cognitive-passport/p31-style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
@@ -724,7 +728,7 @@
   </style>
   <script src="app.js" defer></script>
 </head>
-<body>
+<body class="p31-mesh-m-first">
   <div class="bg-mesh" aria-hidden="true">
     <div class="bg-aurora"></div>
     <div class="bg-orb"></div>
@@ -732,7 +736,7 @@
     <div class="bg-mesh--grid"></div>
   </div>
   <div class="wrap">
-    <a class="skip" href="#main">Skip to results</a>
+    <a class="skip p31-mesh-tap" href="#main">Skip to results</a>
     <header>
       <div class="header-glow" aria-hidden="true"></div>
       <h1 class="display-font"><span class="word-mark">Document library</span> <span class="pill" title="All processing happens in your browser">Local · private</span></h1>
@@ -747,31 +751,32 @@
       <p class="tagline">Your maps, standards, and handbooks — in one quiet view. Stays in this tab until you open a file.</p>
       <p class="comfort-line" id="comfort-line" role="status" aria-live="polite" hidden></p>
       <p class="lede">From the repo root: <code>npm run demo</code> then <code>…/docs/doc-library/</code>. Refresh the index: <code>npm run build:doc-index</code>.</p>
-      <p class="lede lede-below" style="margin-top:0.4rem;opacity:0.92"><em>As above, so below:</em> the same <code>demo</code> / <code>build:doc-index</code> path is one click from BONDING Soup, <a href="../physics-learn/index.html">physics learn</a>, <a href="../../andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (with <code>andromeda/</code>), <a href="../../poets-room.html">Poets room</a>, the interactive how-to, and the local command center — your prose in the tree, a full-text read in the tab, nothing leaves your machine until you open a file.</p>
-      <ul class="quick" aria-label="Quick links">
-        <li><a href="../../P31-ROOT-MAP.md">P31-ROOT-MAP</a></li>
-        <li><a href="../../AGENTS.md">AGENTS</a></li>
-        <li><a href="../../soup.html">BONDING Soup</a></li>
-        <li><a href="../../poets-room.html">Poets room</a></li>
+      <p class="lede lede-below" style="margin-top:0.4rem;opacity:0.92"><em>As above, so below:</em> the same <code>demo</code> / <code>build:doc-index</code> path is one click from BONDING Soup, <a href="../physics-learn/index.html">physics learn</a>, <a href="../../andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (with <code>andromeda/</code>), <a href="../../poets-room.html">Poets room</a>, the interactive how-to, the local command center, and the <a href="../PLAN-BONDING-SOUP-WHEN-SCALE.md">when-scale plan</a> — your prose in the tree, a full-text read in the tab, nothing leaves your machine until you open a file.</p>
+        <ul class="quick" aria-label="Quick links">
+        <li><a class="p31-mesh-tap" href="../../P31-ROOT-MAP.md">P31-ROOT-MAP</a></li>
+        <li><a class="p31-mesh-tap" href="../../AGENTS.md">AGENTS</a></li>
+        <li><a class="p31-mesh-tap" href="../../soup.html">BONDING Soup</a></li>
+        <li><a class="p31-mesh-tap" href="../../poets-room.html">Poets room</a></li>
         <li>
-          <a href="../../andromeda/04_SOFTWARE/p31ca/public/initial-build.html" title="Initial build intake (CWP) — same as p31ca.org/build">Create</a>
+          <a class="p31-mesh-tap" href="../../andromeda/04_SOFTWARE/p31ca/public/initial-build.html" title="Initial build intake (CWP) — same as p31ca.org/build">Create</a>
           <span class="hero-pipe" style="margin:0 0.25em;opacity:0.45" aria-hidden="true">·</span>
-          <a href="../../andromeda/04_SOFTWARE/p31ca/public/connect.html" title="K₄ cage navigator with product satellites">Connect</a>
+          <a class="p31-mesh-tap" href="../../andromeda/04_SOFTWARE/p31ca/public/connect.html" title="K₄ cage navigator with product satellites">Connect</a>
           <span class="hero-pipe" style="margin:0 0.25em;opacity:0.45" aria-hidden="true">·</span>
-          <a href="../../andromeda/04_SOFTWARE/p31ca/public/k4market.html" title="OHLCV on a K₄ — public Binance klines">K4 market</a>
+          <a class="p31-mesh-tap" href="../../andromeda/04_SOFTWARE/p31ca/public/k4market.html" title="OHLCV on a K₄ — public Binance klines">K4 market</a>
         </li>
-        <li><a href="../../docs/P31-PERSONAL-HOW-TO.md">How-to (MD)</a></li>
-        <li><a href="../../p31-personal-howto.html">How-to (UI)</a></li>
+        <li><a class="p31-mesh-tap" href="../../docs/P31-PERSONAL-HOW-TO.md">How-to (MD)</a></li>
+        <li><a class="p31-mesh-tap" href="../../p31-personal-howto.html">How-to (UI)</a></li>
+        <li><a class="p31-mesh-tap" href="../PLAN-BONDING-SOUP-WHEN-SCALE.md">When-scale plan</a></li>
       </ul>
       <div class="try-chips" id="try-chips" role="group" aria-label="Example searches — tap to try">
         <span class="chips-label" id="chips-lbl">Try a gentle search</span>
         <div class="chips" aria-labelledby="chips-lbl">
-          <button type="button" class="chip" data-try="mesh" title="Search for mesh">mesh</button>
-          <button type="button" class="chip" data-try="K4" title="Cage / K₄">K4</button>
-          <button type="button" class="chip" data-try="verify" title="verify pipeline">verify</button>
-          <button type="button" class="chip" data-try="passport" title="Cognitive passport">passport</button>
-          <button type="button" class="chip" data-try="poets" title="Poets room doc">poets</button>
-          <button type="button" class="chip" data-try="alignment" title="P31 alignment">alignment</button>
+          <button type="button" class="chip p31-mesh-tap" data-try="mesh" title="Search for mesh">mesh</button>
+          <button type="button" class="chip p31-mesh-tap" data-try="K4" title="Cage / K₄">K4</button>
+          <button type="button" class="chip p31-mesh-tap" data-try="verify" title="verify pipeline">verify</button>
+          <button type="button" class="chip p31-mesh-tap" data-try="passport" title="Cognitive passport">passport</button>
+          <button type="button" class="chip p31-mesh-tap" data-try="poets" title="Poets room doc">poets</button>
+          <button type="button" class="chip p31-mesh-tap" data-try="alignment" title="P31 alignment">alignment</button>
         </div>
       </div>
       <div class="search-block" id="search-block" role="search">
@@ -791,7 +796,7 @@
             spellcheck="false"
             aria-describedby="kbd-hint"
           />
-          <button type="button" id="clear-q" class="btn-clear" hidden aria-label="Clear search">Clear</button>
+          <button type="button" id="clear-q" class="btn-clear p31-mesh-tap" hidden aria-label="Clear search">Clear</button>
         </div>
         <p class="kbd-hint" id="kbd-hint"><kbd>/</kbd> search · <kbd>Esc</kbd> clear (almost anywhere) · <kbd>↓</kbd> <kbd>↑</kbd> in results (first <kbd>↑</kbd> back to the box) · <kbd>Enter</kbd> save a history step</p>
       </div>

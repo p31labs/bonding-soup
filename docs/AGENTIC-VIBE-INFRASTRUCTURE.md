@@ -74,6 +74,7 @@ Use **`docs/SIC-POVM-K4-ARCHITECTURE.md`** and **`docs/EGG-HUNT.md`** for the Kâ
 
 | Doc | Use |
 |-----|-----|
+| `docs/P31-CREATE-CONNECT-ETHICAL-MONETIZATION.md` | **Create / connect** + **ephemeralization** + **ethical monetization** (alignment + creator economy + ethical UI) |
 | `docs/PLAN-KIDS-VIBE-CODING.md` | **Household** kid/teen local-first vibe path |
 | `docs/SIC-POVM-K4-ARCHITECTURE.md` | Four-vector (physical / net / compliance / UX) without essay length |
 | `P31-ROOT-MAP.md` | Where to work |

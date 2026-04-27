@@ -42,11 +42,27 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
+      "label": "P31: verify shipbox (p31.shipbox JSON snapshot invariants)",
+      "type": "shell",
+      "command": "npm run verify:shipbox",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
       "label": "P31: mesh budgets (k4 + glass SLOs, no network)",
       "type": "shell",
       "command": "npm run mesh:budgets",
       "options": { "cwd": "${workspaceFolder}" },
       "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: build fleet portal (live URL index → fleet-portal.html)",
+      "type": "shell",
+      "command": "npm run build:fleet-portal",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {

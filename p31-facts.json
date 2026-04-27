@@ -30,8 +30,19 @@
     "package.json",
     "packages/p31-mesh/package.json",
     "scripts/verify-facts.mjs",
+    "scripts/p31-shipbox.mjs",
     "scripts/lib/mesh-budgets.mjs",
-    "scripts/print-mesh-budgets.mjs"
+    "scripts/print-mesh-budgets.mjs",
+    "scripts/build-fleet-portal.mjs",
+    "fleet-portal.html",
+    "docs/P31-MISSION-SYSTEM-DELIVERABLE.md",
+    "docs/DELIVERABLE-BONDING-HOME-SCALE-PACK.md",
+    "docs/DELIVERABLE-P31-FACTS.md",
+    "docs/DELIVERABLE-SHIPBOX.md",
+    "docs/P31-CREATE-CONNECT-ETHICAL-MONETIZATION.md",
+    "docs/PLAN-BONDING-SOUP-WHEN-SCALE.md",
+    "docs/SOUP-ROOM-SCALE-RUNBOOK.md",
+    "scripts/soup-room-scale.mjs"
   ],
   "mesh": {
     "k4PersonalProbeBudgetMs": 20000,

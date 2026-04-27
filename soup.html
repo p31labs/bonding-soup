@@ -8,13 +8,17 @@
     <meta property="og:title" content="BONDING Soup" />
     <meta property="og:description" content="Molecular sim built for togetherness—clear colors, soft motion, honest rewards." />
     <meta name="theme-color" content="#0f1115" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="P31 home" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700&family=JetBrains+Mono:ital,wght@0,400;0,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="cognitive-passport/p31-style.css">
     <link rel="stylesheet" href="soup-quantum.css">
+    <link rel="manifest" href="p31-bonding.webmanifest" crossorigin="anonymous" />
+    <link rel="apple-touch-icon" href="p31-bonding-icons/p31-icon.svg" />
 </head>
-<body>
+<body class="p31-mesh-m-first">
     <div id="container">
         <header class="soup-app-header soup-app-header--psych" aria-label="BONDING Soup">
             <h1 class="soup-app-header__title">BONDING Soup</h1>
@@ -24,7 +28,7 @@
                 <li><span class="soup-psych-dot soup-psych-dot--warm" aria-hidden="true"></span> Warmth (coral · energy)</li>
                 <li><span class="soup-psych-dot soup-psych-dot--belong" aria-hidden="true"></span> Belonging (phosphor · we)</li>
             </ul>
-            <p class="soup-aaso"><em>As above, so below:</em> the same <code>demo</code> / <code>build:doc-index</code> bar shows up in the <a href="docs/doc-library/index.html">doc library</a>, <a href="docs/physics-learn/index.html">physics learn</a>, <a href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (with <code>andromeda/</code>), <a href="p31-personal-howto.html">interactive how-to</a>, <a href="poets-room.html">Poets room</a>, and <a href="http://127.0.0.1:3131/">local command center</a> (run <code>npm run command-center</code> — port 3131 by default). Prose in the tree, comfort in the tab. <span class="aaso-love" title="love">&#9829;</span><span class="aaso-3" title="&lt;3" aria-label="less than three"> &lt;3</span></p>
+            <p class="soup-aaso"><em>As above, so below:</em> the same <code>demo</code> / <code>build:doc-index</code> bar shows up in the <a class="p31-mesh-tap" href="docs/doc-library/index.html">doc library</a>, <a class="p31-mesh-tap" href="docs/physics-learn/index.html">physics learn</a>, <a class="p31-mesh-tap" href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (with <code>andromeda/</code>), <a class="p31-mesh-tap" href="fleet-portal.html">live fleet &amp; every URL</a> (<code>npm run build:fleet-portal</code>), <a class="p31-mesh-tap" href="p31-personal-howto.html">interactive how-to</a>, <a class="p31-mesh-tap" href="poets-room.html">Poets room</a>, and <a class="p31-mesh-tap" href="http://127.0.0.1:3131/">local command center</a> (run <code>npm run command-center</code> — port 3131 by default). <strong>When-scale</strong> (plan the work, work the plan): <a class="p31-mesh-tap" href="docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">BONDING Soup — when-scale plan</a>. Prose in the tree, comfort in the tab. <span class="aaso-love" title="love">&#9829;</span><span class="aaso-3" title="&lt;3" aria-label="less than three"> &lt;3</span></p>
         </header>
 
         <div class="soup-larmor" id="soup-larmor" hidden>
@@ -40,7 +44,7 @@
             <span class="ph-run"><code>npm run demo</code> — static server (port 8080)</span>
             <span class="ph-run"><code>node spikes/mock-ws-server/server.js</code> — WebSocket (port 8082, or set <code>MOCK_WS_PORT</code>)</span>
             <p style="margin:8px 0 0 0;opacity:0.88">Then open a <strong>second browser or tab</strong> with the same <code>room</code> and a different <code>name</code>. Use <strong>Copy invite link</strong> below when family play is active.</p>
-            <div class="parents-actions">
+            <div class="parents-actions soup-tap">
                 <a id="parent-kid-view-link" href="#">Open kid-friendly view (larger UI)</a>
                 <button type="button" id="copy-kid-view-link" title="Same room + WebSocket, adds big-kid mode">Copy kid-view link</button>
             </div>
@@ -52,7 +56,7 @@
         <div class="soup-hero--kids" id="kids-hero" role="region" aria-label="Bigger play mode">
             <div><strong>Bigger play</strong> — the soup fills more of the screen, buttons are easy to hit, and you can <strong>play in the same room</strong> with someone on another computer.</div>
             <p style="margin:0.4em 0 0;opacity:0.9;font-size:0.9em">Quick name tags (same house: pick a <strong>room</strong> first, e.g. <code>living-room</code>):</p>
-            <div class="kids-actions" id="kids-actions">
+            <div class="kids-actions soup-tap" id="kids-actions">
                 <span style="align-self:center;opacity:0.85;font-size:0.88em">Play as</span>
                 <button type="button" data-kid-name="SJ" title="Label your molecules for this tab">S.J.</button>
                 <button type="button" data-kid-name="WJ" title="Label your molecules for this tab">W.J.</button>
@@ -87,14 +91,14 @@
                 <div id="as-above-so-below" class="stat" style="display:none" title="README/parent text ↔ this socket ↔ server terminal">
                     <span id="as-above-label">as above / so below</span>
                 </div>
-                <div id="network-family-row" class="stat" style="display:none">
+                <div id="network-family-row" class="stat soup-tap" style="display:none">
                     <span id="family-room-label"></span>
                     <button type="button" id="new-family-room">New private room</button>
                     <button type="button" id="copy-family-link">Copy invite link</button>
                 </div>
             </div>
             <div class="stats adults-only soup-dev-meta">
-                <div class="stat soup-dev-stat">
+                <div class="stat soup-dev-stat soup-tap">
                     <a href="cognitive-passport/index.html">Cognitive Passport (generator)</a>
                     <span class="soup-dev-sep"> · </span>
                     <a href="docs/doc-library/index.html" title="Prose in docs/ and AGENTS (above) → searchable index in-browser (below). After editing docs/*.md: npm run build:doc-index. In the UI: / to focus, ↓ first result, try chips, optional ?q=mesh.">Document library</a>
@@ -108,7 +112,7 @@
                 </div>
             </div>
             <div class="stats adults-only soup-dev-meta">
-                <div class="stat soup-dev-stat">
+                <div class="stat soup-dev-stat soup-tap">
                     <a href="p31-personal-howto.html">How-to (interactive)</a>
                     <span class="soup-dev-sep"> · </span>
                     <span>Command center (local, buttons)</span>
@@ -119,7 +123,7 @@
                 </div>
             </div>
             <div class="stats adults-only soup-dev-meta">
-                <div class="stat soup-dev-stat">
+                <div class="stat soup-dev-stat soup-tap">
                     <span>Personal agent (PAR) —</span>
                     <a href="andromeda/04_SOFTWARE/p31ca/public/planetary-onboard.html">planetary onboard</a>
                     <span class="soup-dev-sep"> · </span>

@@ -25,7 +25,9 @@
 | `andromeda/04_SOFTWARE/p31ca/public/p31-oqe-twenty.json` | `p31.oqeTwenty/1.0.0`; **`contradictions` length 20**, faces **1..20**; curate with counsel; **not** Fate 20 copy |
 | `andromeda/04_SOFTWARE/p31ca/public/oqe-icosa.html` | Browses faces; **no CSPRNG**; loads OQE JSON only; links to Oracle/D20 for assistive use |
 | `andromeda/04_SOFTWARE/p31ca/scripts/verify-oqe-icosa.mjs` | CI: JSON shape, HTML strings, `ground-truth` routes, `_redirects` `/oqe` |
-| `andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json` | Routes: `oqeTwentyLexicon`, `oqeIcosa`; `edgeRedirects` **/oqe** → `oqe-icosa.html` |
+| `scripts/oqe-icosa-e2e.mjs` (home) | Playwright: `http.server` with **CWD = p31ca `public/`** → `oqe-icosa.html` + `p31-oqe-twenty.json` — `npm run test:oqe-icosa:e2e`; in **`p31:all`**; Task **P31: OQE icosa e2e** |
+| `andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json` | Routes: `oqeTwentyLexicon`, `oqeIcosa` (`registryId: oqe-icosa`); `edgeRedirects` **/oqe**; `registryAppUrlInvariants` **oqe-icosa → oqe-icosa.html** |
+| `andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs` + `hub-app-ids.mjs` | Hub card **oqe-icosa** (cockpit grid) + `oqe-icosa-about.html` via `generate-about-pages` — same id set rules as all hub products |
 
 ---
 

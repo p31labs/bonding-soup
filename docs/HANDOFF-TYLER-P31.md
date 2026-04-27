@@ -119,7 +119,7 @@ Marketing copy must stay aligned with **`p31-constants.json`** → `organization
 
 - [ ] GitHub **org invite** sent (read or triage role as appropriate).  
 - [ ] Tyler has link to **this file** (or PDF export of it).  
-- [ ] Confirm **#55** merged and **p31ca.org** shows **Ops** + banner (or note “pending deploy”).  
+- [ ] Confirm **#55** merged and **p31ca.org** shows **Ops** + banner (or note “pending deploy”). *External: GitHub + production; not asserted by repo `verify`.*  
 - [ ] Optional: **Cloudflare** Access policy if Tyler needs **EPCP** write paths (not required to read glass).  
 - [ ] Optional: add Tyler to **Slack/Discord** ops channel if you use one.  
 

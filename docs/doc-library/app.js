@@ -372,7 +372,7 @@
         rank +
         "</span>" +
         "<article class=\"hit-inner\">" +
-        "<a class=\"title display-font\" href=\"" +
+        "<a class=\"title display-font p31-mesh-tap\" href=\"" +
         esc(href) +
         '" title="Open: ' +
         esc(d.title).replace(/"/g, "&quot;") +

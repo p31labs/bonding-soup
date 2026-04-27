@@ -5,7 +5,7 @@
  *  2. `validate-p31-full.sh` — scorecard + extended audits (report under /tmp/p31_validation_report.json)
  *  3. p31ca `fleet:probe` — soft (non-fatal; matches p31-ci.yml fleet step)
  *  3b. `ecosystem-glass.mjs` — soft; live GETs in p31-ecosystem.json; report includes `skipped[]` for `skipIfEmpty`; writes /tmp/p31_glass_report.json
- *  4. Playwright E2E — (a) home **`npm run test:doc-library:e2e`** + **`npm run test:physics-learn:e2e`** + **`npm run test:k4market:smoke`**;
+ *  4. Playwright E2E — (a) home **`npm run test:doc-library:e2e`** + **`npm run test:physics-learn:e2e`** + **`npm run test:k4market:smoke`** + **`npm run test:oqe-icosa:e2e`**;
  *     (b) p31ca if `playwright.config.ts` exists. Subprocess sets **CI=true**; p31ca uses `astro preview` so preview
  *     is not a stale 127.0.0.1:4321 from a prior run. Both respect **`--skip-e2e`**.
  *  5. p31ca `security:lint` — soft (script uses || true)
@@ -125,6 +125,13 @@ function main() {
       const k4Smoke = fs.existsSync(path.join(root, "scripts", "k4market-smoke.mjs"));
       if (k4Smoke) {
         run("K4 market smoke (static server + p31ca k4market.html)", "npm run test:k4market:smoke", {
+          cwd: root,
+          env: { ...process.env, CI: "true" },
+        });
+      }
+      const oqeE2e = fs.existsSync(path.join(root, "scripts", "oqe-icosa-e2e.mjs"));
+      if (oqeE2e) {
+        run("OQE icosa E2E (static server CWD p31ca/public + oqe-icosa.html)", "npm run test:oqe-icosa:e2e", {
           cwd: root,
           env: { ...process.env, CI: "true" },
         });

@@ -2,7 +2,7 @@
   "_comment": "Deploy targets + glass-box URLs. Templates: {{mesh.*}}, {{bonding.*}}, {{payment.*}} from p31-constants.json. Consolidated live sites + Workers: p31-live-fleet.json. After edits: npm run verify:ecosystem",
   "schema": "p31.ecosystem/1.0.0",
   "updated": "2026-04-26",
-  "_deployNote": "Order matches docs/ECOSYSTEM-PRODUCTION-11.md §4: constants + pnpm, K₄ trio, geodesic, agent/orchestrator/love-ledger, Google bridge, satellite Workers, passkey, EPCP command-center, donate-api, wcd33, p31ca Pages last. unified-k4-cage/ omitted (same worker name as k4-cage). p31-pwa + sovereign-command-center are Cloudflare Pages (build + pages deploy). quantum-edge wrangler may still have placeholder KV ids — fix before expect green deploy.",
+  "_deployNote": "Order matches docs/ECOSYSTEM-PRODUCTION-11.md §4: constants + pnpm, K₄ trio, geodesic, agent/orchestrator/love-ledger, Google bridge, satellite Workers, passkey, EPCP command-center, donate-api, wcd33, p31ca Pages last. unified-k4-cage/ omitted (same worker name as k4-cage). p31-pwa + sovereign-command-center are Cloudflare Pages (build + pages deploy). Holistic edge audit: npm run quantum:cloud",
   "glassProbes": [
     {
       "id": "k4-personal-api-health",

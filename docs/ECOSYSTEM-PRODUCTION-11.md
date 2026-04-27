@@ -137,6 +137,8 @@ These are **explicit** “not done until addressed” items called out elsewhere
 - **Orchestrator package name:** Production URL is `p31-orchestrator.trimtab-signal.workers.dev`; ensure the Worker that serves it is owned and in CI, even if the repo path is non-obvious.
 - **Google bridge:** `auth.html` embeds a bridge URL; keep allowlists and Worker deploy in sync with OAuth clients.
 
+**Repo-side vs operational:** A **home** (`bonding-soup`) checkout is **structurally** aligned for the deliverable pack when **`npm run verify`** and **`MESH_LIVE_STRICT=0 npm run release:check`** (with **`andromeda/04_SOFTWARE/p31ca`** present) are green. **Deploy, DNS, org filings, and ECO/COCKPIT merge** are tracked above and in **`docs/PLAN-11-10-FULL-ECOSYSTEM.md`** — they are not automatic from git alone.
+
 ---
 
 ## 7. Definition of Done (single sentence)

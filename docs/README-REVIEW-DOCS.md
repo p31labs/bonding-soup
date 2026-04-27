@@ -17,6 +17,7 @@ Read in this order:
 | 3 | **`REVIEW-SUPPLEMENT-B-WORKERS-AND-PACKAGES.md`** | Cloudflare `wrangler.toml` packages under `andromeda/04_SOFTWARE` + mental map |
 | 4 | **`REVIEW-SUPPLEMENT-C-ECO-CWP-AND-INTEGRATIONS.md`** | ECO CWP, **CWP-P31-UI-2026-01** (operator shell `/ops/`), **CWP-P31-PAR-2026-01** (PAR + `soup.html`), **CWP-P31-IB-2026-01** (Initial Build, `p31ca.org/build`), SUPER-CENTAUR handoff, monetary CWP, EPCP report paths |
 | 5 | **`MVP-DELIVERABLES-INVENTORY.md`** | Tiered MVP list — LIVE hub/products, 10-worker fleet, adjacent sprint items, active dev, concepts; grant-ready five-bullet summary |
+| 5b | **`DELIVERABLE-BONDING-HOME-SCALE-PACK.md`** | **Home repo drop** — PWA + when-scale + room runbook + fleet portal + entry parity; proof: **`verify`** + **`soup:room-scale`** |
 | 6 | **`ENTERPRISE-LAUNCH-PREP.md`** | **Launch** — verify gates, secret rotation, Andromeda merge/deploy path, Zenodo/constants alignment vs Genesis SOPs |
 
 **Also authoritative (pre-existing, not duplicated in full here):**

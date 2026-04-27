@@ -124,6 +124,12 @@ const actions = {
     cmd: "npm",
     args: ["run", "mesh:budgets"],
   },
+  "home-build-fleet-portal": {
+    title: "build:fleet-portal (live URL index → fleet-portal.html; polish copies to p31ca public)",
+    cwd: root,
+    cmd: "npm",
+    args: ["run", "build:fleet-portal"],
+  },
   "home-apply-constants": {
     title: "apply:constants (JSON → ground-truth fragments, generated TS)",
     cwd: root,
@@ -381,6 +387,7 @@ const SECTIONS = [
       "home-verify-alignment",
       "home-verify-facts",
       "home-mesh-budgets",
+      "home-build-fleet-portal",
       "home-verify",
       "home-apply-constants",
       "home-sync-passport",
@@ -617,7 +624,8 @@ function buildPageHtml() {
           <a href="http://127.0.0.1:8080/poets-room.html" rel="noopener" target="_blank">Poets room</a>,
           <a href="http://127.0.0.1:8080/docs/doc-library/index.html" rel="noopener" target="_blank">Document library</a>
           (<a href="http://127.0.0.1:8080/docs/doc-library/index.html?q=mesh" rel="noopener" target="_blank"><code>?q=mesh</code></a>),
-          <a href="http://127.0.0.1:8080/docs/physics-learn/index.html" rel="noopener" target="_blank">Physics learn</a>${
+          <a href="http://127.0.0.1:8080/docs/physics-learn/index.html" rel="noopener" target="_blank">Physics learn</a>,
+          <a href="http://127.0.0.1:8080/docs/PLAN-BONDING-SOUP-WHEN-SCALE.md" rel="noopener" target="_blank">When-scale plan</a>${
             p
               ? ` · <a href="${P31CA_PUBLIC_BASE}/initial-build.html" rel="noopener" target="_blank">Create</a> &amp; <a href="${P31CA_PUBLIC_BASE}/connect.html" rel="noopener" target="_blank">Connect</a> (local hub static)`
               : ""

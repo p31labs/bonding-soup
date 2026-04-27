@@ -9,14 +9,49 @@
       "role": "Operator-locked numbers, mission snippet, ground-truth version/schema pins, mesh URLs"
     },
     {
+      "id": "p31-shipbox-script",
+      "path": "scripts/p31-shipbox.mjs",
+      "role": "p31.shipbox/1.0.0 — JSON handoff snapshot (package, git head, public constants, file flags); p31:shipbox, verify:shipbox"
+    },
+    {
+      "id": "deliverable-shipbox-md",
+      "path": "docs/DELIVERABLE-SHIPBOX.md",
+      "role": "Human manifest for shipbox snapshot; pairs with verify:shipbox and P31-ROOT-MAP handoff row"
+    },
+    {
+      "id": "deliverable-p31-facts-md",
+      "path": "docs/DELIVERABLE-P31-FACTS.md",
+      "role": "Human manifest for p31.facts contract; pairs with verify:facts"
+    },
+    {
+      "id": "p31-create-connect-ethical-md",
+      "path": "docs/P31-CREATE-CONNECT-ETHICAL-MONETIZATION.md",
+      "role": "Keystone: create/connect, ephemeralization, ethical monetization, scale, organize"
+    },
+    {
+      "id": "plan-bonding-soup-when-scale-md",
+      "path": "docs/PLAN-BONDING-SOUP-WHEN-SCALE.md",
+      "role": "BONDING phased when-scale plan; cadence and Phase 0–3 gates"
+    },
+    {
       "id": "p31-facts",
       "path": "p31-facts.json",
       "role": "p31.facts/1.0.0 — machine-verified paths/keys; npm run verify:facts (mesh URLs, @p31/mesh, policy-file substring guard)"
     },
     {
+      "id": "p31-mission-system-deliverable",
+      "path": "docs/P31-MISSION-SYSTEM-DELIVERABLE.md",
+      "role": "Final handoff: mission system manifest, prep, assemble, definition of done; links P31-CREATE-CONNECT, fleet-portal, verify bar"
+    },
+    {
+      "id": "fleet-portal-html",
+      "path": "fleet-portal.html",
+      "role": "Generated index of all live URLs (npm run build:fleet-portal); polish → p31ca public/fleet-portal.html"
+    },
+    {
       "id": "p31-universal-canon",
       "path": "andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json",
-      "role": "Colors, type scale, motion, focus — hub/org appearances",
+      "role": "Colors, type scale, motion, focus — hub/org; mobileMeshFirst (touch, safe areas) in generated p31-style.css",
       "optional": true
     },
     {
@@ -108,6 +143,12 @@
       "path": "andromeda/04_SOFTWARE/p31ca/public/p31-oqe-twenty.json",
       "role": "p31.oqeTwenty/1.0.0 — forensic 20-face contradiction slots; oqe-icosa.html; not Fate 20",
       "optional": true
+    },
+    {
+      "id": "p31-mission-trio",
+      "path": "andromeda/04_SOFTWARE/p31ca/src/data/p31-mission-trio.json",
+      "role": "p31.missionTrio/1.0.0 — Build / Create / Connect: ephemeralization (create) + ethical monetization (connect) in hub copy and EBC; single source for sync’d footers",
+      "optional": true
     }
   ],
   "derivations": [
@@ -118,6 +159,22 @@
       "apply": "edit p31-facts.json when adding externally cited file/path/key claims",
       "verify": "npm run verify:facts",
       "note": "Declarative invariants: required paths, mesh + org keys, https worker URLs, no credential-like substrings in policy files"
+    },
+    {
+      "id": "p31-shipbox-snapshot",
+      "from": ["p31-constants.json", "package.json", "scripts/p31-shipbox.mjs", "p31-facts.json", "p31-alignment.json", "soup.html"],
+      "to": ["(stdout JSON or --check; no written artifact required)"],
+      "apply": "edit p31-constants for public org/mesh/bonding; re-run p31:shipbox for evidence JSON",
+      "verify": "npm run verify:shipbox",
+      "note": "Sister to p31-facts: human/audit snapshot, not a second contract file"
+    },
+    {
+      "id": "fleet-to-portal-html",
+      "from": ["p31-live-fleet.json", "p31-ecosystem.json", "p31-constants.json"],
+      "to": ["fleet-portal.html", "andromeda/04_SOFTWARE/p31ca/public/fleet-portal.html"],
+      "apply": "npm run build:fleet-portal; npm run polish (rewrites CSS href for hub copy)",
+      "verify": "verify:facts pathsMustExist fleet-portal.html + build script; optional manual open",
+      "note": "One-page directory of every tracked production URL; p31ca short https://p31ca.org/fleet-portal and /fleet-portal.html after deploy"
     },
     {
       "id": "constants-to-ground-truth-numbering",
@@ -278,19 +335,32 @@
       "apply": "OQE copy only in p31-oqe-twenty.json; oqe-icosa.html fetches; Dome vertex `oqe-icosa` + /oqe short URL in ground-truth + _redirects",
       "verify": "from p31ca: npm run verify:oqe-icosa (includes dome-cockpit OQE node check)",
       "note": "Forensic p31.oqeTwenty vs assistive p31.fateTwenty — never merge public JSON"
+    },
+    {
+      "id": "mission-trio-to-hub-and-mission-ebc",
+      "from": ["andromeda/04_SOFTWARE/p31ca/src/data/p31-mission-trio.json"],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/src/pages/index.astro (hub mission rail + subtitle)",
+        "andromeda/04_SOFTWARE/p31ca/public/connect.html, mesh-start.html, … (P31:mission-ebc blocks via scripts/sync-connect-mission-ebc.mjs)"
+      ],
+      "apply": "from p31ca: node scripts/sync-connect-mission-ebc.mjs (prebuild, after registry/trio edits)",
+      "verify": "from p31ca: node scripts/verify-mission-trio.mjs",
+      "note": "Create = GEODESIC / ephemeralized rigging; Connect = K₄ mesh + same economics the repo proves (see creator-economy transparency.missionLink)"
     }
   ],
   "verifyPipeline": {
     "description": "Root `package.json` `verify` = prelude + scripts in order. Update this file whenever `verify` changes.",
     "prelude": "verify:alignment",
-    "preludeNote": "Fast guard (verify-alignment.mjs): JSON + required sources. Not re-run inside `npm run verify:alignment -- --verify`.",
+    "preludeNote": "Fast guard (verify-alignment.mjs): JSON + required sources. Skipped in the `--verify` loop (prelude already satisfied).",
     "scripts": [
       "verify:facts",
+      "verify:shipbox",
       "verify:passport",
       "verify:constants",
       "verify:ecosystem",
       "verify:map-pipeline",
       "verify:p31-style",
+      "verify:command-center",
       "verify:p31ca-contracts",
       "verify:egg-hunt",
       "build:doc-index",

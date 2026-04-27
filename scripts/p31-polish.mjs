@@ -2,7 +2,9 @@
 /**
  * One-shot “make it green + synced” for P31 home + nested Andromeda p31ca.
  * - Regenerates constants-derived artifacts (mesh JSON, ground-truth header, TS export).
+ * - Normalizes BONDING static HTML (viewport-fit + p31-mesh-m-first): apply:mesh-m-first:home.
  * - Mirrors p31-live-fleet.json into the hub public tree when both paths exist.
+ * - Regenerates fleet-portal.html (npm run build:fleet-portal) and mirrors it to p31ca public when present.
  * - Runs sync:doc-library:p31ca when p31ca exists (build:doc-index + mirror to public/doc-library/).
  * - Runs release:local (verify + p31ca build + security:check, loose mesh strict).
  */
@@ -21,12 +23,24 @@ function run(title, cmd, cwd = root) {
 
 function main() {
   run("apply:constants", "npm run apply:constants", root);
+  run("apply:mesh-m-first:home", "npm run apply:mesh-m-first:home", root);
+  run("apply:pwa:home (BONDING manifest link)", "npm run apply:pwa:home", root);
+
+  run("build:fleet-portal (live apps index HTML)", "npm run build:fleet-portal", root);
 
   const fleetSrc = path.join(root, "p31-live-fleet.json");
   const fleetDst = path.join(root, "andromeda/04_SOFTWARE/p31ca/public/p31-live-fleet.json");
   if (fs.existsSync(fleetSrc) && fs.existsSync(path.dirname(fleetDst))) {
     fs.copyFileSync(fleetSrc, fleetDst);
     console.log("\n\x1b[32m✓\x1b[0m synced p31-live-fleet.json → andromeda/04_SOFTWARE/p31ca/public/");
+  }
+  const portalSrc = path.join(root, "fleet-portal.html");
+  const portalDst = path.join(root, "andromeda/04_SOFTWARE/p31ca/public/fleet-portal.html");
+  if (fs.existsSync(portalSrc) && fs.existsSync(path.dirname(portalDst))) {
+    let html = fs.readFileSync(portalSrc, "utf8");
+    html = html.replace('href="cognitive-passport/p31-style.css"', 'href="p31-style.css"');
+    fs.writeFileSync(portalDst, html, "utf8");
+    console.log("\n\x1b[32m✓\x1b[0m wrote fleet-portal.html → p31ca public/ (p31-style.css) — live: https://p31ca.org/fleet-portal.html\n");
   }
 
   const p31caRoot = path.join(root, "andromeda", "04_SOFTWARE", "p31ca");

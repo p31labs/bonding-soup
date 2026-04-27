@@ -63,5 +63,6 @@
 ## Ethics & style (non-normative to JSON)
 
 - **`docs/ETHICAL-STYLE-MAP.md`** — how tokens and motion should *behave*; alignment enforces *consistency* of artefacts, not taste. Both matter.
+- **`docs/P31-CREATE-CONNECT-ETHICAL-MONETIZATION.md`** — mission verbs (**create**, **connect**) tied to **ephemeralization** and **ethical monetization** (public creator-economy contract + `verify:monetary`).
 
 **Version:** 1.0.0 (2026) — extend `p31.alignment` with new fields only in a new schema minor if scripts must branch.

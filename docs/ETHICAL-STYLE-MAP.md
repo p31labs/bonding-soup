@@ -10,6 +10,7 @@ P31 **ethical psych** (calm, clarity, belonging, no dark patterns) applies every
 
 - **Tokens:** `andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json` → **`npm run apply:p31-style`** → generated **`cognitive-passport/p31-style.css`** (CSS variables consumed by passport, static pages, and demos).
 - **Hub / Tailwind:** p31ca mirrors the same palette into `public/p31-style.css`, `p31-tailwind-extend.js`, etc. — see **`AGENTS.md`** and **`docs/P31-ENGINEERING-STANDARD.md`** for verify bars.
+- **Mobile browser mesh first:** The default mesh client is **the phone web app** (TLS + add-to-home if the operator wants); Workers + `k4-personal` + static hub, not a gatekept native shell. The canon’s **`mobileMeshFirst`** block drives touch targets (`--p31-touch-min`) and **`body.p31-mesh-m-first`** safe-area padding in generated `p31-style.css` — use **`viewport-fit=cover`** on new static shells. Autonomy: never force an app-store install to reach family mesh; proportion: one honest “Add to Home Screen” nudge, not a lockout.
 
 **Worked example (BONDING Soup):** repo-root **`soup.html`** + **`soup-quantum.css`** — welcome copy, pillar dots, ethical psych comment blocks, and the **`data-soup-*`** hooks (see **section 7** in this file). Styles depend on **`cognitive-passport/p31-style.css`**. Sync to bonding: **`npm run sync:soup-bonding`**. **Alignment of sources / verify pipeline:** **`p31-alignment.json`**, **`docs/P31-ALIGNMENT-SYSTEM.md`**.
 
@@ -100,6 +101,7 @@ Style with attribute selectors in **`soup-quantum.css`**; extend in **that** fil
 
 **Related docs**
 
+- **`docs/P31-CREATE-CONNECT-ETHICAL-MONETIZATION.md`** — create / connect, ephemeralization, and ethical monetization (contracts + verify hooks)
 - **`docs/P31-ALIGNMENT-SYSTEM.md`**, **`p31-alignment.json`** — canonical sources vs derived artefacts; **`npm run verify:alignment`**
 - **`docs/P31-ENGINEERING-STANDARD.md`** — verify / release bar
 - **`docs/ECOSYSTEM-PRODUCTION-11.md`** — fleet / glass ladder alignment

@@ -158,6 +158,16 @@ if [[ "${P31_K4MARKET_SMOKE:-}" = "1" ]]; then
   fi
 fi
 
+# ---- Optional: OQE icosa e2e (set P31_OQE_ICOSA_E2E=1; p31ca public as http root) ----
+if [[ "${P31_OQE_ICOSA_E2E:-}" = "1" ]]; then
+  echo "=== Local: OQE icosa e2e (Playwright) ==="
+  if [ -f "$SCRIPT_DIR/scripts/oqe-icosa-e2e.mjs" ] && node "$SCRIPT_DIR/scripts/oqe-icosa-e2e.mjs"; then
+    add_check "Local" "OQE_Icosa_E2E" "PASS" "headless Chromium: oqe-icosa + JSON + 20 face buttons"
+  else
+    add_check "Local" "OQE_Icosa_E2E" "FAIL" "npx playwright install chromium; npm run test:oqe-icosa:e2e"
+  fi
+fi
+
 # ---- Local: Lattice Oracle (magic-crystal / /oracle contract) ----
 echo "=== Local: Lattice Oracle ==="
 if [ -f "$SCRIPT_DIR/andromeda/04_SOFTWARE/p31ca/scripts/verify-lattice-oracle.mjs" ] && node "$SCRIPT_DIR/andromeda/04_SOFTWARE/p31ca/scripts/verify-lattice-oracle.mjs" 2>/dev/null; then
@@ -166,6 +176,16 @@ elif [ ! -d "$SCRIPT_DIR/andromeda/04_SOFTWARE/p31ca" ]; then
   add_check "Local" "Lattice_Oracle" "SKIP" "no p31ca tree"
 else
   add_check "Local" "Lattice_Oracle" "FAIL" "Run: npm run verify:lattice-oracle in andromeda/04_SOFTWARE/p31ca"
+fi
+
+# ---- Local: OQE icosa (p31.oqeTwenty contract + dome + ground-truth) ----
+echo "=== Local: OQE icosa (verify) ==="
+if [ -f "$SCRIPT_DIR/andromeda/04_SOFTWARE/p31ca/scripts/verify-oqe-icosa.mjs" ] && node "$SCRIPT_DIR/andromeda/04_SOFTWARE/p31ca/scripts/verify-oqe-icosa.mjs" 2>/dev/null; then
+  add_check "Local" "OQE_Icosa_Verify" "PASS" "oqe json + oqe-icosa + redirects + ground-truth + dome-cockpit"
+elif [ ! -d "$SCRIPT_DIR/andromeda/04_SOFTWARE/p31ca" ]; then
+  add_check "Local" "OQE_Icosa_Verify" "SKIP" "no p31ca tree"
+else
+  add_check "Local" "OQE_Icosa_Verify" "FAIL" "Run: npm run verify:oqe-icosa in andromeda/04_SOFTWARE/p31ca"
 fi
 
 # ---- Local: k4-personal Worker (mesh API bundle) ----

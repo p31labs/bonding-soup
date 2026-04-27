@@ -49,3 +49,10 @@ else
   echo "P31 post-commit: git push -u origin ${BRANCH} (auto)"
   git push -u origin "$BRANCH"
 fi
+
+# Optional: open PR if none (needs gh; same as GitHub Action p31-pr-on-push on remote push)
+if [[ "${P31_PR_EVERY_PUSH:-}" == "1" ]] || [[ -f .p31/auto-pr ]]; then
+  if command -v node &>/dev/null; then
+    node "$ROOT/scripts/ensure-pr.mjs" || echo "P31 post-commit: pr:ensure failed (non-fatal)" >&2
+  fi
+fi

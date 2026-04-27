@@ -88,6 +88,8 @@ if (extra[0] === "-h" || extra[0] === "--help") {
   P31_PR_IN_HOME=1        → force bonding-soup
   P31_PR_IN_ANDROMEDA=1   → force andromeda
   P31_PR_NO_AUTO_BRANCH=1 → on main/master, do not auto-create pr/<slug>-<sha> (gh-pr-automerge)
+  npm run pr:ensure       → open PR if missing (same as workflow p31-pr-on-push on feature pushes)
+  npm run git:autopr:on   → after auto-push, run pr:ensure (with git:autopush:on)
   npm run fix:gh          → gh auth setup-git (credential noise / gitci)
 `);
   process.exit(0);

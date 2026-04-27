@@ -1,0 +1,31 @@
+# After each push to a feature branch, open a PR to the default branch if none exists (idempotent).
+# Same behavior locally: npm run pr:ensure  |  after auto-push with npm run git:autopr:on
+name: P31 PR on push
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - master
+
+concurrency:
+  group: p31-pr-on-push-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  ensure-pr:
+    name: P31 / ensure PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Open PR if missing
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+        run: node scripts/ensure-pr.mjs

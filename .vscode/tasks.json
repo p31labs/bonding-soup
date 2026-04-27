@@ -42,6 +42,14 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
+      "label": "P31: mesh budgets (k4 + glass SLOs, no network)",
+      "type": "shell",
+      "command": "npm run mesh:budgets",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
       "label": "P31: verify passport mirror",
       "type": "shell",
       "command": "npm run verify:passport",
@@ -85,6 +93,14 @@
       "label": "P31: k4market smoke (Playwright, needs andromeda)",
       "type": "shell",
       "command": "npm run test:k4market:smoke",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: OQE icosa e2e (Playwright, p31ca public as root)",
+      "type": "shell",
+      "command": "npm run test:oqe-icosa:e2e",
       "options": { "cwd": "${workspaceFolder}" },
       "group": "test",
       "presentation": { "reveal": "always", "panel": "shared" }

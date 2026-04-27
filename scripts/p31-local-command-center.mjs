@@ -118,6 +118,12 @@ const actions = {
     cmd: "npm",
     args: ["run", "verify:facts"],
   },
+  "home-mesh-budgets": {
+    title: "mesh:budgets (k4-personal + glass row latency SLOs — no network)",
+    cwd: root,
+    cmd: "npm",
+    args: ["run", "mesh:budgets"],
+  },
   "home-apply-constants": {
     title: "apply:constants (JSON → ground-truth fragments, generated TS)",
     cwd: root,
@@ -374,6 +380,7 @@ const SECTIONS = [
       "home-build",
       "home-verify-alignment",
       "home-verify-facts",
+      "home-mesh-budgets",
       "home-verify",
       "home-apply-constants",
       "home-sync-passport",

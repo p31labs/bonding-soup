@@ -47,17 +47,42 @@ function getLanIPv4() {
   return null;
 }
 
-const MANIFEST_JSON = JSON.stringify({
-  name: "P31 Operator Console",
-  short_name: "P31 Console",
-  description: "Whitelisted local automation — P31 home workspace",
-  start_url: "/",
-  display: "standalone",
-  orientation: "portrait-primary",
-  theme_color: "#0f1115",
-  background_color: "#0f1115",
-  categories: ["utilities", "developer"],
-});
+/** Bonding PWA icons at repo root — shared with Home Screen tile when LAN mode is on. */
+const bondingAppleTouchPng = path.join(root, "p31-bonding-icons", "apple-touch-180.png");
+const bondingIcon192 = path.join(root, "p31-bonding-icons", "icon-192.png");
+const bondingIcon512 = path.join(root, "p31-bonding-icons", "icon-512.png");
+
+function hasBondingAppleTouch() {
+  return fs.existsSync(bondingAppleTouchPng);
+}
+
+function buildManifestJson() {
+  /** @type {Record<string, unknown>} */
+  const o = {
+    name: "P31 Operator Console",
+    short_name: "P31 Console",
+    description: "Whitelisted local automation — P31 home workspace",
+    start_url: "/",
+    display: "standalone",
+    orientation: "portrait-primary",
+    theme_color: "#0f1115",
+    background_color: "#0f1115",
+    categories: ["utilities", "developer"],
+  };
+  /** @type {Array<{ src: string; sizes: string; type: string; purpose?: string }>} */
+  const icons = [];
+  if (hasBondingAppleTouch()) {
+    icons.push({ src: "/apple-touch-icon.png", sizes: "180x180", type: "image/png", purpose: "any" });
+  }
+  if (fs.existsSync(bondingIcon192)) {
+    icons.push({ src: "/p31-bonding-icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" });
+  }
+  if (fs.existsSync(bondingIcon512)) {
+    icons.push({ src: "/p31-bonding-icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" });
+  }
+  if (icons.length) o.icons = icons;
+  return JSON.stringify(o);
+}
 
 const MAX_BUFFER = 32 * 1024 * 1024;
 
@@ -548,7 +573,7 @@ function buildPageHtml() {
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
   <meta name="theme-color" content="#0f1115" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -557,6 +582,11 @@ function buildPageHtml() {
   <meta name="description" content="P31 local operator console — whitelisted npm automation on loopback." />
   <title>P31 — operator console</title>
   <link rel="manifest" href="/manifest.webmanifest" />
+  ${
+    hasBondingAppleTouch()
+      ? '<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />'
+      : ""
+  }
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600&display=swap" rel="stylesheet" />
@@ -706,6 +736,7 @@ function sendAsset(res, absPath, contentType) {
 
 
 const html = buildPageHtml();
+const manifestBody = buildManifestJson();
 
 const p31StylePath = path.join(root, "cognitive-passport", "p31-style.css");
 
@@ -739,12 +770,39 @@ const server = http.createServer((req, res) => {
     sendAsset(res, path.join(commandCenterDir, "command-center.js"), "application/javascript; charset=utf-8");
     return;
   }
+  if (req.method === "GET" && assetBase === "/apple-touch-icon.png") {
+    if (!hasBondingAppleTouch()) {
+      res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("missing p31-bonding-icons/apple-touch-180.png — run npm run generate:bonding-pwa-icons");
+      return;
+    }
+    sendAsset(res, bondingAppleTouchPng, "image/png");
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/p31-bonding-icon-192.png") {
+    if (!fs.existsSync(bondingIcon192)) {
+      res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("not found");
+      return;
+    }
+    sendAsset(res, bondingIcon192, "image/png");
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/p31-bonding-icon-512.png") {
+    if (!fs.existsSync(bondingIcon512)) {
+      res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("not found");
+      return;
+    }
+    sendAsset(res, bondingIcon512, "image/png");
+    return;
+  }
   if (req.method === "GET" && assetBase === "/manifest.webmanifest") {
     res.writeHead(200, {
       "Content-Type": "application/manifest+json; charset=utf-8",
       "Cache-Control": "no-store",
     });
-    res.end(MANIFEST_JSON);
+    res.end(manifestBody);
     return;
   }
   if (req.method === "POST" && req.url === "/api/run") {
@@ -797,6 +855,11 @@ server.on("error", (err) => {
 server.listen(port, listenHost, () => {
   const urlLoop = "http://127.0.0.1:" + port + "/";
   console.log("P31 command center: " + urlLoop + "  (Ctrl+C to stop)");
+  if (!hasBondingAppleTouch()) {
+    console.warn(
+      "P31 command center: no apple-touch icon — Home Screen tile may be generic. Run: npm run generate:bonding-pwa-icons"
+    );
+  }
   if (listenHost === "0.0.0.0") {
     console.warn(
       "P31 command center: listening on ALL interfaces — anyone on your LAN can run whitelisted actions. Trusted Wi‑Fi only."
@@ -812,7 +875,7 @@ server.listen(port, listenHost, () => {
     if (process.platform === "win32") {
       execFileSync("cmd", ["/c", "start", "", url], { stdio: "ignore" });
     } else if (process.platform === "darwin") {
-      execFileSync("open", [url], { stdio: "ignore" });
+      execFileSync("open", [urlLoop], { stdio: "ignore" });
     } else {
       execFileSync("xdg-open", [url], { stdio: "ignore" });
     }

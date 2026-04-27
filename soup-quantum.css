@@ -5,6 +5,7 @@
 
 html.soup-app {
   color-scheme: dark;
+  overflow-x: clip;
   scroll-padding-bottom: max(5.5rem, env(safe-area-inset-bottom, 0px));
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;

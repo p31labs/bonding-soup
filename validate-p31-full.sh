@@ -112,6 +112,26 @@ else
   add_check "Local" "P31ca_Contracts" "FAIL" "Run: npm run verify:p31ca-contracts (from root when andromeda present)"
 fi
 
+# ---- Local: edge coherence (Wrangler + ecosystem + fleet paths) ----
+echo "=== Local: quantum:cloud (edge coherence) ==="
+if node "$SCRIPT_DIR/scripts/quantum-cloud-optimize.mjs" 2>/dev/null; then
+  add_check "Local" "Quantum_Cloud_Coherence" "PASS" "Wrangler + ecosystem deploy paths + fleet codePaths (npm run quantum:cloud)"
+else
+  add_check "Local" "Quantum_Cloud_Coherence" "FAIL" "Run: npm run quantum:cloud — fix P0 (placeholder IDs, missing deploy paths) or use partial-clone note"
+fi
+
+# ---- Local: PQC + passkey boundary (p31ca security:crypto) ----
+echo "=== Local: pqc:verify (PQC + passkey boundary) ==="
+if [ -d "$SCRIPT_DIR/andromeda/04_SOFTWARE/p31ca" ]; then
+  if (cd "$SCRIPT_DIR" && npm run pqc:verify 2>/dev/null); then
+    add_check "Local" "PQC_Crypto_Surface" "PASS" "npm run pqc:verify — quantum-core + passkey SubtleCrypto boundary"
+  else
+    add_check "Local" "PQC_Crypto_Surface" "FAIL" "Run: npm run pqc:verify from P31 root (requires andromeda/.../packages/quantum-core)"
+  fi
+else
+  add_check "Local" "PQC_Crypto_Surface" "SKIP" "no p31ca tree"
+fi
+
 # ---- Local: quantum egg hunt (manifest anchors + Larmor vs p31-constants) ----
 echo "=== Local: Quantum egg hunt ==="
 if node "$SCRIPT_DIR/scripts/verify-egg-hunt.mjs"; then

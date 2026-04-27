@@ -34,7 +34,7 @@ You are not juggling twenty products—you are juggling **three layers**:
 | **Payment / creator-economy files only (fast)** | `npm run verify:monetary` | Ecosystem + constants + Andromeda MAP + `verify:economy` in p31ca. |
 | **MAP only (donate-api + donate page + secret scan)** | `npm run verify:map-pipeline` | Part of default `verify`; use alone for a quick Andromeda-only check. |
 | **Mesh (k4-personal bundle + live API)** | `npm run verify:mesh` | Dry-run + optional live `MESH_LIVE_STRICT`. |
-| **Clickable local buttons (hooks, verify, mesh, glass, PR)** | `npm run command-center` | Opens **http://127.0.0.1:3131** — **`verify`**, **`verify:mesh`**, **`ecosystem:glass`**, **`operator:shift-status`**, monetary/MAP, **`release:public`**, git/PR (keep terminal open; Ctrl+C stops). |
+| **Clickable local buttons (hooks, verify, mesh, glass, PR)** | `npm run command-center` | Opens **http://127.0.0.1:3131** — **`verify`**, **`verify:mesh`**, **`ecosystem:glass`**, **`operator:shift-status`**, monetary/MAP, **`release:public`**, git/PR (keep terminal open; Ctrl+C stops). **iPhone:** **`docs/P31-IPHONE-COMMAND-READINESS.md`**. **Chromebook:** **`docs/P31-CHROMEBOOK-COMMAND-READINESS.md`**. |
 | **Terminal CLI (boot, doctor, verify, CI, command-center)** | `npm run p31 -- <cmd>` | **`boot`**, **`doctor`**, **`verify`**, **`ci`** (`p31:ci`), **`cc`** / **`command-center`**. Global: **`npm link`** → **`p31`**. TTY art off: **`P31_CLI_MINIMAL=1`**. |
 | **Install git hooks (home)** | `npm run git:hooks` | `core.hooksPath=.githooks` (monetary pre-commit, optional auto-push). |
 | **PR + auto-merge (low friction)** | `npm run pr` at home **or** `pnpm pr` **inside** `andromeda/` | See `AGENTS.md` for `fix:gh` / credentials. |

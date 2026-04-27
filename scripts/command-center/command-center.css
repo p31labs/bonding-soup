@@ -7,6 +7,7 @@
 html {
   --cc-ptr-x: 50%;
   --cc-ptr-y: 32%;
+  overflow-x: clip;
 }
 
 * {
@@ -56,7 +57,7 @@ body.p31-cc::after {
   z-index: 0;
   pointer-events: none;
   background: radial-gradient(
-    680px circle at var(--cc-ptr-x) var(--cc-ptr-y),
+    min(680px, 120vmin) circle at var(--cc-ptr-x) var(--cc-ptr-y),
     rgba(77, 184, 168, 0.11),
     transparent 55%
   );
@@ -200,9 +201,11 @@ body.p31-cc::after {
 .p31-cc__shell {
   position: relative;
   z-index: 1;
+  width: 100%;
   max-width: 72rem;
   margin: 0 auto;
-  padding: var(--p31-space-6) var(--p31-space-5) var(--p31-space-16);
+  padding: max(var(--p31-space-6), env(safe-area-inset-top)) max(var(--p31-space-5), env(safe-area-inset-right))
+    max(var(--p31-space-16), env(safe-area-inset-bottom)) max(var(--p31-space-5), env(safe-area-inset-left));
 }
 
 .p31-cc__main {
@@ -243,6 +246,8 @@ body.p31-cc::after {
   display: flex;
   gap: var(--p31-space-4);
   align-items: flex-start;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .p31-cc__mark {
@@ -323,7 +328,11 @@ body.p31-cc::after {
   border: 1px solid rgba(77, 184, 168, 0.28);
   border-radius: var(--p31-radius-full);
   color: var(--p31-butter);
-  white-space: nowrap;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  text-align: center;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
@@ -559,7 +568,7 @@ a.p31-cc__chip--link:hover {
 
 @media (min-width: 640px) {
   .cc-grid {
-    grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 1fr));
   }
 }
 
@@ -848,9 +857,23 @@ a.cc-link:focus-visible {
   background: rgba(77, 184, 168, 0.4);
 }
 
+@supports (height: 100dvh) {
+  #out {
+    max-height: min(50dvh, 28rem);
+  }
+}
+
 @media (min-width: 1080px) {
   #out {
     max-height: calc(100vh - 14rem);
+  }
+}
+
+@supports (height: 100dvh) {
+  @media (min-width: 1080px) {
+    #out {
+      max-height: calc(100dvh - 14rem);
+    }
   }
 }
 
@@ -930,7 +953,7 @@ a.cc-link:focus-visible {
 
 .p31-cc__modal-panel {
   position: relative;
-  width: min(100%, 22rem);
+  width: min(22rem, calc(100vw - 2 * var(--p31-space-5)));
   padding: var(--p31-space-6);
   border-radius: var(--p31-radius-xl);
   border: 1px solid var(--p31-glass-border);
@@ -988,7 +1011,7 @@ a.cc-link:focus-visible {
   .p31-cc__shell {
     padding-left: max(var(--p31-space-4), env(safe-area-inset-left));
     padding-right: max(var(--p31-space-4), env(safe-area-inset-right));
-    padding-top: var(--p31-space-4);
+    padding-top: max(var(--p31-space-4), env(safe-area-inset-top));
     padding-bottom: max(var(--p31-space-24), calc(38vh + env(safe-area-inset-bottom)));
   }
 
@@ -998,6 +1021,15 @@ a.cc-link:focus-visible {
 
   .p31-cc__title {
     font-size: clamp(1.65rem, 6vw + 0.5rem, 2.5rem);
+  }
+
+  .p31-cc__badge {
+    width: 100%;
+    text-align: left;
+  }
+
+  .p31-cc__callout {
+    padding: var(--p31-space-4) var(--p31-space-5);
   }
 
   .p31-cc__filter {
@@ -1055,5 +1087,21 @@ a.cc-link:focus-visible {
   .p31-cc__modal {
     place-items: center;
     padding-bottom: max(var(--p31-space-8), env(safe-area-inset-bottom));
+  }
+}
+
+@supports (height: 100dvh) {
+  @media (max-width: 900px) {
+    .p31-cc__shell {
+      padding-bottom: max(var(--p31-space-24), calc(38dvh + env(safe-area-inset-bottom)));
+    }
+
+    .p31-cc__term-wrap {
+      max-height: min(38dvh, 320px);
+    }
+
+    #out {
+      max-height: min(28dvh, 220px);
+    }
   }
 }

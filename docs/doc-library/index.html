@@ -2,7 +2,7 @@
 <html lang="en" data-p31-appearance="hub" data-p31-doclib="1.2.0">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
   <meta name="description" content="Search home Markdown: maps, standards, and handbooks. Local: npm run demo." />
   <meta name="theme-color" content="#0f1115" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -11,6 +11,7 @@
   <link rel="apple-touch-icon" href="../../p31-bonding-icons/p31-icon.svg" />
   <title>P31 — document library</title>
   <link rel="stylesheet" href="../../cognitive-passport/p31-style.css" />
+  <link rel="stylesheet" href="../../cognitive-passport/p31-responsive-surface.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Outfit:wght@500;600;700&display=optional" rel="stylesheet" />
@@ -36,6 +37,7 @@
     body {
       margin: 0;
       min-height: 100vh;
+      min-height: 100dvh;
       font-family: var(--p31-font-sans, "Atkinson Hyperlegible", system-ui, sans-serif);
       background: var(--p31-void, #0f1115);
       color: var(--p31-cloud, #d8d6d0);
@@ -171,7 +173,8 @@
       -webkit-backdrop-filter: blur(14px) saturate(1.15);
       border-bottom: 1px solid var(--p31-border-subtle, rgba(255,255,255,0.06));
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045);
-      padding: var(--p31-space-5) var(--p31-space-4) var(--p31-space-6);
+      padding: max(var(--p31-space-5), env(safe-area-inset-top, 0px)) max(var(--p31-space-4), env(safe-area-inset-right, 0px)) var(--p31-space-6)
+        max(var(--p31-space-4), env(safe-area-inset-left, 0px));
     }
     @supports not (background: color-mix(in srgb, red, blue)) {
       header { background: linear-gradient(180deg, var(--p31-surface, #161920), rgba(15, 17, 21, 0.97)); }
@@ -509,7 +512,8 @@
     main {
       max-width: 52rem;
       margin: 0 auto;
-      padding: var(--p31-space-5) var(--p31-space-4) var(--p31-space-16);
+      padding: var(--p31-space-5) max(var(--p31-space-4), env(safe-area-inset-right, 0px)) var(--p31-space-16)
+        max(var(--p31-space-4), env(safe-area-inset-left, 0px));
       scroll-margin-top: 4rem;
     }
     main.results-stage {
@@ -728,7 +732,7 @@
   </style>
   <script src="app.js" defer></script>
 </head>
-<body class="p31-mesh-m-first">
+<body class="p31-mesh-m-first p31-responsive-surface">
   <div class="bg-mesh" aria-hidden="true">
     <div class="bg-aurora"></div>
     <div class="bg-orb"></div>

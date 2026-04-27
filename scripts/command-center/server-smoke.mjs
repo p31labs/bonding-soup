@@ -5,12 +5,14 @@
  */
 import * as http from "node:http";
 import * as path from "node:path";
+import * as fs from "node:fs";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..", "..");
 const port = Number(process.env.P31_CMD_CENTER_SMOKE_PORT) || 31331;
+const bondingAppleTouch = path.join(root, "p31-bonding-icons", "apple-touch-180.png");
 
 function httpGet(url) {
   return new Promise((resolve, reject) => {
@@ -88,6 +90,25 @@ async function main() {
     }
     if (!man.body.includes("P31 Operator Console")) {
       throw new Error("command-center smoke: manifest body");
+    }
+    if (fs.existsSync(bondingAppleTouch)) {
+      const touch = await httpGet(`http://127.0.0.1:${port}/apple-touch-icon.png`);
+      if (touch.status !== 200) {
+        throw new Error("command-center smoke: apple-touch-icon.png " + touch.status);
+      }
+      if (!mainPage.body.includes("apple-touch-icon")) {
+        throw new Error("command-center smoke: HTML missing apple-touch-icon link");
+      }
+      let parsed;
+      try {
+        parsed = JSON.parse(man.body);
+      } catch {
+        throw new Error("command-center smoke: manifest not JSON");
+      }
+      const hasTouch = Array.isArray(parsed.icons) && parsed.icons.some((/** @type {{ src?: string }} */ i) => i.src === "/apple-touch-icon.png");
+      if (!hasTouch) {
+        throw new Error("command-center smoke: manifest missing apple-touch icon entry");
+      }
     }
     console.log("verify:command-center-smoke: OK");
   } finally {

@@ -41,8 +41,12 @@
     "docs/DELIVERABLE-SHIPBOX.md",
     "docs/P31-CREATE-CONNECT-ETHICAL-MONETIZATION.md",
     "docs/PLAN-BONDING-SOUP-WHEN-SCALE.md",
+    "docs/P31-IPHONE-COMMAND-READINESS.md",
+    "docs/P31-CHROMEBOOK-COMMAND-READINESS.md",
     "docs/SOUP-ROOM-SCALE-RUNBOOK.md",
-    "scripts/soup-room-scale.mjs"
+    "cognitive-passport/p31-responsive-surface.css",
+    "scripts/soup-room-scale.mjs",
+    "cognitive-passport/p31-responsive-surface.css"
   ],
   "mesh": {
     "k4PersonalProbeBudgetMs": 20000,

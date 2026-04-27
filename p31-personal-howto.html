@@ -6,8 +6,9 @@
   <meta name="apple-mobile-web-app-title" content="P31 home" />
   <link rel="manifest" href="p31-bonding.webmanifest" crossorigin="anonymous" />
   <link rel="apple-touch-icon" href="p31-bonding-icons/apple-touch-180.png" sizes="180x180" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
   <title>P31 — personal how-to (interactive)</title>
+  <link rel="stylesheet" href="cognitive-passport/p31-responsive-surface.css" />
   <style>
     :root {
       --bg: #0a0a12;
@@ -21,7 +22,7 @@
     }
     * { box-sizing: border-box; }
     body {
-      margin: 0; min-height: 100vh; font-family: system-ui, sans-serif;
+      margin: 0; min-height: 100vh; min-height: 100dvh; font-family: system-ui, sans-serif;
       background: var(--bg); color: var(--text);
       line-height: 1.5;
     }
@@ -32,9 +33,9 @@
       position: sticky; top: 0; z-index: 10;
       background: linear-gradient(180deg, #10101a, rgba(10,10,18,0.95));
       border-bottom: 1px solid var(--border);
-      padding: 0.75rem 1rem;
+      padding: max(0.75rem, env(safe-area-inset-top, 0px)) max(1rem, env(safe-area-inset-right, 0px)) 0.75rem max(1rem, env(safe-area-inset-left, 0px));
     }
-    header h1 { margin: 0; font-size: 1.1rem; font-weight: 600; letter-spacing: -0.02em; }
+    header h1 { margin: 0; font-size: clamp(0.95rem, 2vw + 0.75rem, 1.1rem); font-weight: 600; letter-spacing: -0.02em; }
     header p { margin: 0.25rem 0 0; font-size: 0.8rem; color: var(--muted); }
     .tabs {
       display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.6rem;
@@ -48,7 +49,6 @@
     .tabs button[aria-selected="true"] {
       background: #1e1e32; border-color: var(--accent); color: var(--accent);
     }
-    main { max-width: 56rem; margin: 0 auto; padding: 1rem; }
     section[hidden] { display: none; }
     section h2 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin: 0 0 0.75rem; }
     .card {
@@ -56,7 +56,7 @@
       padding: 1rem; margin-bottom: 1rem;
     }
     .search {
-      width: 100%; max-width: 20rem; padding: 0.5rem 0.75rem; margin: 0 0 0.75rem;
+      width: 100%; max-width: min(20rem, 100%); padding: 0.5rem 0.75rem; margin: 0 0 0.75rem;
       font: inherit; font-size: 0.9rem; border-radius: 8px;
       border: 1px solid var(--border); background: #0c0c14; color: var(--text);
     }
@@ -75,7 +75,7 @@
     details { border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 0.75rem; margin: 0.5rem 0; background: #0c0c14; }
     summary { cursor: pointer; color: var(--accent2); font-size: 0.9rem; }
     .toast {
-      position: fixed; bottom: 1rem; right: 1rem; padding: 0.5rem 0.9rem; border-radius: 8px;
+      position: fixed; bottom: max(1rem, env(safe-area-inset-bottom, 0px)); right: max(1rem, env(safe-area-inset-right, 0px)); padding: 0.5rem 0.9rem; border-radius: 8px;
       background: #1a3a32; color: #a7f3d0; font-size: 0.85rem; opacity: 0; pointer-events: none;
       transition: opacity 0.2s; z-index: 20;
     }
@@ -99,7 +99,7 @@
     .aaso-line .aaso-love { color: #f472b6; }
   </style>
 </head>
-<body class="p31-mesh-m-first">
+<body class="p31-mesh-m-first p31-responsive-surface">
   <header>
     <h1>P31 personal how-to <span class="pill">interactive</span></h1>
     <p>Normative bar: <a href="docs/P31-ENGINEERING-STANDARD.md">docs/P31-ENGINEERING-STANDARD.md</a> · Map: <a href="P31-ROOT-MAP.md">P31-ROOT-MAP.md</a> · <a href="AGENTS.md">AGENTS.md</a></p>
@@ -119,10 +119,11 @@
       <button type="button" role="tab" aria-selected="false" aria-controls="panel-911" id="tab-911" data-panel="panel-911">Emergencies</button>
     </div>
   </header>
-  <main>
+  <main class="p31-shell" style="--p31-shell-max: 56rem; --p31-shell-pad: 1rem; --p31-shell-pad-bottom: 2rem">
     <section id="panel-model" role="tabpanel" aria-labelledby="tab-model">
       <h2>Three layers (not twenty products)</h2>
       <div class="card">
+        <div class="p31-table-scroll">
         <table>
           <thead>
             <tr><th>Layer</th><th>What</th><th>Path / note</th></tr>
@@ -145,6 +146,7 @@
             </tr>
           </tbody>
         </table>
+        </div>
         <p style="margin: 0.75rem 0 0; color: var(--muted); font-size: 0.9rem;">
           <strong>Rule of thumb:</strong> operator numbers + home scripts → P31 home. Hub, Workers, BONDING apps → <code>andromeda/04_SOFTWARE/</code>.
         </p>
@@ -161,7 +163,8 @@
       <h2>From P31 home root</h2>
       <p style="color: var(--muted); font-size: 0.9rem; margin: 0 0 0.5rem;">Filter rows:</p>
       <input type="search" class="search" id="filter-home" placeholder="Filter by goal, command, notes…" autocomplete="off" />
-      <div class="card" style="overflow-x: auto">
+      <div class="card">
+        <div class="p31-table-scroll">
         <table id="table-home">
           <thead>
             <tr>
@@ -190,13 +193,15 @@
             <tr data-cmd="npm run demo"><td>Soup + passport + doc library in browser</td><td class="cmd">npm run demo <button type="button" class="copy" data-copy="npm run demo">copy</button></td><td>port 8080 — <code>soup.html</code>, <code>poets-room.html</code>, passport, <code>docs/doc-library/index.html</code> (opt. <code>?q=mesh</code>). In search: <kbd>/</kbd>, <kbd>↓</kbd>/<kbd>↑</kbd> in results, try chips — same hints as the doc library page.</td></tr>
           </tbody>
         </table>
+        </div>
       </div>
     </section>
 
     <section id="panel-andro" role="tabpanel" aria-labelledby="tab-andro" hidden>
       <h2>Andromeda repo</h2>
       <input type="search" class="search" id="filter-andro" placeholder="Filter…" autocomplete="off" />
-      <div class="card" style="overflow-x: auto">
+      <div class="card">
+        <div class="p31-table-scroll">
         <table id="table-andro">
           <thead><tr><th>Goal</th><th>Where</th><th>Typical</th></tr></thead>
           <tbody id="tbody-andro">
@@ -207,6 +212,7 @@
             <tr><td>Hooks in Andromedia clone</td><td><code>andromeda/</code> root</td><td class="cmd">npm run git:hooks <button type="button" class="copy" data-copy="cd andromeda && npm run git:hooks">copy</button></td></tr>
           </tbody>
         </table>
+        </div>
       </div>
     </section>
 
@@ -222,6 +228,7 @@
       </div>
       <div class="card" style="margin-top: 0.75rem;">
         <p style="margin:0 0 0.5rem; font-size:0.8rem; color: var(--muted);">Local deck can trigger the same action as <code>npm run verify:map-pipeline</code> (Andromedia MAP + optional parent <code>p31-constants</code> checks).</p>
+        <div class="p31-table-scroll">
         <table>
           <tbody>
             <tr data-cmd="command-center">
@@ -236,6 +243,7 @@
             </tr>
           </tbody>
         </table>
+        </div>
       </div>
     </section>
 
@@ -256,7 +264,8 @@
 
     <section id="panel-911" role="tabpanel" aria-labelledby="tab-911" hidden>
       <h2>One-liners</h2>
-      <div class="card" style="overflow-x: auto">
+      <div class="card">
+        <div class="p31-table-scroll">
         <table>
           <tbody>
             <tr><td>CI / verify red</td><td class="cmd">npm run verify <button type="button" class="copy" data-copy="npm run verify">copy</button></td></tr>
@@ -265,6 +274,7 @@
             <tr><td>Folder map</td><td><a href="P31-ROOT-MAP.md">P31-ROOT-MAP.md</a> (open in editor)</td></tr>
           </tbody>
         </table>
+        </div>
       </div>
     </section>
 

@@ -90,14 +90,22 @@ npm run polish
 
 ## 4. Definition of done (this deliverable)
 
-- [ ] **`npm run verify:facts`** passes (includes this path when listed in **`p31-facts.json`** `pathsMustExist`).
-- [ ] **`npm run verify:alignment`** passes.
-- [ ] **`npm run verify`** passes (or your CI-equivalent: **`P31/ root verify` + `P31/ full stack`** with mesh strict as needed).
-- [ ] **`npm run build:doc-index`** and **`npm run verify:doc-index`** pass after any doc that feeds the index changes.
-- [ ] **`npm run build:fleet-portal`** run when **`p31-live-fleet.json`**, **`p31-ecosystem.json`**, or **`p31-constants.json`** change meaningfully; hub copy updated before hub deploy.
-- [ ] If economics change: **`creator-economy.json`** ground-truth + public mirror, **`verify:economy`** in p31ca, **`verify:monetary`** at home; **30-day notice** per contract if you move versioned invariants.
-- [ ] If mission copy or EBC footers: edit **`p31-mission-trio.json`**, run **`sync-connect-mission-ebc.mjs`**, then **`verify-mission-trio`** (p31ca prebuild includes these when the tree is full).
-- [ ] If mobile/PWA statics: p31ca **`prebuild`** runs **`apply:mesh-m-first`** and **`ensure-pwa-manifest-link`**; home uses **`apply:mesh-m-first:home`** and **`apply:pwa:home`** (also chained in **`npm run polish`** after **`apply:constants`**).
+**Default bar (re-run on every change that touches sources; CI: `P31 / root verify`):**
+
+- [x] **`npm run verify:facts`** — `p31-facts.json` `pathsMustExist` includes this file and other deliverable docs.
+- [x] **`npm run verify:alignment`**
+- [x] **`npm run verify`** (includes **`verify:shipbox`**, passport, p31ca contracts when **`andromeda/.../p31ca`** exists, doc index, `tsc`).
+- [x] **`npm run build:doc-index`** + **`npm run verify:doc-index`** after editing tracked markdown in the index manifest.
+
+**Regeneration (when inputs change):**
+
+- **`npm run build:fleet-portal`** when **`p31-live-fleet.json`**, **`p31-ecosystem.json`**, or **`p31-constants.json`** move materially; then mirror to p31ca **`public/fleet-portal.html`** ( **`npm run polish`** or path in **`scripts/p31-polish.mjs`** ) before hub deploy.
+
+**Conditional (only when you touch that surface):**
+
+- **Economics:** **`creator-economy.json`** ground-truth + public mirror, **`verify:economy`**, **`verify:monetary`**; **30-day notice** if versioned invariants change.
+- **Mission EBC / hub footers:** **`p31-mission-trio.json`** → **`sync-connect-mission-ebc.mjs`** → **`verify-mission-trio`** (p31ca prebuild).
+- **Mobile / PWA on hub:** p31ca prebuild **`apply:mesh-m-first`**, **`ensure-pwa-manifest-link`**; home **`apply:mesh-m-first:home`**, **`apply:pwa:home`** (or **`polish`**).
 
 ---
 

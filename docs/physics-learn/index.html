@@ -2,7 +2,7 @@
 <html lang="en" data-p31-appearance="hub" data-p31-physics-learn="1.0.0">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
   <meta name="description" content="Progressive physics learning — local progress, small labs, P31 home." />
   <meta name="theme-color" content="#0f1115" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -11,6 +11,7 @@
   <link rel="apple-touch-icon" href="../../p31-bonding-icons/p31-icon.svg" />
   <title>P31 — physics learning engine</title>
   <link rel="stylesheet" href="../../cognitive-passport/p31-style.css" />
+  <link rel="stylesheet" href="../../cognitive-passport/p31-responsive-surface.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700&family=Outfit:wght@500;600;700&display=optional" rel="stylesheet" />
@@ -20,6 +21,7 @@
     body {
       margin: 0;
       min-height: 100vh;
+      min-height: 100dvh;
       font-family: var(--p31-font-sans, "Atkinson Hyperlegible", system-ui, sans-serif);
       background: var(--p31-void, #0f1115);
       color: var(--p31-cloud, #d8d6d0);
@@ -33,7 +35,7 @@
         radial-gradient(ellipse 90% 50% at 50% -10%, rgba(37, 137, 125, 0.12), transparent 55%),
         var(--p31-void, #0f1115);
     }
-    .pl-wrap { position: relative; z-index: 1; max-width: 72rem; margin: 0 auto; padding: var(--p31-space-4); }
+    .pl-wrap { position: relative; z-index: 1; }
     .pl-hero {
       display: flex;
       flex-wrap: wrap;
@@ -78,6 +80,11 @@
       background: color-mix(in srgb, var(--p31-surface) 92%, transparent);
       max-height: calc(100vh - 2rem);
       overflow: auto;
+    }
+    @supports (height: 100dvh) {
+      .pl-aside {
+        max-height: calc(100dvh - 2rem);
+      }
     }
     @supports not (background: color-mix(in srgb, red, blue)) {
       .pl-aside { background: var(--p31-surface, #161920); }
@@ -130,7 +137,7 @@
     .pl-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .pl-barwrap { max-width: 20rem; height: 6px; background: var(--p31-surface2); border-radius: 3px; overflow: hidden; margin-top: 0.5rem; }
     .pl-bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--p31-cyan), var(--p31-butter)); transform-origin: left center; }
-    .pl-toast { position: fixed; bottom: var(--p31-space-4); right: var(--p31-space-4); z-index: 200; max-width: 20rem; padding: var(--p31-space-3) var(--p31-space-4); background: var(--p31-surface, #161920); border: 1px solid var(--p31-cyan, #4db8a8); border-radius: var(--p31-radius-md); font-size: var(--p31-text-sm); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4); }
+    .pl-toast { position: fixed; bottom: max(var(--p31-space-4), env(safe-area-inset-bottom, 0px)); right: max(var(--p31-space-4), env(safe-area-inset-right, 0px)); z-index: 200; max-width: min(20rem, calc(100vw - 2rem)); padding: var(--p31-space-3) var(--p31-space-4); background: var(--p31-surface, #161920); border: 1px solid var(--p31-cyan, #4db8a8); border-radius: var(--p31-radius-md); font-size: var(--p31-text-sm); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4); }
     .pl-toast[hidden] { display: none; }
     .pl-toplinks { display: flex; flex-wrap: wrap; align-items: center; gap: var(--p31-space-2); font-size: var(--p31-text-xs); margin-top: var(--p31-space-2); }
     .pl-toplinks a { color: var(--p31-cyan, #4db8a8); }
@@ -140,9 +147,9 @@
   </style>
   <script src="physics-engine.js" defer></script>
 </head>
-<body class="p31-mesh-m-first">
+<body class="p31-mesh-m-first p31-responsive-surface">
   <div class="pl-bg" aria-hidden="true"></div>
-  <div class="pl-wrap">
+  <div class="pl-wrap p31-shell" style="--p31-shell-max: 72rem; --p31-shell-pad: var(--p31-space-4)">
     <header class="pl-hero">
       <div>
         <h1><span class="grad">Progressive physics engine</span></h1>

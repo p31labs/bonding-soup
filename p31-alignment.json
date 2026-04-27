@@ -34,6 +34,21 @@
       "role": "BONDING phased when-scale plan; cadence and Phase 0–3 gates"
     },
     {
+      "id": "p31-iphone-command-readiness",
+      "path": "docs/P31-IPHONE-COMMAND-READINESS.md",
+      "role": "Command center from iPhone: LAN bind, Home Screen icon, Tailscale"
+    },
+    {
+      "id": "p31-chromebook-command-readiness",
+      "path": "docs/P31-CHROMEBOOK-COMMAND-READINESS.md",
+      "role": "Command center on Chrome OS: Crostini, PWA, LAN"
+    },
+    {
+      "id": "cognitive-passport-responsive-css",
+      "path": "cognitive-passport/p31-responsive-surface.css",
+      "role": "Safe-area / responsive layer for passport + static pages; mirrored to p31ca public via sync:passport"
+    },
+    {
       "id": "p31-facts",
       "path": "p31-facts.json",
       "role": "p31.facts/1.0.0 — machine-verified paths/keys; npm run verify:facts (mesh URLs, @p31/mesh, policy-file substring guard)"
@@ -73,7 +88,7 @@
     {
       "id": "poets-room-lobby",
       "path": "poets-room.html",
-      "role": "Poets room — lobby for writing, doc library, mesh dialogue, geodesic, narrative links; hub card pending p31ca registry"
+      "role": "Poets room — lobby for writing, doc library, mesh dialogue, geodesic, narrative links (static home; not required on p31ca grid unless product adds a card)"
     },
     {
       "id": "p31-hub-card-ecosystem",
@@ -148,6 +163,17 @@
       "id": "p31-mission-trio",
       "path": "andromeda/04_SOFTWARE/p31ca/src/data/p31-mission-trio.json",
       "role": "p31.missionTrio/1.0.0 — Build / Create / Connect: ephemeralization (create) + ethical monetization (connect) in hub copy and EBC; single source for sync’d footers",
+      "optional": true
+    },
+    {
+      "id": "quantum-cloud-optimize-script",
+      "path": "scripts/quantum-cloud-optimize.mjs",
+      "role": "Edge coherence: wrangler inventory, ecosystem deploy cwd, fleet codePath; npm run quantum:cloud"
+    },
+    {
+      "id": "p31ca-verify-crypto-surface",
+      "path": "andromeda/04_SOFTWARE/p31ca/scripts/security/verify-crypto-surface.mjs",
+      "role": "PQC supply-chain + quantum-core tests + passkey WebCrypto boundary; npm run pqc:verify (root) → p31ca security:crypto",
       "optional": true
     }
   ],
@@ -337,6 +363,19 @@
       "note": "Forensic p31.oqeTwenty vs assistive p31.fateTwenty — never merge public JSON"
     },
     {
+      "id": "edge-coherence-pqc-validate-full",
+      "from": [
+        "scripts/quantum-cloud-optimize.mjs",
+        "p31-ecosystem.json",
+        "p31-live-fleet.json",
+        "andromeda/04_SOFTWARE/p31ca/scripts/security/verify-crypto-surface.mjs"
+      ],
+      "to": ["validate-p31-full.sh (Local: Quantum_Cloud_Coherence + PQC_Crypto_Surface)"],
+      "apply": "npm run validate:full or bash validate-p31-full.sh — not part of default npm run verify (partial clone / speed)",
+      "verify": "validate:full includes npm run quantum:cloud and npm run pqc:verify when p31ca is present",
+      "note": "pqc:verify is P0 on broken quantum-core tests; quantum:cloud is P0 on placeholder KV/D1 or missing ecosystem cwd"
+    },
+    {
       "id": "mission-trio-to-hub-and-mission-ebc",
       "from": ["andromeda/04_SOFTWARE/p31ca/src/data/p31-mission-trio.json"],
       "to": [
@@ -348,6 +387,13 @@
       "note": "Create = GEODESIC / ephemeralized rigging; Connect = K₄ mesh + same economics the repo proves (see creator-economy transparency.missionLink)"
     }
   ],
+  "optionalVerifyCommands": {
+    "description": "Ad hoc or validate:full — not in default npm run verify (home-only / speed; p31ca partial clone).",
+    "commands": [
+      { "name": "quantum:cloud", "role": "Wrangler + ecosystem + fleet path coherence" },
+      { "name": "pqc:verify", "role": "PQC + passkey boundary (delegates to p31ca security:crypto)" }
+    ]
+  },
   "verifyPipeline": {
     "description": "Root `package.json` `verify` = prelude + scripts in order. Update this file whenever `verify` changes.",
     "prelude": "verify:alignment",

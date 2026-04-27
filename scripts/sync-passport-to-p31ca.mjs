@@ -33,3 +33,13 @@ try {
 fs.mkdirSync(path.dirname(dest), { recursive: true });
 fs.writeFileSync(dest, html, "utf8");
 console.log("sync-passport: wrote", path.relative(root, dest));
+
+const responsiveSrc = path.join(root, "cognitive-passport", "p31-responsive-surface.css");
+const responsiveDest = path.join(
+  root,
+  "andromeda/04_SOFTWARE/p31ca/public/p31-responsive-surface.css"
+);
+if (fs.existsSync(responsiveSrc) && fs.existsSync(path.dirname(responsiveDest))) {
+  fs.copyFileSync(responsiveSrc, responsiveDest);
+  console.log("sync-passport: copied", path.relative(root, responsiveSrc), "→", path.relative(root, responsiveDest));
+}

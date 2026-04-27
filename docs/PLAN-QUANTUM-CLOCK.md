@@ -1,6 +1,6 @@
 # Plan: P31 Quantum Clock — build, integration, and coherence
 
-**Status:** **Q0–Q2 (partial)** — Library + `verify:quantum-clock` + **hub + dome:** `createCuckooBus`, `chimeQuantumClock` (→ `document` `p31:quantum-clock`), `startGrandfatherPhaseVar` → `--p31-grandfather-phase` on `html`. Breath / telemetry / mesh chimes on cockpit. **No** public `/quantum-clock` doc route yet. Physics display and Larmor **coherence** are already real (`p31-constants.json`, dome hub, egg-hunt, tomography, soundtrack). This document turns the metaphor (Grandfather / Cuckoo, episodic / rhythmic) into an implementable, verifiable system.
+**Status:** **Q0–Q2 + Q4 (static page)** — Library + `verify:quantum-clock` + **hub + dome** as before. **Public explainer:** `p31ca/public/quantum-clock.html`, short URL **`/quantum-clock`** (301) + `p31.ground-truth` routes/redirects and `fileSnippets.quantumClock.page`. **Not** a product card yet unless added to the hub registry. Physics display and Larmor **coherence** remain the same story (`p31-constants.json`, dome hub, egg-hunt, tomography, soundtrack).
 
 **Normative context:** Larmor and UI numbers are **pedagogical / coherence** artifacts, not clinical or metrology. Same contract as `docs/SIC-POVM-K4-ARCHITECTURE.md` and Larmor lines in `docs/EGG-HUNT.md`.
 

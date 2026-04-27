@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * One-shot friction check: Node, git remotes, gh auth, optional live probes.
+ * One-shot friction check: Node, git remotes, gh auth, CONNECTION brief, optional live probes.
  *   npm run doctor
  *   npm run doctor -- --verify     # chain npm run verify after checks
  *   npm run doctor -- --mesh       # strict mesh probe (needs network + prod URL)
@@ -9,6 +9,7 @@ import { execFileSync, execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { printConnectionBrief } from "./p31-connection.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -75,6 +76,8 @@ if (fs.existsSync(path.join(andr, ".git"))) {
   }
 }
 
+printConnectionBrief();
+
 if (args.has("--mesh")) {
   try {
     execFileSync(process.execPath, [path.join(root, "scripts/verify-mesh-live.mjs")], {
@@ -89,7 +92,9 @@ if (args.has("--mesh")) {
   }
 }
 
-console.log("\n\x1b[36mNext\x1b[0m  pnpm pr  ·  npm run release:all  ·  loose mesh: npm run release:local");
+console.log(
+  "\n\x1b[36mNext\x1b[0m  npm run connection  ·  pnpm pr  ·  npm run release:all  ·  loose mesh: npm run release:local"
+);
 console.log(
   "        Family handoff (after deploy): https://p31ca.org/family-pack\n" +
     "        Still manual: passkey Worker deploy, personal-tetra same-origin bundling, ECO hub index merge (see AGENTS.md)."

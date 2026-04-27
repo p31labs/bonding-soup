@@ -58,6 +58,8 @@ When that tree is present, it has its **own** git remote and **production bar** 
 
 ## 4. Launch and operations
 
+- **`npm run connection`** — CONNECTION spine (same mental model as mission **Connect**): wiring **`verify`**, deploy canon, ecosystem **`deployables`**, **`P31_*`** catalog, edge coherence commands, and live hub URLs — **`scripts/p31-connection.mjs`**; also **`npm run p31 -- connect`**.
+- **`docs/P31-DEPLOY-CANON.md`** — production deploy spine: Andromeda **`p31ca-hub.yml`** vs bonding-soup manual **`p31-pages-deploy.yml`** vs local **`deploy:p31ca`**; secrets names; **`npm run list:p31-env`** / **`verify:p31-env`** for the **`P31_*`** catalog (**`p31-env-manifest.json`**).
 - **`docs/ECOSYSTEM-PRODUCTION-11.md`** — full-fleet “everything connected” matrix: glass probes, deploy order, 11/10 Definition of Done across hub + K₄ + operator + monetary.
 - **`docs/ENTERPRISE-LAUNCH-PREP.md`** — secrets rotation, CI merge path, deploy surfaces, post-Zenodo housekeeping.
 - **`docs/MVP-DELIVERABLES-INVENTORY.md`** — what is LIVE vs adjacent vs concept (grant-facing).

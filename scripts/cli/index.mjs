@@ -31,6 +31,7 @@ function printHelp() {
       dim("Commands:"),
       "  " + cyan("boot") + "          staged boot (full art when TTY; else one line)",
       "  " + cyan("doctor") + "        run " + dim("scripts/p31-doctor.mjs") + " (pass-through args)",
+      "  " + cyan("connect") + "       CONNECTION spine — " + dim("npm run connection") + " (deploy · ecosystem · env · ops)",
       "  " + cyan("verify") + "        " + dim("npm run verify") + " (pass-through after --)",
       "  " + cyan("facts") + "         " + dim("npm run verify:facts") + " (p31-facts.json invariants)",
       "  " + cyan("budgets") + "       " + dim("mesh + glass latency SLOs (p31-facts; no network)"),
@@ -118,6 +119,11 @@ async function main() {
 
   if (cmd === "doctor") {
     const code = await runNodeScript("scripts/p31-doctor.mjs", argv.slice(1));
+    process.exit(code);
+  }
+
+  if (cmd === "connect") {
+    const code = await runNodeScript("scripts/p31-connection.mjs", argv.slice(1));
     process.exit(code);
   }
 

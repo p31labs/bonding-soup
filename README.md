@@ -10,7 +10,7 @@ TypeScript molecular / affective sim (`src/`), built to `dist/`. Entry for local
 
 **Full startup path (zero → shipped, read order, troubleshooting):** **`docs/P31-STARTUP-PACKAGE.md`**. In the repo: **`npm run startup`** prints the first section in the terminal.
 
-Use **Node 20** (see `.nvmrc`). One command aligns dependencies, regenerates operator constants into ground-truth / generated files, and runs the same **`verify`** bar as CI (when `andromeda/` is present it also installs `p31ca` deps):
+Use **Node 20** (see `.nvmrc`). One command aligns dependencies, regenerates operator constants into ground-truth / generated files, and runs the same **`verify`** bar as CI (when `andromeda/` is present it also installs `p31ca` deps). After setup, **`npm run connection`** prints the **CONNECTION** spine (deploy canon, ecosystem order, env catalog, hub links).
 
 ```bash
 npm run setup

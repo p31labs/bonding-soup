@@ -54,6 +54,11 @@
       "role": "p31.facts/1.0.0 — machine-verified paths/keys; npm run verify:facts (mesh URLs, @p31/mesh, policy-file substring guard)"
     },
     {
+      "id": "p31-env-manifest",
+      "path": "p31-env-manifest.json",
+      "role": "p31.envManifest/1.0.0 — catalog of P31_* env vars (names + semantics only); npm run verify:p31-env; npm run list:p31-env"
+    },
+    {
       "id": "p31-mission-system-deliverable",
       "path": "docs/P31-MISSION-SYSTEM-DELIVERABLE.md",
       "role": "Final handoff: mission system manifest, prep, assemble, definition of done; links P31-CREATE-CONNECT, fleet-portal, verify bar"
@@ -195,6 +200,14 @@
       "apply": "edit p31-facts.json when adding externally cited file/path/key claims",
       "verify": "npm run verify:facts",
       "note": "Declarative invariants: required paths, mesh + org keys, https worker URLs, no credential-like substrings in policy files"
+    },
+    {
+      "id": "p31-env-catalog",
+      "from": ["p31-env-manifest.json"],
+      "to": ["(verify only)"],
+      "apply": "edit p31-env-manifest.json when adding or renaming documented P31_* variables",
+      "verify": "npm run verify:p31-env",
+      "note": "Deploy spine + env lore: docs/P31-DEPLOY-CANON.md; never store secret values in the manifest"
     },
     {
       "id": "p31-shipbox-snapshot",
@@ -408,7 +421,7 @@
       "to": ["validate-p31-full.sh (Local: Quantum_Cloud_Coherence + PQC_Crypto_Surface)"],
       "apply": "npm run validate:full or bash validate-p31-full.sh — not part of default npm run verify (partial clone / speed)",
       "verify": "validate:full includes npm run quantum:cloud and npm run pqc:verify when p31ca is present",
-      "note": "pqc:verify is P0 on broken quantum-core tests; quantum:cloud is P0 on placeholder KV/D1 or missing ecosystem cwd"
+      "note": "pqc:verify is P0 on broken quantum-core tests; quantum:cloud is P0 on placeholder KV/D1 in wrangler files; P1 on missing ecosystem deploy cwd or fleet codePath (partial clone)"
     },
     {
       "id": "mission-trio-to-hub-and-mission-ebc",
@@ -425,6 +438,7 @@
   "optionalVerifyCommands": {
     "description": "Ad hoc or validate:full — not in default npm run verify (home-only / speed; p31ca partial clone).",
     "commands": [
+      { "name": "connection", "role": "CONNECTION spine — deploy canon + ecosystem + env catalog + hub links (scripts/p31-connection.mjs)" },
       { "name": "quantum:cloud", "role": "Wrangler + ecosystem + fleet path coherence" },
       { "name": "pqc:verify", "role": "PQC + passkey boundary (delegates to p31ca security:crypto)" }
     ]
@@ -435,6 +449,7 @@
     "preludeNote": "Fast guard (verify-alignment.mjs): JSON + required sources. Skipped in the `--verify` loop (prelude already satisfied).",
     "scripts": [
       "verify:facts",
+      "verify:p31-env",
       "verify:shipbox",
       "verify:passport",
       "verify:constants",

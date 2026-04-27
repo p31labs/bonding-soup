@@ -41,6 +41,10 @@ if (exists(canon)) {
 
 run("npm run verify", root);
 
+console.log(
+  "\n\x1b[36mCONNECTION\x1b[0m  Wiring (deploy · ecosystem · env · edge): \x1b[1mnpm run connection\x1b[0m  ·  \x1b[90mdocs/P31-DEPLOY-CANON.md\x1b[0m\n"
+);
+
 const p31ca = path.join(root, "andromeda/04_SOFTWARE/p31ca");
 if (exists(path.join(p31ca, "package.json"))) {
   run("npm install", p31ca);

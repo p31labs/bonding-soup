@@ -114,10 +114,11 @@ fi
 
 # ---- Local: edge coherence (Wrangler + ecosystem + fleet paths) ----
 echo "=== Local: quantum:cloud (edge coherence) ==="
+echo "CONNECTION spine: npm run connection  ·  docs/P31-DEPLOY-CANON.md"
 if node "$SCRIPT_DIR/scripts/quantum-cloud-optimize.mjs" 2>/dev/null; then
   add_check "Local" "Quantum_Cloud_Coherence" "PASS" "Wrangler + ecosystem deploy paths + fleet codePaths (npm run quantum:cloud)"
 else
-  add_check "Local" "Quantum_Cloud_Coherence" "FAIL" "Run: npm run quantum:cloud — fix P0 (placeholder IDs, missing deploy paths) or use partial-clone note"
+  add_check "Local" "Quantum_Cloud_Coherence" "FAIL" "Run: npm run quantum:cloud — fix P0 (placeholder KV/D1 IDs in wrangler); P1 = missing paths on partial clone"
 fi
 
 # ---- Local: PQC + passkey boundary (p31ca security:crypto) ----

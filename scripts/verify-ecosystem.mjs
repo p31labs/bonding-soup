@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Validates p31-ecosystem.json: JSON parse, required keys for template URLs, deployable paths,
+ * Validates p31-ecosystem.json: JSON parse, required keys for template URLs, deployable paths (`steps` argv arrays),
  * monetary invariants (donate-api health URLs; stripeApiHealthUrl must match donateApiHealthUrl until a separate API host exists; creator-economy URL).
  * Also checks p31-live-fleet.json mesh/payment block matches p31-constants.json (no drift).
  */
@@ -139,8 +139,23 @@ for (const p of manifest.glassProbes || []) {
 }
 
 for (const d of manifest.deployables || []) {
-  if (!d.id || !d.cwd || !d.command) {
-    fail(`deployable missing id/cwd/command: ${JSON.stringify(d)}`);
+  if (!d.id || !d.cwd) {
+    fail(`deployable missing id/cwd: ${JSON.stringify(d)}`);
+  }
+  const steps = d.steps;
+  if (!Array.isArray(steps) || steps.length === 0) {
+    fail(`deployable ${d.id}: steps must be a non-empty array of argv arrays`);
+  }
+  for (let si = 0; si < steps.length; si++) {
+    const argv = steps[si];
+    if (!Array.isArray(argv) || argv.length === 0) {
+      fail(`deployable ${d.id}: steps[${si}] must be a non-empty argv array`);
+    }
+    for (let ai = 0; ai < argv.length; ai++) {
+      if (typeof argv[ai] !== "string" || argv[ai].length === 0) {
+        fail(`deployable ${d.id}: steps[${si}][${ai}] must be a non-empty string`);
+      }
+    }
   }
   const full = path.join(root, d.cwd);
   if (!fs.existsSync(full)) {

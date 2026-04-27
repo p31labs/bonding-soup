@@ -77,6 +77,18 @@ describe("cli entry", () => {
     expect((r.stdout || "") + (r.stderr || "")).toMatch(/verify-facts: OK/);
   });
 
+  it("connect exits 0 and prints CONNECTION spine", () => {
+    const r = spawnSync(process.execPath, [cliEntry, "connect"], {
+      cwd: cliRoot,
+      encoding: "utf8",
+      env: { ...process.env, P31_CLI_MINIMAL: "1" },
+    });
+    expect(r.status).toBe(0);
+    const out = (r.stdout || "") + (r.stderr || "");
+    expect(out).toMatch(/CONNECTION/i);
+    expect(out).toMatch(/deployables|DEPLOY-CANON|p31\.connectionSummary/i);
+  });
+
   it("budgets exits 0 and prints mesh SLO lines", () => {
     const r = spawnSync(process.execPath, [cliEntry, "budgets"], {
       cwd: cliRoot,

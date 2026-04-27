@@ -250,6 +250,14 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
+      "label": "P31: CONNECTION spine (deploy · ecosystem · env · ops)",
+      "type": "shell",
+      "command": "npm run connection",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "none",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
       "label": "P31: ecosystem glass box (live probes + report)",
       "type": "shell",
       "command": "npm run ecosystem:glass",

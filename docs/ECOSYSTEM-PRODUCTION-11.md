@@ -108,7 +108,7 @@ Order minimizes “hub points at dead worker” windows. Adjust if a release onl
 | 8 | Donate-api (Stripe Checkout) | `donate-api/` — `payment.*` health URLs point here until a separate API host ships |
 | 9 | **p31ca Pages** | `npm run deploy:p31ca` (home) or `p31ca` `npm run deploy` — **last** so `_redirects` and static bundle match reality |
 
-`p31-ecosystem.json` **`deployables`** lists a subset; extend that list as you add Workers to the same release train.
+`p31-ecosystem.json` **`deployables`** lists a subset (each row: **`cwd`** + **`steps`**: argv arrays executed without a shell — **`scripts/ecosystem-deploy.mjs`**); extend that list as you add Workers to the same release train.
 
 ---
 

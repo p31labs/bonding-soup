@@ -131,21 +131,24 @@ for (const r of WRANGLER_ROOTS) {
 }
 report.wranglers.sort((a, b) => a.rel.localeCompare(b.rel));
 
-// --- p31-ecosystem.json deploy cwd
+// --- p31-ecosystem.json deploy cwd (deployables[]; legacy eco.deploy for forks)
 const eco = readJson(path.join(root, "p31-ecosystem.json"));
-if (eco?.deploy && Array.isArray(eco.deploy)) {
-  for (const step of eco.deploy) {
-    if (!step.cwd) continue;
-    const abs = resolveEcosystemCwd(step.cwd);
-    if (fs.existsSync(abs)) report.ecosystemDeploy.ok.push({ id: step.id, cwd: step.cwd });
-    else {
-      report.ecosystemDeploy.missing.push({ id: step.id, cwd: step.cwd });
-      report.issues.push({
-        level: "P0",
-        where: "p31-ecosystem.json",
-        message: `deploy step "${step.id}" missing cwd: ${step.cwd}`,
-      });
-    }
+const ecosystemDeployRows = Array.isArray(eco?.deployables)
+  ? eco.deployables
+  : Array.isArray(eco?.deploy)
+    ? eco.deploy
+    : [];
+for (const step of ecosystemDeployRows) {
+  if (!step.cwd || !step.id) continue;
+  const abs = resolveEcosystemCwd(step.cwd);
+  if (fs.existsSync(abs)) report.ecosystemDeploy.ok.push({ id: step.id, cwd: step.cwd });
+  else {
+    report.ecosystemDeploy.missing.push({ id: step.id, cwd: step.cwd });
+    report.issues.push({
+      level: "P1",
+      where: "p31-ecosystem.json",
+      message: `deployable "${step.id}" missing cwd: ${step.cwd} (partial clone or typo — fix path or clone andromeda)`,
+    });
   }
 }
 
@@ -196,7 +199,7 @@ for (const w of report.wranglers) {
   }
 }
 for (const m of report.ecosystemDeploy.missing) {
-  score -= 10;
+  score -= 3;
 }
 for (const m of report.fleetPaths.missing) {
   score -= 3;

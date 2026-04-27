@@ -1,4 +1,5 @@
 # Cloudflare Pages deploy for p31ca + optional production Playwright smoke.
+# Deploy spine vs Andromeda p31ca-hub.yml vs local deploy:p31ca — docs/P31-DEPLOY-CANON.md (bonding-soup).
 # Triggers: manual only (avoids duplicating p31-ci.yml on every push).
 #
 # Secrets: CLOUDFLARE_API_TOKEN (Pages:Edit). Optional: CLOUDFLARE_ACCOUNT_ID.

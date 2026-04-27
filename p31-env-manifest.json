@@ -1,0 +1,335 @@
+{
+  "schema": "p31.envManifest/1.0.0",
+  "description": "Catalog of P31_* environment variables (names and semantics only — never store secret values here).",
+  "variables": [
+    {
+      "name": "P31_AUTO_PUSH",
+      "tier": "git",
+      "risk": "ops",
+      "description": "Opt-in post-commit auto-push when hooks/autopush are enabled.",
+      "refs": ["README.md", "AGENTS.md"]
+    },
+    {
+      "name": "P31_AUTO_PUSH_MAIN",
+      "tier": "git",
+      "risk": "ops",
+      "description": "Allow auto-push on main/master when autopush is on.",
+      "refs": ["README.md"]
+    },
+    {
+      "name": "P31_CI_USE_PREFLIGHT",
+      "tier": "ci",
+      "risk": "low",
+      "description": "GitHub Actions: call p31-ci with skip flags after preflight verify.",
+      "refs": ["scripts/p31-all.mjs"]
+    },
+    {
+      "name": "P31_CLI_MINIMAL",
+      "tier": "dx",
+      "risk": "none",
+      "description": "Reduce CLI banner/boot noise; used in verify:command-center smoke.",
+      "refs": ["scripts/cli/index.mjs"]
+    },
+    {
+      "name": "P31_CMD_CENTER_HOST",
+      "tier": "dx",
+      "risk": "low",
+      "description": "Bind address for local command center (default 127.0.0.1).",
+      "refs": ["scripts/p31-local-command-center.mjs"]
+    },
+    {
+      "name": "P31_CMD_CENTER_LAN",
+      "tier": "dx",
+      "risk": "medium",
+      "description": "Bind command center for LAN / phone access (trusted networks only).",
+      "refs": ["scripts/p31-local-command-center.mjs"]
+    },
+    {
+      "name": "P31_CMD_CENTER_NO_OPEN",
+      "tier": "dx",
+      "risk": "none",
+      "description": "Do not auto-open browser when starting command center.",
+      "refs": ["scripts/p31-local-command-center.mjs"]
+    },
+    {
+      "name": "P31_CMD_CENTER_PORT",
+      "tier": "dx",
+      "risk": "none",
+      "description": "TCP port for command center (default 3131).",
+      "refs": ["scripts/p31-local-command-center.mjs"]
+    },
+    {
+      "name": "P31_CMD_CENTER_SMOKE_PORT",
+      "tier": "ci",
+      "risk": "none",
+      "description": "Ephemeral port for command-center server smoke tests.",
+      "refs": ["scripts/command-center/server-smoke.mjs"]
+    },
+    {
+      "name": "P31_CONVERGE_REPORT",
+      "tier": "ops",
+      "risk": "low",
+      "description": "Override path for p31:converge JSON report.",
+      "refs": ["scripts/p31-parallel-converge.mjs"]
+    },
+    {
+      "name": "P31_CONVERGE_SKIP_CONSTANTS",
+      "tier": "ops",
+      "risk": "low",
+      "description": "Skip verify-constants in converge wave.",
+      "refs": ["scripts/p31-parallel-converge.mjs"]
+    },
+    {
+      "name": "P31_CONVERGE_SKIP_PASSKEY",
+      "tier": "ops",
+      "risk": "low",
+      "description": "Skip slow passkey wrangler dry-run (offline-friendly).",
+      "refs": ["scripts/p31-parallel-converge.mjs", "scripts/p31-morning.sh"]
+    },
+    {
+      "name": "P31_CONVERGE_STACK",
+      "tier": "ops",
+      "risk": "low",
+      "description": "Enable verify-stack-links network probes in converge.",
+      "refs": ["scripts/p31-parallel-converge.mjs"]
+    },
+    {
+      "name": "P31_CONVERGE_VERIFY",
+      "tier": "ops",
+      "risk": "medium",
+      "description": "After parallel converge, run full root npm run verify.",
+      "refs": ["scripts/p31-parallel-converge.mjs"]
+    },
+    {
+      "name": "P31_DEMO_PORT",
+      "tier": "dx",
+      "risk": "none",
+      "description": "Port for npm run demo static server (default 8080).",
+      "refs": ["scripts/demo-server.mjs"]
+    },
+    {
+      "name": "P31_DOC_LIBRARY_E2E",
+      "tier": "ci",
+      "risk": "none",
+      "description": "Scorecard gate in validate:full for doc-library Playwright e2e.",
+      "refs": ["validate-p31-full.sh", "AGENTS.md"]
+    },
+    {
+      "name": "P31_ECOSYSTEM_CONTINUE",
+      "tier": "deploy",
+      "risk": "high",
+      "description": "Run all ecosystem-deploy steps even if one fails; non-zero exit if any failed.",
+      "refs": ["scripts/ecosystem-deploy.mjs"]
+    },
+    {
+      "name": "P31_ECOSYSTEM_DEPLOY",
+      "tier": "deploy",
+      "risk": "critical",
+      "description": "Must be exactly I_UNDERSTAND to execute ordered ecosystem deploy (destructive to remote config).",
+      "refs": ["scripts/ecosystem-deploy.mjs"]
+    },
+    {
+      "name": "P31_FULL_AUTO_GLASS",
+      "tier": "ops",
+      "risk": "low",
+      "description": "Full automation: enable ecosystem glass.",
+      "refs": ["scripts/p31-full-automation.mjs"]
+    },
+    {
+      "name": "P31_FULL_AUTO_MESH",
+      "tier": "ops",
+      "risk": "low",
+      "description": "Full automation: mesh probes (default on unless set to 0).",
+      "refs": ["scripts/p31-full-automation.mjs"]
+    },
+    {
+      "name": "P31_FULL_AUTO_REPORT",
+      "tier": "ops",
+      "risk": "low",
+      "description": "Report output path for full automation.",
+      "refs": ["scripts/p31-full-automation.mjs"]
+    },
+    {
+      "name": "P31_FULL_AUTO_SKIP_ROOT_VERIFY",
+      "tier": "ops",
+      "risk": "medium",
+      "description": "Skip root verify in full automation.",
+      "refs": ["scripts/p31-full-automation.mjs"]
+    },
+    {
+      "name": "P31_GIT_REMOTE",
+      "tier": "git",
+      "risk": "none",
+      "description": "Remote name for pr.mjs (default origin).",
+      "refs": ["scripts/pr.mjs"]
+    },
+    {
+      "name": "P31_GLASS_BUDGET_MS",
+      "tier": "obs",
+      "risk": "low",
+      "description": "Override glass probe latency budget milliseconds.",
+      "refs": ["scripts/ecosystem-glass.mjs"]
+    },
+    {
+      "name": "P31_GLASS_BUDGET_STRICT",
+      "tier": "obs",
+      "risk": "medium",
+      "description": "Exit 1 if any probe exceeds latency budget.",
+      "refs": ["scripts/ecosystem-glass.mjs"]
+    },
+    {
+      "name": "P31_GLASS_REPORT",
+      "tier": "obs",
+      "risk": "none",
+      "description": "JSON report path for ecosystem glass (default /tmp/p31_glass_report.json).",
+      "refs": ["scripts/ecosystem-glass.mjs", "scripts/p31-all.mjs"]
+    },
+    {
+      "name": "P31_GLASS_STRICT",
+      "tier": "obs",
+      "risk": "medium",
+      "description": "Exit 1 if any ecosystem probe is down (non-auth/warn).",
+      "refs": ["scripts/ecosystem-glass.mjs"]
+    },
+    {
+      "name": "P31_GLASS_TIMEOUT_MS",
+      "tier": "obs",
+      "risk": "low",
+      "description": "Per-probe fetch timeout for ecosystem glass.",
+      "refs": ["scripts/ecosystem-glass.mjs"]
+    },
+    {
+      "name": "P31_HOME_GITHUB",
+      "tier": "git",
+      "risk": "low",
+      "description": "Override home repo slug for git-ensure-remotes / pr tooling.",
+      "refs": ["scripts/pr.mjs", "scripts/setup.mjs"]
+    },
+    {
+      "name": "P31_K4MARKET_SMOKE",
+      "tier": "ci",
+      "risk": "none",
+      "description": "Scorecard gate in validate:full for k4market smoke.",
+      "refs": ["README.md"]
+    },
+    {
+      "name": "P31_K4MARKET_SMOKE_SKIP_ON_LAUNCH_FAIL",
+      "tier": "ci",
+      "risk": "low",
+      "description": "Tolerate Playwright/WebGL launch failures in k4market smoke.",
+      "refs": ["docs/MOBILE-OPS-PHASE4.md"]
+    },
+    {
+      "name": "P31_MESH_RETRY_GET",
+      "tier": "mesh",
+      "risk": "low",
+      "description": "Set to 0 to disable retry on mesh GET failures.",
+      "refs": ["scripts/verify-mesh-live.mjs"]
+    },
+    {
+      "name": "P31_NO_AUTO_PUSH",
+      "tier": "git",
+      "risk": "none",
+      "description": "Skip post-commit auto-push for a commit.",
+      "refs": ["README.md", "AGENTS.md"]
+    },
+    {
+      "name": "P31_OQE_ICOSA_E2E",
+      "tier": "ci",
+      "risk": "none",
+      "description": "Scorecard gate in validate:full for OQE icosa e2e.",
+      "refs": ["AGENTS.md"]
+    },
+    {
+      "name": "P31_PHYSICS_LEARN_E2E",
+      "tier": "ci",
+      "risk": "none",
+      "description": "Scorecard gate in validate:full for physics-learn e2e.",
+      "refs": ["README.md"]
+    },
+    {
+      "name": "P31_POLISH_SKIP_DOC_LIB",
+      "tier": "dx",
+      "risk": "none",
+      "description": "Skip sync:doc-library:p31ca during npm run polish.",
+      "refs": ["scripts/p31-polish.mjs"]
+    },
+    {
+      "name": "P31_PR_IN_ANDROMEDA",
+      "tier": "git",
+      "risk": "low",
+      "description": "Force npm run pr to treat cwd as Andromeda repo.",
+      "refs": ["scripts/pr.mjs"]
+    },
+    {
+      "name": "P31_PR_IN_HOME",
+      "tier": "git",
+      "risk": "low",
+      "description": "Force npm run pr to treat cwd as bonding-soup home.",
+      "refs": ["scripts/pr.mjs"]
+    },
+    {
+      "name": "P31_PR_NO_AUTO_BRANCH",
+      "tier": "git",
+      "risk": "none",
+      "description": "On main/master, do not auto-create pr/<slug>-<sha> branch.",
+      "refs": ["scripts/pr.mjs"]
+    },
+    {
+      "name": "P31_SKIP_MONETARY_HOOK",
+      "tier": "git",
+      "risk": "medium",
+      "description": "Bypass pre-commit verify:monetary when committing payment/economy paths.",
+      "refs": [".githooks/pre-commit", "docs/P31-ENGINEERING-STANDARD.md"]
+    },
+    {
+      "name": "P31_STYLE_ALIGN_GLOB",
+      "tier": "dx",
+      "risk": "low",
+      "description": "Expand verify:style-alignment glob (e.g. all public HTML).",
+      "refs": ["docs/P31-ENGINEERING-STANDARD.md"]
+    },
+    {
+      "name": "P31_VFR_AUTO_GLASS",
+      "tier": "ops",
+      "risk": "low",
+      "description": "VFR auto mode: run ecosystem glass.",
+      "refs": ["scripts/p31-vfr-resolve.mjs"]
+    },
+    {
+      "name": "P31_VFR_FILE",
+      "tier": "ops",
+      "risk": "low",
+      "description": "Override path for VFR config JSON.",
+      "refs": ["scripts/p31-vfr-resolve.mjs"]
+    },
+    {
+      "name": "P31_VFR_FREQUENCY",
+      "tier": "ops",
+      "risk": "none",
+      "description": "Manual VFR frequency Hz setpoint.",
+      "refs": ["scripts/p31-vfr-resolve.mjs", "scripts/p31-vfr.mjs"]
+    },
+    {
+      "name": "P31_VFR_MODE",
+      "tier": "ops",
+      "risk": "low",
+      "description": "Force VFR mode auto|manual from environment.",
+      "refs": ["scripts/p31-vfr.mjs"]
+    },
+    {
+      "name": "P31_VFR_SKIP_PASSKEY",
+      "tier": "ops",
+      "risk": "low",
+      "description": "Skip passkey wrangler dry-run in VFR resolve.",
+      "refs": ["scripts/p31-vfr-resolve.mjs"]
+    },
+    {
+      "name": "P31_VFR_VOLTAGE",
+      "tier": "ops",
+      "risk": "none",
+      "description": "Manual VFR voltage percent setpoint.",
+      "refs": ["scripts/p31-vfr-resolve.mjs", "scripts/p31-vfr.mjs"]
+    }
+  ]
+}

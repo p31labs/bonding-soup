@@ -295,7 +295,7 @@ const html = `<!DOCTYPE html>
     <header class="fp-hero">
       <h1>Live apps &amp; pages</h1>
       <p>Single index of production URLs tracked from <code>p31-live-fleet.json</code>, <code>p31-ecosystem.json</code> (glass probes), and <code>p31-constants.json</code>. <strong>Regenerate</strong> after changing those files: <code>npm run build:fleet-portal</code>.</p>
-      <p class="fp-meta">Fleet data <code>p31-live-fleet.json</code> <time datetime="${esc(updated)}">updated: ${esc(updated)}</time> — run <code>npm run ecosystem:glass</code> for live row timings; <code>verify:ecosystem</code> for template alignment.</p>
+      <p class="fp-meta">Fleet data <code>p31-live-fleet.json</code> <time datetime="${esc(updated)}">updated: ${esc(updated)}</time> — run <code>npm run ecosystem:glass</code> for live row timings; <code>verify:ecosystem</code> for template alignment. <strong>CONNECTION:</strong> <code>npm run connection</code> · <a href="${esc(ghMain + "/docs/P31-DEPLOY-CANON.md")}">deploy canon</a> (CI · manual · local CLI).</p>
     </header>
     <nav class="fp-toc" aria-label="Sections">
       <a href="#hub-org">Hub &amp; org</a>
@@ -311,7 +311,7 @@ const html = `<!DOCTYPE html>
 ${sections.join("\n")}
     </main>
     <footer class="fp-meta">
-      <p><a href="${bondingBase}/soup">← BONDING Soup</a> · <a href="${ghMain}/p31-personal-howto.html">How-to</a> · <a href="${ghMain}/docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">When-scale plan</a> · <a href="https://p31ca.org/">p31ca.org</a></p>
+      <p><a href="${bondingBase}/soup">← BONDING Soup</a> · <a href="${ghMain}/p31-personal-howto.html">How-to</a> · <a href="${ghMain}/docs/P31-DEPLOY-CANON.md">CONNECTION</a> · <a href="${ghMain}/docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">When-scale plan</a> · <a href="https://p31ca.org/">p31ca.org</a></p>
     </footer>
   </div>
 </body>

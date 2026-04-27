@@ -120,6 +120,12 @@ const actions = {
     cmd: "npm",
     args: ["run", "doctor"],
   },
+  "home-connection": {
+    title: "connection (CONNECTION spine — deploy · ecosystem · env · edge)",
+    cwd: root,
+    cmd: "npm",
+    args: ["run", "connection"],
+  },
   "home-verify": {
     title: "verify (default ship bar: alignment + facts + passport + … + tsc)",
     cwd: root,
@@ -440,6 +446,7 @@ const SECTIONS = [
     title: "Diagnostics & quick",
     ids: [
       "home-doctor",
+      "home-connection",
       "home-build",
       "home-soup-prep",
       "home-soup-prep-check",
@@ -685,6 +692,7 @@ function buildPageHtml() {
         </div>
 
         <div class="p31-cc__callout">
+          <p><strong>CONNECTION.</strong> Deploy canon · ecosystem order · env catalog · edge coherence · operator UI — <code>npm run connection</code> · <a href="https://github.com/p31labs/bonding-soup/blob/main/docs/P31-DEPLOY-CANON.md" rel="noopener" target="_blank">DEPLOY-CANON</a> · live <a href="https://p31ca.org/connect.html" rel="noopener" target="_blank">Create · Connect</a>.</p>
           <p><strong>Ship bar, without the amnesia.</strong> From repo root: <code>npm run command-center</code> (or VS Code <strong>Run Task</strong> → <em>P31: local command center</em>). Under the hood: <code>execFile</code> whitelist only.</p>
           <p><strong>Command mode (ops):</strong> whitelisted <strong>ecosystem:glass</strong> (all edge probes) and <strong>operator:shift-status / -in / -out</strong> (local <code>~/.p31/operator-shift.jsonl</code>). Production glass + shift line: <a href="https://p31ca.org/ops/" rel="noopener" target="_blank">p31ca.org/ops</a> · <a href="https://command-center.trimtab-signal.workers.dev/api/operator/shift" rel="noopener" target="_blank">edge shift (JSON)</a>. Pre-deploy: <code>npm run p31:converge</code> at home, then <code>npm run deploy</code> in <code>andromeda/04_SOFTWARE/p31ca</code> (runs <code>predeploy</code> = verify + build + Pages). <a href="https://github.com/p31labs/bonding-soup/blob/main/docs/MOBILE-OPS-PHASE3.md" rel="noopener" target="_blank">PHASE3</a></p>
           <p><strong>Create (build):</strong> one dev server at a time — p31ca <code>npm run dev</code> (Astro), BONDING <code>npm run dev</code> (Vite, port 5188). Gates: <code>npm run mobile-ops:phase4</code> · <a href="https://github.com/p31labs/bonding-soup/blob/main/docs/MOBILE-OPS-PHASE4.md" rel="noopener" target="_blank">PHASE4</a> · <a href="https://p31ca.org/dome/" rel="noopener" target="_blank">/dome</a> <a href="https://p31ca.org/education/" rel="noopener" target="_blank">/education</a></p>
@@ -716,6 +724,8 @@ function buildPageHtml() {
         </div>
 
         <div class="p31-cc__chips" style="margin-top:-1rem;margin-bottom:1.75rem">
+          <a class="p31-cc__chip p31-cc__chip--link" href="https://github.com/p31labs/bonding-soup/blob/main/docs/P31-DEPLOY-CANON.md" rel="noopener" target="_blank">DEPLOY-CANON →</a>
+          <a class="p31-cc__chip p31-cc__chip--link" href="https://p31ca.org/connect.html" rel="noopener" target="_blank">Create · Connect →</a>
           <a class="p31-cc__chip p31-cc__chip--link" href="https://command-center.trimtab-signal.workers.dev/" rel="noopener" target="_blank">EPCP edge →</a>
           <a class="p31-cc__chip p31-cc__chip--link" href="https://p31ca.org/ops/" rel="noopener" target="_blank">p31ca /ops →</a>
           <a class="p31-cc__chip p31-cc__chip--link" href="https://p31ca.org/integrations/" rel="noopener" target="_blank">Integrations →</a>
@@ -745,7 +755,7 @@ function buildPageHtml() {
       </aside>
     </div>
 
-    <p class="p31-cc__footer">VS Code / Cursor: <strong>Run Task</strong> → search <em>P31:</em>. Review client logic in <code>scripts/command-center/command-center.js</code>. Production deploy is intentionally not a button.</p>
+    <p class="p31-cc__footer">VS Code / Cursor: <strong>Run Task</strong> → search <em>P31:</em>. Review client logic in <code>scripts/command-center/command-center.js</code>. Production deploy is intentionally not a button — triggers &amp; secrets: <a href="https://github.com/p31labs/bonding-soup/blob/main/docs/P31-DEPLOY-CANON.md" rel="noopener" target="_blank"><code>P31-DEPLOY-CANON</code></a>. Env catalog: <code>npm run list:p31-env</code>.</p>
   </div>
 
   <div id="cc-modal" class="p31-cc__modal" hidden role="dialog" aria-modal="true" aria-labelledby="cc-modal-title">

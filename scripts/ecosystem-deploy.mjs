@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * Ordered deploy plan from p31-ecosystem.json — does not run Cloudflare by default.
+ * Pages hub spine (CI/manual/local) is separate — see docs/P31-DEPLOY-CANON.md.
+ *
+ * Each deployable uses `steps`: array of argv arrays — executed with spawnSync (shell: false).
  *   node scripts/ecosystem-deploy.mjs plan
  *   node scripts/ecosystem-deploy.mjs dry-run
  *   P31_ECOSYSTEM_DEPLOY=I_UNDERSTAND node scripts/ecosystem-deploy.mjs execute
@@ -30,14 +33,40 @@ function exists(rel) {
   return fs.existsSync(path.join(root, rel));
 }
 
-function runShell(title, command, cwd) {
-  console.log(`\n▶ ${title}\n  cwd: ${cwd}\n  ${command}\n`);
-  if (!allowExec) {
-    console.log("  (skipped — dry-run; set P31_ECOSYSTEM_DEPLOY=I_UNDERSTAND to execute)\n");
-    return 0;
+/** @param {string[][]} steps */
+function stepsSummary(steps) {
+  return steps.map((argv) => argv.join(" ")).join(" → ");
+}
+
+/**
+ * @param {string} title
+ * @param {string[][]} steps
+ * @param {string} cwd
+ * @returns {number} exit code of last step or first failure
+ */
+function runSteps(title, steps, cwd) {
+  let last = 0;
+  for (let si = 0; si < steps.length; si++) {
+    const argv = steps[si];
+    const line = argv.join(" ");
+    const sub =
+      steps.length > 1 ? `${title} (${si + 1}/${steps.length})` : title;
+    console.log(`\n▶ ${sub}\n  cwd: ${cwd}\n  ${line}\n`);
+    if (!allowExec) {
+      console.log("  (skipped — dry-run; set P31_ECOSYSTEM_DEPLOY=I_UNDERSTAND to execute)\n");
+      continue;
+    }
+    const r = spawnSync(argv[0], argv.slice(1), {
+      cwd,
+      stdio: "inherit",
+      shell: false,
+      env: process.env,
+      windowsHide: true,
+    });
+    last = r.status ?? 1;
+    if (last !== 0) return last;
   }
-  const r = spawnSync(command, { cwd, shell: true, stdio: "inherit" });
-  return r.status ?? 1;
+  return last;
 }
 
 if (cmd === "plan" || cmd === "dry-run") {
@@ -45,9 +74,10 @@ if (cmd === "plan" || cmd === "dry-run") {
   let n = 0;
   for (const d of deployables) {
     const ok = exists(d.cwd);
+    const steps = d.steps || [];
     n += 1;
     console.log(`- [${n}/${deployables.length}] [${ok ? "ok" : "SKIP"}] ${d.id}: ${d.description || ""}`);
-    console.log(`    ${d.cwd} → ${d.command}`);
+    console.log(`    ${d.cwd} → ${stepsSummary(steps)}`);
   }
   if (cmd === "dry-run") {
     console.log(
@@ -74,8 +104,13 @@ if (cmd === "execute") {
       continue;
     }
     const cwd = path.join(root, d.cwd);
+    const steps = d.steps;
+    if (!Array.isArray(steps) || steps.length === 0) {
+      console.error(`ecosystem-deploy: ${d.id} has no steps — fix p31-ecosystem.json`);
+      process.exit(1);
+    }
     const label = `[${i}/${deployables.length}] ${d.id}`;
-    const c = runShell(label, d.command, cwd);
+    const c = runSteps(label, steps, cwd);
     if (c !== 0) {
       code = c;
       console.error(`${label} failed with exit ${c}`);

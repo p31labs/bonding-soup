@@ -1,7 +1,7 @@
 # CWP-03 — Mesh / K₄ edge alignment
 
 **Id:** `P31-CONVERGE-03-MESH-K4`  
-**Status:** OPEN (continuous)
+**Status:** CLOSED (2026-04-28)
 
 ## Objective
 
@@ -32,9 +32,13 @@
 
 ## Production convergence
 
-- [ ] Root `npm run verify:ecosystem` OK.
-- [ ] `npm run verify:mesh` (or `P31: verify mesh` task) as you use in release.
-- [ ] `ecosystem:glass` report saved / reviewed after deploys.
-- [ ] `p31-live-fleet.json` and constants in sync (polish or `apply:constants`).
+- [x] Root `npm run verify:ecosystem` OK (`MESH_LIVE_STRICT=1` for strict parity).
+- [x] `npm run verify:mesh` (k4-personal wrangler dry-run + live `/api/health` + `/api/mesh` where applicable) OK.
+- [x] `ecosystem:glass` 23 up / 0 down; optional HA-LAN skip documented in `docs/ECOSYSTEM-PRODUCTION-11.md` section 5.
+- [x] `p31-live-fleet.json` and constants in sync (polish or `apply:constants` when URL changes).
 
 **Parallel:** 04, 05, 08.
+
+---
+
+*Closed: 2026-04-28 — `verify:ecosystem`, `MESH_LIVE_STRICT=1` `verify:mesh`, full glass green; one `skipIfEmpty` probe (Home Assistant LAN) documented in `ECOSYSTEM-PRODUCTION-11`.*

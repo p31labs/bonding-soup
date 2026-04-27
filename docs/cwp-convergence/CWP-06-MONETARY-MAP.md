@@ -1,7 +1,7 @@
 # CWP-06 — Monetary + MAP (donate, creator economy)
 
 **Id:** `P31-CONVERGE-06-MONETARY`  
-**Status:** OPEN (guardrails)
+**Status:** CLOSED (2026-04-28)
 
 ## Objective
 
@@ -20,10 +20,14 @@
 
 ## Production convergence
 
-- [ ] `https://p31ca.org/creator-economy.json` matches ground truth (CI proves).
-- [ ] `payment.donateApiHealthUrl` (or current health URL) returns **200** in glass / manual curl.
-- [ ] `npm run verify:map-pipeline` + `verify:monetary` on release PRs touching **payment/**.
-- [ ] `prebuild` githooks: monetary hook as already configured in home.
+- [x] `https://p31ca.org/creator-economy.json` matches ground truth (CI: `verify:economy` in p31ca; `verify:monetary` chains it).
+- [x] `payment.donateApiHealthUrl` / `donate-api` rows **200** in `ecosystem:glass` (and workers.dev twin).
+- [x] `npm run verify:map-pipeline` + `verify:monetary` on root `npm run verify`.
+- [x] Pre-commit monetary hook in home (`verify:monetary` when payment files staged) unchanged.
 
 **Dependencies:** 08 for new Worker payment routes.  
 **Parallel:** 01, 07.
+
+---
+
+*Closed: 2026-04-28 — `verify:map-pipeline` OK, `verify:monetary` OK (ecosystem + constants + p31ca `verify:economy`); glass monetary + creator-economy contract rows UP 200.*

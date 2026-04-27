@@ -71,7 +71,8 @@ When closing any package, the operator (or agent) must record:
 
 ## Closed predecessors (context only)
 
-- **Wave 1 (2026-04-28):** [04 Operator glass](CWP-04-OPERATOR-GLASS.md), [07 BONDING satellite](CWP-07-BONDING-SATELLITE.md), [09 Registry / hub ECO](CWP-09-REGISTRY-HUB-ECO.md) — closed after verify + docs (eight CWP “open” work items remain, plus 08 as recurring gate).
+- **Wave 1 (2026-04-28):** [04 Operator glass](CWP-04-OPERATOR-GLASS.md), [07 BONDING satellite](CWP-07-BONDING-SATELLITE.md), [09 Registry / hub ECO](CWP-09-REGISTRY-HUB-ECO.md) — closed after verify + docs.
+- **Wave 2 (2026-04-28):** [03 Mesh / K₄ edge](CWP-03-MESH-K4-EDGE.md), [06 Monetary + MAP](CWP-06-MONETARY-MAP.md), [11 Repo hygiene](CWP-11-REPO-HYGIENE.md) — glass + `verify:mesh` / `verify:ecosystem` + MAP/monetary + hygiene log; **remaining open CWPs:** 01, 02, 05, 10 (and **08** as recurring compliance gate).
 - `CWP-P31-DEPLOY-2026-02` — deploy sprint closed.
 - `CWP-P31-PHASE-D-2026-01` — Tracks A (legacy) & B (passkey CAGE) closed in production.
 - `CWP-P31-PHASE-D-2026-02` — Track C/D + hygiene (supersedes in part; this index is the superset).

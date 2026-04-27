@@ -125,6 +125,8 @@ Probes are defined in **`p31-ecosystem.json`** (`glassProbes`). Template keys co
 | contracts | public-surface, creator-economy | Deploy hub; fix JSON sync |
 | monetary | donate-api-health, donate-api-health-workers-dev | Deploy donate-api; DNS; fix `payment.*` |
 
+**Intentional skip (not DOWN):** Some probes use `skipIfEmpty` in `p31-ecosystem.json`. If the template expands to an empty URL, the glass run reports **Skipped** (e.g. `empty_after_expand`) — that does **not** count as a red mesh/pages row. As of 2026-04, **`home-assistant-lan-optional`** is skipped when `integrations.endpoints.homeAssistantLanBase` is unset in `p31-constants.json` (LAN Home Assistant is optional). Set the constant to enable the row; leave empty if you do not use HA on the mesh.
+
 ---
 
 ## 6. Known gaps to close for true 11/10
@@ -133,7 +135,7 @@ These are **explicit** “not done until addressed” items called out elsewhere
 
 - **Hub vs glass:** If Pages is behind git, **pages** probes 404 until `dist/` is deployed (not a code bug).
 - **Stripe / Checkout host:** Canonical health is **`donate-api.phosphorus31.org/health`** (and workers.dev twin). A separate **`api.phosphorus31.org`** stack is **not** in fleet until DNS + Worker ship; do not point `payment.*` at it prematurely.
-- **ECO vs COCKPIT:** Hub `mvpData` vs product index drift is **expected** until ECO CWP merge (`diff-index-sources` warns).
+- **ECO vs COCKPIT:** Legacy **`mvpData`** is dual-track with the hub index (**`docs/ADR-ECO-MVPDATA-COCKPIT-DUAL-TRACK.md`**). **`diff-index-sources`** logs an **info** line when the legacy list omits hub cards; **warnings** mean real drift (e.g. id off **`HUB_ALL_CARD_ORDER`**, or missing from **`registry.mjs`** with **`--strict-mvp`**).
 - **Orchestrator package name:** Production URL is `p31-orchestrator.trimtab-signal.workers.dev`; ensure the Worker that serves it is owned and in CI, even if the repo path is non-obvious.
 - **Google bridge:** `auth.html` embeds a bridge URL; keep allowlists and Worker deploy in sync with OAuth clients.
 

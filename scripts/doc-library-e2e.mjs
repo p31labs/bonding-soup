@@ -84,8 +84,10 @@ async function main() {
     await page.goto(nav, { waitUntil: "domcontentloaded", timeout: 60000 });
     // Worker MiniSearch load can exceed 20s on slow CI; search must be ready before "mesh" fill.
     await page.waitForSelector("main#main[aria-busy='false']", { timeout: 90000 });
-    await page.waitForSelector("input#q", { timeout: 10000 });
-    await page.locator("input#q").fill("mesh");
+    // Attached, not strict visibility — headless Chromium can treat the search box as not "visible"
+    // (stacking / paint timing) while the DOM and worker are ready; same rationale as ol.hits below.
+    await page.locator("input#q").waitFor({ state: "attached", timeout: 30000 });
+    await page.locator("input#q").fill("mesh", { force: true });
     // Attached, not "visible" — headless Chromium can be flaky on opacity/animation gating
     // while cardIn runs; the DOM and counts are what we need to assert search works.
     await page.locator("ol.hits li").first().waitFor({ state: "attached", timeout: 20000 });

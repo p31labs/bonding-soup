@@ -63,6 +63,8 @@ function buildManifestJson() {
     short_name: "P31 Console",
     description: "Whitelisted local automation — P31 home workspace",
     start_url: "/",
+    scope: "/",
+    id: "/",
     display: "standalone",
     orientation: "portrait-primary",
     theme_color: "#0f1115",
@@ -130,6 +132,27 @@ const actions = {
     cwd: root,
     cmd: "npm",
     args: ["run", "build"],
+  },
+  "home-soup-prep": {
+    title: "soup:prep (tsc + dist/ + static assets for soup.html)",
+    cwd: root,
+    cmd: "npm",
+    args: ["run", "soup:prep"],
+    slow: true,
+  },
+  "home-soup-prep-check": {
+    title: "soup:prep:check (no build — re-verify dist + assets after verify)",
+    cwd: root,
+    cmd: "npm",
+    args: ["run", "soup:prep:check"],
+  },
+  "home-soup-room-scale": {
+    title: "soup:room-scale (mock-ws probe — Phase 1 gate)",
+    cwd: root,
+    cmd: "npm",
+    args: ["run", "soup:room-scale"],
+    network: true,
+    slow: true,
   },
   "home-verify-alignment": {
     title: "verify:alignment (registry + sources JSON)",
@@ -409,6 +432,9 @@ const SECTIONS = [
     ids: [
       "home-doctor",
       "home-build",
+      "home-soup-prep",
+      "home-soup-prep-check",
+      "home-soup-room-scale",
       "home-verify-alignment",
       "home-verify-facts",
       "home-mesh-budgets",
@@ -585,6 +611,11 @@ function buildPageHtml() {
   ${
     hasBondingAppleTouch()
       ? '<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />'
+      : ""
+  }
+  ${
+    fs.existsSync(bondingIcon192)
+      ? '<link rel="icon" type="image/png" sizes="192x192" href="/p31-bonding-icon-192.png" />'
       : ""
   }
   <link rel="preconnect" href="https://fonts.googleapis.com" />

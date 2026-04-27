@@ -95,6 +95,18 @@ async function main() {
     if (!man.body.includes("P31 Operator Console")) {
       throw new Error("command-center smoke: manifest body");
     }
+    let manifestParsed;
+    try {
+      manifestParsed = JSON.parse(man.body);
+    } catch {
+      throw new Error("command-center smoke: manifest not JSON (early)");
+    }
+    if (manifestParsed.display !== "standalone") {
+      throw new Error("command-center smoke: manifest display must be standalone");
+    }
+    if (manifestParsed.scope !== "/") {
+      throw new Error("command-center smoke: manifest scope");
+    }
     if (fs.existsSync(bondingAppleTouch)) {
       const touch = await httpGet(`http://127.0.0.1:${port}/apple-touch-icon.png`);
       if (touch.status !== 200) {
@@ -103,13 +115,9 @@ async function main() {
       if (!mainPage.body.includes("apple-touch-icon")) {
         throw new Error("command-center smoke: HTML missing apple-touch-icon link");
       }
-      let parsed;
-      try {
-        parsed = JSON.parse(man.body);
-      } catch {
-        throw new Error("command-center smoke: manifest not JSON");
-      }
-      const hasTouch = Array.isArray(parsed.icons) && parsed.icons.some((/** @type {{ src?: string }} */ i) => i.src === "/apple-touch-icon.png");
+      const hasTouch =
+        Array.isArray(manifestParsed.icons) &&
+        manifestParsed.icons.some((/** @type {{ src?: string }} */ i) => i.src === "/apple-touch-icon.png");
       if (!hasTouch) {
         throw new Error("command-center smoke: manifest missing apple-touch icon entry");
       }

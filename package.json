@@ -88,6 +88,7 @@
     "vfr:manual": "node scripts/p31-vfr.mjs manual",
     "p31:converge": "node scripts/p31-parallel-converge.mjs",
     "morning": "bash scripts/p31-morning.sh",
+    "mobile-ops:phase2": "node scripts/mobile-ops-surface-sweep.mjs",
     "operator:shift-in": "node scripts/operator-shift.mjs in",
     "operator:shift-out": "node scripts/operator-shift.mjs out",
     "operator:shift-status": "node scripts/operator-shift.mjs status",

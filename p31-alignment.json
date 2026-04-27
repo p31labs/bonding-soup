@@ -434,6 +434,14 @@
       "apply": "from p31ca: node scripts/sync-connect-mission-ebc.mjs (prebuild, after registry/trio edits)",
       "verify": "from p31ca: node scripts/verify-mission-trio.mjs",
       "note": "Create = GEODESIC / ephemeralized rigging; Connect = K₄ mesh + same economics the repo proves (see creator-economy transparency.missionLink)"
+    },
+    {
+      "id": "production-state-2026-04-28",
+      "from": ["docs/PRODUCTION-STATE-2026-04-28.md"],
+      "to": [],
+      "apply": "Human-authored production snapshot. Update on next tagged release.",
+      "verify": "git tag -l production-2026-04-28 (bonding-soup); same tag name on andromeda for paired hub commits",
+      "note": "Numbers and gate outputs recorded in-doc; reproducibility via checkout + npm run verify / p31:all"
     }
   ],
   "optionalVerifyCommands": {

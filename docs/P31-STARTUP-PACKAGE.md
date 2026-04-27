@@ -1,7 +1,7 @@
 # P31 startup package — frictionless + informative
 
 **One goal:** from **zero** to **shipped** with the fewest decisions and the right links.  
-**Node:** 20+ (see repo **`.nvmrc`**). **Repos:** BONDING Soup = this tree; `andromeda/` = separate git (ignored from home, clone beside this repo). **Tag that proved reproducibility:** `clean-room-2026-04-27` (bonding-soup).
+**Node:** 20+ (see repo **`.nvmrc`**). **Repos:** BONDING Soup = this tree; `andromeda/` = separate git (ignored from home, clone beside this repo). **Production snapshot + gate numbers:** `docs/PRODUCTION-STATE-2026-04-28.md` — paired tags **`production-2026-04-28`** (bonding-soup + andromeda). Prior clean-room tag: `clean-room-2026-04-27`.
 
 ---
 

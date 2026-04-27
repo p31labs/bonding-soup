@@ -119,6 +119,7 @@ async function cmdProbe(cwd, jsonOut) {
         {
           ok: result.ok,
           baseUrl: result.baseUrl,
+          durationMs: result.durationMs,
           errors: result.errors,
           health: result.health,
           mesh: result.mesh,
@@ -130,7 +131,8 @@ async function cmdProbe(cwd, jsonOut) {
     process.exit(strict && !result.ok ? 1 : 0);
   }
   if (result.ok) {
-    console.log("p31-mesh probe: OK", result.baseUrl);
+    const ms = typeof result.durationMs === "number" ? ` (${result.durationMs}ms)` : "";
+    console.log("p31-mesh probe: OK", result.baseUrl + ms);
     process.exit(0);
   }
   for (const line of result.errors) {
@@ -162,6 +164,7 @@ async function cmdFleet(cwd, jsonOut) {
       JSON.stringify(
         {
           ok: result.ok,
+          durationMs: result.durationMs,
           endpoints,
           errors: result.errors,
           personal: result.personal,
@@ -175,7 +178,8 @@ async function cmdFleet(cwd, jsonOut) {
     process.exit(strict && !result.ok ? 1 : 0);
   }
   if (result.ok) {
-    console.log("p31-mesh fleet: OK", JSON.stringify(endpoints));
+    const ms = typeof result.durationMs === "number" ? ` (${result.durationMs}ms) ` : " ";
+    console.log("p31-mesh fleet: OK" + ms + JSON.stringify(endpoints));
     process.exit(0);
   }
   for (const line of result.errors) {

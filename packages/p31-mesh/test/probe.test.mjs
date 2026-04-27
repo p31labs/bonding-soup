@@ -44,6 +44,8 @@ test("runK4PersonalMeshProbe succeeds with mock fetch", async () => {
   });
   assert.equal(result.ok, true);
   assert.equal(result.errors.length, 0);
+  assert.equal(typeof result.durationMs, "number");
+  assert.ok(result.durationMs >= 0);
 });
 
 test("resolveK4PersonalBaseUrl reads fixture constants", () => {

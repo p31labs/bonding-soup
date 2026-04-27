@@ -19,6 +19,7 @@ import { validateK4PersonalHealth } from "./schemas.mjs";
  * @property {ProbeStepResult} health
  * @property {ProbeStepResult} mesh
  * @property {string[]} errors - Human-readable failures
+ * @property {number} durationMs - Wall time for the full probe (parallel health + mesh)
  */
 
 /**
@@ -29,6 +30,7 @@ import { validateK4PersonalHealth } from "./schemas.mjs";
  * @returns {Promise<K4PersonalMeshProbeResult>}
  */
 export async function runK4PersonalMeshProbe(opts) {
+  const started = Date.now();
   const { baseUrl, fetch: fetchImpl, timeoutMs } = opts;
   const base = baseUrl.replace(/\/+$/, "");
   const getOpts = { fetch: fetchImpl, timeoutMs };
@@ -95,7 +97,8 @@ export async function runK4PersonalMeshProbe(opts) {
   const health = H.step;
   const mesh = M.step;
   const ok = health.ok && mesh.ok;
-  return { ok, baseUrl: base, health, mesh, errors };
+  const durationMs = Date.now() - started;
+  return { ok, baseUrl: base, health, mesh, errors, durationMs };
 }
 
 /**

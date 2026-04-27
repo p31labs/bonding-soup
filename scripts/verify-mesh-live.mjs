@@ -37,13 +37,14 @@ const base = /** @type {string} */ (resolved.baseUrl);
 
 async function main() {
   const result = await runK4PersonalMeshProbe({ baseUrl: base });
+  const ms = typeof result.durationMs === "number" ? ` (${result.durationMs}ms)` : "";
   if (result.ok) {
-    console.log("verify-mesh-live: OK", base);
+    console.log("verify-mesh-live: OK", base + ms);
     process.exit(0);
   }
   const primary = result.errors[0] || "probe failed";
-  if (strict) bail(1, primary);
-  bail(0, primary + " [non-strict: exit 0]");
+  if (strict) bail(1, primary + ms);
+  bail(0, primary + ms + " [non-strict: exit 0]");
 }
 
 main().catch((e) => {

@@ -65,6 +65,7 @@ export async function runSingleHealthProbe(baseUrl, path, validator, opts = {}) 
  * @typedef {object} MeshFleetProbeResult
  * @property {boolean} ok
  * @property {string[]} errors
+ * @property {number} durationMs - Wall time for the full fleet probe (edges in parallel)
  * @property {import('./probe.mjs').K4PersonalMeshProbeResult} [personal]
  * @property {(EdgeProbeOk | EdgeProbeFail)} [cage]
  * @property {(EdgeProbeOk | EdgeProbeFail)} [hubs]
@@ -78,11 +79,12 @@ export async function runSingleHealthProbe(baseUrl, path, validator, opts = {}) 
  * @returns {Promise<MeshFleetProbeResult>}
  */
 export async function runMeshFleetProbe(opts) {
+  const started = Date.now();
   const { endpoints, fetch: fetchImpl, timeoutMs } = opts;
   const pass = { fetch: fetchImpl, timeoutMs };
 
   /** @type {MeshFleetProbeResult} */
-  const out = { ok: true, errors: [] };
+  const out = { ok: true, errors: [], durationMs: 0 };
   /** @type {Promise<void>[]} */
   const pending = [];
 
@@ -135,5 +137,6 @@ export async function runMeshFleetProbe(opts) {
   }
 
   await Promise.all(pending);
+  out.durationMs = Date.now() - started;
   return out;
 }

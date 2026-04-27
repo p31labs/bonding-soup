@@ -1,7 +1,7 @@
 # CWP-05 — Geodesic campaign + room Worker
 
 **Id:** `P31-CONVERGE-05-GEODESIC`  
-**Status:** OPEN (incremental)
+**Status:** CLOSED (2026-04-28)
 
 ## Objective
 
@@ -19,10 +19,14 @@
 
 ## Production convergence
 
-- [ ] `verify:geodesic-campaign` + `verify:synergetic` + dist checks on ship.
-- [ ] `geodesic-room` glass probe (or `p31-ecosystem` row) **UP** for prod URL.
-- [ ] `npm run deploy` p31ca when static campaign HTML changes.
-- [ ] Worker deploy for geodesic-room per monorepo deploy order.
+- [x] `verify:geodesic-campaign` + `verify:synergetic` (p31ca prebuild) on ship; dist checks via `npm run verify` in p31ca.
+- [x] `geodesic-room-worker` in `p31-ecosystem.json` / glass — **UP** 200 (prod: `geodesic-room.trimtab-signal.workers.dev/`).
+- [x] `npm run deploy` p31ca when static campaign HTML changes (standard hub pipeline).
+- [x] Worker: `andromeda/04_SOFTWARE/geodesic-room` per **ECOSYSTEM-PRODUCTION-11** deploy order; allowlist in `security:workers` as part of release hygiene (**CWP-08**).
 
 **Dependencies:** 03 (mesh/glass), 08 (Worker allowlist).  
 **Parallel:** 01, 03.
+
+---
+
+*Closed: 2026-04-28 — `verify:geodesic-campaign` OK; glass geodesic-room **UP**; static/wire/ground-truth alignment enforced in p31ca prebuild. Future static or Worker changes: same bar + 08 allowlist on new routes.*

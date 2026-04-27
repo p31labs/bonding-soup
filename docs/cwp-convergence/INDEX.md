@@ -72,7 +72,9 @@ When closing any package, the operator (or agent) must record:
 ## Closed predecessors (context only)
 
 - **Wave 1 (2026-04-28):** [04 Operator glass](CWP-04-OPERATOR-GLASS.md), [07 BONDING satellite](CWP-07-BONDING-SATELLITE.md), [09 Registry / hub ECO](CWP-09-REGISTRY-HUB-ECO.md) — closed after verify + docs.
-- **Wave 2 (2026-04-28):** [03 Mesh / K₄ edge](CWP-03-MESH-K4-EDGE.md), [06 Monetary + MAP](CWP-06-MONETARY-MAP.md), [11 Repo hygiene](CWP-11-REPO-HYGIENE.md) — glass + `verify:mesh` / `verify:ecosystem` + MAP/monetary + hygiene log; **remaining open CWPs:** 01, 02, 05, 10 (and **08** as recurring compliance gate).
+- **Wave 2 (2026-04-28):** [03 Mesh / K₄ edge](CWP-03-MESH-K4-EDGE.md), [06 Monetary + MAP](CWP-06-MONETARY-MAP.md), [11 Repo hygiene](CWP-11-REPO-HYGIENE.md) — glass + `verify:mesh` / `verify:ecosystem` + MAP/monetary + hygiene log.
+- **Wave 3 (2026-04-28):** [05 Geodesic + rooms](CWP-05-GEODESIC-ROOMS.md), [10 Phosphorus31.org](CWP-10-PHOSPHORUS31-SITE.md) — closed; runbooks + `verify:geodesic-campaign` + org smoke; [08](CWP-08-SECURITY-COMPLIANCE.md) = **ongoing** gate (not closed); **E3 policy skeleton:** [EDU-E3-POLICY-2026-01.md](../EDU-E3-POLICY-2026-01.md); **org runbook:** [PHOSPHORUS31-ORG-SITE.md](../PHOSPHORUS31-ORG-SITE.md).
+- **Open work:** [01 E3+](CWP-01-EDU-E3-PORTAL.md) (code blocked on policy), [02 Node Zero](CWP-02-NODE-ZERO.md) (hardware), **08** = recurring.
 - `CWP-P31-DEPLOY-2026-02` — deploy sprint closed.
 - `CWP-P31-PHASE-D-2026-01` — Tracks A (legacy) & B (passkey CAGE) closed in production.
 - `CWP-P31-PHASE-D-2026-02` — Track C/D + hygiene (supersedes in part; this index is the superset).

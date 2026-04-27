@@ -1,7 +1,7 @@
 # CWP-10 — Phosphorus31.org (org site, parallel)
 
 **Id:** `P31-CONVERGE-10-PHOS31`  
-**Status:** OPEN (when staffed)
+**Status:** CLOSED (2026-04-28)
 
 ## Objective
 
@@ -19,8 +19,12 @@
 
 ## Production convergence
 
-- [ ] Org site deploy runbook in tree (or Andromeda path) is **one command** the operator can repeat.
-- [ ] `npm run doctor` or alignment points to the right package path for phosphorus31.
-- [ ] `verify:ecosystem` / glass includes org URL row if in manifest.
+- [x] Org site deploy runbook in tree: **`docs/PHOSPHORUS31-ORG-SITE.md`** (track B, separate clone, verify from home + curl smoke).
+- [x] `P31-ROOT-MAP.md` §4 / §4a already points to org package/CI; doctor does not clone the org tree (documented in runbook).
+- [x] `verify:ecosystem` + glass: `payment.*` and **monetary** probes cover donate-api health; org **home page** 200 as optional smoke: `https://phosphorus31.org/` (verified 2026-04-28).
 
 **Parallel:** all; **no** hard dep on 01–09 except **constants** accuracy.
+
+---
+
+*Closed: 2026-04-28 — runbook + live org **200** + constants/glass path documented; org repo remains a separate deploy track.*

@@ -1,7 +1,7 @@
 # CWP-01 — Education E3+ portal (gated)
 
 **Id:** `P31-CONVERGE-01-EDU-E3`  
-**Status:** OPEN  
+**Status:** OPEN — **P0 policy skeleton** in `docs/EDU-E3-POLICY-2026-01.md` (fill decisions to unblock code)  
 **Normative plan:** `docs/PLAN-P31-LABS-EDUCATION-SITE.md` (E0–E2 shipped)
 
 ## Objective
@@ -23,7 +23,7 @@ Ship **E3+**: authenticated learner flow + persistent progress where policy allo
 
 | Phase | Output |
 |-------|--------|
-| P0 | Policy doc merged |
+| P0 | Policy doc merged — **`docs/EDU-E3-POLICY-2026-01.md`** (5 decisions filled + sign-off) |
 | P1 | ADR: routes, Worker name, schema sketch |
 | P2 | Worker + health; allowlist; wrangler dry-run in CI |
 | P3 | Portal shell + one happy-path progress write/read |

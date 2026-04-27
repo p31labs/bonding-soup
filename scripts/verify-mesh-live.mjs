@@ -7,37 +7,16 @@
  * MESH_BUDGET_STRICT=1 → exit 1 when duration exceeds budget (and budget is set).
  * Implementation: @p31/mesh (packages/p31-mesh).
  */
-import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { resolveK4PersonalBaseUrl } from "@p31/mesh/config";
 import { runK4PersonalMeshProbe } from "@p31/mesh/probe";
+import { resolveK4PersonalProbeBudgetMs } from "./lib/mesh-budgets.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const strict = process.env.MESH_LIVE_STRICT === "1";
 const budgetStrict = process.env.MESH_BUDGET_STRICT === "1";
-
-/**
- * @returns {number | undefined} ms
- */
-function loadK4ProbeBudgetMs() {
-  const env = process.env.P31_MESH_PROBE_BUDGET_MS;
-  if (env && String(env).trim() !== "") {
-    const n = parseInt(String(env), 10);
-    if (Number.isFinite(n) && n > 0) return n;
-  }
-  const factsPath = path.join(root, "p31-facts.json");
-  if (!fs.existsSync(factsPath)) return undefined;
-  try {
-    const j = JSON.parse(fs.readFileSync(factsPath, "utf8"));
-    const b = j?.mesh?.k4PersonalProbeBudgetMs;
-    if (typeof b === "number" && Number.isFinite(b) && b > 0) return b;
-  } catch {
-    /* */
-  }
-  return undefined;
-}
 
 function bail(code, msg) {
   if (msg) {
@@ -61,7 +40,7 @@ if (resolved.skipReason) {
 const base = /** @type {string} */ (resolved.baseUrl);
 
 async function main() {
-  const budgetMs = loadK4ProbeBudgetMs();
+  const budgetMs = resolveK4PersonalProbeBudgetMs(root);
   const result = await runK4PersonalMeshProbe({ baseUrl: base });
   const ms = typeof result.durationMs === "number" ? ` (${result.durationMs}ms)` : "";
   const over =

@@ -76,4 +76,16 @@ describe("cli entry", () => {
     expect(r.status).toBe(0);
     expect((r.stdout || "") + (r.stderr || "")).toMatch(/verify-facts: OK/);
   });
+
+  it("budgets exits 0 and prints mesh SLO lines", () => {
+    const r = spawnSync(process.execPath, [cliEntry, "budgets"], {
+      cwd: cliRoot,
+      encoding: "utf8",
+      env: { ...process.env, P31_CLI_MINIMAL: "1" },
+    });
+    expect(r.status).toBe(0);
+    const out = (r.stdout || "") + (r.stderr || "");
+    expect(out).toMatch(/k4-personal/);
+    expect(out).toMatch(/ecosystem-glass/);
+  });
 });

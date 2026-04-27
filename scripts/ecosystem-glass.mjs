@@ -11,38 +11,17 @@ import fs from "node:fs";
 import path from "node:path";
 import { homedir } from "node:os";
 import { fileURLToPath } from "node:url";
+import { resolveGlassProbeBudgetMs } from "./lib/mesh-budgets.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const manifestPath = path.join(root, "p31-ecosystem.json");
 const constantsPath = path.join(root, "p31-constants.json");
-const factsPath = path.join(root, "p31-facts.json");
 const reportPath = process.env.P31_GLASS_REPORT || "/tmp/p31_glass_report.json";
 const strict = process.env.P31_GLASS_STRICT === "1";
 const budgetStrict = process.env.P31_GLASS_BUDGET_STRICT === "1";
 const timeoutMs = parseInt(process.env.P31_GLASS_TIMEOUT_MS || "12000", 10);
 const jsonOnly = process.argv.includes("--json");
-
-/**
- * @returns {number} 0 = off (no slow marking)
- */
-function loadGlassProbeBudgetMs() {
-  const e = process.env.P31_GLASS_BUDGET_MS;
-  if (e != null && String(e).trim() !== "") {
-    const n = parseInt(String(e), 10);
-    if (Number.isFinite(n) && n > 0) return n;
-    return 0;
-  }
-  if (!fs.existsSync(factsPath)) return 0;
-  try {
-    const j = JSON.parse(fs.readFileSync(factsPath, "utf8"));
-    const b = j?.mesh?.glassProbeBudgetMs;
-    if (typeof b === "number" && Number.isFinite(b) && b > 0) return b;
-  } catch {
-    /* */
-  }
-  return 0;
-}
 
 function getNested(obj, dotted) {
   return dotted.split(".").reduce((o, k) => (o && o[k] !== undefined ? o[k] : undefined), obj);
@@ -232,7 +211,7 @@ async function main() {
     process.exit(1);
   }
 
-  const glassBudgetMs = loadGlassProbeBudgetMs();
+  const glassBudgetMs = resolveGlassProbeBudgetMs(root);
   const results = [];
   for (const p of probes) {
     results.push(await probeOne(p, glassBudgetMs));

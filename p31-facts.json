@@ -29,7 +29,9 @@
     "AGENTS.md",
     "package.json",
     "packages/p31-mesh/package.json",
-    "scripts/verify-facts.mjs"
+    "scripts/verify-facts.mjs",
+    "scripts/lib/mesh-budgets.mjs",
+    "scripts/print-mesh-budgets.mjs"
   ],
   "mesh": {
     "k4PersonalProbeBudgetMs": 20000,

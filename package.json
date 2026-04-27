@@ -67,6 +67,7 @@
     "verify:command-center": "vitest run --config vitest.config.mjs && node scripts/command-center/server-smoke.mjs && P31_CLI_MINIMAL=1 node scripts/cli/index.mjs --version && npm run verify:p31-mesh",
     "verify:ecosystem": "node scripts/verify-ecosystem.mjs",
     "ecosystem:glass": "node scripts/ecosystem-glass.mjs",
+    "mesh:budgets": "node scripts/print-mesh-budgets.mjs",
     "ecosystem:plan": "node scripts/ecosystem-deploy.mjs plan",
     "ecosystem:deploy:dry": "node scripts/ecosystem-deploy.mjs dry-run",
     "ecosystem:deploy": "node scripts/ecosystem-deploy.mjs execute",

@@ -33,6 +33,7 @@ function printHelp() {
       "  " + cyan("doctor") + "        run " + dim("scripts/p31-doctor.mjs") + " (pass-through args)",
       "  " + cyan("verify") + "        " + dim("npm run verify") + " (pass-through after --)",
       "  " + cyan("facts") + "         " + dim("npm run verify:facts") + " (p31-facts.json invariants)",
+      "  " + cyan("budgets") + "       " + dim("mesh + glass latency SLOs (p31-facts; no network)"),
       "  " + cyan("ci") + "            " + dim("npm run p31:ci") + " (release-style verify + hub when present)",
       "  " + cyan("command-center") + "  start local UI " + dim("(npm run command-center)"),
       "  " + cyan("cc") + "            alias for " + cyan("command-center"),
@@ -137,6 +138,11 @@ async function main() {
 
   if (cmd === "facts") {
     const code = await runNpmScript("verify:facts", argv.slice(1));
+    process.exit(code);
+  }
+
+  if (cmd === "budgets") {
+    const code = await runNodeScript("scripts/print-mesh-budgets.mjs", argv.slice(1));
     process.exit(code);
   }
 

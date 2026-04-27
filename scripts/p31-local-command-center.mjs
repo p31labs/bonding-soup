@@ -591,6 +591,7 @@ function buildPageHtml() {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/assets/p31-style.css" />
+  <link rel="stylesheet" href="/assets/p31-responsive-surface.css" />
   <link rel="stylesheet" href="/assets/command-center.css" />
   <script type="application/json" id="cc-boot">${bootJson}</script>
   <script src="/assets/command-center.js" defer></script>
@@ -739,6 +740,7 @@ const html = buildPageHtml();
 const manifestBody = buildManifestJson();
 
 const p31StylePath = path.join(root, "cognitive-passport", "p31-style.css");
+const p31ResponsiveSurfacePath = path.join(root, "cognitive-passport", "p31-responsive-surface.css");
 
 const server = http.createServer((req, res) => {
   if (req.method === "GET" && (req.url === "/" || req.url === "/index.html")) {
@@ -747,6 +749,10 @@ const server = http.createServer((req, res) => {
     return;
   }
   const assetBase = req.url && req.url.split("?")[0];
+  if (req.method === "GET" && assetBase === "/assets/p31-responsive-surface.css") {
+    sendAsset(res, p31ResponsiveSurfacePath, "text/css; charset=utf-8");
+    return;
+  }
   if (req.method === "GET" && assetBase === "/assets/p31-style.css") {
     fs.readFile(p31StylePath, (err, buf) => {
       if (err) {

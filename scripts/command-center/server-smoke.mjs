@@ -84,6 +84,10 @@ async function main() {
     if (css.status !== 200) {
       throw new Error("command-center smoke: command-center.css " + css.status);
     }
+    const rs = await httpGet(`http://127.0.0.1:${port}/assets/p31-responsive-surface.css`);
+    if (rs.status !== 200) {
+      throw new Error("command-center smoke: p31-responsive-surface.css " + rs.status);
+    }
     const man = await httpGet(`http://127.0.0.1:${port}/manifest.webmanifest`);
     if (man.status !== 200) {
       throw new Error("command-center smoke: manifest " + man.status);

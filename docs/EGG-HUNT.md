@@ -17,12 +17,12 @@
 | ORCH-PAGE | dark-eigenstate | 3 | `GET /orchestrator` | `p31ca/…/orchestrator.astro` |
 | ORCH-WORKER | entangled-channel | 3 | fetches p31-orchestrator worker | `p31ca/…/OrchestratorDashboard.astro` |
 | HUB-PAULI-ORCH | pauli-exclusion | — | hub JSON ⊥ `/orchestrator` | `p31ca/src/data/hub-landing.json` |
-| LEGACY-LATTICE-LINK | weak-coupling | 4 | legacy hub footer | `p31ca/public/legacy-mvp-hub.html` |
+| LEGACY-LATTICE-LINK | weak-coupling | 4 | OQE nav → lattice | `p31ca/public/oqe-icosa.html` |
 | LATTICE-WONKY | weak-coupling | 4 | lattice → `wonky.html` | `p31ca/public/lattice.html` |
 
 **Path prefix:** `andromeda/04_SOFTWARE/p31ca/` in full checkouts. **Base URL** for the shipped hub: `https://p31ca.org`.
 
-**Operator map (p31ca.org, no surprise — static routes exist):** `/` hub · `/dome` · `/orchestrator` (not on hub-landing) · `legacy-mvp-hub.html` · `lattice.html` · `wonky.html` · `soup.html` is repo-local (BONDING demo, not the hub). Passport generator: `passport-generator.html` and root `cognitive-passport/`.
+**Operator map (p31ca.org, no surprise — static routes exist):** `/` hub · `/dome` · `/orchestrator` (not on hub-landing) · `lattice.html` · `wonky.html` · `soup.html` is repo-local (BONDING demo, not the hub). Legacy `legacy-mvp-hub.html` was retired; `/legacy-mvp-hub.html` → 301 `/`. Passport generator: `passport-generator.html` and root `cognitive-passport/`.
 
 **Risk / hardening:** The **orchestrator** static page is **unlisted**, not private: anyone with the URL can load it. Treat **`p31-orchestrator` worker** APIs as the trust boundary: enforce **auth / rate limits / audit** on the Worker, not in static HTML. `entangled-channel` remains **nonlocal** (browser → worker); CORS and deployment own exposure.
 

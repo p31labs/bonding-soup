@@ -146,7 +146,12 @@
     {
       "id": "p31-labs-education-site-plan",
       "path": "docs/PLAN-P31-LABS-EDUCATION-SITE.md",
-      "role": "Education program: progressive stack, security mapping, phases; E0 shell at p31ca /education/ + ground-truth routes.p31LabsEducation"
+      "role": "Education program: progressive stack, security mapping, phases E0–E2 shipped as static /education/**; E3+ portal not on this tier"
+    },
+    {
+      "id": "p31ca-education-curriculum",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/education/curriculum.json",
+      "role": "p31.labsEducationCurriculum/0.2.0 — tracks, modules, labs; verify:education"
     },
     {
       "id": "adr-eco-mvpdata-cockpit",
@@ -320,12 +325,11 @@
         "andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs"
       ],
       "to": [
-        "andromeda/04_SOFTWARE/p31ca/src/data/hub-landing.json",
-        "andromeda/04_SOFTWARE/p31ca/public/legacy-mvp-hub.html"
+        "andromeda/04_SOFTWARE/p31ca/src/data/hub-landing.json"
       ],
-      "apply": "New hub cards: registry + hub-app-ids + hub:build; do not add products only to mvpData (see ADR). Optional: diff-index-sources --strict-mvp when cleaning legacy.",
-      "verify": "p31ca prebuild: scripts/hub/diff-index-sources.mjs (warnings expected until merge)",
-      "note": "Exit: align mvpData to registry or remove dual-track per ADR"
+      "apply": "New hub cards: registry + hub-app-ids + hub:build. Legacy public/legacy-mvp-hub.html retired (CWP-P31-PHASE-D Track A); 301 → /.",
+      "verify": "p31ca prebuild: scripts/hub/diff-index-sources.mjs (hub-landing vs hub-app-ids; [warn] index.astro inline coreProducts if any)",
+      "note": "COCKPIT+prototypes + hub-landing are authoritative; legacy mvpData file removed"
     },
     {
       "id": "dome-constants-to-quantum-clock",
@@ -341,12 +345,21 @@
       "note": "PLAN: docs/PLAN-QUANTUM-CLOCK.md; landing + dome: Cuckoo + Grandfather (global.css --p31-grandfather-phase, event p31:quantum-clock)"
     },
     {
-      "id": "education-e0-p31ca-shell",
-      "from": ["docs/PLAN-P31-LABS-EDUCATION-SITE.md", "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"],
-      "to": ["andromeda/04_SOFTWARE/p31ca/public/education/index.html", "andromeda/04_SOFTWARE/p31ca/public/_redirects"],
-      "apply": "Hand-curated E0: page schema p31.labsEducation/0.1.0; _redirects + ground-truth edgeRedirects 1:1; hub: `id` education in registry.mjs + hub-app-ids.mjs + education-about.html from generate-about-pages",
-      "verify": "from p31ca: npm run verify:ground-truth (fileSnippets p31Labs.educationE0)",
-      "note": "optional: partial clone without andromeda — skip; education live URLs https://p31ca.org/education/ short /learn /edu"
+      "id": "education-p31ca-e0-e2-static",
+      "from": [
+        "docs/PLAN-P31-LABS-EDUCATION-SITE.md",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json",
+        "andromeda/04_SOFTWARE/p31ca/public/education/curriculum.json"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/education/",
+        "andromeda/04_SOFTWARE/p31ca/public/_redirects",
+        "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs",
+        "andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs"
+      ],
+      "apply": "Static tree under public/education/; schemas 0.2.0; hub card `education`; generate-about → education-about.html; ground-truth routes.p31LabsEducation + edgeRedirects /education|/learn|/edu",
+      "verify": "from p31ca: npm run verify:ground-truth && npm run verify:education",
+      "note": "E3 portal placeholder only; partial clone without andromeda skips; live https://p31ca.org/education/"
     },
     {
       "id": "oqe-lexicon-to-icosa-and-dome",

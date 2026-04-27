@@ -86,12 +86,12 @@
       "id": "LEGACY-LATTICE-LINK",
       "operator": "weak-coupling",
       "vertex": 4,
-      "file": "andromeda/04_SOFTWARE/p31ca/public/legacy-mvp-hub.html",
+      "file": "andromeda/04_SOFTWARE/p31ca/public/oqe-icosa.html",
       "require": [
-        "<a href=\"lattice.html\"",
-        "hover:opacity-100 transition-opacity\">Lattice</a>"
+        "<a href=\"/lattice.html\">Lattice</a>",
+        "nav"
       ],
-      "trigger": "Low-transition-amplitude path from legacy hub to lattice (footer)."
+      "trigger": "Nav link from OQE Icosa sector to lattice (post–legacy-mvp-hub sunsetting)."
     },
     {
       "id": "LATTICE-WONKY",

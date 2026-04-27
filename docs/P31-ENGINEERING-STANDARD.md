@@ -34,7 +34,7 @@ Applies to the repo that contains `p31-constants.json`, `cognitive-passport/`, a
 
 **Operator-locked values:** edit **`p31-constants.json`**, then **`npm run apply:constants`** and **`npm run verify:constants`**.
 
-**Universal UI canon:** source **`andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json`** (in a full checkout). Regenerate CSS via **`npm run apply:p31-style`**; verify via **`npm run verify:p31-style`**.
+**Universal UI canon:** source **`andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json`** (in a full checkout). Regenerate CSS via **`npm run apply:p31-style`**; verify via **`npm run verify:p31-style`**. Generated variable tables: **`andromeda/04_SOFTWARE/design-tokens/DESIGN-TOKENS-REFERENCE.md`** (also **`npm run generate:design-token-docs`** without a full style regen). **p31ca static HTML drift:** **`npm run verify:style-alignment`** — `public/*-about.html` must link `p31-style.css`, set **`data-p31-appearance`**, and avoid hardcoded canon hex outside `<style>` custom properties (p31ca **`prebuild`** runs it after **`verify:p31-style`**; full public tree: **`P31_STYLE_ALIGN_GLOB=all`** with **`style-alignment-exclude.json`**).
 
 **Cognitive Passport:** after generator edits, **`npm run sync:passport`** then **`npm run verify:passport`**. Do not hand-edit the p31ca mirror.
 

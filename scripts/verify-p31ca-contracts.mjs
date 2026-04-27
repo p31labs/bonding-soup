@@ -22,6 +22,7 @@ function run(cmd) {
 }
 
 run("npm run verify:ground-truth");
+run("npm run verify:education");
 run("npm run verify:economy");
 run("npm run verify:super-centaur-pack");
 run("npm run verify:synergetic");

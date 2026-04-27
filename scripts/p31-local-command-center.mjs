@@ -110,7 +110,7 @@ const actions = {
     background: true,
     network: true,
     confirm:
-      "Starts Python http.server on 8080 in the background (second click may fail if port busy). Continue?",
+      "Starts Python http.server on 8080 in the background (see docs/SOUP-LOCAL-DEMO.md; P31_DEMO_PORT=… if port busy). Second click may fail if port busy. Continue?",
   },
 
   // —— Daily & diagnostics
@@ -268,6 +268,15 @@ const actions = {
     network: true,
     confirm:
       "p31:all can take 15–30+ minutes (Playwright, mesh, probes). Stay on Wi‑Fi. Run only when you mean “full fleet”. Continue?",
+  },
+  "home-semgrep-p31ca": {
+    title: "semgrep:p31ca (SAST — p/javascript + p/typescript + p/security-audit on src + workers)",
+    cwd: root,
+    cmd: "npm",
+    args: ["run", "semgrep:p31ca"],
+    slow: true,
+    confirm:
+      "Semgrep scans p31ca only (needs CLI: pipx install semgrep). Many warnings are expected — soft in p31:all. Continue?",
   },
 
   // —— Verify slices
@@ -453,6 +462,7 @@ const SECTIONS = [
       "home-p31-ci-all",
       "home-validate-full",
       "home-p31-all",
+      "home-semgrep-p31ca",
     ],
   },
   {

@@ -8,6 +8,8 @@ TypeScript molecular / affective sim (`src/`), built to `dist/`. Entry for local
 
 ## First-time / clean machine setup
 
+**Full startup path (zero → shipped, read order, troubleshooting):** **`docs/P31-STARTUP-PACKAGE.md`**. In the repo: **`npm run startup`** prints the first section in the terminal.
+
 Use **Node 20** (see `.nvmrc`). One command aligns dependencies, regenerates operator constants into ground-truth / generated files, and runs the same **`verify`** bar as CI (when `andromeda/` is present it also installs `p31ca` deps):
 
 ```bash
@@ -22,13 +24,19 @@ For the **whole Andromeda pnpm workspace** (optional, large): `npm run setup:and
 
 ## Local run
 
+**Path / port (Chromebook Linux, `Address already in use`, wrong `cd`):** **`docs/SOUP-LOCAL-DEMO.md`**.
+
+**Chromebook (e.g. Acer Spin 7xx) + phone — full professional setup (hub-styled page + doc):** **`p31-device-setup.html`** (with `npm run demo`) · **`docs/P31-DEVICE-SETUP-CHROMEBOOK-MOBILE.md`**.
+
+**Parallel merge tracks (Soup vs hub vs mesh vs operator):** **`docs/P31-PARALLEL-WORK-TRACKS.md`** — avoid mixed-scope PRs.
+
 ```bash
 npm install
 npm run build
 npm run demo
 ```
 
-Then open **http://127.0.0.1:8080/soup.html** (or the path your server shows).
+Then open **http://127.0.0.1:8080/soup.html** — the `demo` script prints the exact base URL, or set **`P31_DEMO_PORT=8090`** (etc.) if **8080** is taken.
 
 - **Document library (search home `docs/` + root Markdown):** **http://127.0.0.1:8080/docs/doc-library/** — **`npm run build:doc-index`** (included in **`npm run verify`**). Proofs: **`npm run verify:doc-index`**. **Headless E2E:** **`npm run test:doc-library:e2e`** (first time: **`npx playwright install chromium`**); part of **`npm run p31:all`** unless **`--skip-e2e`**. Optional: **`?q=mesh`** to open with a search query. The same **`demo` / `build:doc-index`** bar is one click from **`soup.html`**, **`p31-personal-howto.html`**, and **`npm run command-center`** (port **3131**; sample `?q=mesh` link in the page header).
 - **Progressive physics learn (static, local):** **http://127.0.0.1:8080/docs/physics-learn/** — **Headless E2E:** **`npm run test:physics-learn:e2e`** (same Playwright install as the doc library); in **`p31:all`** unless **`--skip-e2e`**; optional **`P31_PHYSICS_LEARN_E2E=1`** in **`validate:full`**.
@@ -39,10 +47,13 @@ Then open **http://127.0.0.1:8080/soup.html** (or the path your server shows).
 - **Initial Build (CWP, production):** Live **`https://p31ca.org/build`** ( **`initial-build.html`** ). **`andromeda/04_SOFTWARE/integration-handoff/CONTROLLED-WORK-PACKAGE-INITIAL-BUILD.md`** + **`CWP-32/`**; normative **`INITIAL-BUILD-SITE-STRICT-PLAN.md`**. Ground truth + `_redirects` are part of `npm run verify:ground-truth` (p31ca) when the tree is present.
 - **`npm run dev`** — `tsc --watch` while editing `src/`.
 - **`?debug`** — append to the demo URL to enable verbose engine logs (WebSocket, LOD). Example: `soup.html?debug`
+- **`?perf=1`** — logs rolling average frame time to the **browser console** every ~120 frames (Chromebook perf; **`docs/SOUP-PERF-BUDGET.md`**). Example: `soup.html?perf=1`
 
 ## Multiplayer / mock WebSocket (WCD-32)
 
 **Scale:** room → mesh growth (bounded groups, edge budgets, honest presence) — **`docs/PLAN-BONDING-SOUP-WHEN-SCALE.md`**. **Phase 1 gate:** **`npm run soup:room-scale`** (protocol probe) + manual **`docs/SOUP-ROOM-SCALE-RUNBOOK.md`**. Wire spec: **`docs/wcd-32-websocket-spec.md`**. Client: **`src/soup.ts`** (reconnect + heartbeat + `data-soup-*` in **`soup.html`**).
+
+**Before first open:** from the repo root, **`npm run soup:prep`** compiles TypeScript into **`dist/`** and checks that **`soup.html`**’s JS imports and CSS/JSON/manifest assets exist. After a successful **`npm run verify`** (which also runs **`tsc`**), **`npm run soup:prep:check`** re-validates without rebuilding. **`npm run setup`** runs **`soup:prep`** right after **`npm install`** so **`dist/`** is ready even if verify fails later.
 
 Terminal 1: `npm run demo` from the repo root. Terminal 2:
 

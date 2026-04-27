@@ -15,11 +15,12 @@
  * Env: P31_CI_USE_PREFLIGHT=1 — call p31-ci with --skip-root-verify --skip-npm-ci (GitHub Actions
  *   job 2 after job 1 already ran `npm ci` + `npm run verify`).
  */
-import { execSync, spawnSync } from "node:child_process";
+import { execSync } from "node:child_process";
 import fs from "node:fs";
-import { homedir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { resolveSemgrepBin } from "./resolve-semgrep-bin.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -35,22 +36,6 @@ const skipEcosystemGlass = args.has("--skip-ecosystem-glass");
 const hasP31ca = fs.existsSync(p31ca);
 
 const validateScript = path.join(root, "validate-p31-full.sh");
-
-function shOk(script) {
-  return spawnSync("sh", ["-c", script], { stdio: "ignore" }).status === 0;
-}
-
-function semgrepCommand() {
-  if (shOk("command -v semgrep")) {
-    return "semgrep";
-  }
-  // pip install --user (CI step adds ~/.local/bin to GITHUB_PATH)
-  const userBin = path.join(homedir(), ".local/bin/semgrep");
-  if (fs.existsSync(userBin)) {
-    return userBin;
-  }
-  return null;
-}
 
 /**
  * @param {string} title
@@ -153,7 +138,7 @@ function main() {
   }
 
   if (hasP31ca && !skipSast) {
-    const bin = semgrepCommand();
+    const bin = resolveSemgrepBin();
     if (bin) {
       // Matches .github/workflows/p31-security.yml sast job (report-only, soft exit)
       const q = (s) => `"${s.replace(/"/g, '\\"')}"`;
@@ -165,7 +150,7 @@ function main() {
       run("Semgrep SAST (p/javascript + p/typescript + p/security-audit)", cmd, { cwd: p31ca, soft: true });
     } else {
       console.log(
-        "\n\x1b[33m▶\x1b[0m Semgrep: CLI not in PATH (install: pip install semgrep or brew install semgrep) — skipped"
+        "\n\x1b[33m▶\x1b[0m Semgrep: CLI not found (install: pipx install semgrep — ~/.local/bin on PATH) — skipped"
       );
     }
   }

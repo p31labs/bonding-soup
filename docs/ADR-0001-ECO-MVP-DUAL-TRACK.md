@@ -1,21 +1,6 @@
-# ADR-0001 — ECO vs hub COCKPIT index (dual track)
+# ADR-0001 — ECO vs hub COCKPIT (alias)
 
-**Status:** accepted (interim). **Date:** 2026-04-26.
+**Status:** **Normative text lives in** **`docs/ADR-ECO-MVPDATA-COCKPIT-DUAL-TRACK.md`**.  
+This filename stays as a **stable link target**; policy, consequences, and **`diff-index-sources`** behavior (`mvpData` vs **`HUB_ALL_CARD_ORDER`**, registry, `prebuild` info vs warn) are maintained there and in **`p31-alignment.json`**.
 
-## Context
-
-`scripts/hub/diff-index-sources.mjs` reports **`mvpData` id set ≠ COCKPIT** hub index until the ECO CWP merges a single product registry.
-
-## Decision
-
-**Dual track** is allowed: **COCKPIT** drives shipped hub landing data; **`mvpData`** may list additional lab / roadmap ids. CI remains **non-strict** (`diff-index-sources` OK with warning). **`--strict-mvp`** is reserved for a future merge milestone.
-
-## Consequences
-
-- Grant-facing copy must align with **COCKPIT + registry**, not mvpData alone.
-- Removing this ADR requires clearing the diff (merge or split manifests with two machine-readable lists).
-
-## Links
-
-- `PLAN-11-10-FULL-ECOSYSTEM.md` Phase 9  
-- `AGENTS.md` — diff-index-sources note  
+**See also:** **`docs/PLAN-11-10-FULL-ECOSYSTEM.md`** Phase 9.

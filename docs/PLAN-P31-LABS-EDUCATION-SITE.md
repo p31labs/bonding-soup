@@ -1,6 +1,6 @@
 # Plan: P31 Labs — full education site & stack (progressive, security-hardened)
 
-**Status:** **E0 shipped** — static shell on p31ca: **`/education/`** · short **`/learn`**, **`/edu`**, canonical trailing slash via **`/education` → `/education/`**. **Machine proof:** `p31ca` **`npm run verify:ground-truth`** ( `fileSnippets` **`p31Labs.educationE0`**, `p31.labsEducation/0.1.0` in page). **Hub grid:** `id: education` in **`registry.mjs`** + **`hub-app-ids.mjs`**, about **`/education-about.html`**, `registryAppUrlInvariants` in ground-truth; **`hub:verify`** + **`hub:build`** in prebuild.  
+**Status:** **E0–E2 shipped (static)** — full tree **`p31ca/public/education/**`** (discover, tracks, modules, labs, E3 placeholder), short **`/learn`**, **`/edu`**, **`/education` → `/education/`**. **Proof:** **`verify:ground-truth`** (fileSnippets **`p31Labs.educationIndex`** + **`p31Labs.educationCurriculum`**) + **`verify:education`**. **Hub:** `id: education`, **`registryAppUrlInvariants`**, prebuild.  
 **Audience:** operators, architects, and grant reviewers.  
 **Normative security bar (hub):** `andromeda/04_SOFTWARE/p31ca/docs/SECURITY-RUNBOOK.md`, `andromeda/04_SOFTWARE/p31ca/docs/EDGE-SECURITY.md`, and root **`docs/P31-ENGINEERING-STANDARD.md`**.  
 **Last updated:** 2026-04-27
@@ -40,8 +40,8 @@ Work top-down; each level gets a **route contract** in **`p31.ground-truth.json`
 | Phase | Ship bar | Outcomes |
 |------|----------|----------|
 | **E0 — Foundation** | Static Pages only; new routes in **ground-truth** + about-page generation if in hub registry; **`npm run hub:ci`** + **`security:check`** | Launch `/education` shell + 3–5 “pillar” pages, PDF/download policy aligned with Andromeda **`docs/files/`** large-binary rule |
-| **E1 — Catalog + search** | Home **`build:doc-index`** pattern **or** lightweight client index for `education/**` MDX/markdown; **`verify:alignment`** if new source rows | Browsable tracks, no accounts |
-| **E2 — Labs** | Reuse **P31 style** + canon (`apply:p31-style`); a11y pass on components | Interactive checklists, embed Geodesic / hub links as **optional** |
+| **E1 — Catalog + search** | **`public/education/catalog.json`** + filter UI on **`/education/`**; schema **`p31.labsEducationCatalog/0.2.0`** | **Shipped** — flat catalog + client search |
+| **E2 — Labs** | **`public/education/curriculum.json`** + static module/lab pages; **`npm run verify:education`** in prebuild | **Shipped** — discover/tracks/modules/labs + checklists; Geodesic/hub links optional |
 | **E3 — Identity (optional)** | New Worker = **new `worker-allowlist` row** + `security:workers`; D1/KV as per passkey or new service | Cohort sign-in, progress — **only** with written data retention + COPPA/GDPR story for youth |
 | **E4 — Partner / org** | Separate from “family mesh” unless contractually explicit | Branded subpaths or R2 + signed URLs for materials |
 
@@ -119,7 +119,7 @@ This table ties **education** work to **existing** commands and files. Nothing h
 3. **Security:** **`npm run security:check`** in p31ca (triage P1 inventory warnings).  
 4. **No secrets** in public trees; MAP unchanged or updated via **`verify:map-pipeline`**.  
 5. **Style:** **`verify:p31-style`**; appearance tokens consistent with canon.  
-6. **Content:** At least one **machine-checked** manifest (curriculum or nav) if you claim “versioned” curriculum.
+6. **Content:** **Machine manifests** — **`curriculum.json`** + **`catalog.json`** (0.2.0) + **`verify:education`** in p31ca prebuild.
 
 ---
 
@@ -136,5 +136,5 @@ This table ties **education** work to **existing** commands and files. Nothing h
 
 ---
 
-**Done (E0, 2026-04-27):** `public/education/index.html`, **`routes.p31LabsEducation`**, **`_redirects` + `edgeRedirects`**, **fileSnippet** in ground-truth, **alignment** source + derivation in **`p31-alignment.json`**. Live: **`https://p31ca.org/education/`** (after next Pages deploy).  
-**Next step (E1+):** expand static catalog (still no Worker), or add search/index for `education/**` content. Any Worker → **allowlist** + **`security:check`**.
+**Done (E0–E2, 2026-04-26):** `public/education/**` (about, ethics, parent FAQ, tracks/modules/labs HTML, `catalog.json`, `curriculum.json`), **`routes.p31LabsEducation`**, **`_redirects` + `edgeRedirects`** for short paths, hub card **`education`**, **`verify:education`** in p31ca prebuild, **alignment** sources + derivation **`education-p31ca-e0-e2-static`**. Live: **`https://p31ca.org/education/`**.  
+**Next step (E3+):** optional portal / progress — **Worker** only with allowlist + **`security:check`** + written data policy; not started on static tier.

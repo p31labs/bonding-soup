@@ -242,6 +242,14 @@
       "presentation": { "reveal": "always", "panel": "dedicated" }
     },
     {
+      "label": "P31: Semgrep (p31ca src + workers)",
+      "type": "shell",
+      "command": "npm run semgrep:p31ca",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
       "label": "P31: ecosystem glass box (live probes + report)",
       "type": "shell",
       "command": "npm run ecosystem:glass",

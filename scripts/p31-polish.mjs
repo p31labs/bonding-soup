@@ -39,6 +39,14 @@ function main() {
   if (fs.existsSync(portalSrc) && fs.existsSync(path.dirname(portalDst))) {
     let html = fs.readFileSync(portalSrc, "utf8");
     html = html.replace('href="cognitive-passport/p31-style.css"', 'href="p31-style.css"');
+    html = html.replace(
+      'href="cognitive-passport/p31-responsive-surface.css"',
+      'href="p31-responsive-surface.css"',
+    );
+    html = html.replace(
+      'src="cognitive-passport/lib/p31-subject-prefs.js"',
+      'src="lib/p31-subject-prefs.js"',
+    );
     fs.writeFileSync(portalDst, html, "utf8");
     console.log("\n\x1b[32m✓\x1b[0m wrote fleet-portal.html → p31ca public/ (p31-style.css) — live: https://p31ca.org/fleet-portal.html\n");
   }

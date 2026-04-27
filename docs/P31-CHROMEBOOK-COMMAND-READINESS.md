@@ -1,5 +1,7 @@
 # P31 Chromebook command readiness
 
+**Parent spine (full Chromebook + phone setup):** `docs/P31-DEVICE-SETUP-CHROMEBOOK-MOBILE.md` · `p31-device-setup.html`.
+
 Checklist for the **local operator console** (`npm run command-center`, default **http://127.0.0.1:3131**) on **Chrome OS**: using Chrome as the client, running Node in **Linux (Crostini)**, or reaching another machine on the LAN.
 
 ## 1. Repo runs on the Chromebook (Linux / Crostini)

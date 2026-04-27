@@ -46,6 +46,7 @@
     "docs/SOUP-ROOM-SCALE-RUNBOOK.md",
     "cognitive-passport/p31-responsive-surface.css",
     "scripts/soup-room-scale.mjs",
+    "scripts/soup-prep.mjs",
     "cognitive-passport/p31-responsive-surface.css"
   ],
   "mesh": {

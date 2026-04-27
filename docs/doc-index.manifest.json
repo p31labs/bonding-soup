@@ -11,7 +11,8 @@
       "final_validation_report.md"
     ],
     "optionalDirs": [
-      { "path": "andromeda/04_SOFTWARE/p31ca/docs", "label": "p31ca (optional)" }
+      { "path": "andromeda/04_SOFTWARE/p31ca/docs", "label": "p31ca (optional)" },
+      { "path": "andromeda/04_SOFTWARE/design-tokens", "label": "design-tokens (optional)" }
     ]
   },
   "excludePathSubstrings": ["/node_modules/", "/.git/"],

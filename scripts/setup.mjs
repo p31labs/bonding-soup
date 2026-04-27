@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * One-shot local environment alignment: Node version, root deps, generated artifacts, verify, p31ca deps.
+ * One-shot local environment alignment: Node version, root deps, soup:prep (dist/ + Soup assets), generated artifacts, verify, p31ca deps.
  * Idempotent. Does not run wrangler, mesh live strict checks, or pnpm for full Andromeda (use setup:andromeda).
  */
 import { execSync } from "node:child_process";
@@ -31,6 +31,7 @@ function exists(p) {
 }
 
 run("npm install", root);
+run("npm run soup:prep", root);
 run("node scripts/apply-constants.mjs", root);
 
 const canon = path.join(root, "andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json");
@@ -53,7 +54,7 @@ if (exists(path.join(p31ca, "package.json"))) {
   );
 }
 
-console.log("Local demo:  npm run demo  →  http://127.0.0.1:8080/soup.html\n");
+console.log("Local demo:  npm run demo  →  http://127.0.0.1:8080/soup.html  (docs/SOUP-LOCAL-DEMO.md; P31_DEMO_PORT if :8080 busy)\n");
 
 try {
   execSync("node scripts/git-hooks-config.mjs", { cwd: root, stdio: "inherit" });

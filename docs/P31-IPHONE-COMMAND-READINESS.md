@@ -1,5 +1,7 @@
 # P31 iPhone command readiness
 
+**Full device layout:** `docs/P31-DEVICE-SETUP-CHROMEBOOK-MOBILE.md` (Chromebook + mobile operator path).
+
 Short checklist for using the **local operator console** (`npm run command-center`, default **http://127.0.0.1:3131**) from an iPhone: same trusted Wi‑Fi (or Tailscale), LAN bind, and a proper Home Screen icon.
 
 ## 1. LAN bind (required for the phone)

@@ -67,7 +67,8 @@
       "file": "andromeda/04_SOFTWARE/p31ca/src/pages/orchestrator.astro",
       "require": [
         "OrchestratorDashboard",
-        "Sovereign Cockpit · Orchestrator"
+        "../layouts/BaseLayout.astro",
+        "title=\"P31 Orchestrator | Sovereign Cockpit\""
       ],
       "trigger": "/orchestrator — not coupled to the hub-landing subspace (see Pauli assertion)."
     },

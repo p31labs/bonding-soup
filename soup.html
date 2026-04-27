@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="soup-app" lang="en">
+<html class="soup-app soup-app--gray-rock" lang="en" data-p31-appearance="hub">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
@@ -16,6 +16,22 @@
     <link rel="stylesheet" href="cognitive-passport/p31-style.css">
     <link rel="stylesheet" href="cognitive-passport/p31-responsive-surface.css">
     <link rel="stylesheet" href="soup-quantum.css">
+    <script src="cognitive-passport/lib/p31-subject-prefs.js"></script>
+    <script>
+      (function () {
+        var r = document.documentElement;
+        if (!r.classList.contains("soup-app")) return;
+        if (/[?&]alive=1(?:&|$)/.test(location.search)) {
+          r.classList.remove("soup-app--gray-rock");
+          return;
+        }
+        function wake() {
+          r.classList.remove("soup-app--gray-rock");
+        }
+        document.addEventListener("pointerdown", wake, { once: true, capture: true });
+        document.addEventListener("keydown", wake, { once: true, capture: true });
+      })();
+    </script>
     <link rel="manifest" href="p31-bonding.webmanifest" crossorigin="anonymous" />
     <link rel="apple-touch-icon" href="p31-bonding-icons/p31-icon.svg" />
 </head>
@@ -29,7 +45,7 @@
                 <li><span class="soup-psych-dot soup-psych-dot--warm" aria-hidden="true"></span> Warmth (coral · energy)</li>
                 <li><span class="soup-psych-dot soup-psych-dot--belong" aria-hidden="true"></span> Belonging (phosphor · we)</li>
             </ul>
-            <p class="soup-aaso"><em>As above, so below:</em> the same <code>demo</code> / <code>build:doc-index</code> bar shows up in the <a class="p31-mesh-tap" href="docs/doc-library/index.html">doc library</a>, <a class="p31-mesh-tap" href="docs/physics-learn/index.html">physics learn</a>, <a class="p31-mesh-tap" href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (with <code>andromeda/</code>), <a class="p31-mesh-tap" href="fleet-portal.html">live fleet &amp; every URL</a> (<code>npm run build:fleet-portal</code>), <a class="p31-mesh-tap" href="p31-personal-howto.html">interactive how-to</a>, <a class="p31-mesh-tap" href="poets-room.html">Poets room</a>, and <a class="p31-mesh-tap" href="http://127.0.0.1:3131/">local command center</a> (run <code>npm run command-center</code> — port 3131 by default). <strong>When-scale</strong> (plan the work, work the plan): <a class="p31-mesh-tap" href="docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">BONDING Soup — when-scale plan</a>. Prose in the tree, comfort in the tab. <span class="aaso-love" title="love">&#9829;</span><span class="aaso-3" title="&lt;3" aria-label="less than three"> &lt;3</span></p>
+            <p class="soup-aaso"><em>As above, so below:</em> the same <code>demo</code> / <code>build:doc-index</code> bar shows up in the <a class="p31-mesh-tap" href="docs/doc-library/index.html">doc library</a>, <a class="p31-mesh-tap" href="docs/physics-learn/index.html">physics learn</a>, <a class="p31-mesh-tap" href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (with <code>andromeda/</code>), <a class="p31-mesh-tap" href="fleet-portal.html">live fleet &amp; every URL</a> (<code>npm run build:fleet-portal</code>), <a class="p31-mesh-tap" href="p31-personal-howto.html">interactive how-to</a>, <a class="p31-mesh-tap" href="p31-device-setup.html">Chromebook &amp; phone setup</a>, <a class="p31-mesh-tap" href="poets-room.html">Poets room</a>, and <a class="p31-mesh-tap" href="http://127.0.0.1:3131/">local command center</a> (run <code>npm run command-center</code> — port 3131 by default). <strong>When-scale</strong> (plan the work, work the plan): <a class="p31-mesh-tap" href="docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">BONDING Soup — when-scale plan</a>. Prose in the tree, comfort in the tab. <span class="aaso-love" title="love">&#9829;</span><span class="aaso-3" title="&lt;3" aria-label="less than three"> &lt;3</span></p>
         </header>
 
         <div class="soup-larmor" id="soup-larmor" hidden>
@@ -40,25 +56,25 @@
         </div>
         <div class="soup-hero--parents" id="parents-hero" role="region" aria-label="Parent and guardian notes">
             <h2>For parents & guardians</h2>
-            <p style="margin:0 0 8px 0">This page is <strong>local-first</strong>: you choose a shared <code>room</code> string for your household—it is not public matchmaking. Stay in the loop on which room name is in use.</p>
-            <p style="margin:0 0 8px 0"><strong>Run two things</strong> on the machine that serves this page (repo root):</p>
+            <p class="soup-hero__p-tight">This page is <strong>local-first</strong>: you choose a shared <code>room</code> string for your household—it is not public matchmaking. Stay in the loop on which room name is in use.</p>
+            <p class="soup-hero__p-tight"><strong>Prep once</strong> (repo root): <code>npm run soup:prep</code> — compiles TypeScript into <code>dist/</code> and checks static assets. After a full <code>npm run verify</code>, <code>npm run soup:prep:check</code> re-checks without rebuilding. Then <strong>run two things</strong> while you play:</p>
             <span class="ph-run"><code>npm run demo</code> — static server (port 8080)</span>
             <span class="ph-run"><code>node spikes/mock-ws-server/server.js</code> — WebSocket (port 8082, or set <code>MOCK_WS_PORT</code>)</span>
-            <p style="margin:8px 0 0 0;opacity:0.88">Then open a <strong>second browser or tab</strong> with the same <code>room</code> and a different <code>name</code>. Use <strong>Copy invite link</strong> below when family play is active.</p>
+            <p class="soup-hero__p-tight soup-hero__p-secondary">Then open a <strong>second browser or tab</strong> with the same <code>room</code> and a different <code>name</code>. Use <strong>Copy invite link</strong> below when family play is active.</p>
             <div class="parents-actions soup-tap">
                 <a id="parent-kid-view-link" href="#">Open kid-friendly view (larger UI)</a>
                 <button type="button" id="copy-kid-view-link" title="Same room + WebSocket, adds big-kid mode">Copy kid-view link</button>
             </div>
-            <div id="parents-runbook-below" style="display: none">
+            <div id="parents-runbook-below" class="soup-runbook">
                 <div>Live · from this WebSocket (same lines as the server process prints, and <code>connectionInit</code>)</div>
                 <div id="parents-runbook-lines"></div>
             </div>
         </div>
         <div class="soup-hero--kids" id="kids-hero" role="region" aria-label="Bigger play mode">
             <div><strong>Bigger play</strong> — the soup fills more of the screen, buttons are easy to hit, and you can <strong>play in the same room</strong> with someone on another computer.</div>
-            <p style="margin:0.4em 0 0;opacity:0.9;font-size:0.9em">Quick name tags (same house: pick a <strong>room</strong> first, e.g. <code>living-room</code>):</p>
+            <p class="soup-kids-hint">Quick name tags (same house: pick a <strong>room</strong> first, e.g. <code>living-room</code>):</p>
             <div class="kids-actions soup-tap" id="kids-actions">
-                <span style="align-self:center;opacity:0.85;font-size:0.88em">Play as</span>
+                <span class="soup-kids-label">Play as</span>
                 <button type="button" data-kid-name="SJ" title="Label your molecules for this tab">S.J.</button>
                 <button type="button" data-kid-name="WJ" title="Label your molecules for this tab">W.J.</button>
             </div>
@@ -67,7 +83,7 @@
         <div id="presence-hud" aria-live="polite">
             <div class="ph-inner">
                 <span class="ph-title" id="presence-title">Who’s here</span>
-                <div id="presence-chips" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;"></div>
+                <div id="presence-chips" class="presence-chips"></div>
             </div>
         </div>
         <canvas id="canvas" width="1600" height="800"></canvas>
@@ -84,15 +100,15 @@
                 <div class="stat" id="stat-reactions" title="A new reaction is a small shared win—informational, not a loot roll">Reactions: <span id="reactions">--</span></div>
                 <div class="stat">Audio: <span id="audio">--</span></div>
             </div>
-            <div class="stats" style="align-items:center;flex-wrap:wrap;gap:8px;">
-                <div class="stat" style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;max-width:100%;">
+            <div class="stats stats--connection">
+                <div class="stat stat--connection">
                     <span id="connection-status" class="connection-status disconnected"></span>
                     <span id="connection-text">Disconnected</span>
                 </div>
-                <div id="as-above-so-below" class="stat" style="display:none" title="README/parent text ↔ this socket ↔ server terminal">
+                <div id="as-above-so-below" class="stat stat--as-above" title="README/parent text ↔ this socket ↔ server terminal">
                     <span id="as-above-label">as above / so below</span>
                 </div>
-                <div id="network-family-row" class="stat soup-tap" style="display:none">
+                <div id="network-family-row" class="stat stat--family soup-tap">
                     <span id="family-room-label"></span>
                     <button type="button" id="new-family-room">New private room</button>
                     <button type="button" id="copy-family-link">Copy invite link</button>
@@ -264,6 +280,8 @@
             wsUrl = 'ws://127.0.0.1:8082';
         }
         const isDebug = urlParams.has('debug');
+        /** Wall-time frame probe for Chromebook perf (docs/SOUP-PERF-BUDGET.md) — logs to console every 120 frames */
+        const perfProbe = urlParams.has('perf') || urlParams.get('perf') === '1';
         const networkPlay =
             roomQ && roomQ !== URL_MOCK_ROOM
                 ? { room: roomQ, displayName: nameQ || 'You' }
@@ -351,7 +369,7 @@
         const familyLabel = document.getElementById('family-room-label');
         const copyFamilyBtn = document.getElementById('copy-family-link');
         if (networkPlay) {
-            familyRow.style.display = 'inline-flex';
+            familyRow.classList.add('soup-visible');
             familyLabel.textContent =
                 'Family play · ' +
                 (roomQ || '') +
@@ -705,10 +723,12 @@
             const ph = document.getElementById('presence-hud');
             const chipHost = document.getElementById('presence-chips');
             if (connectionStatus.connected && wsUrl) {
-                ph.style.display = 'block';
+                ph.classList.add('soup-hud--visible');
                 const me = connectionStatus.displayName || 'You';
                 const roster = connectionStatus.roster || [];
-                const youBorder = connectionStatus.familyMode ? '#3ba372' : '#4db8a8';
+                const youBorder = connectionStatus.familyMode
+                    ? 'var(--p31-phosphorus)'
+                    : 'var(--p31-cyan)';
                 let html = `<span class="presence-pill" style="border-color:${youBorder}">You · ${escapeHtml(me)}</span>`;
                 roster.forEach((p) => {
                     const hue = presenceHue(p.displayName);
@@ -716,7 +736,7 @@
                 });
                 chipHost.innerHTML = html;
             } else {
-                ph.style.display = 'none';
+                ph.classList.remove('soup-hud--visible');
                 chipHost.innerHTML = '';
             }
 
@@ -725,14 +745,14 @@
             if (abRow && abLabel) {
                 const lr = connectionStatus.localRunbook;
                 if (connectionStatus.connected && lr && lr.lines && lr.lines.length) {
-                    abRow.style.display = 'inline-flex';
+                    abRow.classList.add('soup-panel-visible');
                     const short0 =
                         lr.lines[0].length > 110
                             ? lr.lines[0].slice(0, 110) + '…'
                             : lr.lines[0];
                     abLabel.textContent = `${lr.echo} · :${lr.port} — ${short0}`;
                 } else {
-                    abRow.style.display = 'none';
+                    abRow.classList.remove('soup-panel-visible');
                 }
             }
             const prb = document.getElementById('parents-runbook-below');
@@ -740,17 +760,17 @@
             if (prb && prbl) {
                 const lr2 = connectionStatus.localRunbook;
                 if (isParents && connectionStatus.connected && lr2 && lr2.lines) {
-                    prb.style.display = 'block';
+                    prb.classList.add('soup-panel-visible');
                     prbl.innerHTML = lr2.lines
                         .map(
                             (line) =>
-                                '<p style="margin:0.35em 0">' +
+                                '<p class="soup-runbook-line">' +
                                 escapeHtml(line) +
                                 '</p>'
                         )
                         .join('');
                 } else {
-                    prb.style.display = 'none';
+                    prb.classList.remove('soup-panel-visible');
                     prbl.innerHTML = '';
                 }
             }
@@ -772,11 +792,31 @@
 
         // Main animation loop
         let lastTime = performance.now();
+        let prevRafWall = performance.now();
+        let perfAccumMs = 0;
+        let perfFrameCount = 0;
+        const PERF_LOG_FRAMES = 120;
 
         async function animate() {
             const currentTime = performance.now();
             const deltaTime = (currentTime - lastTime) / 1000;
             lastTime = currentTime;
+
+            if (perfProbe) {
+                const frameWallMs = currentTime - prevRafWall;
+                prevRafWall = currentTime;
+                perfAccumMs += frameWallMs;
+                perfFrameCount++;
+                if (perfFrameCount >= PERF_LOG_FRAMES) {
+                    const avg = perfAccumMs / perfFrameCount;
+                    const fps = avg > 0 ? 1000 / avg : 0;
+                    console.info(
+                        `[Soup perf] avg frame ${avg.toFixed(2)} ms (~${fps.toFixed(0)} fps) — ${perfFrameCount} frames — docs/SOUP-PERF-BUDGET.md`
+                    );
+                    perfAccumMs = 0;
+                    perfFrameCount = 0;
+                }
+            }
 
             // Update soup simulation
             soup.update(deltaTime);

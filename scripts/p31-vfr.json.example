@@ -1,0 +1,5 @@
+{
+  "voltagePercent": 60,
+  "frequencyHz": 50,
+  "comment": "MANUAL: copy to ~/.p31/vfr.json — V depth %, F Hz (≥65 = strict live mesh)"
+}

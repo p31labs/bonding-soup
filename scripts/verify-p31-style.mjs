@@ -29,4 +29,22 @@ if (fs.readFileSync(hubCss, "utf8") !== fs.readFileSync(passCss, "utf8")) {
   );
   process.exit(1);
 }
-console.log("verify-p31-style: passport mirror OK");
+
+const prefsHub = path.join(p31ca, "public", "lib", "p31-subject-prefs.js");
+const prefsPass = path.join(root, "cognitive-passport", "lib", "p31-subject-prefs.js");
+if (!fs.existsSync(prefsHub)) {
+  console.error(
+    "verify-p31-style: missing",
+    path.relative(root, prefsHub),
+    "— restore from repo or run npm run apply:p31-style after p31ca public/lib exists",
+  );
+  process.exit(1);
+}
+if (!fs.existsSync(prefsPass) || fs.readFileSync(prefsHub, "utf8") !== fs.readFileSync(prefsPass, "utf8")) {
+  console.error(
+    "verify-p31-style: cognitive-passport/lib/p31-subject-prefs.js !== p31ca/public/lib — run npm run apply:p31-style",
+  );
+  process.exit(1);
+}
+
+console.log("verify-p31-style: passport mirror OK (CSS + subject-prefs)");

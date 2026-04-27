@@ -59,6 +59,11 @@
       "role": "Final handoff: mission system manifest, prep, assemble, definition of done; links P31-CREATE-CONNECT, fleet-portal, verify bar"
     },
     {
+      "id": "p31-design-doctrine-md",
+      "path": "docs/P31-DESIGN-DOCTRINE.md",
+      "role": "Normative Gray Rock → Alive layouts and component patterns; pairs with canon-to-style-css + emitDesignDoctrineBlock"
+    },
+    {
       "id": "fleet-portal-html",
       "path": "fleet-portal.html",
       "role": "Generated index of all live URLs (npm run build:fleet-portal); polish → p31ca public/fleet-portal.html"
@@ -220,11 +225,28 @@
       "from": ["andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json"],
       "to": [
         "cognitive-passport/p31-style.css",
-        "andromeda/04_SOFTWARE/p31ca/public/p31-style.css"
+        "andromeda/04_SOFTWARE/p31ca/public/p31-style.css",
+        "andromeda/04_SOFTWARE/design-tokens/DESIGN-TOKENS-REFERENCE.md"
       ],
       "apply": "npm run apply:p31-style",
       "verify": "npm run verify:p31-style",
-      "note": "Passport and p31ca public CSS must be identical after apply"
+      "note": "Passport and p31ca public CSS must be identical after apply; design-tokens/generate-reference.mjs emits DESIGN-TOKENS-REFERENCE.md (also npm run generate:design-token-docs)"
+    },
+    {
+      "id": "design-doctrine-to-style-css",
+      "from": ["docs/P31-DESIGN-DOCTRINE.md", "andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json"],
+      "to": ["cognitive-passport/p31-style.css"],
+      "apply": "npm run apply:p31-style — doctrine CSS patterns are in andromeda/04_SOFTWARE/p31ca/scripts/lib/p31-style-generate.mjs (emitDesignDoctrineBlock), emitted into p31-style.css alongside mission trio and appearance blocks.",
+      "verify": "npm run verify:style-alignment (about pages); visual doctrine compliance is manual.",
+      "note": "Normative layout + Gray Rock doctrine: docs/P31-DESIGN-DOCTRINE.md; prefs bridge: p31ca/public/lib/p31-subject-prefs.js"
+    },
+    {
+      "id": "canon-to-p31ca-about-html-style",
+      "from": ["andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json", "andromeda/04_SOFTWARE/p31ca/scripts/generate-about-pages.mjs"],
+      "to": ["andromeda/04_SOFTWARE/p31ca/public/*-about.html"],
+      "apply": "npm run hub:about:generate (andromeda/04_SOFTWARE/p31ca); optional hub:about:enrich",
+      "verify": "npm run verify:style-alignment (from P31 home or p31ca/)",
+      "note": "Mechanical token use on about pages; default scope is *-about.html only"
     },
     {
       "id": "passport-to-p31ca-mirror",
@@ -419,6 +441,7 @@
       "verify:ecosystem",
       "verify:map-pipeline",
       "verify:p31-style",
+      "verify:style-alignment",
       "verify:command-center",
       "verify:p31ca-contracts",
       "verify:egg-hunt",

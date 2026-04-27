@@ -73,7 +73,7 @@
 
 | Check | Status |
 |--------|--------|
-| mvpData vs COCKPIT | **Waived** pending ECO CWP — see **`docs/ADR-0001-ECO-MVP-DUAL-TRACK.md`** |
+| mvpData vs COCKPIT | **Waived** pending ECO CWP — see **`docs/ADR-ECO-MVPDATA-COCKPIT-DUAL-TRACK.md`** (alias **`docs/ADR-0001-ECO-MVP-DUAL-TRACK.md`**) |
 
 ## Phase 10 — Security
 

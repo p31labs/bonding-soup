@@ -235,7 +235,11 @@ h2("Glass probes (p31-ecosystem.json)", "glass");
 h2("P31 home, hub, and source links", "local");
 {
   const rows = [
-    { href: `${bondingBase}/soup`, label: "BONDING Soup (live)", note: "Bonding deploy; local: npm run demo → :8080" },
+    {
+      href: `${bondingBase}/soup`,
+      label: "BONDING Soup (live)",
+      note: "Bonding deploy; local: npm run soup:prep then npm run demo → :8080",
+    },
     { href: `${bondingBase}/poets-room.html`, label: "Poets room (live)", note: "Bonding" },
     { href: `${ghMain}/p31-personal-howto.html`, label: "Personal how-to (source)", note: "Open file locally for full command list" },
     { href: "https://p31ca.org/passport", label: "Cognitive Passport (hub)", note: "Generator mirror" },
@@ -257,6 +261,7 @@ const html = `<!DOCTYPE html>
   <meta name="theme-color" content="#0f1115" />
   <link rel="stylesheet" href="cognitive-passport/p31-style.css" />
   <link rel="stylesheet" href="cognitive-passport/p31-responsive-surface.css" />
+  <script src="cognitive-passport/lib/p31-subject-prefs.js"></script>
   <style>
     .fp-page {
       max-width: 64rem;

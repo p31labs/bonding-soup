@@ -282,11 +282,18 @@ if not ok and isinstance(edges,list) and len(edges)>0:
 if not ok and isinstance(meshedges,dict) and meshedges:
     first=next(iter(meshedges.values()))
     ok=isinstance(first.get('qFactor'),(int,float))
+mv = mesh.get('vertices') or {}
+if not ok and isinstance(mv,dict):
+    for vert in mv.values():
+        qmeta = (vert.get('metadata') or {}).get('q_factor')
+        if isinstance(qmeta,(int,float)):
+            ok=True
+            break
 sys.exit(0 if ok else 1)
 " "$MESH_SNAPSHOT" 2>/dev/null; then
-  add_check "P0-Mesh" "Link_Quality_qFactor" "PASS" "qFactor computation present in telemetry"
+  add_check "P0-Mesh" "Link_Quality_qFactor" "PASS" "Link quality scalar present (qFactor or mesh.vertices[].metadata.q_factor)"
 else
-  add_check "P0-Mesh" "Link_Quality_qFactor" "FAIL" "qFactor computation missing — deploy k4-cage (topology exposes qFactor on GET /api/mesh)"
+  add_check "P0-Mesh" "Link_Quality_qFactor" "FAIL" "No qFactor — pull latest k4-cage main and wrangler deploy (topology GET exposes qFactor)"
 fi
 rm -f "$MESH_SNAPSHOT"
 

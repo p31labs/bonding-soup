@@ -4,6 +4,8 @@
  * Probes default to GET. Optional: skipIfEmpty — omit probe when expanded URL is empty or not http(s) (optional LAN URLs from p31-constants). Skips appear in report/stdout (`skipped[]`: empty_after_expand | not_http_scheme). method "POST", body, expectJsonKey as before.
  * Prints a table + writes /tmp/p31_glass_report.json (and optional --json stdout only).
  * Exit: 0 by default. P31_GLASS_STRICT=1 → exit 1 if any probe is "down" (not auth/warn).
+ * Latency: P31_GLASS_BUDGET_MS overrides p31-facts.json mesh.glassProbeBudgetMs. Rows over budget
+ * get [slow] in the table; P31_GLASS_BUDGET_STRICT=1 → exit 1 if any row is slow.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -14,10 +16,33 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const manifestPath = path.join(root, "p31-ecosystem.json");
 const constantsPath = path.join(root, "p31-constants.json");
+const factsPath = path.join(root, "p31-facts.json");
 const reportPath = process.env.P31_GLASS_REPORT || "/tmp/p31_glass_report.json";
 const strict = process.env.P31_GLASS_STRICT === "1";
+const budgetStrict = process.env.P31_GLASS_BUDGET_STRICT === "1";
 const timeoutMs = parseInt(process.env.P31_GLASS_TIMEOUT_MS || "12000", 10);
 const jsonOnly = process.argv.includes("--json");
+
+/**
+ * @returns {number} 0 = off (no slow marking)
+ */
+function loadGlassProbeBudgetMs() {
+  const e = process.env.P31_GLASS_BUDGET_MS;
+  if (e != null && String(e).trim() !== "") {
+    const n = parseInt(String(e), 10);
+    if (Number.isFinite(n) && n > 0) return n;
+    return 0;
+  }
+  if (!fs.existsSync(factsPath)) return 0;
+  try {
+    const j = JSON.parse(fs.readFileSync(factsPath, "utf8"));
+    const b = j?.mesh?.glassProbeBudgetMs;
+    if (typeof b === "number" && Number.isFinite(b) && b > 0) return b;
+  } catch {
+    /* */
+  }
+  return 0;
+}
 
 function getNested(obj, dotted) {
   return dotted.split(".").reduce((o, k) => (o && o[k] !== undefined ? o[k] : undefined), obj);
@@ -63,7 +88,11 @@ function shiftState() {
   return { state, last, logFile };
 }
 
-async function probeOne(row) {
+/**
+ * @param {object} row
+ * @param {number} glassBudgetMs
+ */
+async function probeOne(row, glassBudgetMs) {
   const start = Date.now();
   let http = 0;
   let level = "down";
@@ -131,13 +160,17 @@ async function probeOne(row) {
     err = e instanceof Error ? e.message : String(e);
     level = "down";
   }
+  const ms = Date.now() - start;
+  const slow = glassBudgetMs > 0 && ms > glassBudgetMs;
   return {
     ...row,
     http,
-    ms: Date.now() - start,
+    ms,
     level,
     err: err || undefined,
     bodySnippet: bodySnippet || undefined,
+    slow: slow || undefined,
+    budgetMs: glassBudgetMs > 0 ? glassBudgetMs : undefined,
   };
 }
 
@@ -199,9 +232,10 @@ async function main() {
     process.exit(1);
   }
 
+  const glassBudgetMs = loadGlassProbeBudgetMs();
   const results = [];
   for (const p of probes) {
-    results.push(await probeOne(p));
+    results.push(await probeOne(p, glassBudgetMs));
   }
 
   const shift = shiftState();
@@ -230,7 +264,9 @@ async function main() {
     console.log(`Operator shift: \x1b[1m${shift.state}\x1b[0m  (log: ${shift.logFile})`);
     console.log(`Report file: ${reportPath}\n`);
     const w = (s, n) => String(s).slice(0, n).padEnd(n);
-    console.log(`${w("LEVEL", 6)} ${w("HTTP", 5)} ${w("MS", 5)} ${w("GROUP", 14)} ${w("ID", 24)} URL`);
+    console.log(
+      `${w("LEVEL", 6)} ${w("HTTP", 5)} ${w("MS", 6)} ${w("GROUP", 14)} ${w("ID", 24)} URL`
+    );
     for (const r of results) {
       const col =
         r.level === "up"
@@ -240,8 +276,18 @@ async function main() {
             : r.level === "warn"
               ? "\x1b[35m"
               : "\x1b[31m";
-      const line = `${col}${w(r.level.toUpperCase(), 6)}\x1b[0m ${w(r.http || "-", 5)} ${w(r.ms, 5)} ${w(r.group, 14)} ${w(r.id, 24)} ${r.url}`;
-      console.log(line + (r.err ? ` \x1b[90m— ${r.err}\x1b[0m` : ""));
+      const rawMs = r.slow ? `${r.ms}*` : String(r.ms);
+      const msCell = r.slow
+        ? `\x1b[33m${w(rawMs, 6)}\x1b[0m`
+        : w(rawMs, 6);
+      const line = `${col}${w(r.level.toUpperCase(), 6)}\x1b[0m ${w(r.http || "-", 5)} ${msCell} ${w(r.group, 14)} ${w(r.id, 24)} ${r.url}`;
+      const slowTag = r.slow ? " \x1b[33m[slow]\x1b[0m" : "";
+      console.log(line + (r.err ? ` \x1b[90m— ${r.err}\x1b[0m` : "") + slowTag);
+    }
+    if (glassBudgetMs) {
+      console.log(
+        `\n\x1b[90mLatency budget: ${glassBudgetMs}ms (p31-facts or P31_GLASS_BUDGET_MS) — * / [slow] = exceeded\x1b[0m`
+      );
     }
     if (skipped.length) {
       console.log(`\n\x1b[90mSkipped (skipIfEmpty — ${skipped.length}):\x1b[0m`);
@@ -266,6 +312,11 @@ async function main() {
   const hardFailures = results.filter((r) => r.level === "down");
   if (strict && hardFailures.length) {
     console.error("ecosystem-glass: P31_GLASS_STRICT=1 and some probes are down");
+    process.exit(1);
+  }
+  const anySlow = results.some((r) => r.slow);
+  if (budgetStrict && anySlow) {
+    console.error("ecosystem-glass: P31_GLASS_BUDGET_STRICT=1 and some probes exceeded the glass latency budget");
     process.exit(1);
   }
   process.exit(0);

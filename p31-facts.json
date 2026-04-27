@@ -31,6 +31,11 @@
     "packages/p31-mesh/package.json",
     "scripts/verify-facts.mjs"
   ],
+  "mesh": {
+    "k4PersonalProbeBudgetMs": 20000,
+    "glassProbeBudgetMs": 15000,
+    "note": "k4Personal: verify-mesh-live SLO. glass: per-probe row ms in ecosystem-glass; P31_GLASS_BUDGET_MS overrides. P31_GLASS_BUDGET_STRICT=1 fails if any row over budget"
+  },
   "forbiddenSubstringsInFiles": [
     {
       "note": "Policy files must not embed credential env assignments (see docs/AGENTIC-VIBE-INFRASTRUCTURE.md).",

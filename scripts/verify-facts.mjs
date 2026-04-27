@@ -118,13 +118,30 @@ function main() {
     die("mesh.passkeyApiBasePath must be a same-origin path starting with /", 1);
   }
 
+  const bud = data.mesh?.k4PersonalProbeBudgetMs;
+  if (bud != null) {
+    if (typeof bud !== "number" || !Number.isFinite(bud) || bud < 1000 || bud > 300_000) {
+      die("p31-facts: mesh.k4PersonalProbeBudgetMs must be a number 1000..300000 (ms)", 1);
+    }
+  }
+  const gb = data.mesh?.glassProbeBudgetMs;
+  if (gb != null) {
+    if (typeof gb !== "number" || !Number.isFinite(gb) || gb < 1000 || gb > 300_000) {
+      die("p31-facts: mesh.glassProbeBudgetMs must be a number 1000..300000 (ms)", 1);
+    }
+  }
+
   const nOrg = (data.constants.organization?.requiredStringPaths || []).length;
+  const meshNote =
+    bud != null || gb != null
+      ? `, mesh budget${bud != null ? ` k4=${bud}ms` : ""}${gb != null ? ` glass=${gb}ms` : ""}`
+      : "";
   console.log(
     "verify-facts: OK —",
     (data.pathsMustExist || []).length,
     "paths,",
     (data.constants.requiredStringPaths || []).length,
-    "required constant paths" + (nOrg ? `, ${nOrg} org fields` : "") + ", https mesh worker URLs"
+    "required constant paths" + (nOrg ? `, ${nOrg} org fields` : "") + ", https mesh worker URLs" + meshNote
   );
   process.exit(0);
 }

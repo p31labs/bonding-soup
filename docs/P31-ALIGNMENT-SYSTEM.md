@@ -42,6 +42,8 @@
 | Hub `registry.mjs` + `hub-app-ids.mjs` | `hub-landing.json` | p31ca `hub:build` / postinstall | p31ca `prebuild` hub verify (`scripts/hub/verify.mjs`) |
 | `p31-constants.json` (`mesh` / `payment` URLs) | `p31-live-fleet.json` | Edit live-fleet to mirror operator-locked URLs | `npm run verify:ecosystem` |
 | `docs/doc-index.manifest.json` + allowlisted `.md` | `docs/doc-library/index.json` | `npm run build:doc-index` | `npm run verify:doc-index` (runs after `build:doc-index` in root `verify`); headless e2e `npm run test:doc-library:e2e` in `p31:all` unless `--skip-e2e` |
+| `docs/physics-learn/index.html` + `docs/physics-learn/physics-engine.js` | (hand-maintained static) | — | headless e2e `npm run test:physics-learn:e2e` in `p31:all` unless `--skip-e2e`; `P31_PHYSICS_LEARN_E2E=1` in `validate:full` for scorecard line |
+| `andromeda/04_SOFTWARE/p31ca/public/k4market.html` | (hand-maintained static) | — | smoke `npm run test:k4market:smoke` (Playwright; needs `andromeda/`); `P31_K4MARKET_SMOKE=1` in `validate:full`; on-page disclaimer `#k4market-disclaimer` |
 | `p31ca/security/worker-allowlist.json` | In-repo `wrangler.toml` set + `build/security-inventory.json` | Add allowlist row when adding a Worker; align `p31-constants` / live-fleet if new mesh URL | p31ca `npm run security:workers` (in `security:check`) |
 
 ## Cloudflare Workers (alignment)

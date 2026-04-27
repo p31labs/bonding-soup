@@ -2,10 +2,12 @@
 /**
  * Optional live probe: k4-personal /api/health + /api/mesh vs p31-constants.json mesh.k4PersonalWorkerUrl.
  * Default: exit 0 even on failure (informational). Set MESH_LIVE_STRICT=1 to fail CI on drift.
+ * Implementation: @p31/mesh (packages/p31-mesh).
  */
-import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveK4PersonalBaseUrl } from "@p31/mesh/config";
+import { runK4PersonalMeshProbe } from "@p31/mesh/probe";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -19,52 +21,28 @@ function bail(code, msg) {
   process.exit(code);
 }
 
-const constantsPath = path.join(root, "p31-constants.json");
-if (!fs.existsSync(constantsPath)) {
-  bail(0, "skip (no p31-constants.json)");
+const resolved = resolveK4PersonalBaseUrl(root);
+if (resolved.skipReason) {
+  const reason =
+    resolved.skipReason === "no p31-constants.json"
+      ? "skip (no p31-constants.json)"
+      : resolved.skipReason === "no mesh.k4PersonalWorkerUrl"
+        ? "skip (no mesh.k4PersonalWorkerUrl)"
+        : `skip (${resolved.skipReason})`;
+  bail(0, reason);
 }
 
-const c = JSON.parse(fs.readFileSync(constantsPath, "utf8"));
-const base = c.mesh?.k4PersonalWorkerUrl;
-if (!base) {
-  bail(0, "skip (no mesh.k4PersonalWorkerUrl)");
-}
-
-async function get(suffix) {
-  const u = new URL(suffix, base);
-  const r = await fetch(u, { method: "GET" });
-  const text = await r.text();
-  let json;
-  try {
-    json = JSON.parse(text);
-  } catch {
-    json = null;
-  }
-  return { r, text, json };
-}
+const base = /** @type {string} */ (resolved.baseUrl);
 
 async function main() {
-  const health = await get("/api/health");
-  if (health.r.status !== 200) {
-    const msg = `GET /api/health → HTTP ${health.r.status} (deploy: pnpm --filter k4-personal deploy from andromeda/04_SOFTWARE)`;
-    if (strict) bail(1, msg);
-    bail(0, msg + " [non-strict: exit 0]");
+  const result = await runK4PersonalMeshProbe({ baseUrl: base });
+  if (result.ok) {
+    console.log("verify-mesh-live: OK", base);
+    process.exit(0);
   }
-  if (health.json?.service !== "k4-personal" || health.json?.scope !== "personal") {
-    const msg = `GET /api/health body unexpected: ${String(health.text).slice(0, 200)}`;
-    if (strict) bail(1, msg);
-    bail(0, msg + " [non-strict: exit 0]");
-  }
-
-  const mesh = await get("/api/mesh");
-  if (mesh.r.status !== 200) {
-    const msg = `GET /api/mesh → HTTP ${mesh.r.status}`;
-    if (strict) bail(1, msg);
-    bail(0, msg + " [non-strict: exit 0]");
-  }
-
-  console.log("verify-mesh-live: OK", base);
-  process.exit(0);
+  const primary = result.errors[0] || "probe failed";
+  if (strict) bail(1, primary);
+  bail(0, primary + " [non-strict: exit 0]");
 }
 
 main().catch((e) => {

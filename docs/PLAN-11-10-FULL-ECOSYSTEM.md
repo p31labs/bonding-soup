@@ -178,7 +178,8 @@ Tracks **A–B** are **foundational** (everything else assumes them). **C–H** 
 - [ ] If merge: run **`--strict-mvp`** in CI when ready; fix duplicates and dead registry ids.  
 - [ ] Update **hub about** / generated copy so grant-facing text matches registry.
 
-**Exit:** `diff-index-sources` **clean** or **waived** with ADR-style note in **`docs/`** (short).
+**Exit:** `diff-index-sources` **clean** or **waived** with ADR-style note in **`docs/`** (short).  
+**Policy (2026-04-27):** dual-track **waived** in **`docs/ADR-ECO-MVPDATA-COCKPIT-DUAL-TRACK.md`** (COCKPIT/registry authoritative; `mvpData` legacy until ECO merge); **`p31-alignment.json`** registers the ADR and derivation.
 
 **Depends on:** Phase 1 (hub build uses generated data).
 

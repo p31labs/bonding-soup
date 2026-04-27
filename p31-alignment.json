@@ -9,6 +9,11 @@
       "role": "Operator-locked numbers, mission snippet, ground-truth version/schema pins, mesh URLs"
     },
     {
+      "id": "p31-facts",
+      "path": "p31-facts.json",
+      "role": "p31.facts/1.0.0 — machine-verified paths/keys; npm run verify:facts (mesh URLs, @p31/mesh, policy-file substring guard)"
+    },
+    {
       "id": "p31-universal-canon",
       "path": "andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json",
       "role": "Colors, type scale, motion, focus — hub/org appearances",
@@ -29,6 +34,11 @@
       "id": "soup-entry",
       "path": "soup.html",
       "role": "BONDING Soup browser entry; bonding deploy copy via sync"
+    },
+    {
+      "id": "poets-room-lobby",
+      "path": "poets-room.html",
+      "role": "Poets room — lobby for writing, doc library, mesh dialogue, geodesic, narrative links; hub card pending p31ca registry"
     },
     {
       "id": "p31-hub-card-ecosystem",
@@ -53,6 +63,11 @@
       "role": "Sites + mesh/payment snapshot; `sources[]` and mesh URLs must match `p31-constants.json` and worker-allowlist names"
     },
     {
+      "id": "p31-mesh-sdk",
+      "path": "packages/p31-mesh/package.json",
+      "role": "@p31/mesh — mesh fleet probe (personal+cage+hubs), agent client, `src/browser.mjs` (no fs); `scripts/verify-mesh-live.mjs`, `p31-mesh` / `p31 mesh` CLI"
+    },
+    {
       "id": "p31ca-worker-allowlist",
       "path": "andromeda/04_SOFTWARE/p31ca/security/worker-allowlist.json",
       "role": "p31.workerAllowlist/1.0.0 — named Workers + paths; inventory compares to all `wrangler.toml` under andromeda/04_SOFTWARE",
@@ -67,9 +82,43 @@
       "id": "doc-index-manifest",
       "path": "docs/doc-index.manifest.json",
       "role": "Allowlist of markdown roots for docs/doc-library search index (p31.docIndexManifest/1.0.0)"
+    },
+    {
+      "id": "physics-learn-shell",
+      "path": "docs/physics-learn/index.html",
+      "role": "Progressive physics labs static shell; paired with physics-learn-engine"
+    },
+    {
+      "id": "physics-learn-engine",
+      "path": "docs/physics-learn/physics-engine.js",
+      "role": "Gated units, canvas labs, localStorage p31.physicsLearn.v1; headless e2e test:physics-learn:e2e"
+    },
+    {
+      "id": "p31-labs-education-site-plan",
+      "path": "docs/PLAN-P31-LABS-EDUCATION-SITE.md",
+      "role": "Education program: progressive stack, security mapping, phases; E0 shell at p31ca /education/ + ground-truth routes.p31LabsEducation"
+    },
+    {
+      "id": "adr-eco-mvpdata-cockpit",
+      "path": "docs/ADR-ECO-MVPDATA-COCKPIT-DUAL-TRACK.md",
+      "role": "Product index policy: COCKPIT/registry is authoritative for hub grid; legacy mvpData dual-track until ECO merge; pairs with diff-index-sources"
+    },
+    {
+      "id": "p31-oqe-twenty-lexicon",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/p31-oqe-twenty.json",
+      "role": "p31.oqeTwenty/1.0.0 — forensic 20-face contradiction slots; oqe-icosa.html; not Fate 20",
+      "optional": true
     }
   ],
   "derivations": [
+    {
+      "id": "p31-facts-registry",
+      "from": ["p31-facts.json", "p31-constants.json", ".cursorrules", "CLAUDE.md"],
+      "to": ["(verify only)"],
+      "apply": "edit p31-facts.json when adding externally cited file/path/key claims",
+      "verify": "npm run verify:facts",
+      "note": "Declarative invariants: required paths, mesh + org keys, https worker URLs, no credential-like substrings in policy files"
+    },
     {
       "id": "constants-to-ground-truth-numbering",
       "from": ["p31-constants.json"],
@@ -155,7 +204,80 @@
       ],
       "apply": "npm run build:doc-index",
       "verify": "npm run verify:doc-index (after build:doc-index in root verify; Node uses npm minisearch, browser uses vendor UMD + worker). Browser e2e: npm run test:doc-library:e2e; also run in p31:all unless --skip-e2e",
-      "note": "index.json is generated; UI/worker/vendor are hand-maintained. Schema p31.docLibrary/1.0.0; p31ca public mirror = Phase 3 (PLAN-DOCUMENT-LIBRARY.md)"
+      "note": "index.json is generated; UI/worker/vendor are hand-maintained. Schema p31.docLibrary/1.0.0. Hub: npm run sync:doc-library:p31ca → p31ca public/doc-library/ (ground-truth docLibraryHub, redirect /doc-library)"
+    },
+    {
+      "id": "doc-library-index-to-p31ca-public",
+      "from": [
+        "docs/doc-library/index.html",
+        "docs/doc-library/index.json",
+        "docs/doc-index.manifest.json"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/doc-library/index.html",
+        "andromeda/04_SOFTWARE/p31ca/public/doc-library/index.json"
+      ],
+      "apply": "npm run sync:doc-library:p31ca (invokes build:doc-index; requires andromeda tree)",
+      "verify": "p31ca npm run verify:ground-truth (fileSnippets docLibrary.hubMirror, edgeRedirect /doc-library)",
+      "note": "PLAN-DOCUMENT-LIBRARY.md Phase 3; optional partial clone without p31ca"
+    },
+    {
+      "id": "physics-learn-local-labs",
+      "from": ["docs/physics-learn/index.html", "docs/physics-learn/physics-engine.js"],
+      "to": ["docs/physics-learn/index.html", "docs/physics-learn/physics-engine.js"],
+      "apply": "Edit hand-maintained static assets (no build step; optional p31-constants.json fetch for Larmor)",
+      "verify": "npm run test:physics-learn:e2e; also in p31:all unless --skip-e2e; P31_PHYSICS_LEARN_E2E=1 in validate:full for scorecard",
+      "note": "Sister surface to doc-library: local-only progressive physics; P31-ROOT-MAP + AGENTS.md"
+    },
+    {
+      "id": "registry-cockpit-vs-legacy-mvpdata",
+      "from": [
+        "docs/ADR-ECO-MVPDATA-COCKPIT-DUAL-TRACK.md",
+        "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs",
+        "andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/src/data/hub-landing.json",
+        "andromeda/04_SOFTWARE/p31ca/public/legacy-mvp-hub.html"
+      ],
+      "apply": "New hub cards: registry + hub-app-ids + hub:build; do not add products only to mvpData (see ADR). Optional: diff-index-sources --strict-mvp when cleaning legacy.",
+      "verify": "p31ca prebuild: scripts/hub/diff-index-sources.mjs (warnings expected until merge)",
+      "note": "Exit: align mvpData to registry or remove dual-track per ADR"
+    },
+    {
+      "id": "dome-constants-to-quantum-clock",
+      "from": [
+        "andromeda/04_SOFTWARE/p31ca/src/lib/dome/p31-dome-constants.ts"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/src/lib/quantum-clock/index.ts",
+        "andromeda/04_SOFTWARE/p31ca/public/tomography.html"
+      ],
+      "apply": "Barrel in quantum-clock; static tomography must declare `const TRIM_HZ_MIN` matching `TRIM_HZ_MIN` in dome-constants",
+      "verify": "npm run verify:quantum-clock (invoked from verify-p31ca-contracts when p31ca present)",
+      "note": "PLAN: docs/PLAN-QUANTUM-CLOCK.md; landing + dome: Cuckoo + Grandfather (global.css --p31-grandfather-phase, event p31:quantum-clock)"
+    },
+    {
+      "id": "education-e0-p31ca-shell",
+      "from": ["docs/PLAN-P31-LABS-EDUCATION-SITE.md", "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"],
+      "to": ["andromeda/04_SOFTWARE/p31ca/public/education/index.html", "andromeda/04_SOFTWARE/p31ca/public/_redirects"],
+      "apply": "Hand-curated E0: page schema p31.labsEducation/0.1.0; _redirects + ground-truth edgeRedirects 1:1; hub: `id` education in registry.mjs + hub-app-ids.mjs + education-about.html from generate-about-pages",
+      "verify": "from p31ca: npm run verify:ground-truth (fileSnippets p31Labs.educationE0)",
+      "note": "optional: partial clone without andromeda — skip; education live URLs https://p31ca.org/education/ short /learn /edu"
+    },
+    {
+      "id": "oqe-lexicon-to-icosa-and-dome",
+      "from": [
+        "andromeda/04_SOFTWARE/p31ca/public/p31-oqe-twenty.json",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/oqe-icosa.html",
+        "andromeda/04_SOFTWARE/p31ca/src/scripts/dome-cockpit.ts"
+      ],
+      "apply": "OQE copy only in p31-oqe-twenty.json; oqe-icosa.html fetches; Dome vertex `oqe-icosa` + /oqe short URL in ground-truth + _redirects",
+      "verify": "from p31ca: npm run verify:oqe-icosa (includes dome-cockpit OQE node check)",
+      "note": "Forensic p31.oqeTwenty vs assistive p31.fateTwenty — never merge public JSON"
     }
   ],
   "verifyPipeline": {
@@ -163,6 +285,7 @@
     "prelude": "verify:alignment",
     "preludeNote": "Fast guard (verify-alignment.mjs): JSON + required sources. Not re-run inside `npm run verify:alignment -- --verify`.",
     "scripts": [
+      "verify:facts",
       "verify:passport",
       "verify:constants",
       "verify:ecosystem",

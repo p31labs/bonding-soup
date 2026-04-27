@@ -4,8 +4,8 @@
  *  1. `p31-ci.mjs` with MESH_LIVE_STRICT=1 + `--security` (root verify, k4-personal + mesh, p31ca build, security B+C+E)
  *  2. `validate-p31-full.sh` — scorecard + extended audits (report under /tmp/p31_validation_report.json)
  *  3. p31ca `fleet:probe` — soft (non-fatal; matches p31-ci.yml fleet step)
- *  3b. `ecosystem-glass.mjs` — soft; live GETs in p31-ecosystem.json, writes /tmp/p31_glass_report.json
- *  4. Playwright E2E — (a) home **`npm run test:doc-library:e2e`** (static `http.server` + `docs/doc-library/`);
+ *  3b. `ecosystem-glass.mjs` — soft; live GETs in p31-ecosystem.json; report includes `skipped[]` for `skipIfEmpty`; writes /tmp/p31_glass_report.json
+ *  4. Playwright E2E — (a) home **`npm run test:doc-library:e2e`** + **`npm run test:physics-learn:e2e`** + **`npm run test:k4market:smoke`**;
  *     (b) p31ca if `playwright.config.ts` exists. Subprocess sets **CI=true**; p31ca uses `astro preview` so preview
  *     is not a stale 127.0.0.1:4321 from a prior run. Both respect **`--skip-e2e`**.
  *  5. p31ca `security:lint` — soft (script uses || true)
@@ -110,11 +110,25 @@ function main() {
     const homeE2e = fs.existsSync(path.join(root, "scripts", "doc-library-e2e.mjs"));
     const p31caE2e = hasP31ca && fs.existsSync(path.join(p31ca, "playwright.config.ts"));
     if (homeE2e) {
-      run("Playwright install (chromium) — home doc library", "npx playwright install --with-deps chromium", { cwd: root });
+      run("Playwright install (chromium) — home static e2e", "npx playwright install --with-deps chromium", { cwd: root });
       run("Doc library E2E (static server + /docs/doc-library/)", "npm run test:doc-library:e2e", {
         cwd: root,
         env: { ...process.env, CI: "true" },
       });
+      const physE2e = fs.existsSync(path.join(root, "scripts", "physics-learn-e2e.mjs"));
+      if (physE2e) {
+        run("Physics learn E2E (static server + /docs/physics-learn/)", "npm run test:physics-learn:e2e", {
+          cwd: root,
+          env: { ...process.env, CI: "true" },
+        });
+      }
+      const k4Smoke = fs.existsSync(path.join(root, "scripts", "k4market-smoke.mjs"));
+      if (k4Smoke) {
+        run("K4 market smoke (static server + p31ca k4market.html)", "npm run test:k4market:smoke", {
+          cwd: root,
+          env: { ...process.env, CI: "true" },
+        });
+      }
     }
     if (p31caE2e) {
       run("Playwright install (chromium) — p31ca (test:e2e:install)", "npm run test:e2e:install", { cwd: p31ca });
@@ -151,7 +165,7 @@ function main() {
 
   if (!skipEcosystemGlass) {
     run(
-      "Ecosystem glass box (live probes + /tmp/p31_glass_report.json)",
+      "Ecosystem glass box (live probes + skipped[] + /tmp/p31_glass_report.json)",
       "node scripts/ecosystem-glass.mjs",
       { soft: true }
     );

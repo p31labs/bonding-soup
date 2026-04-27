@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>P31 — Poets room (lobby)</title>
+  <meta name="description" content="Poetry, prose, narrative, and visual making — one lobby linking Cognitive Passport, doc library, mesh agent, geodesic, and hub stories." />
+  <link rel="stylesheet" href="cognitive-passport/p31-style.css" />
+  <style>
+    :root {
+      --po-panel: rgba(18, 18, 28, 0.92);
+      --po-border: rgba(90, 200, 190, 0.22);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, "Atkinson Hyperlegible", sans-serif;
+      background: radial-gradient(1200px 800px at 20% -10%, #1a2840 0%, #0a0a12 55%);
+      color: #e8e8f0;
+      line-height: 1.55;
+    }
+    a { color: #5eead4; text-underline-offset: 3px; }
+    a:hover { color: #a5b4fc; }
+    .wrap { max-width: 44rem; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
+    header {
+      border-bottom: 1px solid var(--po-border);
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.45rem;
+      font-weight: 650;
+      letter-spacing: -0.03em;
+    }
+    header .lede {
+      margin: 0.5rem 0 0;
+      color: #9ca3c4;
+      font-size: 0.95rem;
+      max-width: 40rem;
+    }
+    .aaso {
+      margin: 0.85rem 0 0;
+      font-size: 0.82rem;
+      color: #7c7c9a;
+    }
+    .aaso em { color: #a5b4fc; }
+    section {
+      background: var(--po-panel);
+      border: 1px solid var(--po-border);
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1rem;
+    }
+    section h2 {
+      margin: 0 0 0.5rem;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #8b8ba8;
+      font-weight: 600;
+    }
+    section p { margin: 0 0 0.65rem; font-size: 0.92rem; }
+    section p:last-child { margin-bottom: 0; }
+    ul.links {
+      margin: 0;
+      padding-left: 1.1rem;
+      font-size: 0.9rem;
+    }
+    ul.links li { margin: 0.35rem 0; }
+    .note {
+      font-size: 0.8rem;
+      color: #9ca3c4;
+      border-left: 3px solid rgba(165, 180, 252, 0.45);
+      padding-left: 0.75rem;
+      margin-top: 0.75rem;
+    }
+    code { font-size: 0.85em; background: #12121c; padding: 0.1em 0.35em; border-radius: 4px; }
+    footer {
+      margin-top: 2rem;
+      font-size: 0.82rem;
+      color: #6b6b88;
+    }
+    footer a { margin-right: 0.75rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Poets room</h1>
+      <p class="lede">
+        A single lobby for <strong>writing</strong>, <strong>reading</strong>, <strong>dialogue</strong>, and <strong>visual making</strong>
+        across the P31 home tree and the public hub. Nothing here uploads your work — open each tool on purpose.
+      </p>
+      <p class="aaso"><em>As above, so below:</em> same rhythm as
+        <a href="soup.html">BONDING Soup</a>,
+        <a href="docs/doc-library/index.html">doc library</a>,
+        <a href="docs/physics-learn/index.html">physics learn</a>,
+        <a href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (with <code>andromeda/</code>), and
+        <a href="p31-personal-howto.html">interactive how-to</a>.
+        <span title="love" aria-hidden="true">&#9829;</span>
+        <span title="&lt;3" aria-label="less than three">&lt;3</span>
+      </p>
+    </header>
+
+    <main>
+      <section aria-labelledby="sec-write">
+        <h2 id="sec-write">Write</h2>
+        <p>Structured slice and machine-readable passport JSON — advocacy and self-description, not a medical record.</p>
+        <ul class="links">
+          <li><a href="cognitive-passport/index.html">Cognitive Passport generator</a> (local)</li>
+          <li><a href="https://p31ca.org/passport" rel="noopener">Cognitive Passport</a> (hub)</li>
+          <li>Long-form edition: <code>P31 COGNITIVE PASSPORT — v5.md</code> (repo root)</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="sec-read">
+        <h2 id="sec-read">Read &amp; search</h2>
+        <p>Full-text search over home <code>docs/*.md</code> — maps, specs, handoffs.</p>
+        <ul class="links">
+          <li><a href="docs/doc-library/index.html">Document library</a> (run <code>npm run build:doc-index</code> after edits)</li>
+          <li><a href="docs/physics-learn/index.html">Progressive physics learn</a> (local units + labs)</li>
+          <li><a href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (hub static: live klines on a K₄ — needs <code>andromeda/</code>; <a href="https://p31ca.org/k4market.html" rel="noopener">live</a> · pairs with <a href="https://p31ca.org/tomography.html" rel="noopener">tomography</a>)</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="sec-dialogue">
+        <h2 id="sec-dialogue">Dialogue workshop</h2>
+        <p>Personal agent chat (isolated Durable Object). Optional <strong>SOULSAFE</strong> fusion includes a <strong>creation</strong> lane — useful for revision and expansion, not a substitute for human editors.</p>
+        <ul class="links">
+          <li><a href="https://p31ca.org/mesh-start.html" rel="noopener">Mesh start</a> · <a href="https://p31ca.org/start" rel="noopener">/start</a></li>
+          <li><a href="docs/SOULSAFE-TETRA-SPEC.md">SOULSAFE tetra spec</a> (local doc)</li>
+          <li><a href="docs/PLAN-KIDS-VIBE-CODING.md">Kids / teens vibe coding</a> — privacy boundaries for minors</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="sec-visual">
+        <h2 id="sec-visual">Visual studio</h2>
+        <p>Three.js geodesic builder — spatial “drawing” and optional live room.</p>
+        <ul class="links">
+          <li><a href="https://p31ca.org/geodesic.html" rel="noopener">Geodesic coach + builder</a></li>
+          <li>Live room: append <code>?room=your-id</code> (see <a href="docs/GEODESIC-CAMPAIGN.md">GEODESIC campaign</a>)</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="sec-story">
+        <h2 id="sec-story">Story &amp; narrative frame</h2>
+        <ul class="links">
+          <li><strong>Create &amp; connect</strong> — <a href="https://p31ca.org/build" rel="noopener">p31ca.org/build</a> (intake) · <a href="https://p31ca.org/connect.html" rel="noopener">connect</a> (K₄ cage); local: <a href="andromeda/04_SOFTWARE/p31ca/public/initial-build.html">initial-build</a> · <a href="andromeda/04_SOFTWARE/p31ca/public/connect.html">connect.html</a></li>
+          <li><a href="https://p31ca.org/delta.html" rel="noopener">Delta</a> — Wye→Delta resilience narrative</li>
+          <li><a href="https://p31ca.org/planetary-onboard.html?welcome=kid&amp;a=child" rel="noopener">Planetary onboard</a> (child archetype)</li>
+          <li>Picture book track: <a href="docs/MVP-DELIVERABLES-INVENTORY.md">MVP deliverables</a> (Tier 3)</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="sec-ship">
+        <h2 id="sec-ship">Ship on p31ca.org</h2>
+        <p>This page lives in the <strong>home</strong> repo first. To add a hub card, about page, and clean URL, follow the checklist in <a href="docs/P31-HUB-CARD-ECOSYSTEM.md"><code>docs/P31-HUB-CARD-ECOSYSTEM.md</code></a> (section <em>Poets room</em>).</p>
+        <p class="note">Requires an <code>andromeda/</code> checkout: <code>registry.mjs</code>, <code>hub-app-ids.mjs</code>, <code>public/poets.html</code> (or equivalent), ground-truth + <code>_redirects</code> if you add a short path.</p>
+      </section>
+    </main>
+
+    <footer>
+      <a href="soup.html">Soup</a>
+      <a href="http://127.0.0.1:3131/" title="npm run command-center">Command center</a>
+      <a href="docs/doc-library/index.html">Document library</a>
+      <a href="docs/physics-learn/index.html">Physics learn</a>
+      <a href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a>
+    </footer>
+  </div>
+</body>
+</html>

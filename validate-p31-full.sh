@@ -74,6 +74,14 @@ else
   add_check "Local" "Passport_p31ca_Mirror" "FAIL" "Run: npm run sync:passport (from P31 workspace root)"
 fi
 
+# ---- p31.facts invariants (paths, mesh keys, org, policy files) — same as npm run verify:facts
+echo "=== Local: p31-facts registry ==="
+if node "$SCRIPT_DIR/scripts/verify-facts.mjs"; then
+  add_check "Local" "P31_Facts_Registry" "PASS" "p31.facts/1.0.0: paths, mesh + org keys, https workers, no toxic substrings in policy files"
+else
+  add_check "Local" "P31_Facts_Registry" "FAIL" "Run: npm run verify:facts — see p31-facts.json"
+fi
+
 # ---- Local: p31-constants vs ground-truth + synergetic manifest ----
 echo "=== Local: Constants + synergetic contracts ==="
 if node "$SCRIPT_DIR/scripts/verify-constants.mjs"; then
@@ -127,6 +135,26 @@ if [[ "${P31_DOC_LIBRARY_E2E:-}" = "1" ]]; then
     add_check "Local" "Doc_Library_E2E" "PASS" "headless Chromium: worker search returns list hits (mesh)"
   else
     add_check "Local" "Doc_Library_E2E" "FAIL" "npm i; npx playwright install chromium; npm run test:doc-library:e2e"
+  fi
+fi
+
+# ---- Optional: physics learn Playwright (set P31_PHYSICS_LEARN_E2E=1) ----
+if [[ "${P31_PHYSICS_LEARN_E2E:-}" = "1" ]]; then
+  echo "=== Local: physics learn e2e (Playwright) ==="
+  if node "$SCRIPT_DIR/scripts/physics-learn-e2e.mjs"; then
+    add_check "Local" "Physics_Learn_E2E" "PASS" "headless Chromium: first unit lab + check + XP"
+  else
+    add_check "Local" "Physics_Learn_E2E" "FAIL" "npm i; npx playwright install chromium; npm run test:physics-learn:e2e"
+  fi
+fi
+
+# ---- Optional: K4 market smoke (set P31_K4MARKET_SMOKE=1; needs andromeda/.../k4market.html) ----
+if [[ "${P31_K4MARKET_SMOKE:-}" = "1" ]]; then
+  echo "=== Local: k4market smoke (Playwright) ==="
+  if [ -f "$SCRIPT_DIR/scripts/k4market-smoke.mjs" ] && node "$SCRIPT_DIR/scripts/k4market-smoke.mjs"; then
+    add_check "Local" "K4_Market_Smoke" "PASS" "headless Chromium: k4market disclaimer + canvas"
+  else
+    add_check "Local" "K4_Market_Smoke" "FAIL" "npx playwright install chromium; test:k4market:smoke; if launch hangs, see P31_K4MARKET_SMOKE_LAUNCH_TIMEOUT_MS / _SKIP_ON_LAUNCH_FAIL=1 in scripts/k4market-smoke.mjs"
   fi
 fi
 

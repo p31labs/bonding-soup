@@ -24,4 +24,16 @@
 2. **Remove a surface:** remove id from both files, delete is not needed if you re-run `generate-about-pages` after shrink (or delete orphan `*-about.html` manually).
 3. **`related[]`:** must only reference ids that exist in `registry.mjs` (enforced by existing hub verify loop).
 
+## Poets room (`poets`)
+
+**Home tree (BONDING Soup repo):** `poets-room.html` — static lobby linking Cognitive Passport, doc library, mesh-start, geodesic, delta, and normative docs (SOULSAFE, geodesic campaign, MVP picture-book row).
+
+**Andromeda / p31ca (same change set when the monorepo is checked out):**
+
+1. Add `public/poets.html` — copy or adapt from home `poets-room.html` (keep hub absolute URLs; drop redundant “ship” section if the page is already on p31ca).
+2. `scripts/hub/registry.mjs` — new row `id: "poets"`, `appUrl: "/poets.html"` (or `/poets` if served via clean path), title/description aligned with the lobby.
+3. `scripts/hub/hub-app-ids.mjs` — include `poets` in `HUB_ALL_CARD_ORDER` (cockpit or prototypes).
+4. `ground-truth/p31.ground-truth.json` + `public/_redirects` — optional short path `/poets` → `poets.html` if you want parity with other short URLs.
+5. `npm run hub:build` → `node scripts/generate-about-pages.mjs` → `npm run hub:verify` (or full `hub:ci`).
+
 **Version:** 1.0.0 (2026)

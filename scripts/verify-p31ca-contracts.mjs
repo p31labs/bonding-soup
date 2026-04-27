@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Runs p31ca verify:ground-truth + economy + super-centaur + synergetic + lattice-oracle when the tree exists.
+ * Runs p31ca verify:ground-truth + economy + super-centaur + synergetic + lattice-oracle + verify-quantum-clock when the tree exists.
  * Skips on partial clone (no andromeda). Does not run astro build. Economy verifier enforces p31.creatorEconomy/1.0.0 fee invariants.
  */
 import { execSync } from "node:child_process";
@@ -26,4 +26,9 @@ run("npm run verify:economy");
 run("npm run verify:super-centaur-pack");
 run("npm run verify:synergetic");
 run("npm run verify:lattice-oracle");
+run("npm run verify:oqe-icosa");
+execSync(`node ${JSON.stringify(path.join(root, "scripts", "verify-quantum-clock.mjs"))}`, {
+  cwd: root,
+  stdio: "inherit",
+});
 console.log("verify-p31ca-contracts: OK");

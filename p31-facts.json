@@ -1,0 +1,41 @@
+{
+  "schema": "p31.facts/1.0.0",
+  "description": "Machine-verified invariants for this workspace. Extend when documenting externally verifiable claims; run npm run verify:facts.",
+  "constants": {
+    "path": "p31-constants.json",
+    "requiredStringPaths": [
+      "mesh.k4PersonalWorkerUrl",
+      "mesh.k4CageWorkerUrl",
+      "mesh.k4HubsWorkerUrl",
+      "mesh.agentHubWorkerUrl",
+      "mesh.orchestratorWorkerUrl",
+      "mesh.passkeyApiBasePath"
+    ],
+    "pathsMustBeHttps": [
+      "mesh.k4PersonalWorkerUrl",
+      "mesh.k4CageWorkerUrl",
+      "mesh.k4HubsWorkerUrl",
+      "mesh.agentHubWorkerUrl",
+      "mesh.orchestratorWorkerUrl"
+    ],
+    "organization": {
+      "requiredStringPaths": ["ein", "legalName"]
+    }
+  },
+  "pathsMustExist": [
+    "p31-alignment.json",
+    "p31-facts.json",
+    "p31-constants.json",
+    "AGENTS.md",
+    "package.json",
+    "packages/p31-mesh/package.json",
+    "scripts/verify-facts.mjs"
+  ],
+  "forbiddenSubstringsInFiles": [
+    {
+      "note": "Policy files must not embed credential env assignments (see docs/AGENTIC-VIBE-INFRASTRUCTURE.md).",
+      "paths": [".cursorrules", "CLAUDE.md"],
+      "substrings": ["NEO4J_PASSWORD=", "NEO4J_AUTH=", "OPENAI_API_KEY=sk-"]
+    }
+  ]
+}

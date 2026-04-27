@@ -4,8 +4,8 @@
  * Data path:  `index.json` (schema `p31.docLibrary/1.0.0`, built at repo root)
  * Search path: main thread debounces input → `doc-search-worker.js` (MiniSearch)
  *              → `results` with term lists for snippet highlighting
- * Markup:     with an active query, row 0 → `hit--prime`; each row shows a `--p` bar =
- *              MiniSearch score / max score in the current list (not an absolute 0–1).
+ * Markup:     with a query, rows 0–2 → `hit--prime` (left accent + badge). Each row has a
+ *              `role="progressbar"` relevance track: score / max score in the current list.
  * Motion:     `--stagger` capped via `maxStaggerIndex` so 100+ hits don’t queue heavy CSS.
  */
 (function () {
@@ -273,7 +273,7 @@
     for (const t of uniq) {
       const i = low.indexOf(t);
       if (i !== -1) {
-        start = Math.max(0, i - 80);
+        start = Math.max(0, i - 100);
         break;
       }
     }
@@ -340,14 +340,21 @@
         ? makeSnippetBody(d.text || "", tlist, q)
         : { html: esc(d.preview || ""), plain: 1 };
       const rank = i + 1;
-      const isPrime = Boolean(q && i === 0);
+      const isPrime = Boolean(q && i < 3);
       const rel =
         maxScore > 0 && hm && typeof hm.score === "number"
           ? Math.min(1, Math.max(0, hm.score / maxScore))
           : 0;
+      const relPct = Math.round(rel * 100);
       const relv =
         q && maxScore > 0
-          ? '<div class="hit-relv" title="Relevance within this result set (MiniSearch score ÷ top hit)"><div class="hit-relv__track" aria-hidden="true"><div class="hit-relv__fill" style="--p:' +
+          ? '<div class="hit-relv" title="Relative score in this result set (higher = stronger match)">' +
+            '<div class="hit-relv__track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' +
+            relPct +
+            '" aria-label="Match strength in this list: ' +
+            relPct +
+            ' percent of the top result">' +
+            '<div class="hit-relv__fill" style="--p:' +
             rel.toFixed(6) +
             '"></div></div></div>'
           : "";
@@ -365,7 +372,7 @@
         rank +
         "</span>" +
         "<article class=\"hit-inner\">" +
-        "<a class=\"title\" href=\"" +
+        "<a class=\"title display-font\" href=\"" +
         esc(href) +
         '" title="Open: ' +
         esc(d.title).replace(/"/g, "&quot;") +

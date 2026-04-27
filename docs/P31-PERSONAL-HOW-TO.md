@@ -35,11 +35,14 @@ You are not juggling twenty products—you are juggling **three layers**:
 | **MAP only (donate-api + donate page + secret scan)** | `npm run verify:map-pipeline` | Part of default `verify`; use alone for a quick Andromeda-only check. |
 | **Mesh (k4-personal bundle + live API)** | `npm run verify:mesh` | Dry-run + optional live `MESH_LIVE_STRICT`. |
 | **Clickable local buttons (hooks, verify, mesh, glass, PR)** | `npm run command-center` | Opens **http://127.0.0.1:3131** — **`verify`**, **`verify:mesh`**, **`ecosystem:glass`**, **`operator:shift-status`**, monetary/MAP, **`release:public`**, git/PR (keep terminal open; Ctrl+C stops). |
+| **Terminal CLI (boot, doctor, verify, CI, command-center)** | `npm run p31 -- <cmd>` | **`boot`**, **`doctor`**, **`verify`**, **`ci`** (`p31:ci`), **`cc`** / **`command-center`**. Global: **`npm link`** → **`p31`**. TTY art off: **`P31_CLI_MINIMAL=1`**. |
 | **Install git hooks (home)** | `npm run git:hooks` | `core.hooksPath=.githooks` (monetary pre-commit, optional auto-push). |
 | **PR + auto-merge (low friction)** | `npm run pr` at home **or** `pnpm pr` **inside** `andromeda/` | See `AGENTS.md` for `fix:gh` / credentials. |
 | **Remotes (origin + andromeda)** | `npm run git:remotes` | Uses `p31-github.json` when present. |
-| **Search home docs (full-text)** | `npm run demo` → **http://127.0.0.1:8080/docs/doc-library/** | After editing `docs/*.md`: `npm run build:doc-index` (or rely on `npm run verify`). **Headless browser check:** `npm run test:doc-library:e2e` (first machine: `npx playwright install chromium`); also runs in **`npm run p31:all`** unless `--skip-e2e`. |
-| **Soup + passport in browser** | `npm run demo` → **`soup.html`**, **`cognitive-passport/index.html`** | Port **8080** default. |
+| **Search home docs (full-text)** | `npm run demo` → **http://127.0.0.1:8080/docs/doc-library/** (or **`…/index.html`**) | After editing `docs/*.md`: `npm run build:doc-index` (or rely on `npm run verify`). Optional **`?q=mesh`**. In the page: `/` focus, `↓` / `↑` between results, try chips — same as **`p31-personal-howto.html`** (table) and **`soup.html`** (dev link title). **Headless check:** `npm run test:doc-library:e2e` (first: `npx playwright install chromium`); also in **`npm run p31:all`** unless `--skip-e2e`. **Command center** (3131) links the library + a sample `?q=mesh`. |
+| **Progressive physics learn (static)** | `npm run demo` → **http://127.0.0.1:8080/docs/physics-learn/** | **Headless:** `npm run test:physics-learn:e2e` (same Chromium as doc-library e2e); **`p31:all`**; optional **`P31_PHYSICS_LEARN_E2E=1`** with **`validate:full`**. **Command center** (3131) whitelists this script. |
+| **K4 market (p31ca static, Andromeda)** | `npm run demo` → **http://127.0.0.1:8080/andromeda/04_SOFTWARE/p31ca/public/k4market.html** | Live Binance public data in-page; **static disclaimer** `#k4market-disclaimer`. **Smoke:** `npm run test:k4market:smoke`; **`p31:all`**; optional **`P31_K4MARKET_SMOKE=1`** + **`validate:full`**. **Command center:** `home-test-k4market-smoke`. |
+| **Soup + passport in browser** | `npm run demo` → **`soup.html`**, **`cognitive-passport/index.html`**, doc library | Port **8080** default. **`soup.html`** dev row links the document library and repeats the refresh + shortcut story in the link title. |
 
 ---
 

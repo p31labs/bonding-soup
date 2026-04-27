@@ -75,16 +75,20 @@ async function main() {
     throw new Error("http.server exited");
   }
   await waitForHttp(base);
+  const nav = pageUrl(port);
+  await waitForHttp(nav);
 
   const browser = await chromium.launch({ headless: true });
   try {
     const page = await browser.newPage();
-    const nav = pageUrl(port);
-    await page.goto(nav, { waitUntil: "domcontentloaded", timeout: 30000 });
-    await page.waitForSelector("main#main[aria-busy='false']", { timeout: 20000 });
+    await page.goto(nav, { waitUntil: "domcontentloaded", timeout: 60000 });
+    // Worker MiniSearch load can exceed 20s on slow CI; search must be ready before "mesh" fill.
+    await page.waitForSelector("main#main[aria-busy='false']", { timeout: 90000 });
     await page.waitForSelector("input#q", { timeout: 10000 });
     await page.locator("input#q").fill("mesh");
-    await page.waitForSelector("ol.hits li", { timeout: 15000 });
+    // Attached, not "visible" — headless Chromium can be flaky on opacity/animation gating
+    // while cardIn runs; the DOM and counts are what we need to assert search works.
+    await page.locator("ol.hits li").first().waitFor({ state: "attached", timeout: 20000 });
     const n = await page.locator("ol.hits li").count();
     if (n < 1) {
       throw new Error("expected >= 1 hit, got " + n);

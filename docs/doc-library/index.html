@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-p31-appearance="hub">
+<html lang="en" data-p31-appearance="hub" data-p31-doclib="1.2.0">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -109,6 +109,9 @@
     @keyframes orbSpin {
       to { transform: rotate(360deg); }
     }
+    @media (prefers-reduced-data: reduce) {
+      body.lib-ready .bg-orb { animation: none !important; opacity: 0.22; }
+    }
     .bg-mesh--grid {
       position: absolute;
       inset: 0;
@@ -189,6 +192,7 @@
       font-weight: 700;
       letter-spacing: -0.02em;
       line-height: 1.15;
+      text-wrap: balance;
     }
     h1 .word-mark {
       background: linear-gradient(120deg, var(--p31-cloud, #d8d6d0) 0%, var(--p31-cyan, #4db8a8) 42%, var(--p31-butter, #cda852) 100%);
@@ -526,6 +530,7 @@
       margin: 0 0 var(--p31-space-3);
       line-height: 1.5;
       font-variant-numeric: tabular-nums;
+      min-height: 2.75rem;
     }
     .meta-line strong { color: var(--p31-cloud, #d8d6d0); font-weight: 600; }
     .meta-hint { font-size: 0.75rem; color: var(--p31-muted, #6b7280); margin: 0 0 var(--p31-space-4); max-width: 32rem; line-height: 1.45; }
@@ -554,6 +559,7 @@
       margin-bottom: var(--p31-space-3);
       overflow: hidden;
       box-shadow: 0 1px 0 rgba(255,255,255,0.03);
+      contain: layout;
     }
     @media (prefers-reduced-motion: no-preference) {
       .hits .hit {
@@ -565,9 +571,6 @@
     @keyframes cardIn {
       from { opacity: 0; transform: translateY(10px) scale(0.992); }
       to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    .hit {
-      --hit-accent: color-mix(in srgb, var(--p31-cyan, #4db8a8) 55%, var(--p31-butter, #cda852) 45%);
     }
     .hit::before {
       content: "";
@@ -622,7 +625,12 @@
     @supports not (border-color: color-mix(in srgb, red, blue)) {
       .hit:hover, .hit:focus-within { border-color: var(--p31-cyan, #4db8a8); }
     }
-    .hit .title { font-size: var(--p31-text-md); font-weight: 600; line-height: var(--p31-leading-snug, 1.4); }
+    .hit .title {
+      font-size: var(--p31-text-md);
+      font-weight: 600;
+      line-height: var(--p31-leading-snug, 1.4);
+      letter-spacing: -0.015em;
+    }
     .hit .path {
       font-family: var(--p31-font-mono, ui-monospace, monospace);
       font-size: 0.68rem;
@@ -647,6 +655,7 @@
       top: 0;
       bottom: 0;
       width: max(0%, min(100%, calc(var(--p) * 100%)));
+      min-width: 0;
       border-radius: 2px;
       background: linear-gradient(90deg, color-mix(in srgb, var(--p31-cyan) 80%, var(--p31-void)) 0%, var(--p31-butter, #cda852) 100%);
     }
@@ -693,6 +702,14 @@
     @supports (background: color-mix(in srgb, red, blue)) {
       mark.hi { background: color-mix(in srgb, var(--p31-butter) 30%, var(--p31-surface2)); }
     }
+    @media (prefers-contrast: more) {
+      body { color: #eceae4; }
+      .tagline { color: #a8aeb8; }
+      .meta-line, .meta-hint, .kbd-hint, .foot { color: #8d94a0; }
+      .hero-ribbon { border-color: rgba(255, 255, 255, 0.22); }
+      .hits .hit { border-color: rgba(255, 255, 255, 0.16); }
+      #q { border-color: rgba(255, 255, 255, 0.18); }
+    }
     .foot {
       margin-top: var(--p31-space-10);
       padding-top: var(--p31-space-4);
@@ -730,11 +747,19 @@
       <p class="tagline">Your maps, standards, and handbooks — in one quiet view. Stays in this tab until you open a file.</p>
       <p class="comfort-line" id="comfort-line" role="status" aria-live="polite" hidden></p>
       <p class="lede">From the repo root: <code>npm run demo</code> then <code>…/docs/doc-library/</code>. Refresh the index: <code>npm run build:doc-index</code>.</p>
-      <p class="lede lede-below" style="margin-top:0.4rem;opacity:0.92"><em>As above, so below:</em> the same <code>demo</code> / <code>build:doc-index</code> path is one click from BONDING Soup, the interactive how-to, and the local command center — your prose in the tree, a full-text read in the tab, nothing leaves your machine until you open a file.</p>
+      <p class="lede lede-below" style="margin-top:0.4rem;opacity:0.92"><em>As above, so below:</em> the same <code>demo</code> / <code>build:doc-index</code> path is one click from BONDING Soup, <a href="../physics-learn/index.html">physics learn</a>, <a href="../../andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (with <code>andromeda/</code>), <a href="../../poets-room.html">Poets room</a>, the interactive how-to, and the local command center — your prose in the tree, a full-text read in the tab, nothing leaves your machine until you open a file.</p>
       <ul class="quick" aria-label="Quick links">
         <li><a href="../../P31-ROOT-MAP.md">P31-ROOT-MAP</a></li>
         <li><a href="../../AGENTS.md">AGENTS</a></li>
         <li><a href="../../soup.html">BONDING Soup</a></li>
+        <li><a href="../../poets-room.html">Poets room</a></li>
+        <li>
+          <a href="../../andromeda/04_SOFTWARE/p31ca/public/initial-build.html" title="Initial build intake (CWP) — same as p31ca.org/build">Create</a>
+          <span class="hero-pipe" style="margin:0 0.25em;opacity:0.45" aria-hidden="true">·</span>
+          <a href="../../andromeda/04_SOFTWARE/p31ca/public/connect.html" title="K₄ cage navigator with product satellites">Connect</a>
+          <span class="hero-pipe" style="margin:0 0.25em;opacity:0.45" aria-hidden="true">·</span>
+          <a href="../../andromeda/04_SOFTWARE/p31ca/public/k4market.html" title="OHLCV on a K₄ — public Binance klines">K4 market</a>
+        </li>
         <li><a href="../../docs/P31-PERSONAL-HOW-TO.md">How-to (MD)</a></li>
         <li><a href="../../p31-personal-howto.html">How-to (UI)</a></li>
       </ul>
@@ -745,6 +770,7 @@
           <button type="button" class="chip" data-try="K4" title="Cage / K₄">K4</button>
           <button type="button" class="chip" data-try="verify" title="verify pipeline">verify</button>
           <button type="button" class="chip" data-try="passport" title="Cognitive passport">passport</button>
+          <button type="button" class="chip" data-try="poets" title="Poets room doc">poets</button>
           <button type="button" class="chip" data-try="alignment" title="P31 alignment">alignment</button>
         </div>
       </div>
@@ -758,6 +784,9 @@
             name="q"
             placeholder="One word: mesh, verify, passport… or tap a chip for a nudge"
             autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            inputmode="search"
             enterkeyhint="search"
             spellcheck="false"
             aria-describedby="kbd-hint"
@@ -771,8 +800,4 @@
       <p class="meta-line" id="meta" aria-live="polite">Loading your index…</p>
       <p class="meta-hint" id="meta-hint" hidden>The address line keeps your query so you can bookmark it or paste it to a teammate. <kbd>Enter</kbd> saves a step in your browser’s Back stack.</p>
       <div id="results" class="results" role="region" aria-label="Document hits" aria-describedby="meta"></div>
-      <p class="foot" id="foot-hint" hidden>End of the list — same library, two altitudes. Tweak a word or tap a chip; there is no wrong path.</p>
-    </main>
-  </div>
-</body>
-</html>
+      <p class="foot" id="foot-hint" hidden>End of the list — same library, two altitudes. Tweak a word or tap a chip; t

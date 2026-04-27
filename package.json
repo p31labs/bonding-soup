@@ -3,7 +3,12 @@
   "version": "0.1.0",
   "description": "BONDING Soup molecular physics engine",
   "main": "dist/soup.js",
+  "bin": {
+    "p31": "scripts/cli/index.mjs"
+  },
   "scripts": {
+    "p31": "node scripts/cli/index.mjs",
+    "p31:open": "node scripts/cli/index.mjs open",
     "setup": "node scripts/setup.mjs",
     "git:hooks": "node scripts/git-hooks-config.mjs",
     "git:autopush": "node scripts/git-autopush.mjs",
@@ -21,8 +26,11 @@
     "sync:soup-bonding": "node scripts/sync-soup-to-bonding.mjs",
     "test:mock-ws": "node scripts/bonding-mock-ws-probe.mjs",
     "test:doc-library:e2e": "node scripts/doc-library-e2e.mjs",
+    "test:physics-learn:e2e": "node scripts/physics-learn-e2e.mjs",
+    "test:k4market:smoke": "node scripts/k4market-smoke.mjs",
     "demo": "python3 -m http.server 8080",
     "build:doc-index": "node scripts/build-doc-index.mjs",
+    "sync:doc-library:p31ca": "node scripts/sync-doc-library-p31ca.mjs",
     "verify:doc-index": "node scripts/verify-doc-index.mjs",
     "docs:prep": "npm run build:doc-index",
     "dev": "tsc --watch",
@@ -42,11 +50,16 @@
     "verify:monetary": "node scripts/verify-monetary.mjs",
     "verify:map-pipeline": "node scripts/verify-map-pipeline.mjs",
     "verify:k4-personal": "node scripts/verify-k4-personal.mjs",
+    "p31-mesh": "node packages/p31-mesh/src/cli.mjs",
     "verify:mesh-live": "node scripts/verify-mesh-live.mjs",
     "verify:mesh": "node scripts/verify-mesh.mjs",
     "verify:egg-hunt": "node scripts/verify-egg-hunt.mjs",
+    "verify:quantum-clock": "node scripts/verify-quantum-clock.mjs",
     "verify:quantum-egg": "node scripts/verify-egg-hunt.mjs",
     "verify:alignment": "node scripts/verify-alignment.mjs",
+    "verify:facts": "node scripts/verify-facts.mjs",
+    "verify:p31-mesh": "npm test --prefix packages/p31-mesh",
+    "verify:command-center": "vitest run --config vitest.config.mjs && node scripts/command-center/server-smoke.mjs && P31_CLI_MINIMAL=1 node scripts/cli/index.mjs --version && npm run verify:p31-mesh",
     "verify:ecosystem": "node scripts/verify-ecosystem.mjs",
     "ecosystem:glass": "node scripts/ecosystem-glass.mjs",
     "ecosystem:plan": "node scripts/ecosystem-deploy.mjs plan",
@@ -55,7 +68,7 @@
     "operator:shift-in": "node scripts/operator-shift.mjs in",
     "operator:shift-out": "node scripts/operator-shift.mjs out",
     "operator:shift-status": "node scripts/operator-shift.mjs status",
-    "verify": "npm run verify:alignment && npm run verify:passport && npm run verify:constants && npm run verify:ecosystem && npm run verify:map-pipeline && npm run verify:p31-style && npm run verify:p31ca-contracts && npm run verify:egg-hunt && npm run build:doc-index && npm run verify:doc-index && npm run build",
+    "verify": "npm run verify:alignment && npm run verify:facts && npm run verify:passport && npm run verify:constants && npm run verify:ecosystem && npm run verify:map-pipeline && npm run verify:p31-style && npm run verify:command-center && npm run verify:p31ca-contracts && npm run verify:egg-hunt && npm run build:doc-index && npm run verify:doc-index && npm run build",
     "validate:full": "bash validate-p31-full.sh",
     "verify:all": "node scripts/p31-ci.mjs",
     "p31:ci": "node scripts/p31-ci.mjs",
@@ -75,9 +88,11 @@
     "node": ">=20"
   },
   "devDependencies": {
+    "@p31/mesh": "file:./packages/p31-mesh",
     "minisearch": "^6.3.0",
     "playwright": "^1.49.0",
     "typescript": "^4.9.0",
+    "vitest": "^3.0.0",
     "ws": "^8.14.0"
   },
   "files": [

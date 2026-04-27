@@ -240,16 +240,17 @@ else
   add_check "P0-Mesh" "K4_Topology_DO" "FAIL" "K4 Topology DO not accessible (status=$rc)"
 fi
 
-# Get mesh data and validate serialization
-MESH_RESPONSE=$(curl -s "${CAGE_BASE}/api/mesh" 2>/dev/null || echo '{}')
-if python3 -c "import json,sys; d=json.loads('$MESH_RESPONSE'); sys.exit(0 if d.get('topology')=='K4' and d.get('vertices')==4 and d.get('edges')==6 else 1)" 2>/dev/null; then
+# Snapshot cage mesh JSON once (file — avoids bash quoting on signatures / emoji / pretty-print)
+MESH_SNAPSHOT="${TMPDIR:-/tmp}/p31_mesh_audit.json.$$"
+curl -sS "${CAGE_BASE}/api/mesh" -o "$MESH_SNAPSHOT" 2>/dev/null || echo '{}' >"$MESH_SNAPSHOT"
+if python3 -c "import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if d.get('topology')=='K4' and d.get('vertices')==4 and d.get('edges')==6 else 1)" "$MESH_SNAPSHOT" 2>/dev/null; then
   add_check "P0-Mesh" "K4_Serialization_RoundTrip" "PASS" "K4 graph serialization verified: 4 vertices, 6 edges"
 else
   add_check "P0-Mesh" "K4_Serialization_RoundTrip" "FAIL" "K4 graph serialization mismatch"
 fi
 
 # Edge love totals idempotency
-EDGE_HASH=$(python3 -c "import json; print(json.loads('$MESH_RESPONSE').get('totalLove', 0))" 2>/dev/null || echo "0")
+EDGE_HASH=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1])).get('totalLove', 0))" "$MESH_SNAPSHOT" 2>/dev/null || echo "0")
 if [[ "$EDGE_HASH" =~ ^[0-9]+$ ]]; then
   add_check "P0-Mesh" "Edge_Love_Idempotency" "PASS" "Edge love totals are idempotent: $EDGE_HASH"
 else
@@ -257,7 +258,7 @@ else
 fi
 
 # Routing protocol
-ROUTING_INFO=$(python3 -c "import json; print(json.loads('$MESH_RESPONSE').get('routing_protocol', 'custom_dsdv'))" 2>/dev/null || echo "custom_dsdv")
+ROUTING_INFO=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1])).get('routing_protocol', 'custom_dsdv'))" "$MESH_SNAPSHOT" 2>/dev/null || echo "custom_dsdv")
 add_check "P0-Mesh" "Routing_Protocol" "INFO" "Routing protocol: $ROUTING_INFO"
 
 # Node ID mapping
@@ -268,12 +269,26 @@ else
   add_check "P0-Mesh" "Node_ID_Mapping" "FAIL" "Node ID mapping verification failed"
 fi
 
-# qFactor computation
-if python3 -c "import json,sys; d=json.loads('$MESH_RESPONSE'); sys.exit(0 if (isinstance(d.get('qFactor'),(int,float)) or (isinstance(d.get('edges'),list) and len(d['edges'])>0 and isinstance(d['edges'][0].get('qFactor'),(int,float)))) else 1)" 2>/dev/null; then
+# qFactor — topology JSON carries normalized scalar (deploy k4-cage with qFactor + routing_protocol)
+if python3 -c "
+import json,sys
+d=json.load(open(sys.argv[1]))
+edges=d.get('edges')
+mesh=d.get('mesh') or {}
+meshedges=mesh.get('edges')
+ok = isinstance(d.get('qFactor'),(int,float))
+if not ok and isinstance(edges,list) and len(edges)>0:
+    ok=isinstance(edges[0].get('qFactor'),(int,float))
+if not ok and isinstance(meshedges,dict) and meshedges:
+    first=next(iter(meshedges.values()))
+    ok=isinstance(first.get('qFactor'),(int,float))
+sys.exit(0 if ok else 1)
+" "$MESH_SNAPSHOT" 2>/dev/null; then
   add_check "P0-Mesh" "Link_Quality_qFactor" "PASS" "qFactor computation present in telemetry"
 else
-  add_check "P0-Mesh" "Link_Quality_qFactor" "FAIL" "qFactor computation missing"
+  add_check "P0-Mesh" "Link_Quality_qFactor" "FAIL" "qFactor computation missing — deploy k4-cage (topology exposes qFactor on GET /api/mesh)"
 fi
+rm -f "$MESH_SNAPSHOT"
 
 # Durable Objects persistence
 do_status=$(curl -s -o /dev/null -w "%{http_code}" "${CAGE_BASE}/api/mesh" 2>/dev/null || echo "000")
@@ -283,15 +298,18 @@ else
   add_check "P0-Mesh" "Durable_Objects_Persistence" "FAIL" "Durable Objects not responding (status=$do_status)"
 fi
 
-# Ed25519/secp256k1 signatures
-if python3 -c "import json,sys; d=json.loads('$MESH_RESPONSE'); sys.exit(0 if d.get('signature') and isinstance(d['signature'],str) and len(d['signature'])>0 else 1)" 2>/dev/null; then
+# Ed25519/secp256k1 signatures (re-fetch — snapshot removed)
+SIG_TMP="${TMPDIR:-/tmp}/p31_mesh_sig.json.$$"
+curl -sS "${CAGE_BASE}/api/mesh" -o "$SIG_TMP" 2>/dev/null || echo '{}' >"$SIG_TMP"
+if python3 -c "import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if d.get('signature') and isinstance(d['signature'],str) and len(d['signature'])>0 else 1)" "$SIG_TMP" 2>/dev/null; then
   add_check "P0-Crypto" "Signature_Algorithms" "PASS" "Ed25519/secp256k1 signatures verified"
 else
   add_check "P0-Crypto" "Signature_Algorithms" "FAIL" "Signature verification failed"
 fi
 
 # Clock sync source
-CLOCK_SOURCE=$(python3 -c "import json; print(json.loads('$MESH_RESPONSE').get('clock_source', 'unknown'))" 2>/dev/null || echo "unknown")
+CLOCK_SOURCE=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1])).get('clock_source', 'unknown'))" "$SIG_TMP" 2>/dev/null || echo "unknown")
+rm -f "$SIG_TMP"
 add_check "P0-Clock" "Clock_Sync_Source" "INFO" "Clock source: $CLOCK_SOURCE"
 
 # Failure modes - link loss (body discarded — avoid JSON on stdout in report flow)
@@ -431,17 +449,15 @@ else
   add_check "P3-CrossDomain" "Mutual_Trust" "FAIL" "Cross-domain trust check failed (status=$trust_out)"
 fi
 
-# Telemetry federation
-tel_out=$(curl -s "${CAGE_BASE}/api/telemetry" 2>/dev/null || echo '{}')
-if python3 -c "import json,sys; d=json.loads('${tel_out:-{}'); sys.exit(0 if d.get('source') else 1)" 2>/dev/null; then
+# Telemetry federation (stdin JSON — avoids bash quoting bugs on pretty-printed bodies / payloads with quotes)
+if curl -sS "${CAGE_BASE}/api/telemetry" 2>/dev/null | python3 -c "import json,sys; d=json.load(sys.stdin); sys.exit(0 if d.get('source') else 1)" 2>/dev/null; then
   add_check "P3-CrossDomain" "Telemetry_Federation" "PASS" "Telemetry source verified"
 else
   add_check "P3-CrossDomain" "Telemetry_Federation" "FAIL" "Telemetry source not found"
 fi
 
-# CORS headers
-cors_out=$(curl -sI "${CAGE_BASE}/api/mesh" 2>/dev/null | grep -i "access-control\|coop\|cross-origin" || echo "none")
-if python3 -c "import sys; sys.exit(0 if 'access-control' in '$cors_out'.lower() or 'coop' in '$cors_out'.lower() else 1)" 2>/dev/null; then
+# CORS / COOP headers on mesh API (HEAD must be routed — k4-cage returns COOP + CORP + ACAO)
+if curl -sSI "${CAGE_BASE}/api/mesh" 2>/dev/null | python3 -c "import sys; h=sys.stdin.read().lower(); sys.exit(0 if ('access-control' in h or 'coop' in h or 'cross-origin' in h) else 1)" 2>/dev/null; then
   add_check "P3-CrossDomain" "CORS_COOP_Headers" "PASS" "CORS/COOP headers present"
 else
   add_check "P3-CrossDomain" "CORS_COOP_Headers" "FAIL" "CORS/COOP headers missing"

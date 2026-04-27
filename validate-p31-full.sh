@@ -112,6 +112,24 @@ else
   add_check "Local" "Quantum_Egg_Hunt" "FAIL" "Run: npm run verify:egg-hunt — see docs/EGG-HUNT.md"
 fi
 
+# ---- Local: document library index (markdown → docs/doc-library/index.json) ----
+echo "=== Local: doc library index ==="
+if node "$SCRIPT_DIR/scripts/build-doc-index.mjs" && node "$SCRIPT_DIR/scripts/verify-doc-index.mjs"; then
+  add_check "Local" "Doc_Library_Index" "PASS" "p31.docLibrary index + fingerprint (see docs/PLAN-DOCUMENT-LIBRARY.md)"
+else
+  add_check "Local" "Doc_Library_Index" "FAIL" "Run: npm run build:doc-index && npm run verify:doc-index"
+fi
+
+# ---- Optional: doc library Playwright (set P31_DOC_LIBRARY_E2E=1) ----
+if [[ "${P31_DOC_LIBRARY_E2E:-}" = "1" ]]; then
+  echo "=== Local: doc library e2e (Playwright) ==="
+  if node "$SCRIPT_DIR/scripts/doc-library-e2e.mjs"; then
+    add_check "Local" "Doc_Library_E2E" "PASS" "headless Chromium: worker search returns list hits (mesh)"
+  else
+    add_check "Local" "Doc_Library_E2E" "FAIL" "npm i; npx playwright install chromium; npm run test:doc-library:e2e"
+  fi
+fi
+
 # ---- Local: Lattice Oracle (magic-crystal / /oracle contract) ----
 echo "=== Local: Lattice Oracle ==="
 if [ -f "$SCRIPT_DIR/andromeda/04_SOFTWARE/p31ca/scripts/verify-lattice-oracle.mjs" ] && node "$SCRIPT_DIR/andromeda/04_SOFTWARE/p31ca/scripts/verify-lattice-oracle.mjs" 2>/dev/null; then

@@ -3,6 +3,7 @@
  * Single entry: edit andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json,
  * then run: npm run apply:p31-style
  * — regenerates p31ca/public CSS+JS from design-tokens/p31-universal-canon.json, syncs Tailwind CDN pages, mirrors CSS into cognitive-passport/.
+ * Alignment registry: p31-alignment.json; docs: docs/P31-ALIGNMENT-SYSTEM.md
  */
 import fs from "fs";
 import path from "path";

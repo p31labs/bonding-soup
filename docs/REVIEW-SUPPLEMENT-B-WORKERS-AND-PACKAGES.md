@@ -32,7 +32,7 @@ Paths are under `andromeda/04_SOFTWARE/` unless noted.
 | `spaceship-earth/`, `packages/quantum-edge/`, `packages/node-zero/pwa/` | As configured | Varies |
 | `unified-k4-cage/` | Alternate / unified k4 | Per docs |
 
-**`api.phosphorus31.org`:** logical payment API host — **implementation package** is whatever Worker the operator deployed for Stripe direct; **confirm** in monorepo and Cloudflare dashboard.
+**Stripe Checkout:** **`donate-api.phosphorus31.org`** (Worker `donate-api` in `04_SOFTWARE/donate-api`). A separate **`api.phosphorus31.org`** host is **not** fleet canon until DNS + Worker exist.
 
 **Fleet count (April 2026):** operator docs cite **~10** production Workers in the managed fleet; exact membership changes with deploys.
 
@@ -60,7 +60,7 @@ Paths are under `andromeda/04_SOFTWARE/` unless noted.
 | `INTERNAL_FANOUT_TOKEN` | k4-cage → room broadcast. |
 | `BOUNCER_GATE_TOKEN` | Bouncer. |
 | Service bindings | DO / Worker RPC on Cloudflare. |
-| Stripe keys | `donate-api`, `api.phosphorus31.org` patterns. |
+| Stripe keys | `donate-api` Worker; **`p31-constants.json`** `payment.*` matches donate-api host. |
 
 No **single** OAuth2 “P31 login” in-repo for all products; identity is **edge-native** (Access + secrets).
 

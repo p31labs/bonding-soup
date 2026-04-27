@@ -42,7 +42,31 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
-      "label": "P31: verify (passport + constants + p31ca contracts + tsc)",
+      "label": "P31: build doc index (markdown → docs/doc-library/index.json)",
+      "type": "shell",
+      "command": "npm run build:doc-index",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify doc index",
+      "type": "shell",
+      "command": "npm run verify:doc-index",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: doc library e2e (Playwright, headless)",
+      "type": "shell",
+      "command": "npm run test:doc-library:e2e",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify (full root ship bar incl. doc index + tsc)",
       "type": "shell",
       "command": "npm run verify",
       "options": { "cwd": "${workspaceFolder}" },
@@ -114,6 +138,14 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
+      "label": "P31: polish (apply:constants + sync live-fleet + release:local + security)",
+      "type": "shell",
+      "command": "npm run polish",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
       "label": "P31: validate full (local + live mesh audits)",
       "type": "shell",
       "command": "npm run validate:full",
@@ -128,6 +160,14 @@
       "options": { "cwd": "${workspaceFolder}" },
       "group": "test",
       "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: release:public (verify + strict mesh + hub:ci + security)",
+      "type": "shell",
+      "command": "npm run release:public",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "dedicated" }
     },
     {
       "label": "P31: release:all (strict mesh + hub + p31ca security suite)",

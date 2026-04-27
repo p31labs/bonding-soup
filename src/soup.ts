@@ -49,6 +49,27 @@ export interface Molecule {
   creationTime: number;
 }
 
+/** When set, WebSocket URL should include the same `room` + `name` query params the server reads (see README family play). */
+export interface NetworkPlayOptions {
+  room: string;
+  displayName: string;
+}
+
+/** Other people in the same room (from server heartbeats, mock or family). */
+export interface NetworkRosterEntry {
+  id: string;
+  displayName: string;
+}
+
+/** Mirrors README/parent copy to the live mock server (connectionInit.localRunbook). */
+export interface LocalRunbookFromServer {
+  echo: string;
+  port: number;
+  lines: string[];
+}
+
+const MOCK_ROOM = "mock";
+
 export class SoupEngine {
   private physics: SoupPhysics;
   private personalities: PersonalitiesEngine;
@@ -119,7 +140,20 @@ export class SoupEngine {
   public onMoleculeCreated?: (molecule: Molecule) => void;
   public onMoleculeDestroyed?: (moleculeId: string) => void;
 
-  constructor(config: PhysicsConfig = DEFAULT_SOUP_CONFIG, wsUrl: string = '') {
+  private networkPlay: NetworkPlayOptions | null = null;
+  private networkClientId: string = "";
+  /** When false, e.g. after dispose, socket close will not schedule reconnect. */
+  private allowReconnect: boolean = true;
+  private lastServerPeerCount: number = -1;
+  private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+  private networkRoster: NetworkRosterEntry[] = [];
+  private localRunbookFromServer: LocalRunbookFromServer | null = null;
+
+  constructor(
+    config: PhysicsConfig = DEFAULT_SOUP_CONFIG,
+    wsUrl: string = "",
+    networkPlay: NetworkPlayOptions | null = null
+  ) {
     this.physicsConfig = config;
     this.physics = new SoupPhysics(config);
     this.personalities = new PersonalitiesEngine();
@@ -127,13 +161,93 @@ export class SoupEngine {
     this.audio = new SoundtrackEngine();
     this.persistence = new PersistenceLayer();
 
-    this.wsUrl = wsUrl;
+    this.networkPlay = networkPlay;
+    this.wsUrl = networkPlay
+      ? SoupEngine.appendNetworkQuery(
+          wsUrl.trim() || "ws://127.0.0.1:8082",
+          networkPlay
+        )
+      : wsUrl;
     this.initializeZones();
-    
-    // Initialize WebSocket connection if URL provided
+
     if (this.wsUrl) {
       this.initializeWebSocket();
     }
+  }
+
+  /** When `room` is not the mock id, the server syncs `playerState` / full snapshots (see spikes/mock-ws-server). */
+  private isFamilyNetworkMode(): boolean {
+    return (
+      this.networkPlay !== null &&
+      this.networkPlay.room !== MOCK_ROOM
+    );
+  }
+
+  private static appendNetworkQuery(
+    base: string,
+    play: NetworkPlayOptions
+  ): string {
+    const b = base || "ws://127.0.0.1:8082";
+    try {
+      const u = new URL(b);
+      u.searchParams.set("room", play.room || MOCK_ROOM);
+      u.searchParams.set("name", play.displayName || "player");
+      return u.toString();
+    } catch {
+      return b;
+    }
+  }
+
+  private serializeMoleculesForNetwork(): Array<{
+    id: string;
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    element: string;
+    personality: string;
+  }> {
+    const out: Array<{
+      id: string;
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      element: string;
+      personality: string;
+    }> = [];
+    const cap = 400;
+    let sent = 0;
+    for (const mol of this.molecules.values()) {
+      if (sent++ >= cap) break;
+      const atoms = mol.atoms;
+      if (atoms.length === 0) continue;
+      let x = 0;
+      let y = 0;
+      let vx = 0;
+      let vy = 0;
+      const atomCount = atoms.length;
+      for (const a of atoms) {
+        x += a.x;
+        y += a.y;
+        vx += a.vx;
+        vy += a.vy;
+      }
+      x /= atomCount;
+      y /= atomCount;
+      vx /= atomCount;
+      vy /= atomCount;
+      out.push({
+        id: mol.id,
+        x,
+        y,
+        vx,
+        vy,
+        element: atoms[0]?.element || "O",
+        personality: mol.personality,
+      });
+    }
+    return out;
   }
 
   private dbg(...args: unknown[]): void {
@@ -148,50 +262,91 @@ export class SoupEngine {
     }
   }
 
+  private clearWebSocketInstance(): void {
+    if (!this.ws) {
+      this.isWsConnected = false;
+      return;
+    }
+    const s = this.ws;
+    s.onopen = null;
+    s.onmessage = null;
+    s.onerror = null;
+    s.onclose = null;
+    try {
+      s.close(1000, "cleared");
+    } catch {
+      /* ignore */
+    }
+    this.ws = null;
+    this.isWsConnected = false;
+  }
+
   /**
    * Initialize WebSocket connection for multiplayer synchronization
    */
   private initializeWebSocket(): void {
+    this.clearWebSocketInstance();
     try {
       this.ws = new WebSocket(this.wsUrl);
-      
+
       this.ws.onopen = () => {
         this.isWsConnected = true;
         this.wsReconnectAttempts = 0;
+        this.lastServerPeerCount = -1;
+        this.networkRoster = [];
+        this.localRunbookFromServer = null;
         this.wsLastHeartbeat = performance.now();
-        this.wsLastNetworkUpdate = performance.now();
-        this.dbg('WebSocket connected:', this.wsUrl);
-        
-        // Send initial state (in a real implementation, this would be more sophisticated)
+        this.wsLastNetworkUpdate =
+          performance.now() - this.wsNetworkUpdateInterval;
+        this.dbg("WebSocket connected:", this.wsUrl);
+        this.clearReconnectTimer();
         this.sendMoleculeStates();
       };
-      
+
       this.ws.onmessage = (event) => {
         this.handleWebSocketMessage(event.data);
       };
-      
+
       this.ws.onclose = () => {
         this.isWsConnected = false;
-        this.dbg('WebSocket disconnected, attempting to reconnect...');
-        this.scheduleReconnect();
+        this.localRunbookFromServer = null;
+        this.clearWebSocketInstance();
+        if (this.allowReconnect) {
+          this.dbg("WebSocket disconnected, attempting to reconnect…");
+          this.scheduleReconnect();
+        } else {
+          this.dbg("WebSocket closed (no reconnect).");
+        }
       };
-      
+
       this.ws.onerror = (error) => {
-        this.dbgw('WebSocket error:', error);
+        this.dbgw("WebSocket error:", error);
         this.isWsConnected = false;
-        // Don't schedule reconnect here - onclose will handle it
       };
     } catch (error) {
-      this.dbgw('Failed to create WebSocket:', error);
+      this.dbgw("Failed to create WebSocket:", error);
       this.isWsConnected = false;
-      this.scheduleReconnect();
+      if (this.allowReconnect) {
+        this.scheduleReconnect();
+      }
     }
   }
 
   /**
    * Schedule a reconnection attempt with exponential backoff
    */
+  private clearReconnectTimer(): void {
+    if (this.reconnectTimer != null) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
+    }
+  }
+
   private scheduleReconnect(): void {
+    this.clearReconnectTimer();
+    if (!this.allowReconnect) {
+      return;
+    }
     // Calculate delay with exponential backoff and jitter
     const baseDelay = Math.min(
       this.wsReconnectInterval * Math.pow(2, this.wsReconnectAttempts),
@@ -199,14 +354,18 @@ export class SoupEngine {
     );
     const jitter = Math.random() * 0.1 * baseDelay; // ±10% jitter
     const delay = baseDelay + jitter;
-    
+
     this.wsReconnectAttempts++;
-    
-    setTimeout(() => {
-      if (!this.isWsConnected && this.wsUrl) {
-        this.dbg(`Reconnecting to WebSocket (attempt ${this.wsReconnectAttempts})...`);
-        this.initializeWebSocket();
+
+    this.reconnectTimer = setTimeout(() => {
+      this.reconnectTimer = null;
+      if (this.isWsConnected || !this.wsUrl || !this.allowReconnect) {
+        return;
       }
+      this.dbg(
+        `Reconnecting to WebSocket (attempt ${this.wsReconnectAttempts})…`
+      );
+      this.initializeWebSocket();
     }, delay);
   }
 
@@ -228,11 +387,14 @@ export class SoupEngine {
         case 'eventLog':
           this.handleEventLog(message.data);
           break;
-        case 'connectionInit':
+        case "connectionInit":
           this.handleConnectionInit(message.data);
           break;
+        case "heartbeat":
+          this.applyServerHeartbeat(message);
+          break;
         default:
-          this.dbgw('Unknown WebSocket message type:', message.type);
+          this.dbgw("Unknown WebSocket message type:", message.type);
       }
     } catch (error) {
       this.dbgw('Failed to parse WebSocket message:', error, data);
@@ -242,39 +404,99 @@ export class SoupEngine {
   /**
    * Handle molecule state updates from other players
    */
-  private handleMoleculeStateUpdate(data: any): void {
-    if (!Array.isArray(data) && !data.molecules) return;
+  private static parseRosterArray(r: unknown): NetworkRosterEntry[] {
+    if (!Array.isArray(r)) {
+      return [];
+    }
+    return r
+      .map((e: unknown) => {
+        if (!e || typeof e !== "object") return null;
+        const o = e as { id?: unknown; displayName?: unknown };
+        const id = typeof o.id === "string" ? o.id.slice(0, 64) : "";
+        const displayName =
+          typeof o.displayName === "string"
+            ? o.displayName.slice(0, 32)
+            : "";
+        if (!id) return null;
+        return { id, displayName: displayName || "player" };
+      })
+      .filter((x): x is NetworkRosterEntry => x != null);
+  }
 
-    const molecules = Array.isArray(data) ? data : data.molecules;
+  private applyServerHeartbeat(message: {
+    clientCount?: number;
+    peerCount?: number;
+    roster?: unknown;
+  }): void {
+    const p = message?.peerCount;
+    if (typeof p === "number" && Number.isFinite(p) && p >= 0) {
+      this.lastServerPeerCount = p;
+    } else {
+      const c = message?.clientCount;
+      if (typeof c === "number" && Number.isFinite(c) && c >= 0) {
+        this.lastServerPeerCount = Math.max(0, c - 1);
+      }
+    }
+    if (message?.roster !== undefined) {
+      this.networkRoster = SoupEngine.parseRosterArray(message.roster);
+    }
+  }
+
+  private static clampNetworkNumber(v: unknown, fallback: number): number {
+    const n = typeof v === "number" ? v : parseFloat(String(v));
+    if (!Number.isFinite(n)) return fallback;
+    return n;
+  }
+
+  private handleMoleculeStateUpdate(data: any): void {
+    if (data == null) return;
+    if (!Array.isArray(data) && data.molecules === undefined && !data.fullSnapshot) {
+      return;
+    }
+
+    if (typeof data === "object" && !Array.isArray(data) && data.fullSnapshot) {
+      this.ghostMolecules.clear();
+    }
+
+    const molecules: any[] = Array.isArray(data) ? data : data.molecules ?? [];
+    const { width: wmax, height: hmax } = this.physics.getWorldSize();
 
     molecules.forEach((moleculeData: any) => {
-      const { id, x, y, vx, vy, personality, element } = moleculeData;
+      const { id, personality, element } = moleculeData;
+      if (id == null || String(id).length > 200) {
+        return;
+      }
+      const sid = String(id);
+      const x = SoupEngine.clampNetworkNumber(moleculeData.x, 0);
+      const y = SoupEngine.clampNetworkNumber(moleculeData.y, 0);
+      const cx = Math.max(0, Math.min(wmax, x));
+      const cy = Math.max(0, Math.min(hmax, y));
 
       // Get or create ghost molecule entry
-      let ghost = this.ghostMolecules.get(id);
+      let ghost = this.ghostMolecules.get(sid);
       if (!ghost) {
         ghost = {
-          networkX: x,
-          networkY: y,
-          lastNetworkX: x,
-          lastNetworkY: y,
-          interpolatedX: x,
-          interpolatedY: y,
+          networkX: cx,
+          networkY: cy,
+          lastNetworkX: cx,
+          lastNetworkY: cy,
+          interpolatedX: cx,
+          interpolatedY: cy,
           interpolationProgress: 0,
           isInterpolating: false,
           lastUpdate: performance.now(),
-          element: element || 'O',
-          personality: personality || 'mediator'
+          element: element || "O",
+          personality: personality || "mediator"
         };
-        this.ghostMolecules.set(id, ghost);
+        this.ghostMolecules.set(sid, ghost);
       } else {
         // Store last known position for interpolation
         ghost.lastNetworkX = ghost.interpolatedX;
         ghost.lastNetworkY = ghost.interpolatedY;
 
         // Update network target
-        ghost.networkX = x;
-        ghost.networkY = y;
+        ghost.networkX = cx;
+        ghost.networkY = cy;
         ghost.lastUpdate = performance.now();
         ghost.element = element || ghost.element;
         ghost.personality = personality || ghost.personality;
@@ -361,21 +583,56 @@ export class SoupEngine {
    * Handle initial connection state from server
    */
   private handleConnectionInit(data: any): void {
-    this.dbg('Received connection init from server:', data);
+    this.dbg("Received connection init from server:", data);
 
-    // Clear existing ghost molecules
+    if (data && typeof data.clientId === "string") {
+      this.networkClientId = data.clientId;
+    }
+
     this.ghostMolecules.clear();
 
-    // Initialize with server snapshot
-    if (data.molecules) {
-      this.handleMoleculeStateUpdate(data.molecules);
+    if (data.molecules && data.molecules.length > 0) {
+      this.handleMoleculeStateUpdate({
+        fullSnapshot: true,
+        molecules: data.molecules,
+      });
     }
 
     if (data.eventLog) {
       this.handleEventLog(data.eventLog);
     }
 
+    if (data && data.roster !== undefined) {
+      this.networkRoster = SoupEngine.parseRosterArray(data.roster);
+    }
+
+    this.localRunbookFromServer = SoupEngine.parseLocalRunbook(data?.localRunbook);
+
     this.dbg(`Initialized with ${this.ghostMolecules.size} ghost molecules`);
+  }
+
+  private static parseLocalRunbook(raw: unknown): LocalRunbookFromServer | null {
+    if (!raw || typeof raw !== "object") {
+      return null;
+    }
+    const o = raw as { echo?: unknown; port?: unknown; lines?: unknown };
+    const lines = Array.isArray(o.lines)
+      ? o.lines
+          .filter((x): x is string => typeof x === "string")
+          .map((s) => s.slice(0, 600))
+      : [];
+    if (lines.length === 0) {
+      return null;
+    }
+    return {
+      echo:
+        typeof o.echo === "string"
+          ? o.echo.slice(0, 64)
+          : "as-above-so-below",
+      port:
+        typeof o.port === "number" && Number.isFinite(o.port) ? o.port : 0,
+      lines,
+    };
   }
 
   /**
@@ -383,34 +640,53 @@ export class SoupEngine {
    * This would be called at 2Hz interval
    */
   private sendMoleculeStates(): void {
-    if (!this.isWsConnected || !this.ws || this.ws.readyState !== WebSocket.OPEN) {
+    if (
+      !this.isWsConnected ||
+      !this.ws ||
+      this.ws.readyState !== WebSocket.OPEN
+    ) {
       return;
     }
-    
-    // Throttle to 2Hz update rate
+
     const now = performance.now();
     if (now - this.wsLastNetworkUpdate < this.wsNetworkUpdateInterval) {
       return;
     }
-    
+
     this.wsLastNetworkUpdate = now;
-    
-    // In a full implementation, this would:
-    // 1. Collect current molecule states (position, velocity, etc.)
-    // 2. Compress/delta-compress the data
-    // 3. Send as WebSocket message
-    
-    // For now, we'll just send a heartbeat to keep connection alive
+    this.sendNetworkFrame(now);
+  }
+
+  private sendNetworkFrame(now: number): void {
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) return;
+
+    if (this.isFamilyNetworkMode()) {
+      const payload = {
+        type: "playerState" as const,
+        molecules: this.serializeMoleculesForNetwork(),
+        timestamp: now,
+      };
+      try {
+        this.ws.send(JSON.stringify(payload));
+      } catch (error) {
+        this.dbgw("Failed to send playerState:", error);
+        this.isWsConnected = false;
+        this.clearWebSocketInstance();
+        this.scheduleReconnect();
+      }
+      return;
+    }
+
     const heartbeat = {
-      type: 'heartbeat',
-      timestamp: now
+      type: "heartbeat" as const,
+      timestamp: now,
     };
-    
     try {
       this.ws.send(JSON.stringify(heartbeat));
     } catch (error) {
-      this.dbgw('Failed to send WebSocket message:', error);
+      this.dbgw("Failed to send WebSocket message:", error);
       this.isWsConnected = false;
+      this.clearWebSocketInstance();
       this.scheduleReconnect();
     }
   }
@@ -883,32 +1159,14 @@ export class SoupEngine {
      * Send our own molecule states to other players at 2Hz rate
      */
     private sendMoleculeStatesIfDue(currentTime: number): void {
-      // Throttle to 2Hz update rate
       if (currentTime - this.wsLastNetworkUpdate < this.wsNetworkUpdateInterval) {
         return;
       }
-      
+
       this.wsLastNetworkUpdate = currentTime;
-      
-      // In a full implementation, this would:
-      // 1. Collect current molecule states (position, velocity, etc.)
-      // 2. Compress/delta-compress the data
-      // 3. Send as WebSocket message
-      
-      // For now, we'll just send a heartbeat to keep connection alive
+
       if (this.isWsConnected && this.ws && this.ws.readyState === WebSocket.OPEN) {
-        const heartbeat = {
-          type: 'heartbeat',
-          timestamp: currentTime
-        };
-        
-        try {
-          this.ws.send(JSON.stringify(heartbeat));
-        } catch (error) {
-          this.dbgw('Failed to send WebSocket message:', error);
-          this.isWsConnected = false;
-          this.scheduleReconnect();
-        }
+        this.sendNetworkFrame(currentTime);
       }
     }
 
@@ -1451,11 +1709,30 @@ export class SoupEngine {
   /**
    * Get WebSocket connection status
    */
-  getConnectionStatus(): { connected: boolean; url: string; reconnectAttempts: number } {
+  getConnectionStatus(): {
+    connected: boolean;
+    url: string;
+    reconnectAttempts: number;
+    familyMode: boolean;
+    room: string;
+    displayName: string;
+    clientId: string;
+    roomPeers: number;
+    roster: NetworkRosterEntry[];
+    localRunbook: LocalRunbookFromServer | null;
+  } {
+    const play = this.networkPlay;
     return {
       connected: this.isWsConnected,
       url: this.wsUrl,
-      reconnectAttempts: this.wsReconnectAttempts
+      reconnectAttempts: this.wsReconnectAttempts,
+      familyMode: this.isFamilyNetworkMode(),
+      room: play?.room ?? "",
+      displayName: play?.displayName ?? "",
+      clientId: this.networkClientId,
+      roomPeers: this.lastServerPeerCount,
+      roster: this.networkRoster.slice(),
+      localRunbook: this.localRunbookFromServer,
     };
   }
 
@@ -1470,11 +1747,9 @@ export class SoupEngine {
    * Cleanup all resources
    */
   dispose() {
-    // Close WebSocket connection
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
-    }
+    this.allowReconnect = false;
+    this.clearReconnectTimer();
+    this.clearWebSocketInstance();
 
     this.audio.dispose();
     this.molecules.clear();
@@ -1483,5 +1758,6 @@ export class SoupEngine {
     this.outgoingPings = [];
     this.eventLog = [];
     this.reactions.clearHistory();
+    this.localRunbookFromServer = null;
   }
 }

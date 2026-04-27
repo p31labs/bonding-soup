@@ -11,12 +11,20 @@
     "git:autopush:off": "node scripts/git-autopush.mjs off",
     "git:autopush:status": "node scripts/git-autopush.mjs status",
     "git:remotes": "node scripts/git-ensure-remotes.mjs",
+    "doctor": "node scripts/p31-doctor.mjs",
+    "frictionless": "node scripts/p31-frictionless.mjs",
     "gh:pr:automerge": "node scripts/gh-pr-automerge.mjs",
     "pr": "node scripts/pr.mjs",
     "fix:gh": "node scripts/gh-setup-git.mjs",
     "command-center": "node scripts/p31-local-command-center.mjs",
     "build": "tsc",
+    "sync:soup-bonding": "node scripts/sync-soup-to-bonding.mjs",
+    "test:mock-ws": "node scripts/bonding-mock-ws-probe.mjs",
+    "test:doc-library:e2e": "node scripts/doc-library-e2e.mjs",
     "demo": "python3 -m http.server 8080",
+    "build:doc-index": "node scripts/build-doc-index.mjs",
+    "verify:doc-index": "node scripts/verify-doc-index.mjs",
+    "docs:prep": "npm run build:doc-index",
     "dev": "tsc --watch",
     "archive:dev": "npm run dev --prefix ./wcd33-global-archive",
     "archive:deploy": "npm run deploy --prefix ./wcd33-global-archive",
@@ -38,6 +46,7 @@
     "verify:mesh": "node scripts/verify-mesh.mjs",
     "verify:egg-hunt": "node scripts/verify-egg-hunt.mjs",
     "verify:quantum-egg": "node scripts/verify-egg-hunt.mjs",
+    "verify:alignment": "node scripts/verify-alignment.mjs",
     "verify:ecosystem": "node scripts/verify-ecosystem.mjs",
     "ecosystem:glass": "node scripts/ecosystem-glass.mjs",
     "ecosystem:plan": "node scripts/ecosystem-deploy.mjs plan",
@@ -46,7 +55,7 @@
     "operator:shift-in": "node scripts/operator-shift.mjs in",
     "operator:shift-out": "node scripts/operator-shift.mjs out",
     "operator:shift-status": "node scripts/operator-shift.mjs status",
-    "verify": "npm run verify:passport && npm run verify:constants && npm run verify:ecosystem && npm run verify:map-pipeline && npm run verify:p31-style && npm run verify:p31ca-contracts && npm run verify:egg-hunt && npm run build",
+    "verify": "npm run verify:alignment && npm run verify:passport && npm run verify:constants && npm run verify:ecosystem && npm run verify:map-pipeline && npm run verify:p31-style && npm run verify:p31ca-contracts && npm run verify:egg-hunt && npm run build:doc-index && npm run verify:doc-index && npm run build",
     "validate:full": "bash validate-p31-full.sh",
     "verify:all": "node scripts/p31-ci.mjs",
     "p31:ci": "node scripts/p31-ci.mjs",
@@ -55,6 +64,9 @@
     "p31:ci:content": "node scripts/p31-ci.mjs --content",
     "release:check": "node scripts/p31-ci.mjs",
     "release:all": "MESH_LIVE_STRICT=1 node scripts/p31-ci.mjs --security",
+    "release:local": "MESH_LIVE_STRICT=0 node scripts/p31-ci.mjs --security",
+    "polish": "node scripts/p31-polish.mjs",
+    "release:public": "node scripts/p31-release-public.mjs",
     "deploy:p31ca": "npm run deploy --prefix andromeda/04_SOFTWARE/p31ca",
     "inventory:cf": "node scripts/inventory-cf.mjs",
     "setup:andromeda": "cd andromeda/04_SOFTWARE && pnpm install"
@@ -63,12 +75,14 @@
     "node": ">=20"
   },
   "devDependencies": {
+    "minisearch": "^6.3.0",
+    "playwright": "^1.49.0",
     "typescript": "^4.9.0",
     "ws": "^8.14.0"
   },
   "files": [
     "dist/**/*",
     "src/**/*",
-    "soup-demo.html"
+    "soup.html"
   ]
 }

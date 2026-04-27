@@ -16,23 +16,23 @@
       "id": "SOUP-DBG-WS",
       "operator": "parametric-superposition",
       "vertex": 1,
-      "file": "soup-demo.html",
+      "file": "soup.html",
       "require": [
         "urlParams.get('ws')",
         "urlParams.has('debug')",
         "debug: isDebug"
       ],
-      "trigger": "URL phases ?debug, ?ws — BONDING demo prepared state."
+      "trigger": "URL phases ?debug, ?ws — BONDING Soup lab prepared state."
     },
     {
       "id": "SOUP-ARCHIVE",
       "operator": "parametric-superposition",
       "vertex": 1,
-      "file": "soup-demo.html",
+      "file": "soup.html",
       "require": [
         "BONDING_ARCHIVE_URL"
       ],
-      "trigger": "window.BONDING_ARCHIVE_URL (WCD-33) couples demo to the archive sector."
+      "trigger": "window.BONDING_ARCHIVE_URL (WCD-33) couples the lab to the archive sector."
     },
     {
       "id": "DOME",

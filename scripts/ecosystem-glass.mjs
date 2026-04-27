@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Glass box: live GET each probe in p31-ecosystem.json, expand {{mesh.*}} from p31-constants.json.
+ * Glass box: live fetch each probe in p31-ecosystem.json, expand {{mesh.*}} from p31-constants.json.
+ * Probes default to GET. Optional: skipIfEmpty — omit probe when expanded URL is empty or not http(s) (optional LAN URLs from p31-constants). method "POST", body, expectJsonKey as before.
  * Prints a table + writes /tmp/p31_glass_report.json (and optional --json stdout only).
  * Exit: 0 by default. P31_GLASS_STRICT=1 → exit 1 if any probe is "down" (not auth/warn).
  */
@@ -68,30 +69,63 @@ async function probeOne(row) {
   let level = "down";
   let err = "";
   let bodySnippet = "";
+  const method = String(row.method || "GET").toUpperCase();
   try {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), timeoutMs);
-    const r = await fetch(row.url, {
-      method: "GET",
+    /** @type {RequestInit} */
+    const init = {
+      method,
       signal: ctrl.signal,
       redirect: "follow",
       headers: { Accept: "application/json, text/html;q=0.9, */*;q=0.1" },
-    });
+    };
+    if (method === "POST") {
+      init.headers["Content-Type"] = "application/json";
+      init.body = row.body !== undefined ? row.body : "{}";
+    }
+    const r = await fetch(row.url, init);
     clearTimeout(t);
     http = r.status;
     const ct = r.headers.get("content-type") || "";
     if (r.ok) {
-      level = "up";
+      if (row.expectJsonKey) {
+        if (!ct.includes("application/json")) {
+          level = "warn";
+        } else {
+          const txt = await r.text();
+          bodySnippet = txt.slice(0, 240);
+          try {
+            const j = JSON.parse(txt);
+            level =
+              j && typeof j === "object" && Object.prototype.hasOwnProperty.call(j, row.expectJsonKey)
+                ? "up"
+                : "warn";
+          } catch {
+            level = "warn";
+          }
+        }
+      } else {
+        level = "up";
+        if (ct.includes("application/json")) {
+          const txt = await r.text();
+          bodySnippet = txt.slice(0, 240);
+        }
+      }
     } else if (http === 401 || http === 403) {
       level = "auth";
+      if (ct.includes("application/json")) {
+        const txt = await r.text();
+        bodySnippet = txt.slice(0, 240);
+      }
     } else if (http >= 500) {
       level = "down";
     } else {
       level = "warn";
-    }
-    if (ct.includes("application/json")) {
-      const txt = await r.text();
-      bodySnippet = txt.slice(0, 240);
+      if (ct.includes("application/json")) {
+        const txt = await r.text();
+        bodySnippet = txt.slice(0, 240);
+      }
     }
   } catch (e) {
     err = e instanceof Error ? e.message : String(e);
@@ -119,12 +153,26 @@ async function main() {
 
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
   const constants = JSON.parse(fs.readFileSync(constantsPath, "utf8"));
-  const probes = (manifest.glassProbes || []).map((p) => ({
-    id: p.id,
-    group: p.group || "other",
-    note: p.note,
-    url: expandUrl(p.url, constants),
-  }));
+  const raw = manifest.glassProbes || [];
+  /** @type {Array<{id: string, group: string, note?: string, url: string, method: string, body?: string, expectJsonKey?: string}>} */
+  const probes = [];
+  for (const p of raw) {
+    const url = expandUrl(p.url, constants);
+    if (p.skipIfEmpty) {
+      if (!url || !/^https?:/i.test(String(url))) {
+        continue;
+      }
+    }
+    probes.push({
+      id: p.id,
+      group: p.group || "other",
+      note: p.note,
+      url,
+      method: p.method || "GET",
+      body: p.body,
+      expectJsonKey: p.expectJsonKey,
+    });
+  }
 
   const bad = probes.filter((p) => !p.url || !p.url.startsWith("http"));
   if (bad.length) {

@@ -54,6 +54,11 @@ coverage/
 final_validation_report.md
 audit_runner.py
 
+# Local installers / large binaries (not tracked)
+/Applications/
+*.AppImage
+*.deb
+
 # Logs
 *.log
 npm-debug.log*

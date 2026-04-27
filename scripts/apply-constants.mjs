@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
  * Propagates p31-constants.json → ground-truth, cognitive-passport index.html, src/p31-constants-generated.ts
+ * Registry of coupled artefacts: p31-alignment.json + docs/P31-ALIGNMENT-SYSTEM.md
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -42,10 +43,29 @@ function main() {
   const p31caMeshJson = path.join(p31caRoot, "src/data/p31-mesh-constants.json");
   if (c.mesh && fs.existsSync(p31caRoot)) {
     fs.mkdirSync(path.dirname(p31caMeshJson), { recursive: true });
-    fs.writeFileSync(p31caMeshJson, JSON.stringify(c.mesh, null, 2) + "\n", "utf8");
+    const meshBody = JSON.stringify(c.mesh, null, 2) + "\n";
+    fs.writeFileSync(p31caMeshJson, meshBody, "utf8");
     console.log("Wrote", path.relative(root, p31caMeshJson));
+    const meshPublic = path.join(p31caRoot, "public/p31-mesh-constants.json");
+    fs.mkdirSync(path.dirname(meshPublic), { recursive: true });
+    fs.writeFileSync(meshPublic, meshBody, "utf8");
+    console.log("Wrote", path.relative(root, meshPublic));
   } else if (c.mesh) {
     console.warn("apply-constants: skip p31-mesh-constants (no p31ca tree):", p31caMeshJson);
+  }
+
+  if (c.integrations && fs.existsSync(p31caRoot)) {
+    const integBody = JSON.stringify(c.integrations, null, 2) + "\n";
+    const integSrc = path.join(p31caRoot, "src/data/p31-integrations.json");
+    const integPub = path.join(p31caRoot, "public/p31-integrations.json");
+    fs.mkdirSync(path.dirname(integSrc), { recursive: true });
+    fs.writeFileSync(integSrc, integBody, "utf8");
+    console.log("Wrote", path.relative(root, integSrc));
+    fs.mkdirSync(path.dirname(integPub), { recursive: true });
+    fs.writeFileSync(integPub, integBody, "utf8");
+    console.log("Wrote", path.relative(root, integPub));
+  } else if (c.integrations) {
+    console.warn("apply-constants: skip p31-integrations (no p31ca tree)");
   }
 
   /** dev-workbench `URLS` prop name → p31-constants.json `mesh` key */
@@ -112,11 +132,13 @@ function main() {
     ...(c.mesh != null ? { mesh: c.mesh } : {}),
     ...(c.operations != null ? { operations: c.operations } : {}),
     ...(c.documentation != null ? { documentation: c.documentation } : {}),
+    ...(c.integrations != null ? { integrations: c.integrations } : {}),
   };
   const tsBody = `/* eslint-disable */
 /**
  * AUTO-GENERATED from p31-constants.json by: npm run apply:constants
  * Do not hand-edit. Source of truth: p31-constants.json
+ * Cross-artefact map: p31-alignment.json (p31.alignment/1.0.0) — docs/P31-ALIGNMENT-SYSTEM.md
  */
 export const P31_CONSTANTS = ${JSON.stringify(exportObj, null, 2)} as const;
 `;

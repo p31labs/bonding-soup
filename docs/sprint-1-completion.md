@@ -36,7 +36,7 @@ Successfully implemented the core physics foundation for BONDING's molecular sim
 ├── reactions.ts        # 6 reaction types (Synthesis, Combustion, etc.)
 ├── soundtrack.ts       # Web Audio API integration (8 oscillator limit)
 ├── soup.ts            # Main orchestration engine
-└── soup-demo.ts       # Interactive demonstration
+└── soup-demo.ts       # Demo harness (browser entry: soup.html)
 ```
 
 ### Performance Targets Achieved
@@ -68,7 +68,7 @@ Successfully implemented the core physics foundation for BONDING's molecular sim
 - Oscillator management respecting mobile constraints
 
 ## Demo Implementation
-- **soup-demo.html**: Interactive browser-based demonstration
+- **soup.html**: Interactive browser-based demonstration (TypeScript build loads engine + demo glue from `dist/`)
 - **Real-time Visualization**: Canvas rendering with molecule trails
 - **Performance Monitoring**: Live FPS, LOD level, and statistics display
 - **Zone Overlays**: Visual representation of Calm, Lab, Kitchen, Deep zones

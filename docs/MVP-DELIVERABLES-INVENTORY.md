@@ -14,12 +14,13 @@ Deployed, CI-verifiable, and demonstrable today (URLs and baselines cross-check 
 
 | # | Deliverable | URL / anchor | Evidence |
 |---|------------|--------------|----------|
-| 1 | **BONDING** — molecular builder | `https://bonding.p31ca.org` | Shipped 2026-03-10. **413 tests / 30 suites** (canonical baseline). K₄ bond model, multiplayer relay (KV polling, room codes), timestamped session export (registry: evidence-friendly logging), offline/local mock relay. R3F + Zustand + Vitest. Hub registry: LIVE. |
+| 1 | **BONDING** — molecular builder | `https://bonding.p31ca.org` | Shipped 2026-03-10. **424 tests / 32 suites** (canonical baseline). K₄ bond model, multiplayer relay (KV polling, room codes), timestamped session export (registry: evidence-friendly logging), offline/local mock relay. R3F + Zustand + Vitest. Hub registry: LIVE. |
 | 2 | **p31ca.org technical hub** | `https://p31ca.org` | Astro 5. **Prebuild:** `verify:ground-truth` → **`verify:synergetic`** (multi-dome Three pins + Spaceship `package.json`) → hub data → hub verify → build. **`p31.ground-truth.json`**, **`synergetic-manifest.json`**, passport mirror, `/dome`, static catalog. |
 | 3 | **Cognitive Passport (public)** | `https://p31ca.org/passport` | Authoring: `cognitive-passport/index.html` → mirror `p31ca/public/passport-generator.html`. **Long-form edition 5.1** (H1 in **`P31 COGNITIVE PASSPORT — v5.md`**); JSON schema **`p31.cognitivePassport/1.0.0`**. **`npm run verify:passport`** / sync scripts. |
 | 4 | **Spaceship Earth PWA** | Launcher `spaceship-earth.html` on hub; app deploy separate host | Package `@p31/spaceship-earth` (`npm run build`, `npm test`). **Synergetic manifest** locks `three` to **`^0.159.0`**. Security/audit notes: e.g. `spaceship-earth/WCD-30-SECURITY-REPORT.md`. |
 | 5 | **Zenodo publication series** (defensive + IV + **V–XX**) | DOIs in `p31-constants.json` → `research.papers`; batch log `andromeda/docs/files/zenodo_results.json` | ORCID **0009-0002-2492-9079**. Defensive **10.5281/zenodo.18627420**; Paper IV **10.5281/zenodo.19503542** (2026-04-10); Papers **V–XX** published **2026-04-26** (Zenodo deposit IDs **19782969**–**19783001** per results file). |
 | 6 | **Quantum branding kit** | Cross-site | K₄ / **31P** visual language on p31ca, BONDING, and related surfaces (mark + palette consistency per hub/registry). |
+| 6b | **Generic public trust bundle** | **`https://p31ca.org/p31-public-surface.json`** (index); **`/privacy`**, **`/terms`**, **`/contact`**, **`/accessibility`**, **`/security`**, **`/oss`**; **`/.well-known/security.txt`**; **`robots.txt`**, **`sitemap.xml`** | Hub footer links; glass probes in **`p31-ecosystem.json`**. Clean paths (**`/privacy`**, etc.) are served by Pages (avoid **`/foo` → `/foo.html`** in **`_redirects`** when Pages already 308s `foo.html` → `/foo`). Short paths that **rename** files (e.g. **`/passport`**, **`/security`**) stay in **`_redirects`**. Entity copy aligned with **`p31-constants.json`**. |
 
 ---
 
@@ -34,7 +35,7 @@ Backend Workers and related edge surface — operational, instrumented, producti
 | 9 | **bonding-relay** | BONDING multiplayer relay | KV polling, room codes (see BONDING package / workers). |
 | 10 | **telemetry-worker** | Unified telemetry ingest | Internal fanout tokens; feeds fleet patterns. |
 | 11 | **donate-api** | Donations pipeline | Stripe configuration per deploy. |
-| 12 | **`api.phosphorus31.org`** | Stripe direct (HCB pivot) | Worker host; **`p31-constants.json`** → `payment.stripeWorkerHost`. |
+| 12 | **`donate-api.phosphorus31.org`** | Stripe Checkout (HCB pivot) | Worker host; **`p31-constants.json`** → `payment.stripeWorkerHost` matches donate-api (same Worker as `donateApiHealthUrl`). |
 | 13 | **genesis-gate** | Governance / telemetry plane | Bearer / admin patterns. |
 | 14 | **bouncer** | Gate / auth proxy | `BOUNCER_GATE_TOKEN` pattern. |
 | 15 | **p31-agent-hub** | Agent ↔ cage | Service bindings. |
@@ -50,7 +51,7 @@ Backend Workers and related edge surface — operational, instrumented, producti
 |---|------------|---------------|---------------------------|
 | 17 | **phosphorus31.org** | Live; **parallel** repo and deploy vs p31ca | Keep pipelines explicit; content/deploy checklist per site owner. |
 | 18 | **WCD-33 Soup archive Worker** | `wcd33-global-archive/DEPLOY.md`, KV, CORS | Confirm production Worker URL, health checks, and client `BONDING_ARCHIVE_URL` wiring. |
-| 19 | **Root BONDING Soup engine** | `tsc`, `soup-demo.html`, archive hook | Full molecular/world MVP still roadmap Phase 3–4 (`docs/development-roadmap.md`); **core engine** is buildable now. |
+| 19 | **Root BONDING Soup engine** | `tsc`, `soup.html`, archive hook | Full molecular/world MVP still roadmap Phase 3–4 (`docs/development-roadmap.md`); **core engine** is buildable now. |
 | 20 | **Children’s picture book** | *Mother Nature and Father Time: The Spark and the Cage* — illustrated PDF / flipbook tracks | Print + public flipbook polish as needed. |
 | 21 | **Ko-fi** | **`https://ko-fi.com/trimtab69420`** (`p31-constants.json` → `contact.kofiUrl`) | Low-friction; align with grant/funder CTAs. |
 | 22 | **Paper XII — Sovereign Stack** | **Live** — DOI **10.5281/zenodo.19782969** (2026-04-26); see `research.papers` | Optional: add Zenodo **cites** relations from XI/XIX (and related papers) to XII if metadata was frozen before XII minted. |
@@ -87,11 +88,11 @@ Backend Workers and related edge surface — operational, instrumented, producti
 
 For a funder who needs **what exists today** (facts aligned with **`p31-constants.json`** and review docs):
 
-1. **BONDING** — Shipped, **413 tests / 30 suites**, multiplayer relay, 3D builder, difficulty tiers (**Seed / Sprout / Sapling** per engine). **`https://bonding.p31ca.org`**.
+1. **BONDING** — Shipped, **424 tests / 32 suites**, multiplayer relay, 3D builder, difficulty tiers (**Seed / Sprout / Sapling** per engine). **`https://bonding.p31ca.org`**.
 2. **P31 technical hub** — Product catalog, **Cognitive Passport** generator (**edition 5.1** long-form; schema **`p31.cognitivePassport/1.0.0`**), **`/dome`**, CI chain including **ground-truth**, **synergetic manifest**, and **constants** verification. **`https://p31ca.org`**.
 3. **Spaceship Earth** — PWA command-center experience (R3F, PGlite, geodesic observatory patterns). Launcher on hub; **`verify:synergetic`** pins Three **`^0.159.0`** against **`spaceship-earth/package.json`**.
 4. **Research foundation** — Zenodo series with locked DOIs (**defensive**, Paper **IV**, Papers **V–XX** batch 2026-04-26), ORCID **0009-0002-2492-9079**, K₄ / information-framing line documented in bundle + supplements.
-5. **Edge infrastructure** — **10-worker** production fleet snapshot: telemetry, k4 mesh, relays, Stripe host **`api.phosphorus31.org`**, governance/operator Workers, D1/R2 patterns per **`REVIEW-SUPPLEMENT-B`**.
+5. **Edge infrastructure** — **10-worker** production fleet snapshot: telemetry, k4 mesh, relays, Stripe Checkout on **`donate-api.phosphorus31.org`**, governance/operator Workers, D1/R2 patterns per **`REVIEW-SUPPLEMENT-B`**.
 
 **Entity (accurate for filings):** P31 Labs, Inc., Georgia nonprofit corporation, **EIN 42-1888158**; **501(c)(3) determination pending**. Open-source and assistive-technology-aligned mission per org docs.
 

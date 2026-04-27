@@ -2,6 +2,7 @@
 /**
  * Copies cognitive-passport/index.html to p31ca/public/passport-generator.html
  * with p31ca-specific header/footer. Run: npm run sync:passport
+ * Alignment: p31-alignment.json + verify:passport
  */
 import fs from "fs";
 import path from "path";

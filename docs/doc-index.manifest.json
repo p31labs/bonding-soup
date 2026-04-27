@@ -1,0 +1,19 @@
+{
+  "schema": "p31.docIndexManifest/1.0.0",
+  "include": {
+    "docsDirRecursive": "docs",
+    "rootMarkdown": [
+      "README.md",
+      "AGENTS.md",
+      "P31-ROOT-MAP.md",
+      "CLAUDE.md",
+      "P31 COGNITIVE PASSPORT — v5.md",
+      "final_validation_report.md"
+    ],
+    "optionalDirs": [
+      { "path": "andromeda/04_SOFTWARE/p31ca/docs", "label": "p31ca (optional)" }
+    ]
+  },
+  "excludePathSubstrings": ["/node_modules/", "/.git/"],
+  "excludeNamePatterns": [".archived", ".DS_Store"]
+}

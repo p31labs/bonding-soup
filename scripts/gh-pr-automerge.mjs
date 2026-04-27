@@ -2,6 +2,8 @@
 /**
  * P31 home: push → open PR if needed → enable auto-merge.
  *   npm run gh:pr:automerge -- --base main --title "…" [--dir andromeda]
+ * Requires git remote (default name **origin**): run **`npm run git:remotes`**; **`P31_GIT_REMOTE`** to override remote name.
+ * On **main** / **master**: auto-creates **`pr/<slug>-<shortsha>`** (fallback **`pr/auto-…`**) unless **`P31_PR_NO_AUTO_BRANCH=1`**.
  * Strips a literal "--" (pnpm may inject it). Auth check uses `gh api user` to avoid
  * spurious "gitci" errors from a broken git credential helper on `gh auth status`.
  * If you see: unknown command "gitci" for "gh auth" — fix: git config credential.helper '!gh auth git-credential'
@@ -31,9 +33,9 @@ for (let i = 0; i < argv.length; i++) {
   } else if (a === "--dir" && argv[i + 1]) {
     workdir = path.resolve(defaultRoot, argv[++i]);
   } else if (a === "--help" || a === "-h") {
-    console.log(
-      "Usage: npm run gh:pr:automerge -- [--dir andromeda] --base main --title '…' --body '…'"
-    );
+    console.log(`Usage: npm run gh:pr:automerge -- [--dir andromeda] --base main --title '…' --body '…'
+  On main/master: auto-creates pr/<slug>-<shortsha> unless P31_PR_NO_AUTO_BRANCH=1
+  P31_DRY_RUN=1  print steps only`);
     process.exit(0);
   }
 }
@@ -55,6 +57,18 @@ function prNumberIfExists(cwd) {
   }
 }
 
+function getRemoteUrl(cwd, name) {
+  try {
+    return execSync(`git remote get-url ${name}`, {
+      cwd,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+  } catch {
+    return null;
+  }
+}
+
 function sh(cmd) {
   if (dry) {
     console.log(`[DRY] cd ${workdir} && ${cmd}`);
@@ -63,16 +77,56 @@ function sh(cmd) {
   execSync(cmd, { cwd: workdir, stdio: "inherit" });
 }
 
+function slugify(s) {
+  return (
+    String(s)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 48) || "wip"
+  );
+}
+
+function suggestAutoBranchName() {
+  const subj = execSync("git log -1 --pretty=%s", { cwd: workdir, encoding: "utf8" }).trim() || "wip";
+  const short = execSync("git rev-parse --short HEAD", { cwd: workdir, encoding: "utf8" }).trim();
+  let name = `pr/${slugify(subj)}-${short}`.replace(/\/{2,}/g, "/");
+  return name.length > 200 ? name.slice(0, 200) : name;
+}
+
+function autoBranchFromMain() {
+  let name = suggestAutoBranchName();
+  try {
+    execSync(`git checkout -b ${name}`, { cwd: workdir, stdio: "inherit" });
+    return name;
+  } catch {
+    const short = execSync("git rev-parse --short HEAD", { cwd: workdir, encoding: "utf8" }).trim();
+    const fallback = `pr/auto-${short}-${Date.now().toString(36)}`;
+    execSync(`git checkout -b ${fallback}`, { cwd: workdir, stdio: "inherit" });
+    return fallback;
+  }
+}
+
 function run() {
   if (!ghAuthed()) {
     console.error("gh-pr-automerge: not logged in — run: gh auth login");
     process.exit(1);
   }
 
-  const branch = execSync("git rev-parse --abbrev-ref HEAD", { cwd: workdir, encoding: "utf8" }).trim();
+  let branch = execSync("git rev-parse --abbrev-ref HEAD", { cwd: workdir, encoding: "utf8" }).trim();
   if (branch === "main" || branch === "master") {
-    console.error("gh-pr-automerge: switch to a feature branch first (on " + branch + ")");
-    process.exit(1);
+    if (process.env.P31_PR_NO_AUTO_BRANCH === "1") {
+      console.error("gh-pr-automerge: switch to a feature branch first (on " + branch + ")");
+      process.exit(1);
+    }
+    if (dry) {
+      branch = suggestAutoBranchName();
+      console.log(`[DRY] gh-pr-automerge: would auto-branch from main → ${branch}`);
+    } else {
+      console.log(`gh-pr-automerge: on ${branch} — creating feature branch for PR`);
+      branch = autoBranchFromMain();
+      console.log(`gh-pr-automerge: now on ${branch}`);
+    }
   }
 
   if (!title) {
@@ -82,7 +136,14 @@ function run() {
     body = "Automated PR (npm run gh:pr:automerge).";
   }
 
-  sh(`git push -u origin ${branch}`);
+  const remote = process.env.P31_GIT_REMOTE || "origin";
+  if (!getRemoteUrl(workdir, remote)) {
+    console.error(`gh-pr-automerge: no git remote "${remote}" in ${workdir}`);
+    console.error("  Fix: npm run git:remotes   (set p31-github.json homeRepository or P31_HOME_GITHUB=org/repo)");
+    process.exit(1);
+  }
+
+  sh(`git push -u ${remote} ${branch}`);
 
   if (dry) {
     console.log("[DRY] gh pr view|create; gh pr merge --auto");

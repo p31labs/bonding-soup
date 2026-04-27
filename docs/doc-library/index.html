@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" data-p31-appearance="hub">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Search home Markdown: docs, maps, and root handbooks. Local use with npm run demo." />
+  <meta name="theme-color" content="#0f1115" />
+  <title>P31 — document library</title>
+  <link rel="stylesheet" href="../../cognitive-passport/p31-style.css" />
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--p31-font-sans, system-ui, sans-serif);
+      background: var(--p31-void, #0f1115);
+      color: var(--p31-cloud, #d8d6d0);
+      line-height: var(--p31-leading-normal, 1.6);
+    }
+    .skip {
+      position: absolute;
+      left: -10000px;
+      top: 0;
+      z-index: 1000;
+      padding: var(--p31-space-3) var(--p31-space-4);
+      background: var(--p31-surface, #161920);
+      color: var(--p31-cyan, #4db8a8);
+      border: 1px solid var(--p31-border-subtle, rgba(255,255,255,0.06));
+      border-radius: var(--p31-radius-md);
+    }
+    .skip:focus {
+      left: var(--p31-space-4);
+      top: var(--p31-space-4);
+      outline: var(--p31-focus-ring, 2px) solid var(--p31-focus-color-hub, rgba(77, 184, 168, 0.55));
+      outline-offset: var(--p31-focus-offset, 2px);
+    }
+    a { color: var(--p31-cyan, #4db8a8); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:focus-visible {
+      outline: var(--p31-focus-ring, 2px) solid var(--p31-focus-color-hub, rgba(77, 184, 168, 0.55));
+      outline-offset: 2px;
+      border-radius: var(--p31-radius-sm);
+    }
+    code {
+      font-family: var(--p31-font-mono, ui-monospace, monospace);
+      font-size: 0.88em;
+      padding: 0.12em 0.4em;
+      border-radius: var(--p31-radius-sm);
+      background: var(--p31-surface2, #1c2028);
+      color: var(--p31-lavender, #8b7cc9);
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: var(--p31-z-sticky, 100);
+      background: linear-gradient(180deg, color-mix(in srgb, var(--p31-surface, #161920) 88%, transparent), color-mix(in srgb, var(--p31-void, #0f1115) 95%, transparent));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--p31-border-subtle, rgba(255,255,255,0.06));
+      padding: var(--p31-space-4) var(--p31-space-4);
+    }
+    @supports not (background: color-mix(in srgb, red, blue)) {
+      header {
+        background: linear-gradient(180deg, var(--p31-surface, #161920), rgba(15, 17, 21, 0.97));
+      }
+    }
+    header h1 {
+      margin: 0;
+      font-size: var(--p31-text-lg);
+      font-weight: 600;
+      letter-spacing: var(--p31-tracking-tight);
+    }
+    header .lede { margin: var(--p31-space-2) 0 0; font-size: var(--p31-text-xs); color: var(--p31-muted, #6b7280); max-width: 40rem; }
+    .pill {
+      display: inline-block;
+      margin-left: var(--p31-space-2);
+      padding: 0.1rem 0.45rem;
+      border-radius: var(--p31-radius-sm);
+      background: var(--p31-surface2, #1c2028);
+      font-size: 0.7rem;
+      color: var(--p31-lavender, #8b7cc9);
+      font-weight: 500;
+      vertical-align: middle;
+    }
+    .quick {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--p31-space-2);
+      margin: var(--p31-space-3) 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .quick a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 var(--p31-space-3);
+      font-size: var(--p31-text-xs);
+      border: 1px solid var(--p31-border-subtle, rgba(255,255,255,0.06));
+      border-radius: var(--p31-radius-md);
+      background: var(--p31-surface, #161920);
+    }
+    .quick a:hover { border-color: var(--p31-cyan, #4db8a8); }
+    .search-label {
+      display: block;
+      font-size: var(--p31-text-xs);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: var(--p31-tracking-caps, 0.12em);
+      color: var(--p31-muted, #6b7280);
+      margin-bottom: var(--p31-space-2);
+    }
+    .search-block { margin-top: var(--p31-space-4); max-width: 32rem; }
+    .search-input-wrap { display: flex; gap: var(--p31-space-2); align-items: stretch; min-width: 0; }
+    #q {
+      flex: 1 1 12rem;
+      min-width: 0;
+      margin: 0;
+      padding: var(--p31-space-3) var(--p31-space-4);
+      min-height: 44px;
+      font: inherit;
+      font-size: var(--p31-text-sm);
+      border-radius: var(--p31-radius-md);
+      border: 1px solid var(--p31-border-subtle, rgba(255,255,255,0.06));
+      background: var(--p31-surface2, #1c2028);
+      color: var(--p31-cloud, #d8d6d0);
+    }
+    #q:focus {
+      outline: none;
+      border-color: var(--p31-cyan, #4db8a8);
+      box-shadow: 0 0 0 1px var(--p31-cyan, #4db8a8);
+    }
+    #q::placeholder { color: var(--p31-muted, #6b7280); opacity: 0.9; }
+    .btn-clear {
+      flex: 0 0 auto;
+      min-width: 44px;
+      min-height: 44px;
+      padding: 0 var(--p31-space-3);
+      font: inherit;
+      font-size: var(--p31-text-sm);
+      border-radius: var(--p31-radius-md);
+      border: 1px solid var(--p31-border-subtle, rgba(255,255,255,0.06));
+      background: var(--p31-surface, #161920);
+      color: var(--p31-cloud, #d8d6d0);
+      cursor: pointer;
+    }
+    .btn-clear:hover { border-color: var(--p31-muted, #6b7280); color: var(--p31-cyan, #4db8a8); }
+    .btn-clear:focus-visible {
+      outline: var(--p31-focus-ring, 2px) solid var(--p31-focus-color-hub, rgba(77, 184, 168, 0.55));
+      outline-offset: 2px;
+    }
+    .btn-clear[hidden] { display: none; }
+    .btn-inline-clear {
+      display: inline;
+      margin: 0;
+      padding: 0;
+      font: inherit;
+      font-size: var(--p31-text-sm);
+      color: var(--p31-cyan, #4db8a8);
+      background: none;
+      border: none;
+      border-bottom: 1px solid color-mix(in srgb, var(--p31-cyan, #4db8a8) 40%, transparent);
+      border-radius: 0;
+      cursor: pointer;
+      min-height: auto;
+    }
+    @supports not (color: color-mix(in srgb, red, blue)) {
+      .btn-inline-clear { border-bottom-color: var(--p31-cyan, #4db8a8); }
+    }
+    .btn-inline-clear:hover { color: var(--p31-teal, #25897d); }
+    .btn-inline-clear:focus-visible {
+      outline: var(--p31-focus-ring, 2px) solid var(--p31-focus-color-hub, rgba(77, 184, 168, 0.55));
+      outline-offset: 2px;
+      border-radius: var(--p31-radius-sm);
+    }
+    .kbd-hint {
+      margin: var(--p31-space-2) 0 0;
+      font-size: 0.7rem;
+      color: var(--p31-muted, #6b7280);
+    }
+    kbd {
+      font-family: var(--p31-font-mono, ui-monospace, monospace);
+      font-size: 0.85em;
+      padding: 0.1em 0.35em;
+      border: 1px solid var(--p31-border-subtle);
+      border-radius: 4px;
+      background: var(--p31-surface2, #1c2028);
+    }
+    main {
+      max-width: 56rem;
+      margin: 0 auto;
+      padding: var(--p31-space-4) var(--p31-space-4) var(--p31-space-10);
+      scroll-margin-top: 4rem;
+    }
+    .meta-line { font-size: var(--p31-text-xs); color: var(--p31-muted, #6b7280); margin: 0 0 var(--p31-space-2); }
+    .meta-hint { font-size: 0.7rem; color: var(--p31-muted, #6b7280); margin: 0 0 var(--p31-space-4); max-width: 32rem; }
+    .meta-hint[hidden] { display: none; }
+    .results { min-height: 2rem; }
+    .results:focus { outline: none; }
+    .hit {
+      position: relative;
+      background: var(--p31-surface, #161920);
+      border: 1px solid var(--p31-border-subtle, rgba(255,255,255,0.06));
+      border-radius: var(--p31-radius-lg);
+      padding: var(--p31-space-4);
+      margin-bottom: var(--p31-space-3);
+      transition: border-color var(--p31-duration-fast, 150ms) var(--p31-ease-standard, ease), box-shadow var(--p31-duration-fast, 150ms) var(--p31-ease-standard, ease);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hit { transition: none; }
+    }
+    .hit:hover, .hit:focus-within {
+      border-color: color-mix(in srgb, var(--p31-cyan, #4db8a8) 50%, var(--p31-border-subtle));
+      box-shadow: var(--p31-shadow-sm, 0 1px 2px rgba(0,0,0,0.06));
+    }
+    @supports not (border-color: color-mix(in srgb, red, blue)) {
+      .hit:hover, .hit:focus-within { border-color: var(--p31-cyan, #4db8a8); }
+    }
+    .hit .title { font-size: var(--p31-text-md); font-weight: 600; line-height: var(--p31-leading-snug, 1.4); }
+    .hit .path {
+      font-family: var(--p31-font-mono, ui-monospace, monospace);
+      font-size: var(--p31-text-xs);
+      color: var(--p31-lavender, #8b7cc9);
+      margin: var(--p31-space-2) 0;
+      word-break: break-all;
+    }
+    .hit .preview { margin: 0; font-size: var(--p31-text-sm); color: var(--p31-muted, #6b7280); line-height: var(--p31-leading-relaxed, 1.75); }
+    .hit .h2 { font-size: 0.7rem; color: var(--p31-muted, #6b7280); margin: var(--p31-space-2) 0 0; }
+    .empty { color: var(--p31-muted, #6b7280); margin: 0; }
+    .empty strong { color: var(--p31-cloud, #d8d6d0); font-weight: 600; }
+    .err { color: #fca5a5; }
+    .hits {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .hits .hit { list-style: none; }
+    .hit-inner { margin: 0; }
+    mark.hi {
+      background: rgba(205, 168, 82, 0.22);
+      color: var(--p31-cloud, #d8d6d0);
+      padding: 0.04em 0.12em;
+      border-radius: 3px;
+    }
+    @supports (background: color-mix(in srgb, red, blue)) {
+      mark.hi {
+        background: color-mix(in srgb, var(--p31-butter, #cda852) 28%, var(--p31-surface2, #1c2028));
+      }
+    }
+  </style>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to results</a>
+  <header>
+    <h1>Document library <span class="pill">search</span></h1>
+    <p class="lede">Client-side index of home Markdown. Serve from the repo root with <code>npm run demo</code>, then open this folder. Regenerate: <code>npm run build:doc-index</code>.</p>
+    <ul class="quick" aria-label="Quick links">
+      <li><a href="../../P31-ROOT-MAP.md">P31-ROOT-MAP</a></li>
+      <li><a href="../../AGENTS.md">AGENTS</a></li>
+      <li><a href="../../docs/P31-PERSONAL-HOW-TO.md">How-to (MD)</a></li>
+      <li><a href="../../p31-personal-howto.html">How-to (UI)</a></li>
+    </ul>
+    <div class="search-block" role="search">
+      <label class="search-label" for="q">Search</label>
+      <div class="search-input-wrap">
+        <input type="search" id="q" name="q" placeholder="Title, path, headings, or body" autocomplete="off" enterkeyhint="search" spellcheck="false" />
+        <button type="button" id="clear-q" class="btn-clear" hidden aria-label="Clear search">Clear</button>
+      </div>
+      <p class="kbd-hint" id="kbd-hint" aria-hidden="true"><kbd>/</kbd> to focus · <kbd>Esc</kbd> to clear</p>
+    </div>
+  </header>
+  <main id="main" tabindex="-1" aria-label="Search results" aria-busy="true">
+    <p class="meta-line" id="meta" aria-live="polite">Loading index…</p>
+    <p class="meta-hint" id="meta-hint" hidden>Address bar updates as you type (bookmark or share). Press <kbd>Enter</kbd> to record a step in history so <kbd>Back</kbd> undoes a query.</p>
+    <div id="results" class="results" role="region" aria-label="Document hits"></div>
+  </main>
+</body>
+</html>

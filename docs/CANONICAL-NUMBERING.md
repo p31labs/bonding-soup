@@ -1,7 +1,7 @@
 # P31 canonical numbering system
 
 **Status:** normative for this workspace.  
-**Last updated:** 2026-04-25
+**Last updated:** 2026-04-26
 
 **Problem solved:** multiple independent “version” numbers (CogPass filename, H1 edition, JSON schema, ground-truth, WCD, papers, review-bundle prose) were drifting. This document defines **namespaces**—each number series has **one** authority and **one** bump rule. **Never** infer cross-namespace equality (e.g. Passport “v5” ≠ `p31.ground-truth` `1.0.0`).
 
@@ -35,20 +35,20 @@
 | **WCD** | Work Control Documents | `WCD-NN` or `WCD-NN-…` (suffix if split) | Master Ops Manual process | MOM + repo WCD files | **Monotonic** integers per product area; **never reuse** a number for a different intent |
 | **CWP** | Controlled Work Packages | `CWP-P31-<NAME>-<YYYY>-<SEQ>` (example) | CWP author + closure PR | e.g. `CONTROLLED-WORK-PACKAGE-*.md` | New ID per new scope; revision bumps **Version** field **inside** the CWP file |
 | **PAPER** | Research outputs | `Paper-roman` or `Paper-Arabic` + **DOI** | Operator + Zenodo | Zenodo, `docs/`, CogPass | **DOI** is the immutable key; in-repo labels (I, II, III, IV, XII) are **convenience** only |
-| **BOND-TEST** | BONDING test baseline | `tests/suites` (two integers) | WCD + CI that enforces it | BONDING package + operator lock | **Only** change with explicit WCD; canonical **413 tests / 30 suites** (as of 2026-04-25 operator lock) — do not “drift” from chat |
+| **BOND-TEST** | BONDING test baseline | `tests/suites` (two integers) | WCD + CI that enforces it | BONDING package + operator lock | **Only** change with explicit WCD; canonical **424 tests / 32 suites** (as of 2026-04-26 operator lock) — do not “drift” from chat |
 | **REV** | Gemini/Opus review doc set | `REVIEW-BUNDLE-YYYY-MM-DD` **or** “Last updated” in header | Maintainer | `docs/GEMINI-OPUS-REVIEW-BUNDLE.md`, `README-REVIEW-DOCS.md` | Date stamp on any material factual change; optional tag `REVIEW-BUNDLE-2026-04-25` in changelog |
 | **EPCP-REL** | EPCP implementation reports | Report title + file date | Deploy owner | `cloudflare-worker/command-center/EPCP_*.md` | Document revision in filename or front matter when replacing narrative |
 
 ---
 
-## 3. Current authoritative values (2026-04-25)
+## 3. Current authoritative values (2026-04-26)
 
 | Namespace | Value | Notes |
 |-----------|--------|--------|
 | **GT** | `p31.ground-truth/1.0.0`, `"version": "1.0.0"` | Bump only with contract change + `verify:ground-truth` green |
 | **CP-LONG** | **5.1** (H1 in `P31 COGNITIVE PASSPORT — v5.md`) | Replaces any ad-hoc “v4.0 renumber” in old review text — that was **non-canonical** |
 | **CP-JSON** | `p31.cognitivePassport/1.0.0` | Bumps only if JSON **shape** changes |
-| **BOND-TEST** | **413** tests, **30** suites | Marketing or secondary docs that cite other counts are **wrong** until a WCD changes the lock |
+| **BOND-TEST** | **424** tests, **32** suites | Marketing or secondary docs that cite other counts are **wrong** until a WCD changes the lock |
 
 `canonicalNumbering` in `p31.ground-truth.json` mirrors this table for **machine** consumers.
 

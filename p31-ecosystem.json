@@ -1,7 +1,8 @@
 {
-  "_comment": "Deploy targets + glass-box URLs. Templates: {{mesh.*}}, {{bonding.*}}, {{payment.*}} from p31-constants.json. After edits: npm run verify:ecosystem",
+  "_comment": "Deploy targets + glass-box URLs. Templates: {{mesh.*}}, {{bonding.*}}, {{payment.*}} from p31-constants.json. Consolidated live sites + Workers: p31-live-fleet.json. After edits: npm run verify:ecosystem",
   "schema": "p31.ecosystem/1.0.0",
   "updated": "2026-04-26",
+  "_deployNote": "Order matches docs/ECOSYSTEM-PRODUCTION-11.md §4: constants + pnpm, K₄ trio, geodesic, agent/orchestrator/love-ledger, Google bridge, satellite Workers, passkey, EPCP command-center, donate-api, wcd33, p31ca Pages last. unified-k4-cage/ omitted (same worker name as k4-cage). p31-pwa + sovereign-command-center are Cloudflare Pages (build + pages deploy). quantum-edge wrangler may still have placeholder KV ids — fix before expect green deploy.",
   "glassProbes": [
     {
       "id": "k4-personal-api-health",
@@ -26,6 +27,14 @@
       "url": "{{mesh.k4HubsWorkerUrl}}/health",
       "group": "mesh",
       "note": "Hub fusion liveness"
+    },
+    {
+      "id": "p31ca-passkey-register-begin",
+      "url": "https://p31ca.org{{mesh.passkeyApiBasePath}}/register-begin",
+      "method": "POST",
+      "expectJsonKey": "challenge",
+      "group": "mesh",
+      "note": "WebAuthn register-begin; 200 + challenge when p31-passkey zone route is live"
     },
     {
       "id": "geodesic-room-worker",
@@ -64,10 +73,16 @@
       "note": "Technical hub (HTML)"
     },
     {
+      "id": "p31ca-passport-short",
+      "url": "https://p31ca.org/passport",
+      "group": "pages",
+      "note": "301 → passport-generator.html; AGENTS canonical /passport"
+    },
+    {
       "id": "p31ca-mesh-start-page",
       "url": "https://p31ca.org/mesh-start.html",
       "group": "pages",
-      "note": "PAR personal landing (CWP-P31-PAR); repo dev: soup-demo.html → andromeda/.../p31ca/public/mesh-start.html"
+      "note": "PAR personal landing (CWP-P31-PAR); repo: soup.html → andromeda/.../p31ca/public/mesh-start.html"
     },
     {
       "id": "p31ca-initial-build-page",
@@ -82,16 +97,34 @@
       "note": "301/302 → initial-build.html (Cloudflare _redirects); client follows redirect in glass + browsers"
     },
     {
+      "id": "p31ca-family-sovereign-pack",
+      "url": "https://p31ca.org/family-pack",
+      "group": "pages",
+      "note": "Household delivery handoff; 301 → family-sovereign-pack.html; prose in docs/FAMILY-SOVEREIGN-PACK.md"
+    },
+    {
+      "id": "p31ca-public-surface-json",
+      "url": "https://p31ca.org/p31-public-surface.json",
+      "group": "contracts",
+      "note": "p31.publicSurface/1.0.0 — trust/legal index + machine endpoints"
+    },
+    {
+      "id": "p31ca-privacy-page",
+      "url": "https://p31ca.org/privacy",
+      "group": "pages",
+      "note": "301 → privacy.html; generic public deliverable"
+    },
+    {
+      "id": "p31ca-security-txt",
+      "url": "https://p31ca.org/.well-known/security.txt",
+      "group": "pages",
+      "note": "RFC 9116 security.txt; mailto contact"
+    },
+    {
       "id": "bonding-soup",
       "url": "{{bonding.publicUrl}}/",
       "group": "pages",
       "note": "BONDING vertical"
-    },
-    {
-      "id": "stripe-api-health",
-      "url": "{{payment.stripeApiHealthUrl}}",
-      "group": "monetary",
-      "note": "Main API / Stripe Worker (p31-constants payment.stripeWorkerHost); glass liveness"
     },
     {
       "id": "donate-api-health",
@@ -100,30 +133,193 @@
       "note": "Stripe checkout Worker liveness; CWP-P31-MAP-2026-01 as-built"
     },
     {
+      "id": "donate-api-health-workers-dev",
+      "url": "{{payment.donateApiWorkersDevUrl}}/health",
+      "group": "monetary",
+      "note": "Same Worker as donate-api-health; default workers.dev subdomain (DNS-independent check)"
+    },
+    {
       "id": "creator-economy-contract",
       "url": "https://p31ca.org/creator-economy.json",
       "group": "contracts",
       "note": "Public JSON contract (verify:economy in p31ca)"
+    },
+    {
+      "id": "home-assistant-lan-optional",
+      "url": "{{integrations.endpoints.homeAssistantLanBase}}",
+      "group": "integrations",
+      "note": "Set integrations.endpoints.homeAssistantLanBase in p31-constants (e.g. http://hass:8123). Omitted from CLI + /ops/ when empty. LAN-only; same network as HA.",
+      "skipIfEmpty": true
     }
   ],
   "deployables": [
     {
-      "id": "p31ca-pages",
-      "cwd": "andromeda/04_SOFTWARE/p31ca",
+      "id": "apply-constants",
+      "cwd": ".",
+      "command": "npm run apply:constants",
+      "description": "Regenerate hub/constants mirrors from p31-constants.json (no Cloudflare)"
+    },
+    {
+      "id": "04-software-pnpm-install",
+      "cwd": "andromeda/04_SOFTWARE",
+      "command": "pnpm install",
+      "description": "Workspace deps for k4-personal filter + shared packages (no Cloudflare)"
+    },
+    {
+      "id": "k4-personal-worker",
+      "cwd": "andromeda/04_SOFTWARE",
+      "command": "pnpm --filter k4-personal run deploy",
+      "description": "Personal K₄ Worker — deploy before k4-hubs (service bindings)"
+    },
+    {
+      "id": "k4-cage-worker",
+      "cwd": "andromeda/04_SOFTWARE/k4-cage",
+      "command": "npx wrangler deploy",
+      "description": "k4-cage family mesh + topology DOs"
+    },
+    {
+      "id": "k4-hubs-worker",
+      "cwd": "andromeda/04_SOFTWARE/k4-hubs",
+      "command": "npx wrangler deploy",
+      "description": "k4-hubs fusion — PERSONAL_MESH_URL must match mesh.k4PersonalWorkerUrl"
+    },
+    {
+      "id": "geodesic-room-worker",
+      "cwd": "andromeda/04_SOFTWARE/geodesic-room",
+      "command": "npx wrangler deploy",
+      "description": "GeodesicRoom DO (WS + shared shapes)"
+    },
+    {
+      "id": "p31-agent-hub-worker",
+      "cwd": "andromeda/04_SOFTWARE/p31-agent-hub",
+      "command": "npx wrangler deploy",
+      "description": "p31-agent-hub — service binds to K₄ trio"
+    },
+    {
+      "id": "p31-orchestrator-worker",
+      "cwd": "andromeda/04_SOFTWARE/workers",
+      "command": "npx wrangler deploy --config wrangler-orchestrator.toml",
+      "description": "mesh.orchestratorWorkerUrl"
+    },
+    {
+      "id": "p31-workers-love-ledger",
+      "cwd": "andromeda/04_SOFTWARE/workers",
+      "command": "npx wrangler deploy",
+      "description": "p31-workers — LoveTransactionDO + default wrangler.toml (separate from orchestrator config)"
+    },
+    {
+      "id": "p31-google-bridge-worker",
+      "cwd": "andromeda/04_SOFTWARE/p31-google-bridge",
+      "command": "npx wrangler deploy --env production",
+      "description": "Google OAuth bridge — production vars + GOOGLE_CLIENT_SECRET secret"
+    },
+    {
+      "id": "bonding-relay",
+      "cwd": "andromeda/04_SOFTWARE/bonding",
+      "command": "npx wrangler deploy",
+      "description": "bonding-relay Worker"
+    },
+    {
+      "id": "genesis-gate",
+      "cwd": "andromeda/04_SOFTWARE/genesis-gate",
+      "command": "npx wrangler deploy",
+      "description": "genesis-gate Worker"
+    },
+    {
+      "id": "kenosis-mesh",
+      "cwd": "andromeda/04_SOFTWARE/kenosis-mesh",
+      "command": "npx wrangler deploy",
+      "description": "kenosis-mesh Worker"
+    },
+    {
+      "id": "p31-cortex",
+      "cwd": "andromeda/04_SOFTWARE/p31-cortex",
+      "command": "npx wrangler deploy",
+      "description": "p31-cortex Worker"
+    },
+    {
+      "id": "p31-forge",
+      "cwd": "andromeda/04_SOFTWARE/p31-forge",
+      "command": "npx wrangler deploy",
+      "description": "p31-forge Worker"
+    },
+    {
+      "id": "p31-hearing-ops",
+      "cwd": "andromeda/04_SOFTWARE/p31-hearing-ops",
       "command": "npm run deploy",
-      "description": "p31ca.org Pages + Astro hub"
+      "description": "p31-hearing-ops — Vite → Cloudflare Pages (ops.p31ca.org project)"
+    },
+    {
+      "id": "p31-state",
+      "cwd": "andromeda/04_SOFTWARE/p31-state",
+      "command": "npx wrangler deploy",
+      "description": "p31-state Worker"
+    },
+    {
+      "id": "p31-quantum-edge",
+      "cwd": "andromeda/04_SOFTWARE/packages/quantum-edge",
+      "command": "npx wrangler deploy",
+      "description": "p31-quantum-edge — confirm real KV/D1 ids in wrangler.toml (not placeholders)"
+    },
+    {
+      "id": "p31-pwa-pages",
+      "cwd": "andromeda/04_SOFTWARE/packages/node-zero/pwa",
+      "command": "npm install && npm run build && npx wrangler pages deploy",
+      "description": "p31-pwa — Vite dist → Cloudflare Pages project p31-pwa"
+    },
+    {
+      "id": "sovereign-command-center-pages",
+      "cwd": "andromeda/04_SOFTWARE/sovereign-command-center",
+      "command": "npm install && npm run build && npx wrangler pages deploy",
+      "description": "Next.js → Pages project p31-command-center (wrangler may need @cloudflare/next-on-pages; pages_build_output_dir is .next today)"
+    },
+    {
+      "id": "spaceship-relay",
+      "cwd": "andromeda/04_SOFTWARE/spaceship-earth",
+      "command": "npx wrangler deploy",
+      "description": "spaceship-relay Worker"
+    },
+    {
+      "id": "p31-telemetry",
+      "cwd": "andromeda/04_SOFTWARE/telemetry-worker",
+      "command": "npx wrangler deploy",
+      "description": "p31-telemetry Worker"
+    },
+    {
+      "id": "p31-bouncer",
+      "cwd": "andromeda/04_SOFTWARE/cloudflare-worker/bouncer",
+      "command": "npx wrangler deploy",
+      "description": "p31-bouncer Worker"
+    },
+    {
+      "id": "p31-social-broadcast",
+      "cwd": "andromeda/04_SOFTWARE/cloudflare-worker",
+      "command": "npx wrangler deploy",
+      "description": "p31-social-broadcast — runs npm run build via wrangler [build]"
+    },
+    {
+      "id": "p31-social-worker",
+      "cwd": "andromeda/04_SOFTWARE/cloudflare-worker/social-drop-automation",
+      "command": "npx wrangler deploy",
+      "description": "p31-social-worker (social-drop-automation)"
+    },
+    {
+      "id": "p31-passkey-worker",
+      "cwd": "andromeda/04_SOFTWARE/p31ca/workers/passkey",
+      "command": "npx wrangler deploy --env production",
+      "description": "WebAuthn — zone route p31ca.org/api/passkey/*"
     },
     {
       "id": "command-center-worker",
       "cwd": "andromeda/04_SOFTWARE/cloudflare-worker/command-center",
       "command": "npx wrangler deploy",
-      "description": "EPCP command-center Worker"
+      "description": "EPCP command-center Worker (command-center.trimtab-signal.workers.dev)"
     },
     {
-      "id": "k4-personal-worker",
-      "cwd": "andromeda/04_SOFTWARE",
-      "command": "pnpm --filter k4-personal deploy",
-      "description": "Personal K4 Worker (requires pnpm install in 04_SOFTWARE)"
+      "id": "donate-api",
+      "cwd": "andromeda/04_SOFTWARE/donate-api",
+      "command": "npx wrangler deploy",
+      "description": "Stripe Checkout Worker — secrets per donate-api/DEPLOY.md"
     },
     {
       "id": "wcd33-archive",
@@ -132,10 +328,10 @@
       "description": "WCD-33 global archive Worker"
     },
     {
-      "id": "donate-api",
-      "cwd": "andromeda/04_SOFTWARE/donate-api",
-      "command": "npx wrangler deploy",
-      "description": "MAP donate-api Worker — custom domain donate-api.phosphorus31.org/*; default workers.dev donate-api.trimtab-signal.workers.dev (see donate-api/DEPLOY.md)"
+      "id": "p31ca-pages",
+      "cwd": "andromeda/04_SOFTWARE/p31ca",
+      "command": "npm run deploy",
+      "description": "p31ca.org Astro hub — last so static bundle + _redirects match live Workers"
     }
   ]
 }

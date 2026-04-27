@@ -32,9 +32,8 @@ simple = { limit = 30, period = 60 }
 
 [[kv_namespaces]]
 binding = "ARCHIVE_KV"
-# Replace after `wrangler kv namespace create` for production deploy; wrangler dev uses local KV
-id = "00000000000000000000000000000000"
-preview_id = "00000000000000000000000000000000"
+id = "667710b3072a4e5b814b0c5cb835514d"
+preview_id = "667710b3072a4e5b814b0c5cb835514d"
 
 # Example production vars (uncomment and set real origins after KV id is set):
 # [vars]

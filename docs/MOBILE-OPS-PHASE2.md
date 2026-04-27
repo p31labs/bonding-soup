@@ -32,4 +32,6 @@ Expect **HTTP 200** and `viewport: y` on each row. Tweak URLs in `scripts/mobile
 
 After HTML/CSS changes: `npm run verify` (root) as usual; touch layouts are not e2e-gated in Phase 2 — use a real iPhone for dome/connect WebGL and passkey (Phase 5).
 
+**See also:** [PHASE3](MOBILE-OPS-PHASE3.md) (command) · [PHASE4](MOBILE-OPS-PHASE4.md) (create) · [PHASE5](MOBILE-OPS-PHASE5.md) (connect) · [PHASE6](MOBILE-OPS-PHASE6.md) (integration) · <code>npm run mobile-ops:full</code> (phases 2–5 script chain).
+
 **Version:** 1.0.0 — 2026-04-28

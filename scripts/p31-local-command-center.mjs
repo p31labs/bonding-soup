@@ -86,6 +86,13 @@ const actions = {
     cmd: "npm",
     args: ["run", "verify:doc-index"],
   },
+  "home-test-doc-library-e2e": {
+    title: "test:doc-library:e2e (Playwright — static server + headless search; install chromium once: npx playwright install chromium)",
+    cwd: root,
+    cmd: "npm",
+    args: ["run", "test:doc-library:e2e"],
+    slow: true,
+  },
 
   // —— CI-shaped
   "home-release-check": {
@@ -279,6 +286,7 @@ const SECTIONS = [
       "home-verify-mesh",
       "home-build-doc-index",
       "home-verify-doc-index",
+      "home-test-doc-library-e2e",
       "home-ecosystem-glass",
       "home-ecosystem-plan",
     ],

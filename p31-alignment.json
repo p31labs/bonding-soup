@@ -154,7 +154,7 @@
         "docs/doc-library/vendor/minisearch-6.3.0.umd.min.js"
       ],
       "apply": "npm run build:doc-index",
-      "verify": "npm run verify:doc-index (after build:doc-index in root verify; Node uses npm minisearch, browser uses vendor UMD + worker)",
+      "verify": "npm run verify:doc-index (after build:doc-index in root verify; Node uses npm minisearch, browser uses vendor UMD + worker). Browser e2e: npm run test:doc-library:e2e; also run in p31:all unless --skip-e2e",
       "note": "index.json is generated; UI/worker/vendor are hand-maintained. Schema p31.docLibrary/1.0.0; p31ca public mirror = Phase 3 (PLAN-DOCUMENT-LIBRARY.md)"
     }
   ],

@@ -40,7 +40,7 @@ All deliverables for WCD-31: Affective Chemistry Spec + Soup World Design have b
 - **SPIKE-02**: Spatial chat architecture validated (canvas-only rendering supports 40+ orbiting messages at 55-60fps) ✓
 - **SPIKE-03**: 2Hz ghost-molecule interpolation validated (Hermite spline provides smooth 60fps rendering) ✓
 - **Full TypeScript Implementation**: All core systems built and compiled to `/home/p31/dist/`
-- **Interactive Demo**: `soup-demo.html` showcasing molecular behaviors, zone effects, reactions, and particle systems
+- **Interactive Demo**: `soup.html` (browser entry; bundles engine via `src/` / `dist/`) showcasing molecular behaviors, zone effects, reactions, and particle systems
 
 ---
 

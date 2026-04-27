@@ -5,8 +5,9 @@
  *  2. `validate-p31-full.sh` — scorecard + extended audits (report under /tmp/p31_validation_report.json)
  *  3. p31ca `fleet:probe` — soft (non-fatal; matches p31-ci.yml fleet step)
  *  3b. `ecosystem-glass.mjs` — soft; live GETs in p31-ecosystem.json, writes /tmp/p31_glass_report.json
- *  4. Playwright E2E — if `p31ca/playwright.config.ts` exists; subprocess sets **CI=true** so `astro preview`
- *     starts a fresh webServer (avoids reusing a stale 127.0.0.1:4321 from a prior run)
+ *  4. Playwright E2E — (a) home **`npm run test:doc-library:e2e`** (static `http.server` + `docs/doc-library/`);
+ *     (b) p31ca if `playwright.config.ts` exists. Subprocess sets **CI=true**; p31ca uses `astro preview` so preview
+ *     is not a stale 127.0.0.1:4321 from a prior run. Both respect **`--skip-e2e`**.
  *  5. p31ca `security:lint` — soft (script uses || true)
  *  6. Semgrep SAST — same rules as p31-security.yml sast job, if `semgrep` is on PATH (CI installs via workflow step)
  *
@@ -105,17 +106,26 @@ function main() {
     run("p31ca mesh fleet health probe (informational)", "npm run fleet:probe", { cwd: p31ca, soft: true });
   }
 
-  if (hasP31ca && !skipE2e) {
-    const pw = path.join(p31ca, "playwright.config.ts");
-    if (fs.existsSync(pw)) {
-      run("Playwright install (chromium)", "npx playwright install --with-deps chromium", { cwd: p31ca });
-      // Force same behavior as GitHub: fresh `astro preview` (reuseExistingServer off when CI is set)
-      run("Playwright E2E (preview + tests)", "npm run test:e2e", {
-        cwd: p31ca,
-        env: { CI: "true" },
+  if (!skipE2e) {
+    const homeE2e = fs.existsSync(path.join(root, "scripts", "doc-library-e2e.mjs"));
+    if (homeE2e) {
+      run("Playwright install (chromium) — home doc library", "npx playwright install --with-deps chromium", { cwd: root });
+      run("Doc library E2E (static server + /docs/doc-library/)", "npm run test:doc-library:e2e", {
+        cwd: root,
+        env: { ...process.env, CI: "true" },
       });
-    } else {
-      console.log("\n\x1b[33m▶\x1b[0m Playwright: no playwright.config.ts — skipped");
+    }
+    if (hasP31ca) {
+      const pw = path.join(p31ca, "playwright.config.ts");
+      if (fs.existsSync(pw)) {
+        run("Playwright install (chromium) — p31ca", "npx playwright install --with-deps chromium", { cwd: p31ca });
+        run("Playwright E2E (p31ca preview + tests)", "npm run test:e2e", {
+          cwd: p31ca,
+          env: { ...process.env, CI: "true" },
+        });
+      } else {
+        console.log("\n\x1b[33m▶\x1b[0m Playwright: no playwright.config.ts in p31ca — skipped");
+      }
     }
   }
 

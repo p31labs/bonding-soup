@@ -58,6 +58,14 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
+      "label": "P31: doc library e2e (Playwright, headless)",
+      "type": "shell",
+      "command": "npm run test:doc-library:e2e",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
       "label": "P31: verify (full root ship bar incl. doc index + tsc)",
       "type": "shell",
       "command": "npm run verify",

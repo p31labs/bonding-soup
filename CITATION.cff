@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "P31 Home Workspace (C.A.R.S. / bonding-soup) + Docs"
+authors:
+- family-names: Johnson
+  given-names: William R.
+  orcid: https://orcid.org/0009-0002-2492-9079
+  affiliation: "P31 Labs, Inc."
+repository-code: https://github.com/p31labs/bonding-soup
+url: https://phosphorus31.org
+keywords:
+- P31 Labs
+- C.A.R.S.
+- bonding-soup
+- neuroinclusive
+- mesh
+references:
+- type: article
+  title: "The Tetrahedron Protocol: A Grand Unified Theory of Structural Resilience"
+  doi: 10.5281/zenodo.19004485
+- type: article
+  title: "Strategic Convergence of Geometric Security and Cognitive Resilience: P31 Labs Genesis Whitepaper"
+  doi: 10.5281/zenodo.19411363
+- type: article
+  title: "Consciousness, Memory, and the Architecture of Self-Preservation: Neuroscientific Foundations for Cognitive Prosthetic Design"
+  doi: 10.5281/zenodo.19416491
+- type: article
+  title: "The Universal Bridge at the Phase Transition: Kuramoto Criticality, Maxwell Rigidity, and the Topology of Neurodivergent Cognition"
+  doi: 10.5281/zenodo.19503542
+

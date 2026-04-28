@@ -8,6 +8,13 @@
 
 **Engineering standard:** before merge or deploy, follow **`docs/P31-ENGINEERING-STANDARD.md`** (`npm run verify`, `npm run release:check` when the full tree is present). **Facts contract (machine invariants):** `npm run verify:facts` — see **`docs/DELIVERABLE-P31-FACTS.md`**. Andromeda monorepo bar: **`andromeda/docs/ENTERPRISE_QUALITY.md`**.
 
+## Research series (Zenodo DOIs)
+
+- **Paper I**: `10.5281/zenodo.19004485` (prior version: `10.5281/zenodo.18627420`)
+- **Paper II**: `10.5281/zenodo.19411363`
+- **Paper III**: `10.5281/zenodo.19416491`
+- **Paper IV**: `10.5281/zenodo.19503542`
+
 ## First-time / clean machine setup
 
 **Full startup path (zero → shipped, read order, troubleshooting):** **`docs/P31-STARTUP-PACKAGE.md`**. In the repo: **`npm run startup`** prints the first section in the terminal.

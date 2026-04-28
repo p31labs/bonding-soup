@@ -1,0 +1,41 @@
+{
+  "metadata": {
+    "title": "P31 Home Workspace (C.A.R.S. / bonding-soup) + Docs",
+    "upload_type": "software",
+    "description": "Top-level P31 home workspace containing C.A.R.S. (Collaborative Affective Realtime Sim) plus documentation and integration surfaces. This repo is part of the broader P31 Labs ecosystem; the Andromeda monorepo and public site are related identifiers.",
+    "creators": [
+      {
+        "name": "Johnson, William R.",
+        "orcid": "0009-0002-2492-9079",
+        "affiliation": "P31 Labs, Inc."
+      }
+    ],
+    "license": "MIT",
+    "keywords": [
+      "P31 Labs",
+      "C.A.R.S.",
+      "bonding-soup",
+      "neuroinclusive",
+      "mesh",
+      "documentation"
+    ],
+    "related_identifiers": [
+      {
+        "scheme": "url",
+        "identifier": "https://github.com/p31labs/bonding-soup",
+        "relation": "isSupplementTo"
+      },
+      {
+        "scheme": "url",
+        "identifier": "https://github.com/p31labs/andromeda",
+        "relation": "isPartOf"
+      },
+      {
+        "scheme": "url",
+        "identifier": "https://phosphorus31.org",
+        "relation": "isPartOf"
+      }
+    ]
+  }
+}
+

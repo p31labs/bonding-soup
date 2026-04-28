@@ -58,8 +58,8 @@ export const P31_CONSTANTS = {
     "papers": [
       {
         "id": "defensive",
-        "doi": "10.5281/zenodo.18627420",
-        "title": "The Tetrahedron Protocol"
+        "doi": "10.5281/zenodo.19004485",
+        "title": "The Tetrahedron Protocol: A Grand Unified Theory of Structural Resilience"
       },
       {
         "id": "IV",

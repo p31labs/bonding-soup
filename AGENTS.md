@@ -1,6 +1,6 @@
 # P31 home workspace — agent notes
 
-This tree is a **multi-root** home: **C.A.R.S.** (**Collaborative Affective Realtime Sim**, **`docs/CARS-NAMING.md`**, npm package **`bonding-soup`**) at the top level, **Andromeda** under `andromeda/`, other sites, `docs/`, and tooling. The **P31 home** root may be its own git repository (e.g. `bonding-soup` + `cognitive-passport` + `scripts` + `wcd33-global-archive/`; `.gitignore` excludes `andromeda/` and `phosphorus31.org/`, which have separate remotes). `andromeda/` remains the monorepo for `04_SOFTWARE` and GitHub Actions.
+This tree is a **multi-root** home: **C.A.R.S.** (**Collaborative Affective Realtime Sim**, **`docs/CARS-NAMING.md`**) — npm package **`bonding-soup`** (legacy name; Git **`p31labs/bonding-soup`**) at the top level, **Andromeda** under `andromeda/`, other sites, `docs/`, and tooling. The **P31 home** root may be its own git repository (e.g. `bonding-soup` + `cognitive-passport` + `scripts` + `wcd33-global-archive/`; `.gitignore` excludes `andromeda/` and `phosphorus31.org/`, which have separate remotes). `andromeda/` remains the monorepo for `04_SOFTWARE` and GitHub Actions.
 
 0. **New clone / machine** — start here, then depth is elsewhere ( **`docs/P31-STARTUP-PACKAGE.md`** ; **`npm run startup`** prints **~first 54 lines**, including **Chromebook · iPhone → command center (:3131)** ).
 

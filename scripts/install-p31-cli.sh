@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
-# Symlink p31 into ~/.local/bin so it works from any terminal (no npm global PATH required).
+# Installs ~/.local/bin/p31 → scripts/p31-launcher.sh (C.A.R.S. home repo; npm name still bonding-soup).
 set -euo pipefail
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SELF="${BASH_SOURCE[0]}"
+if command -v realpath >/dev/null 2>&1; then
+  SELF="$(realpath "$SELF")"
+elif readlink -f / >/dev/null 2>&1; then
+  SELF="$(readlink -f "$SELF")"
+fi
+ROOT="$(cd "$(dirname "$SELF")/.." && pwd)"
 LAUNCHER="$ROOT/scripts/p31-launcher.sh"
 TARGET="${HOME}/.local/bin/p31"
 mkdir -p "${HOME}/.local/bin"
 chmod +x "$LAUNCHER"
 ln -sf "$LAUNCHER" "$TARGET"
+echo "C.A.R.S. home repo: $ROOT"
 echo "Installed: $TARGET -> $LAUNCHER"
 if ! command -v p31 >/dev/null 2>&1; then
   echo ""

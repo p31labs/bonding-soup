@@ -1,7 +1,7 @@
 {
   "name": "bonding-soup",
   "version": "0.1.0",
-  "description": "C.A.R.S. — Collaborative Affective Realtime Sim (social molecules; npm name bonding-soup)",
+  "description": "C.A.R.S. (Collaborative Affective Realtime Sim) — home workspace; npm package name bonding-soup (legacy; see docs/CARS-NAMING.md)",
   "main": "dist/soup.js",
   "bin": {
     "p31": "scripts/cli/index.mjs"

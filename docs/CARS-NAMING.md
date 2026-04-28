@@ -15,7 +15,7 @@
 
 **Legacy / repo:**
 
-- **`bonding-soup`** — npm **`package.json` `name`** (unchanged; GitHub **`p31labs/bonding-soup`**).
+- **`bonding-soup`** — npm **`package.json` `name`** (unchanged; GitHub **`p31labs/bonding-soup`**). **CLI:** **`p31`** on **`PATH`** via **`npm run p31:link`** → **`~/.local/bin/p31`** (**`scripts/p31-launcher.sh`** resolves **`ROOT`**). See **`docs/P31-STARTUP-PACKAGE.md`** (exact **`/home/p31`** block for penguin).
 - **`soup.html`**, **`soup:*`** scripts — filenames stay; **BONDING** in mission copy (labs EIN 424/32, etc.) is unrelated.
 
 **Deployed URL:** `https://bonding.p31ca.org/soup` (bonding vertical; path unchanged).

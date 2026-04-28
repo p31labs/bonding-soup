@@ -18,17 +18,33 @@ Everything below is **`npm run command-center`** (Node on the machine that holds
 
 ---
 
-## `p31` on your PATH (any terminal — Chromebook Linux / penguin)
+## `p31` on your PATH (C.A.R.S. home repo — Chromebook Linux / penguin)
 
-`npm link` only works if npm’s global **`bin`** directory is on **`PATH`** (often missing on Crostini). One-shot:
+**Product name:** **C.A.R.S.** (see **`docs/CARS-NAMING.md`**). **`npm link`** only works if npm’s global **`bin`** directory is on **`PATH`** (often missing on Crostini). One-shot installer:
 
 | Step | Command |
 |------|--------|
-| 1. From the **home repo root** | `npm run p31:link` |
-| 2. If the installer says `p31` is not found | `echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc` then **open a new terminal** (or `source ~/.bashrc`) |
-| 3. Test | `p31 --version` · `p31 boot` |
+| 1. From **this repo root** (the directory that contains **`package.json`** named **`bonding-soup`**) | `npm run p31:link` |
+| 2. If **`p31`** is still not found | `echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc` then **open a new terminal** (or **`source ~/.bashrc`**) |
 
-This installs **`~/.local/bin/p31`** → `scripts/p31-launcher.sh` (realpath resolves the repo no matter **cwd**).
+This installs **`~/.local/bin/p31`** → **`scripts/p31-launcher.sh`**. At runtime **`realpath`** resolves to your clone (`ROOT`), then **`node "$ROOT/scripts/cli/index.mjs"`** — **`cwd` does not matter**.
+
+### Exact commands (clone at **`/home/p31`** — your penguin Linux home layout)
+
+Copy-paste as a block:
+
+```bash
+cd /home/p31
+git pull --ff-only
+npm run p31:link
+grep -qF '.local/bin' ~/.bashrc 2>/dev/null || echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+export PATH="$HOME/.local/bin:$PATH"
+hash -r
+p31 --version
+P31_CLI_MINIMAL=1 p31 boot
+```
+
+If your checkout lives elsewhere, replace **`/home/p31`** with the directory that contains **`package.json`** (`"name": "bonding-soup"`).
 
 ---
 
@@ -127,4 +143,4 @@ Searchable index: build with **`npm run build:doc-index`** (in **`verify`**). Op
 
 ---
 
-**Version:** 1.2.0 — 2026-04-28 ( **`npm run p31:link`** · `~/.local/bin/p31` on PATH) · prior: Chromebook + iPhone + CC · aligns with **`npm run startup`** (**54-line** teaser; extend file for full steps) + **`npm run verify`** spine.
+**Version:** 1.3.0 — 2026-04-28 (C.A.R.S. wording · exact **`/home/p31`** **`p31:link`** commands) · prior: **`p31:link`** **`~/.local/bin`**

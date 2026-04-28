@@ -3,7 +3,7 @@
  * One-shot “make it green + synced” for P31 home + nested Andromeda p31ca.
  * - Regenerates constants-derived artifacts (mesh JSON, ground-truth header, TS export).
  * - Normalizes BONDING static HTML (viewport-fit + p31-mesh-m-first): apply:mesh-m-first:home.
- * - Mirrors p31-live-fleet.json into the hub public tree when both paths exist.
+ * - Mirrors p31-live-fleet.json into the hub public tree when both paths exist, then npm run build:fleet-entities in p31ca (fleet agents JSON + /agent stubs).
  * - Regenerates fleet-portal.html (npm run build:fleet-portal) and mirrors it to p31ca public when present.
  * - Runs sync:doc-library:p31ca when p31ca exists (build:doc-index + mirror to public/doc-library/).
  * - Runs release:local (verify + p31ca build + security:check, loose mesh strict).
@@ -28,11 +28,19 @@ function main() {
 
   run("build:fleet-portal (live apps index HTML)", "npm run build:fleet-portal", root);
 
+  const p31caRoot = path.join(root, "andromeda", "04_SOFTWARE", "p31ca");
   const fleetSrc = path.join(root, "p31-live-fleet.json");
   const fleetDst = path.join(root, "andromeda/04_SOFTWARE/p31ca/public/p31-live-fleet.json");
   if (fs.existsSync(fleetSrc) && fs.existsSync(path.dirname(fleetDst))) {
     fs.copyFileSync(fleetSrc, fleetDst);
     console.log("\n\x1b[32m✓\x1b[0m synced p31-live-fleet.json → andromeda/04_SOFTWARE/p31ca/public/");
+    if (fs.existsSync(p31caRoot)) {
+      run(
+        "build:fleet-entities — p31-fleet-entities.json + public/agent/* from live-fleet snapshot",
+        "npm run build:fleet-entities",
+        p31caRoot
+      );
+    }
   }
   const portalSrc = path.join(root, "fleet-portal.html");
   const portalDst = path.join(root, "andromeda/04_SOFTWARE/p31ca/public/fleet-portal.html");
@@ -51,7 +59,6 @@ function main() {
     console.log("\n\x1b[32m✓\x1b[0m wrote fleet-portal.html → p31ca public/ (p31-style.css) — live: https://p31ca.org/fleet-portal.html\n");
   }
 
-  const p31caRoot = path.join(root, "andromeda", "04_SOFTWARE", "p31ca");
   if (fs.existsSync(p31caRoot) && process.env.P31_POLISH_SKIP_DOC_LIB !== "1") {
     run(
       "sync:doc-library:p31ca (build:doc-index + hub /doc-library mirror)",

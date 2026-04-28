@@ -79,6 +79,12 @@
       "note": "301 → passport-generator.html; AGENTS canonical /passport"
     },
     {
+      "id": "p31ca-agents-short",
+      "url": "https://p31ca.org/agents",
+      "group": "pages",
+      "note": "301 → fleet-agents.html; Worker · bot · Cortex roster + probes + paste-ready curl/wrangler"
+    },
+    {
       "id": "p31ca-mesh-start-page",
       "url": "https://p31ca.org/mesh-start.html",
       "group": "pages",
@@ -107,6 +113,13 @@
       "url": "https://p31ca.org/p31-public-surface.json",
       "group": "contracts",
       "note": "p31.publicSurface/1.0.0 — trust/legal index + machine endpoints"
+    },
+    {
+      "id": "p31ca-fleet-entities-json",
+      "url": "https://p31ca.org/p31-fleet-entities.json",
+      "group": "contracts",
+      "note": "p31.fleetEntities/1.0.0 — merged roster consumed by fleet-agents.html; npm run build:fleet-entities in p31ca prebuild",
+      "expectJsonKey": "schema"
     },
     {
       "id": "p31ca-privacy-page",

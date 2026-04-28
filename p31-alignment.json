@@ -94,7 +94,7 @@
     {
       "id": "p31-ground-truth",
       "path": "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json",
-      "role": "p31.ground-truth/1.0.0 — redirects, registry invariants, Three pins",
+      "role": "p31.ground-truth/1.0.0 — edgeRedirects (+ Worker SPA 302 triple from worker-spa-launches.mjs), registry invariants, Three pins",
       "optional": true
     },
     {
@@ -132,6 +132,12 @@
       "id": "p31ca-hub-app-ids",
       "path": "andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs",
       "role": "Home / prototype id order; id set must match registry",
+      "optional": true
+    },
+    {
+      "id": "p31-worker-spa-launches",
+      "path": "andromeda/04_SOFTWARE/p31ca/scripts/hub/worker-spa-launches.mjs",
+      "role": "Canonical https://p31ca.org/<path> Launch URLs for Worker SPAs; Workers.dev targets; derivation worker-spa-launch-triple",
       "optional": true
     },
     {
@@ -252,7 +258,7 @@
         "andromeda/04_SOFTWARE/p31ca/public/agent/*/index.html"
       ],
       "apply": "Author p31-live-fleet.json at P31 home root; polish copies → p31ca/public/p31-live-fleet.json; then from p31ca npm run build:fleet-entities — or rely on hub prebuild. Supplemental Cortex/Discord roster: SUPPLEMENT_ENTITIES in build-fleet-entities.mjs.",
-      "verify": "npm run verify:p31ca-contracts (includes build:fleet-entities + verify:fleet-entities before verify-ground-truth) or from p31ca npm run verify:fleet-entities alone",
+      "verify": "npm run verify:p31ca-contracts (includes build:fleet-entities + verify:fleet-entities + verify:ground-truth + verify:worker-spa-launch before education/economy) or from p31ca npm run verify:fleet-entities alone",
       "note": "Names: Fleet map = live-fleet-demo + raw p31.liveFleet bundle; Fleet portal = build-fleet-portal URL index; Fleet agents room = /fleet-agents.html + entities JSON + per-slug /agent/<slug>/ — no synonym mixing."
     },
     {
@@ -346,6 +352,20 @@
       "apply": "postinstall / p31ca: hub:build (scripts/hub/build-landing-data.mjs)",
       "verify": "p31ca prebuild: scripts/hub/verify.mjs",
       "note": "Joint constraint: same id set in both from[] files. index.astro grid is data-driven. Spec: docs/P31-HUB-CARD-ECOSYSTEM.md"
+    },
+    {
+      "id": "worker-spa-launch-triple",
+      "from": [
+        "andromeda/04_SOFTWARE/p31ca/scripts/hub/worker-spa-launches.mjs",
+        "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/_redirects",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+      ],
+      "apply": "Edit WORKER_SPA_LAUNCHES; registry uses appUrlForWorkerSpa(<id>). Then npm run sync:worker-spa-launch (repo root or p31ca). Refresh Launch copy if needed: npm run hub:about:generate (from p31ca)",
+      "verify": "npm run verify:worker-spa-launch; chained after verify:ground-truth inside npm run verify:p31ca-contracts (home verify) and p31ca prebuild",
+      "note": "@generated worker-spa-launch block in _redirects; Launch URLs https://p31ca.org/<path> → 302 → *.trimtab-signal.workers.dev"
     },
     {
       "id": "mesh-urls-constants-to-live-fleet",
@@ -512,7 +532,7 @@
     ]
   },
   "verifyPipeline": {
-    "description": "Root `package.json` `verify` = prelude + scripts in order. Update this file whenever `verify` changes.",
+    "description": "Root `package.json` `verify` = prelude + scripts in order. verify:p31ca-contracts chains build:fleet-entities → verify:fleet-entities → verify:ground-truth → verify:worker-spa-launch → education → … Update this file whenever `verify` changes.",
     "prelude": "verify:alignment",
     "preludeNote": "Fast guard (verify-alignment.mjs): JSON + required sources. Skipped in the `--verify` loop (prelude already satisfied).",
     "scripts": [

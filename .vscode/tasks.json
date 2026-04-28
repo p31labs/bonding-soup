@@ -290,9 +290,25 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
+      "label": "P31: verify Worker SPA launch (redirects ↔ registry ↔ ground-truth)",
+      "type": "shell",
+      "command": "npm run verify:worker-spa-launch",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
       "label": "P31: p31ca hub:ci (registry → about + verify + build)",
       "type": "shell",
       "command": "npm run hub:ci",
+      "options": { "cwd": "${workspaceFolder}/andromeda/04_SOFTWARE/p31ca" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: p31ca hub:diff (edge contract + hub index)",
+      "type": "shell",
+      "command": "npm run hub:diff",
       "options": { "cwd": "${workspaceFolder}/andromeda/04_SOFTWARE/p31ca" },
       "group": "build",
       "presentation": { "reveal": "always", "panel": "shared" }

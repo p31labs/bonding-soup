@@ -57,7 +57,7 @@ This file is the **single map of record** for what lives under **`/home/p31`**: 
 
 | Track | What ships | Default commands / CI (when applicable) |
 |--------|------------|----------------------------------------|
-| **A — Technical hub** | **`p31ca.org`** (Astro hub, `*-about.html`, passport mirror) | `andromeda/04_SOFTWARE/p31ca`: `npm run hub:ci`, passport verify/sync, `npm run deploy`; workflows **`p31ca-hub.yml`**, **P31 Automation** / Pages. Registry + home grid id order: `scripts/hub/registry.mjs` and `scripts/hub/hub-app-ids.mjs` — **`docs/P31-HUB-CARD-ECOSYSTEM.md`**. |
+| **A — Technical hub** | **`p31ca.org`** (Astro hub, `*-about.html`, passport mirror) | `andromeda/04_SOFTWARE/p31ca`: `npm run hub:ci`, passport verify/sync, `npm run deploy`; workflows **`p31ca-hub.yml`**, **P31 Automation** / Pages. Registry + home grid id order: `scripts/hub/registry.mjs` and `scripts/hub/hub-app-ids.mjs` — **`docs/P31-HUB-CARD-ECOSYSTEM.md`**. From **home root** (Andromeda present): **`npm run hub:diff:p31ca`** or **`npm run p31 -- hub-diff`** — ground-truth + Worker SPA launches + hub-landing diff (no Astro build). |
 | **B — Public org / programs site** | **`phosphorus31.org`** | That repo’s own `package.json`, CI, and `DEPLOY` docs — **not** the p31ca path above. |
 | **C — P31 home vertical** | C.A.R.S. (`soup.html`), passport authoring, wcd33 archive | Root `npm run verify` / `release:check`, `wcd33-global-archive` per its `DEPLOY.md`. |
 

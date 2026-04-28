@@ -10,7 +10,7 @@ This tree is a **multi-root** home: **C.A.R.S.** (**Collaborative Affective Real
 
    - **Post-commit auto-push (optional):** **`npm run git:autopush:on`** or **`P31_AUTO_PUSH=1`**; off **`P31_NO_AUTO_PUSH=1`**.
 
-   - **Command center (local):** **`npm run command-center`** → **http://127.0.0.1:3131** — whitelisted actions (verify, **`connection`**, **`p31:all`**, **`validate:full`**, **`release:check`**, **`apply:constants`**, **`ecosystem:plan`**, mesh/glass, operator shift, **`inventory:cf`**, **`doctor`**, Andromeda / **`p31ca`** **`hub:ci`**, git/PR), **slow/net/hitl** tags, browser confirms. Or **Tasks** → **“P31: local command center”**. **`P31_CMD_CENTER_NO_OPEN=1`** disables auto-open.    **Phone on same Wi‑Fi:** **`P31_CMD_CENTER_LAN=1`** (see **`docs/P31-IPHONE-COMMAND-READINESS.md`**).
+   - **Command center (local):** **`npm run command-center`** → **http://127.0.0.1:3131** — whitelisted actions (verify, **`connection`**, **`p31:all`**, **`validate:full`**, **`release:check`**, **`apply:constants`**, **`ecosystem:plan`**, mesh/glass, operator shift, **`inventory:cf`**, **`doctor`**, Andromeda / **`p31ca`** **`hub:ci`**, **`p31ca-hub-diff`** (**`hub:diff`**, no full build), git/PR), **slow/net/hitl** tags, browser confirms. Or **Tasks** → **“P31: local command center”**. **`P31_CMD_CENTER_NO_OPEN=1`** disables auto-open.    **Phone on same Wi‑Fi:** **`P31_CMD_CENTER_LAN=1`** (see **`docs/P31-IPHONE-COMMAND-READINESS.md`**).
 
    - **CONNECTION spine:** **`npm run connection`** (alias **`npm run p31 -- connect`**) — one screen wiring deploy canon (**`docs/P31-DEPLOY-CANON.md`**), ecosystem **`deployables`**, **`P31_*`** catalog (**`p31-env-manifest.json`**), edge commands, live hub (`p31ca.org`, **`/connect`**, **`/ops`**). **`npm run doctor`** prints a short CONNECTION line after remotes.
 
@@ -18,7 +18,7 @@ This tree is a **multi-root** home: **C.A.R.S.** (**Collaborative Affective Real
 
    - **Chromebook + mobile (device spine, hub tokens):** **`p31-device-setup.html`** (open with **`npm run demo`**) · **`docs/P31-DEVICE-SETUP-CHROMEBOOK-MOBILE.md`** — clone path, **`P31_DEMO_PORT`**, Crostini, LAN **3131**; command-center deep dives **`docs/P31-CHROMEBOOK-COMMAND-READINESS.md`**, **`docs/P31-IPHONE-COMMAND-READINESS.md`**. **Static path/port:** **`docs/SOUP-LOCAL-DEMO.md`**.
 
-   - **`p31` CLI:** **`npm run p31`** — `boot`, `doctor`, `connect`, `verify`, `ci`, `cc` (same family as command center); **`scripts/cli/`**; global **`p31`** via **`npm link`**; **`P31_CLI_MINIMAL`**, **`NO_COLOR`**.
+   - **`p31` CLI:** **`npm run p31`** — `boot`, `doctor`, `connect`, `verify`, `ci`, `cc`, `hub-diff` (same family as command center; **`hub-diff`** runs **`npm run hub:diff:p31ca`** when `andromeda/04_SOFTWARE/p31ca` exists); **`scripts/cli/`**; global **`p31`** via **`npm link`**; **`P31_CLI_MINIMAL`**, **`NO_COLOR`**.
 
    - **Normative docs:** **`docs/P31-ENGINEERING-STANDARD.md`** (DoD: **`verify`**, **`release:check`**, constants/canon/passport, secrets, **`docs/files/`** in Andromeda). Fleet / 11.10: **`docs/ECOSYSTEM-PRODUCTION-11.md`**. Monorepo bar: **`andromeda/docs/ENTERPRISE_QUALITY.md`**.
 

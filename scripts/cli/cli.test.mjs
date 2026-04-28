@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
+import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { useFullBoot, useColor, stdoutIsTTY } from "./tty.mjs";
 
@@ -99,5 +100,18 @@ describe("cli entry", () => {
     const out = (r.stdout || "") + (r.stderr || "");
     expect(out).toMatch(/k4-personal/);
     expect(out).toMatch(/ecosystem-glass/);
+  });
+
+  it("hub-diff exits 0 when p31ca tree present", () => {
+    const p31caPkg = path.join(cliRoot, "andromeda", "04_SOFTWARE", "p31ca", "package.json");
+    if (!existsSync(p31caPkg)) return;
+    const r = spawnSync(process.execPath, [cliEntry, "hub-diff"], {
+      cwd: cliRoot,
+      encoding: "utf8",
+      env: { ...process.env, P31_CLI_MINIMAL: "1" },
+    });
+    expect(r.status).toBe(0);
+    const out = (r.stdout || "") + (r.stderr || "");
+    expect(out).toMatch(/verify-ground-truth: OK|verify:ground-truth/i);
   });
 });

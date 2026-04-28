@@ -406,11 +406,17 @@ const actions = {
     confirm: "Andromeda polish can take a long time. Continue?",
   },
   "p31ca-hub-ci": {
-    title: "p31ca only: hub:ci (about + verify + build + dist check)",
+    title: "p31ca hub:ci (about + verify + build + dist check)",
     cwd: p31ca,
     cmd: "npm",
     args: ["run", "hub:ci"],
     slow: true,
+  },
+  "p31ca-hub-diff": {
+    title: "p31ca hub:diff (ground-truth + Worker SPA + hub index diff)",
+    cwd: p31ca,
+    cmd: "npm",
+    args: ["run", "hub:diff"],
   },
 };
 
@@ -549,6 +555,7 @@ const SECTIONS = [
       "andromeda-git-hooks",
       "andromeda-prepush",
       "p31ca-hub-ci",
+      "p31ca-hub-diff",
       "andromeda-polish",
       "andromeda-pr",
       "andromeda-fix-gh",
@@ -627,7 +634,7 @@ function buildPageHtml() {
   const sections = SECTIONS.map((sec) => {
     const ids = sec.ids.filter((id) => {
       if (id.startsWith("andromeda-") && !a) return false;
-      if (id === "p31ca-hub-ci" && !p) return false;
+      if ((id === "p31ca-hub-ci" || id === "p31ca-hub-diff") && !p) return false;
       return true;
     });
     if (sec.id === "local") {
@@ -945,7 +952,7 @@ const server = http.createServer((req, res) => {
           res.end(JSON.stringify({ code: 1, stderr: "andromeda/ not in this tree\n", stdout: "" }));
           return;
         }
-        if (id === "p31ca-hub-ci" && !hasP31ca()) {
+        if ((id === "p31ca-hub-ci" || id === "p31ca-hub-diff") && !hasP31ca()) {
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ code: 1, stderr: "p31ca package not found\n", stdout: "" }));
           return;

@@ -36,6 +36,13 @@ function printHelp() {
       "  " + cyan("facts") + "         " + dim("npm run verify:facts") + " (p31-facts.json invariants)",
       "  " + cyan("budgets") + "       " + dim("mesh + glass latency SLOs (p31-facts; no network)"),
       "  " + cyan("ci") + "            " + dim("npm run p31:ci") + " (release-style verify + hub when present)",
+      "  " +
+        cyan("hub-diff") +
+        "      " +
+        dim("p31ca hub:diff") +
+        " (ground-truth + Worker SPA + hub index) — " +
+        dim("npm run hub:diff:p31ca") +
+        ", needs andromeda/",
       "  " + cyan("command-center") + "  start local UI " + dim("(npm run command-center)"),
       "  " + cyan("cc") + "            alias for " + cyan("command-center"),
       "  " + cyan("open") + "         " + dim("open local dev pages; auto-starts :8080/:3131 & doc index — ") + dim("p31 open -h") + " " + dim("for details"),
@@ -154,6 +161,11 @@ async function main() {
 
   if (cmd === "ci") {
     const code = await runNpmScript("p31:ci", argv.slice(1));
+    process.exit(code);
+  }
+
+  if (cmd === "hub-diff") {
+    const code = await runNpmScript("hub:diff:p31ca", argv.slice(1));
     process.exit(code);
   }
 

@@ -1,37 +1,49 @@
 /**
- * P31 CLI ASCII — no figlet subprocess; renders everywhere UTF-8 is OK.
- * Wide / compact / mini chosen from terminal width in splash.mjs + boot.mjs.
+ * P31 CLI ASCII — geometric tetrahedron + ASCII # wordmark (no ambiguous block glyphs, no ▓/░).
+ * Tiered by terminal width in splash.mjs + boot.mjs.
  */
 
-/** Full-width signature block (~76 cols): mesh frame + phosphor typography */
-export const BANNER_HERO = `
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    ▓▓░  ██████╗ ██╗ ██████╗     ██████╗ ██╗ ██████╗        ░▓▓
-    ▓▓░  ██╔══██╗██║██╔═══██╗    ██╔══██╗██║██╔════╝        ░▓▓
-    ▓▓░  ██████╔╝██║██║   ██║    ██████╔╝██║██║             ░▓▓
-    ▓▓░  ██╔═══╝ ██║██║   ██║    ██╔═══╝ ██║██║             ░▓▓
-    ▓▓░  ██║     ██║╚██████╔╝ ██╗██║     ██║╚██████╗        ░▓▓
-    ▓▓░  ╚═╝     ╚═╝ ╚═════╝  ╚═╝╚═╝     ╚═╝ ╚═════╝        ░▓▓
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`.trim();
+/** ~76 cols: frame + tetrahedron wireframe + “P31” in # only (reads clearly everywhere). */
+export const BANNER_HERO = [
+  "  ════════════════════════════════════════════════════════════════════════════",
+  "                                   ∘",
+  "                            /|\\",
+  "                           / | \\",
+  "                          /  |  \\",
+  "                         /___|___\\",
+  "                        /\\   |   /\\",
+  "                       /__\\__|__/__\\",
+  "                         \\_____________/",
+  "  ────────────────────────────────────────────────────────────────────────────",
+  "",
+  "           #####       ####        ##    ",
+  "           #   #           #         #   ",
+  "           #####       ####          #   ",
+  "           #           #             #   ",
+  "           #           ####      #####   ",
+  "  ════════════════════════════════════════════════════════════════════════════",
+].join("\n");
 
-/** Mid terminal (~56–75 cols): lean block + rule */
-export const BANNER_COMPACT = `
-    ██████╗ ██████╗     ██╗
-    ██╔══██╗██╔══██╗   ███║
-    ██████╔╝██████╔╝   ╚██║
-    ██╔═══╝ ██╔══██╗    ██║
-    ██║     ██║  ██╗    ██║
-    ╚═╝     ╚═╝  ╚═╝    ╚═╝
-    ─────────────────────────`.trim();
+/** ~52–75 cols: compact tetra + short mark */
+export const BANNER_COMPACT = [
+  "        ∘",
+  "       /|\\",
+  "      /_|_\\",
+  "     /__|__\\",
+  "  ───────────────",
+  "   ###   ##   #   ",
+  "   # #    #   #   ",
+  "   ##   ##   #   ",
+  "  ───────────────",
+].join("\n");
 
-/** Very narrow terminals */
+/** Narrow: icon + text */
 export const BANNER_MINI = [
   "",
-  "  ■ P31 ■  local mesh control plane",
-  "  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─",
+  "  ∘  P31  ·  K₄  ·  tetra mesh",
+  "  ───────────────────────────",
 ].join("\n");
 
 export const TAGLINE = "local mesh · build · connect";
 
-/** Edge operator line (optional second line under tagline) */
 export const SUBHEAD = "andromeda node · K₄ edges · zero-budget edge";

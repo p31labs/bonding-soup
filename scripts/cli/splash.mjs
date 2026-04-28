@@ -5,7 +5,7 @@
 import process from "node:process";
 import { stdoutColumns, useFullBoot } from "./tty.mjs";
 import { BANNER_HERO, BANNER_COMPACT, BANNER_MINI, TAGLINE, SUBHEAD } from "./art/banner.mjs";
-import { cyan, dim, green, bold, magentaBright, magenta, blue } from "./theme.mjs";
+import { cyan, dim, green, bold, yellow, magentaBright, magenta, blue } from "./theme.mjs";
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
@@ -24,9 +24,10 @@ export function writeColoredBannerLines(out, raw) {
       out.write("\n");
       continue;
     }
-    if (line.includes("━")) out.write(magentaBright(line) + "\n");
-    else if (line.includes("▓") || line.includes("░")) out.write(magenta(dim(line)) + "\n");
-    else if (line.includes("■") || line.includes("─ ─")) out.write(blue(line) + "\n");
+    if (line.includes("#")) out.write(bold(cyan(line)) + "\n");
+    else if (line.includes("∘")) out.write(yellow(line) + "\n");
+    else if (line.includes("═") || line.includes("─")) out.write(magentaBright(line) + "\n");
+    else if (/[/\\|]/.test(line)) out.write(magenta(line) + "\n");
     else out.write(cyan(line) + "\n");
   }
 }

@@ -56,6 +56,7 @@ coverage/
 # Scratch / generated reports
 final_validation_report.md
 audit_runner.py
+docs/generated/
 
 # Local installers / large binaries (not tracked)
 /Applications/

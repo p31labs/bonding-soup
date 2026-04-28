@@ -40,6 +40,7 @@
     "test:oqe-icosa:e2e": "node scripts/oqe-icosa-e2e.mjs",
     "demo": "node scripts/demo-server.mjs",
     "build:doc-index": "node scripts/build-doc-index.mjs",
+    "build:nav-tree": "node scripts/build-nav-tree-report.mjs",
     "sync:doc-library:p31ca": "node scripts/sync-doc-library-p31ca.mjs",
     "verify:doc-index": "node scripts/verify-doc-index.mjs",
     "docs:prep": "npm run build:doc-index",

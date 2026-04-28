@@ -38,3 +38,18 @@ export function yellow(s) {
 export function red(s) {
   return wrap("31", s);
 }
+
+/** @param {string} s */
+export function magenta(s) {
+  return wrap("35", s);
+}
+
+/** @param {string} s */
+export function blue(s) {
+  return wrap("34", s);
+}
+
+/** Bright magenta — frame rules (ANSI 95). */
+export function magentaBright(s) {
+  return wrap("95", s);
+}

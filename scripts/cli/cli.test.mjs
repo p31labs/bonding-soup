@@ -48,6 +48,26 @@ describe("tty", () => {
 });
 
 describe("cli entry", () => {
+  it("connect --help reaches connection script (not top-level p31 help)", () => {
+    const r = spawnSync(process.execPath, [cliEntry, "connect", "--help"], {
+      cwd: cliRoot,
+      encoding: "utf8",
+      env: { ...process.env, P31_CLI_MINIMAL: "1" },
+    });
+    expect(r.status).toBe(0);
+    const out = (r.stdout || "") + (r.stderr || "");
+    expect(out).not.toMatch(/\bglobal:\s/i);
+  });
+
+  it("art exits 0", () => {
+    const r = spawnSync(process.execPath, [cliEntry, "art"], {
+      cwd: cliRoot,
+      encoding: "utf8",
+      env: { ...process.env, P31_CLI_MINIMAL: "1", CI: "" },
+    });
+    expect(r.status).toBe(0);
+  });
+
   it("exits 1 with message on unknown command", () => {
     const r = spawnSync(process.execPath, [cliEntry, "not-a-real-subcommand"], {
       cwd: cliRoot,

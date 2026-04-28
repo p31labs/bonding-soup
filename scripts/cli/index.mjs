@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
- * P31 home CLI — boot, help, delegates (doctor, …).
+ * P31 home CLI — splash, boot, help, delegates.
  *
  *   npm run p31 -- --help
  *   P31_CLI_MINIMAL=1 npm run p31 -- boot
+ *   P31_CLI_PLAIN=1     — no splash on empty / -h (same as --plain)
  *
  * @see scripts/cli/tty.mjs — TTY / CI / minimal matrix
  */
@@ -14,11 +15,22 @@ import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 import { runBoot } from "./boot.mjs";
 import { runOpen } from "./open.mjs";
+import { printSplash } from "./splash.mjs";
 import { bold, cyan, dim } from "./theme.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..", "..");
 const VERSION = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8")).version;
+
+/** Strip global-only flags before dispatch (does not remove subcommand `--` args). */
+function stripGlobals(argv) {
+  const plain =
+    argv.includes("--plain") ||
+    argv.includes("--no-art") ||
+    process.env.P31_CLI_PLAIN === "1";
+  const rest = argv.filter((a) => a !== "--plain" && a !== "--no-art");
+  return { argv: rest, plain };
+}
 
 function printHelp() {
   console.log(
@@ -27,35 +39,41 @@ function printHelp() {
       "",
       dim("Usage:"),
       "  " + cyan("npm run p31 --") + " [" + dim("command") + "] [" + dim("args...") + "]",
+      "  " + cyan("global:") + " " + dim("npm link") + " in this repo → " + cyan("p31") + " on your " + dim("PATH"),
       "",
       dim("Commands:"),
-      "  " + cyan("boot") + "          staged boot (full art when TTY; else one line)",
-      "  " + cyan("doctor") + "        run " + dim("scripts/p31-doctor.mjs") + " (pass-through args)",
-      "  " + cyan("connect") + "       CONNECTION spine — " + dim("npm run connection") + " (deploy · ecosystem · env · ops)",
-      "  " + cyan("verify") + "        " + dim("npm run verify") + " (pass-through after --)",
-      "  " + cyan("facts") + "         " + dim("npm run verify:facts") + " (p31-facts.json invariants)",
-      "  " + cyan("budgets") + "       " + dim("mesh + glass latency SLOs (p31-facts; no network)"),
-      "  " + cyan("ci") + "            " + dim("npm run p31:ci") + " (release-style verify + hub when present)",
       "  " +
-        cyan("hub-diff") +
-        "      " +
-        dim("p31ca hub:diff") +
-        " (ground-truth + Worker SPA + hub index) — " +
-        dim("npm run hub:diff:p31ca") +
-        ", needs andromeda/",
-      "  " + cyan("command-center") + "  start local UI " + dim("(npm run command-center)"),
+        cyan("art") +
+        ", " +
+        cyan("banner") +
+        "   splash only (" +
+        dim("ignores P31_CLI_MINIMAL") +
+        "; hidden when " +
+        dim("CI=true") +
+        ")",
+      "  " + cyan("boot") + "          staged boot (banner + INIT/MESH/READY when TTY)",
+      "  " + cyan("doctor") + "        run " + dim("scripts/p31-doctor.mjs") + " (pass-through args)",
+      "  " + cyan("connect") + "       CONNECTION spine — " + dim("npm run connection"),
+      "  " + cyan("verify") + "        " + dim("npm run verify"),
+      "  " + cyan("facts") + "         " + dim("npm run verify:facts"),
+      "  " + cyan("budgets") + "       mesh + glass SLOs (no network)",
+      "  " + cyan("ci") + "            " + dim("npm run p31:ci"),
+      "  " + cyan("hub-diff") + "      p31ca " + dim("hub:diff") + " · needs " + dim("andromeda/"),
+      "  " + cyan("command-center") + "  local operator UI (:3131)",
       "  " + cyan("cc") + "            alias for " + cyan("command-center"),
-      "  " + cyan("open") + "         " + dim("open local dev pages; auto-starts :8080/:3131 & doc index — ") + dim("p31 open -h") + " " + dim("for details"),
-      "  " + cyan("mesh") + "          " + dim("p31-mesh") + " CLI " + dim("(probe, fleet, agent, chat)"),
+      "  " + cyan("open") + "         local demos / passport — " + dim("p31 open -h"),
+      "  " + cyan("mesh") + "          " + dim("p31-mesh") + " CLI",
       "",
       dim("Flags:"),
-      "  " + cyan("-h, --help") + "     this text",
-      "  " + cyan("-V, --version") + "  print version",
+      "  " + cyan("-h, --help") + "     help " + dim("(only as first argument; subcommands keep their own -h)"),
+      "  " + cyan("-V, --version") + "  version " + dim("(first argument)"),
+      "  " + cyan("--plain") + ", " + cyan("--no-art") + "  no splash on empty / " + cyan("-h"),
       "",
       dim("Environment:"),
-      "  " + cyan("P31_CLI_MINIMAL=1") + "  skip staged boot / banner",
-      "  " + cyan("CI=true") + "           same as minimal for boot",
-      "  " + cyan("NO_COLOR") + "          disable ANSI",
+      "  " + cyan("P31_CLI_MINIMAL=1") + "  skip splash / staged boot art",
+      "  " + cyan("P31_CLI_PLAIN=1") + "    same as " + cyan("--plain"),
+      "  " + cyan("CI=true") + "           minimal boot/splash",
+      "  " + cyan("NO_COLOR") + "          no ANSI",
       "",
     ].join("\n")
   );
@@ -101,21 +119,35 @@ function runNpmScript(npmScript, fwd) {
 }
 
 async function main() {
-  const argv = process.argv.slice(2);
+  let argv = process.argv.slice(2);
+  const { argv: stripped, plain } = stripGlobals(argv);
+  argv = stripped;
+  if (plain) process.env.P31_CLI_PLAIN = "1";
 
-  if (argv.includes("--help") || argv.includes("-h")) {
+  const first = argv[0];
+
+  if (first === "-h" || first === "--help") {
+    await printSplash();
     printHelp();
     process.exit(0);
   }
-  if (argv.includes("--version") || argv.includes("-V")) {
+
+  if (first === "-V" || first === "--version") {
     console.log("p31-cli " + VERSION);
     process.exit(0);
   }
 
-  const cmd = argv[0];
-
-  if (!cmd) {
+  if (first == null) {
+    await printSplash();
     printHelp();
+    process.exit(0);
+  }
+
+  const cmd = first;
+  const fwd = argv.slice(1);
+
+  if (cmd === "art" || cmd === "banner") {
+    await printSplash(process.stdout, { force: true });
     process.exit(0);
   }
 
@@ -125,52 +157,52 @@ async function main() {
   }
 
   if (cmd === "doctor") {
-    const code = await runNodeScript("scripts/p31-doctor.mjs", argv.slice(1));
+    const code = await runNodeScript("scripts/p31-doctor.mjs", fwd);
     process.exit(code);
   }
 
   if (cmd === "connect") {
-    const code = await runNodeScript("scripts/p31-connection.mjs", argv.slice(1));
+    const code = await runNodeScript("scripts/p31-connection.mjs", fwd);
     process.exit(code);
   }
 
   if (cmd === "command-center" || cmd === "cc") {
-    const code = await runNodeScript("scripts/p31-local-command-center.mjs", argv.slice(1));
+    const code = await runNodeScript("scripts/p31-local-command-center.mjs", fwd);
     process.exit(code);
   }
 
   if (cmd === "mesh") {
-    const code = await runNodeScript("packages/p31-mesh/src/cli.mjs", argv.slice(1));
+    const code = await runNodeScript("packages/p31-mesh/src/cli.mjs", fwd);
     process.exit(code);
   }
 
   if (cmd === "verify") {
-    const code = await runNpmScript("verify", argv.slice(1));
+    const code = await runNpmScript("verify", fwd);
     process.exit(code);
   }
 
   if (cmd === "facts") {
-    const code = await runNpmScript("verify:facts", argv.slice(1));
+    const code = await runNpmScript("verify:facts", fwd);
     process.exit(code);
   }
 
   if (cmd === "budgets") {
-    const code = await runNodeScript("scripts/print-mesh-budgets.mjs", argv.slice(1));
+    const code = await runNodeScript("scripts/print-mesh-budgets.mjs", fwd);
     process.exit(code);
   }
 
   if (cmd === "ci") {
-    const code = await runNpmScript("p31:ci", argv.slice(1));
+    const code = await runNpmScript("p31:ci", fwd);
     process.exit(code);
   }
 
   if (cmd === "hub-diff") {
-    const code = await runNpmScript("hub:diff:p31ca", argv.slice(1));
+    const code = await runNpmScript("hub:diff:p31ca", fwd);
     process.exit(code);
   }
 
   if (cmd === "open") {
-    const code = await runOpen(argv.slice(1));
+    const code = await runOpen(fwd);
     process.exit(code);
   }
 

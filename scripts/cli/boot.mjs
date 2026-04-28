@@ -4,8 +4,9 @@
 
 import process from "node:process";
 import { stdoutColumns, useFullBoot } from "./tty.mjs";
-import { BANNER_COMPACT, TAGLINE } from "./art/banner.mjs";
+import { BANNER_HERO, BANNER_COMPACT, BANNER_MINI, TAGLINE } from "./art/banner.mjs";
 import { cyan, dim, green, bold } from "./theme.mjs";
+import { writeColoredBannerLines } from "./splash.mjs";
 
 const STAGE_MS = 55;
 const MAX_BOOT_MS = 1800;
@@ -37,14 +38,14 @@ export async function runBoot(out = process.stdout) {
   }
 
   const w = stdoutColumns();
-  const banner =
-    w < 56
-      ? dim("── P31 ──")
-      : BANNER_COMPACT.split("\n")
-          .map((line) => dim(line))
-          .join("\n");
+  let raw;
+  if (w >= 76) raw = BANNER_HERO;
+  else if (w >= 52) raw = BANNER_COMPACT;
+  else raw = BANNER_MINI;
 
-  out.write("\n" + banner + "\n");
+  out.write("\n");
+  writeColoredBannerLines(out, raw);
+  out.write("\n");
   out.write(dim(TAGLINE) + "\n\n");
 
   let elapsed = 0;

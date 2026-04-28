@@ -22,4 +22,6 @@
 
 **When-scale roadmap doc:** still `docs/PLAN-BONDING-SOUP-WHEN-SCALE.md` — title in-file uses **C.A.R.S.**; filename kept for stable links.
 
+**Operator narrative / brain map:** **`docs/P31-SESSION-SYNTHESIS-CURRENT-STATE.md`** · **`docs/P31-QUANTUM-BRAIN-FILESYSTEM.md`**.
+
 Last aligned: repo root **`README.md`**, this file, **`cars-contract/p31.carsWire.json`**, and **`scripts/verify-cars-wire.mjs`**.

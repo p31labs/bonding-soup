@@ -1,0 +1,20 @@
+{
+  "name": "@p31/simplex-email",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Cloudflare Email Worker — HERALD/tomograph ingest; forwards to verified destination only (WCD-SIMPLEX-04)",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250505.0",
+    "typescript": "~5.8.3",
+    "wrangler": "^4.40.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

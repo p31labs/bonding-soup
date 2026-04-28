@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased bg-[#05080c]" style="color-scheme: dark;">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>P31 Apex Forge — Sovereign SVG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            void: '#05080c',
+            surface: '#11151c',
+            teal: '#25897d',
+            cyan: '#4db8a8',
+            coral: '#cc6247',
+            cloud: '#e8e6e3',
+            phosphorus: '#3ba372',
+            muted: '#5a6b7c'
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: system-ui, sans-serif; color: #e8e6e3; }
+    .glass-panel {
+      background: linear-gradient(180deg, rgba(26, 31, 41, 0.4), rgba(17, 21, 28, 0.85));
+      border: 1px solid rgba(77, 184, 168, 0.12);
+      border-radius: 12px;
+      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.6);
+    }
+    .asset-box {
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: #0a0d12;
+      border-radius: 8px;
+      cursor: copy;
+      overflow: hidden;
+    }
+    .asset-box:hover { border-color: #4db8a8; }
+    .hud {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+      background: rgba(5, 8, 12, 0.82);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 800;
+      color: #4db8a8;
+      letter-spacing: 0.1em;
+      z-index: 5;
+      pointer-events: none;
+    }
+    .asset-box:hover .hud { opacity: 1; }
+    .asset-box.copied .hud { opacity: 1; color: #3ba372; }
+  </style>
+</head>
+<body class="min-h-screen p-6 lg:p-10">
+  <header class="max-w-5xl mx-auto mb-10 border-b border-white/10 pb-6 flex flex-wrap justify-between gap-4">
+    <div>
+      <p class="font-mono text-[10px] tracking-[0.35em] text-cyan mb-1">P31 LABS // APEX ASSET FORGE</p>
+      <h1 class="font-serif italic text-4xl text-cloud">Mathematical Ontology.</h1>
+      <p class="text-muted text-sm mt-2">Click any canvas to copy its SVG markup. Tokens: teal / cyan / coral / phosphorus per <code>cognitive-passport/p31-style.css</code>.</p>
+    </div>
+    <div class="font-mono text-[10px] text-muted text-right space-y-1">
+      <p>GENERATOR_TARGET <span class="text-cyan">RAW_SVG</span></p>
+      <p>SPINNER_PRESETS <span class="text-phosphorus">../spinners/</span></p>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto grid gap-10">
+    <!-- Larmor -->
+    <section class="glass-panel p-5">
+      <h2 class="font-mono text-xs text-teal uppercase tracking-widest mb-4">01 — Larmor kinetic logo</h2>
+      <div class="asset-box h-72 rounded-lg" onclick="copyAsset(this,'svg-larmor')">
+        <div class="hud">Extract SVG payload</div>
+        <svg id="svg-larmor" width="100%" height="100%" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="neon-bloom" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="3" result="b1" />
+              <feGaussianBlur stdDeviation="8" result="b2" />
+              <feMerge>
+                <feMergeNode in="b2" />
+                <feMergeNode in="b1" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <style>
+              .spin-slow { transform-origin: 100px 100px; animation: r-slow 20s linear infinite; }
+              .spin-fast-rev { transform-origin: 100px 100px; animation: r-fast-rev 8s linear infinite; }
+              .pulse-core { animation: p-core 2s ease-in-out infinite; transform-origin: 100px 100px; }
+              @keyframes r-slow { to { transform: rotate(360deg); } }
+              @keyframes r-fast-rev { to { transform: rotate(-360deg); } }
+              @keyframes p-core {
+                0%, 100% { transform: scale(0.95); opacity: 0.85; }
+                50% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 12px #3ba372); }
+              }
+            </style>
+          </defs>
+          <g filter="url(#neon-bloom)">
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#25897d" stroke-width="0.5" stroke-dasharray="2 6" />
+            <g class="spin-slow">
+              <ellipse cx="100" cy="100" rx="70" ry="20" fill="none" stroke="#4db8a8" stroke-width="1.5" transform="rotate(30 100 100)" />
+              <ellipse cx="100" cy="100" rx="70" ry="20" fill="none" stroke="#25897d" stroke-width="0.5" transform="rotate(120 100 100)" />
+            </g>
+            <g class="spin-fast-rev">
+              <ellipse cx="100" cy="100" rx="60" ry="15" fill="none" stroke="#cc6247" stroke-width="1" transform="rotate(-45 100 100)" />
+            </g>
+            <g class="pulse-core">
+              <polygon points="100,70 126,115 74,115" fill="rgba(59,163,114,0.15)" stroke="#3ba372" stroke-width="1" />
+              <path d="M100,100 L100,70 M100,100 L126,115 M100,100 L74,115" stroke="#3ba372" stroke-width="2" />
+              <circle cx="100" cy="100" r="4" fill="#ffffff" />
+            </g>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- PFP -->
+    <section class="glass-panel p-5">
+      <h2 class="font-mono text-xs text-coral uppercase tracking-widest mb-4">02 — Coral subject silhouette</h2>
+      <div class="asset-box h-72 rounded-lg" onclick="copyAsset(this,'svg-pfp')">
+        <div class="hud">Extract SVG payload</div>
+        <svg id="svg-pfp" width="100%" height="100%" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="pfp-bg" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#cc6247" stop-opacity="0.25" />
+              <stop offset="100%" stop-color="#05080c" stop-opacity="1" />
+            </radialGradient>
+          </defs>
+          <rect width="400" height="400" fill="url(#pfp-bg)" />
+          <circle cx="200" cy="200" r="120" fill="none" stroke="#cc6247" stroke-width="2" stroke-dasharray="8 14" opacity="0.7" />
+          <circle cx="200" cy="200" r="40" fill="#cc6247" opacity="0.3" />
+          <circle cx="200" cy="200" r="12" fill="#cc6247" />
+          <text x="200" y="360" font-family="'JetBrains Mono',monospace" font-size="12" fill="#e8e6e3" text-anchor="middle" letter-spacing="3" opacity="0.85">
+            SUBJECT_ID: ROUTED_BY_PASSKEY
+          </text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Banner -->
+    <section class="glass-panel p-5">
+      <h2 class="font-mono text-xs text-phosphorus uppercase tracking-widest mb-4">03 — Tomography hero (1200×600)</h2>
+      <div class="asset-box min-h-[200px] rounded-lg" onclick="copyAsset(this,'svg-banner')">
+        <div class="hud">Extract SVG payload</div>
+        <svg id="svg-banner" width="100%" height="100%" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+          <rect width="1200" height="600" fill="#05080c" />
+          <text x="80" y="220" font-family="'Playfair Display',serif" font-style="italic" font-size="64" fill="#e8e6e3" font-weight="600">Sovereign</text>
+          <text x="80" y="300" font-family="'Playfair Display',serif" font-style="italic" font-size="64" fill="#e8e6e3" font-weight="600">Cognitive Mesh.</text>
+          <text x="80" y="360" font-family="'JetBrains Mono',monospace" font-size="14" fill="#4db8a8" letter-spacing="4">P31 LABS // EDGE TOPOLOGY</text>
+          <g transform="translate(850 280)" opacity="0.35">
+            <circle r="180" fill="none" stroke="#25897d" stroke-width="0.5" stroke-dasharray="6 12" />
+            <circle r="80" fill="none" stroke="#4db8a8" />
+            <polygon points="0,-100 86,50 -86,50" fill="none" stroke="#3ba372" />
+          </g>
+        </svg>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function copyAsset(cardEl, svgId) {
+      const svgEl = document.getElementById(svgId);
+      const serializer = new XMLSerializer();
+      let source = serializer.serializeToString(svgEl);
+      if (!/^<svg[^>]+xmlns="http:\/\/www\.w3\.org\/2000\/svg"/.test(source)) {
+        source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+      }
+      navigator.clipboard.writeText(source).then(() => {
+        cardEl.classList.add('copied');
+        setTimeout(() => cardEl.classList.remove('copied'), 2000);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -262,9 +262,9 @@ const html = `<!DOCTYPE html>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="cognitive-passport/p31-style.css" />
-  <link rel="stylesheet" href="cognitive-passport/p31-responsive-surface.css" />
-  <script src="cognitive-passport/lib/p31-subject-prefs.js"></script>
+  <link rel="stylesheet" href="/p31-style.css" />
+  <link rel="stylesheet" href="/p31-responsive-surface.css" />
+  <script src="/lib/p31-subject-prefs.js"></script>
   <style>
     body.fp-shell {
       background-color: var(--p31-void);

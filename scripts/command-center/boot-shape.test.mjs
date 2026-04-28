@@ -2,9 +2,25 @@ import { describe, it, expect } from "vitest";
 import { assertBootShape } from "./boot-shape.mjs";
 
 const minimalValid = {
+  VERSION: "2",
+  ESSENTIAL_IDS: ["a1"],
   ACTION_META: {
-    a1: { title: "One", slow: false, network: false, hitl: false, confirm: null },
-    a2: { title: "Two", slow: true, network: true, hitl: true, confirm: "Sure?" },
+    a1: {
+      title: "One",
+      slow: false,
+      network: false,
+      hitl: false,
+      confirm: null,
+      protocol: "npm run x",
+    },
+    a2: {
+      title: "Two",
+      slow: true,
+      network: true,
+      hitl: true,
+      confirm: "Sure?",
+      protocol: "npm run y",
+    },
   },
   SECTIONS: [
     { id: "s1", title: "Block", ids: ["a1", "a2"], links: [{ href: "http://127.0.0.1/", label: "x" }] },

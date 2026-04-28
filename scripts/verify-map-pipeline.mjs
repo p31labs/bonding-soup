@@ -21,4 +21,11 @@ if (!fs.existsSync(map)) {
 
 console.log("verify-map-pipeline: running Andromeda verify-monetary-surface (MAP CWP-31)…");
 execSync("node scripts/verify-monetary-surface.mjs", { cwd: andromeda, stdio: "inherit" });
+
+const donateApi = path.join(andromeda, "04_SOFTWARE", "donate-api");
+if (fs.existsSync(path.join(donateApi, "package.json"))) {
+  console.log("verify-map-pipeline: donate-api unit tests (mocked Stripe)…");
+  execSync("npm test", { cwd: donateApi, stdio: "inherit" });
+}
+
 console.log("verify-map-pipeline: OK");

@@ -24,6 +24,14 @@
 2. **Remove a surface:** remove id from both files, delete is not needed if you re-run `generate-about-pages` after shrink (or delete orphan `*-about.html` manually).
 3. **`related[]`:** must only reference ids that exist in `registry.mjs` (enforced by existing hub verify loop).
 
+## Social Molecules / C.A.R.S. (`social-molecules`)
+
+**Hub static app:** `public/social-molecules.html` — operator shell: boot veil, load menu (live soup, BONDING app, mesh assistant, field-only), settings (local prefs), upgraded field chat staging (local echo; real DO chat via `/mesh-start.html`). Header strip probes **`/p31-mesh-constants.json`**, **k4-personal `/api/health`**, and same-origin **`/api/health`** (Refresh repeats the snapshot; last-good time from cache if offline).
+
+**Canonical short path:** `/cars` → `social-molecules.html` (see `ground-truth` `edgeRedirects` + `public/_redirects`).
+
+**Registry:** `social-molecules` immediately after `bonding` in `hub-app-ids.mjs`; `related`: `bonding`, `buffer`, `planetary-onboard`. Live C.A.R.S. soup remains `https://bonding.p31ca.org/soup`; wire catalog `cars-contract/p31.carsWire.json` in bonding-soup repo.
+
 ## Poets room (`poets`)
 
 **Home tree (C.A.R.S. repo):** `poets-room.html` — static lobby linking Cognitive Passport, doc library, mesh-start, geodesic, delta, and normative docs (SOULSAFE, geodesic campaign, MVP picture-book row).

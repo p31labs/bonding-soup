@@ -1,0 +1,42 @@
+# SIMPLEX v7 — simplex-worker
+# Fill database_id / KV id / queue name from Cloudflare dashboard after `wrangler d1 create simplex`.
+# Home Assistant long-lived token + base URL (local hub). Never commit.
+# wrangler secret put HA_TOKEN
+# wrangler secret put HA_BASE_URL
+
+name = "simplex-worker"
+main = "src/index.ts"
+compatibility_date = "2025-03-03"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+# Optional: harmless defaults for local wrangler dev; production uses secrets / KV-backed state.
+
+[[d1_databases]]
+binding = "DB"
+database_name = "simplex"
+database_id = "REPLACE_WITH_D1_ID"
+
+[[kv_namespaces]]
+binding = "SIMPLEX_STATE"
+id = "REPLACE_WITH_KV_ID"
+
+[[queues.producers]]
+binding = "AGENT_QUEUE"
+queue = "simplex-agent-queue"
+
+[observability]
+enabled = true
+
+[triggers]
+crons = [
+  "*/5 * * * *",
+  "0 6 * * *",
+  "0 7 * * 1,3,5",
+  "0 8 * * 1",
+  "0 9 * * *",
+  "0 10 * * 1",
+  "0 */4 * * *",
+  "0 */6 * * *",
+  "0 20 * * *"
+]

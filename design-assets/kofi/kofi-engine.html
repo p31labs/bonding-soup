@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased bg-[#05080c]" style="color-scheme: dark;">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>P31 Ko-fi Asset Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            void: '#05080c',
+            surface: '#11151c',
+            teal: '#25897d',
+            cyan: '#4db8a8',
+            coral: '#cc6247',
+            cloud: '#e8e6e3',
+            phosphorus: '#3ba372',
+            butter: '#cda852',
+            muted: '#5a6b7c'
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: system-ui, sans-serif; color: #e8e6e3; }
+    .wrap {
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      cursor: copy;
+      overflow: hidden;
+      background: #05080c;
+    }
+    .wrap:hover { border-color: rgba(77, 184, 168, 0.4); }
+    .hud {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      opacity: 0;
+      transition: opacity 0.2s;
+      background: rgba(5, 8, 12, 0.85);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 800;
+      color: #4db8a8;
+      z-index: 4;
+      pointer-events: none;
+    }
+    .wrap:hover .hud { opacity: 1; }
+    .wrap.success .hud { opacity: 1; color: #3ba372; }
+    .svg-text-serif { font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-weight: 600; }
+    .svg-text-mono { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+  </style>
+</head>
+<body class="min-h-screen p-6 lg:p-10">
+  <header class="max-w-5xl mx-auto mb-12 border-b border-white/10 pb-6">
+    <p class="font-mono text-[10px] tracking-[0.3em] text-cyan mb-1">P31 LABS // KO-FI STORE GENERATOR</p>
+    <h1 class="text-4xl font-serif italic text-cloud">Monetary alignment.</h1>
+    <p class="text-muted text-sm mt-3 max-w-3xl">
+      Draft PNGs for storefront headers and tiles. Product names are <strong>placeholders</strong> — review against
+      <code>docs/ETHICAL-STYLE-MAP.md</code> before publishing.
+    </p>
+  </header>
+
+  <main class="max-w-5xl mx-auto space-y-16">
+    <section>
+      <h2 class="font-mono text-xs text-cyan uppercase tracking-widest mb-4">01 — Header 1200 × 600</h2>
+      <div class="wrap w-full max-w-4xl mx-auto aspect-[2/1]" id="box-kofi-header" onclick="downloadPNG('svg-kofi-header', 'P31_KoFi_Header')">
+        <div class="hud"><span>Canvas export PNG</span><span class="text-muted font-normal">Font rendering may vary — verify in slicer/OS capture if needed</span></div>
+        <svg id="svg-kofi-header" width="1200" height="600" viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="header-glow" cx="50%" cy="100%" r="90%">
+              <stop offset="0%" stop-color="#25897d" stop-opacity="0.35" />
+              <stop offset="100%" stop-color="#05080c" stop-opacity="1" />
+            </radialGradient>
+            <pattern id="header-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <rect width="40" height="40" fill="none" stroke="#e8e6e3" stroke-opacity="0.04" stroke-width="1" />
+            </pattern>
+            <filter id="bloom-cyan">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <rect width="1200" height="600" fill="#05080c" />
+          <rect width="1200" height="600" fill="url(#header-glow)" />
+          <rect width="1200" height="600" fill="url(#header-grid)" />
+          <text x="600" y="260" class="svg-text-serif" font-size="72" fill="#e8e6e3" text-anchor="middle">Sovereign Cognitive</text>
+          <text x="600" y="340" class="svg-text-serif" font-size="72" fill="#e8e6e3" text-anchor="middle">Infrastructure.</text>
+          <text x="600" y="420" class="svg-text-mono" font-size="16" fill="#4db8a8" text-anchor="middle" letter-spacing="6">
+            P31 LABS // MONETARY ALIGNMENT PIPELINE
+          </text>
+          <rect x="450" y="470" width="300" height="44" rx="8" fill="#11151c" stroke="rgba(255,255,255,0.08)" />
+          <circle cx="478" cy="492" r="5" fill="#3ba372" filter="url(#bloom-cyan)" />
+          <text x="500" y="498" class="svg-text-mono" font-size="14" fill="#5a6b7c">EDGE MESH: ACTIVE</text>
+        </svg>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="font-mono text-xs text-butter uppercase tracking-widest mb-4">02 — Product tiles 600 × 600 (draft labels)</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="wrap aspect-square" onclick="downloadPNG('svg-shop-centaur','P31_Store_CentaurPack')">
+          <div class="hud"><span>PNG export</span></div>
+          <svg id="svg-shop-centaur" width="600" height="600" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+            <rect width="600" height="600" fill="#05080c" />
+            <text x="300" y="260" text-anchor="middle" fill="#cda852" font-family="'Playfair Display',serif" font-style="italic" font-size="72">◇</text>
+            <text x="300" y="380" class="svg-text-serif" font-size="28" fill="#e8e6e3" text-anchor="middle">Super-Centaur Pack</text>
+            <text x="300" y="420" class="svg-text-mono" font-size="12" fill="#cda852" text-anchor="middle" letter-spacing="3">OPERATOR STARTER (DRAFT)</text>
+          </svg>
+        </div>
+        <div class="wrap aspect-square" onclick="downloadPNG('svg-shop-node0','P31_Store_NodeZero')">
+          <div class="hud"><span>PNG export</span></div>
+          <svg id="svg-shop-node0" width="600" height="600" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+            <rect width="600" height="600" fill="#05080c" />
+            <rect x="210" y="200" width="180" height="200" rx="10" fill="none" stroke="#cc6247" stroke-width="2" />
+            <circle cx="300" cy="300" r="24" fill="#cc6247" opacity="0.25" />
+            <text x="300" y="480" class="svg-text-serif" font-size="28" fill="#e8e6e3" text-anchor="middle">Node Zero Firmware</text>
+            <text x="300" y="520" class="svg-text-mono" font-size="12" fill="#cc6247" text-anchor="middle" letter-spacing="3">PAIRING SCHEMATICS (DRAFT)</text>
+          </svg>
+        </div>
+        <div class="wrap aspect-square" onclick="downloadPNG('svg-shop-grant','P31_Store_OperatorGrant')">
+          <div class="hud"><span>PNG export</span></div>
+          <svg id="svg-shop-grant" width="600" height="600" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+            <rect width="600" height="600" fill="#05080c" />
+            <circle cx="300" cy="270" r="80" fill="none" stroke="#3ba372" stroke-width="2" stroke-dasharray="4 12" />
+            <circle cx="300" cy="270" r="12" fill="#3ba372" />
+            <text x="300" y="420" class="svg-text-serif" font-size="28" fill="#e8e6e3" text-anchor="middle">Operator Grant</text>
+            <text x="300" y="460" class="svg-text-mono" font-size="12" fill="#3ba372" text-anchor="middle" letter-spacing="3">INFRA TELEMETRY FUND (DRAFT)</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function downloadPNG(svgId, filenameBase) {
+      const svg = document.getElementById(svgId);
+      const box = svg.parentElement;
+      box.classList.add('success');
+      const serializer = new XMLSerializer();
+      let source = serializer.serializeToString(svg);
+      if (!/^<svg[^>]+xmlns="http:\/\/www\.w3\.org\/2000\/svg"/.test(source)) {
+        source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+      }
+      const url = URL.createObjectURL(new Blob([source], { type: 'image/svg+xml;charset=utf-8' }));
+      const img = new Image();
+      img.onload = function () {
+        const w = +svg.getAttribute('width') || 1200;
+        const h = +svg.getAttribute('height') || 600;
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#05080c';
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+        const a = document.createElement('a');
+        a.download = filenameBase + '_' + Date.now() + '.png';
+        a.href = canvas.toDataURL('image/png');
+        a.click();
+        setTimeout(() => box.classList.remove('success'), 2000);
+      };
+      img.onerror = function () {
+        alert('Canvas raster failed — use OS screenshot on the preview if fonts look wrong.');
+        box.classList.remove('success');
+      };
+      img.src = url;
+    }
+  </script>
+</body>
+</html>

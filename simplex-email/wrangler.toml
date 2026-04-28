@@ -1,0 +1,10 @@
+# WCD-SIMPLEX-04 — inbound Email Worker (HERALD / tomograph path)
+# Pair with Cloudflare Email Routing: route custom address → this Worker.
+# Never commit secrets. `wrangler secret put MAIL_FORWARD_DESTINATION` with a verified destination.
+
+name = "simplex-email"
+main = "src/index.ts"
+compatibility_date = "2025-03-03"
+
+[observability]
+enabled = true

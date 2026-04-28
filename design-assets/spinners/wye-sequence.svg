@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- P31 K4 spinner — Wye Sequence (sequential clockwise). Phosphorus (--p31-phosphorus #3ba372). -->
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+  <style>
+    circle { fill: #3ba372; opacity: 0.2; animation: cli-snap 1.2s infinite; }
+    .node-c { animation-delay: 0s; }
+    .node-t { animation-delay: 0.3s; }
+    .node-r { animation-delay: 0.6s; }
+    .node-l { animation-delay: 0.9s; }
+    @keyframes cli-snap {
+      0%, 100% { opacity: 0.2; }
+      15% { opacity: 1; filter: drop-shadow(0 0 4px #3ba372); }
+      30% { opacity: 0.2; }
+    }
+  </style>
+  <circle cx="12" cy="12" r="2.5" class="node-c" />
+  <circle cx="12" cy="4" r="2.5" class="node-t" />
+  <circle cx="20" cy="20" r="2.5" class="node-r" />
+  <circle cx="4" cy="20" r="2.5" class="node-l" />
+</svg>

@@ -13,6 +13,16 @@ export function assertBootShape(b) {
   }
   const o = /** @type {Record<string, unknown>} */ (b);
 
+  if (o.VERSION != null && typeof o.VERSION !== "string") {
+    throw new Error("boot: VERSION must be a string if present");
+  }
+  if (
+    o.ESSENTIAL_IDS != null &&
+    (!Array.isArray(o.ESSENTIAL_IDS) || !o.ESSENTIAL_IDS.every((x) => typeof x === "string"))
+  ) {
+    throw new Error("boot: ESSENTIAL_IDS must be an array of strings if present");
+  }
+
   if (!o.ACTION_META || typeof o.ACTION_META !== "object" || Array.isArray(o.ACTION_META)) {
     throw new Error("boot: ACTION_META must be a non-array object");
   }
@@ -44,6 +54,18 @@ export function assertBootShape(b) {
     }
     if (me.confirm != null && typeof me.confirm !== "string") {
       throw new Error(`boot: ACTION_META[${id}].confirm must be null or string`);
+    }
+    if (typeof me.protocol !== "string") {
+      throw new Error(`boot: ACTION_META[${id}].protocol must be a string`);
+    }
+  }
+
+  if (o.ESSENTIAL_IDS) {
+    const ess = /** @type {unknown[]} */ (o.ESSENTIAL_IDS);
+    for (const eid of ess) {
+      if (typeof eid === "string" && !(eid in meta)) {
+        throw new Error(`boot: ESSENTIAL_IDS references unknown action id "${eid}"`);
+      }
     }
   }
 

@@ -24,7 +24,7 @@
 - `npm run verify:alignment` — registry + required paths (runs first in `npm run verify`)
 - `npm run verify:alignment -- --verify` — run `verifyPipeline.scripts` from `p31-alignment.json` (skips a duplicate `verify:alignment` if listed)
 
-**Keep in sync:** `verifyPipeline` in `p31-alignment.json` must match root `package.json` **`verify`** (prelude = `verify:alignment`, then the same `npm run` chain through `build`).
+**Keep in sync:** `verifyPipeline` in `p31-alignment.json` must match root `package.json` **`verify`** (prelude = `verify:alignment`, then the same `npm run` chain through `build` and **`soup:prep:check`**).
 
 ## Same but different (appearances)
 
@@ -35,9 +35,13 @@
 
 | Source | Sink | Heal | Proof |
 |--------|------|------|--------|
+| `p31-subscriptions.json` | (contract only) | Edit `p31-subscriptions.json` | `npm run verify:subscriptions` |
 | `p31-constants.json` | `p31.ground-truth.json` (numbering) | `npm run apply:constants` | `npm run verify:constants` |
 | Design canon | `p31-style.css` (passport + p31ca public) | `npm run apply:p31-style` | `npm run verify:p31-style` |
 | `cognitive-passport/index.html` | `p31ca/public/passport-generator.html` | `npm run sync:passport` | `npm run verify:passport` |
+| Audience matrix (`docs/COGNITIVE-PASSPORT-AUDIENCE-MATRIX.md`) + v5 narrative + `simplex-v7` (SENTINEL Context) | (planned) profiles, `serialization_profile`, Genesis — see derivation `cognitive-passport-audience-matrix-suite` | Per derivation `apply` in `p31-alignment.json` | `verify:passport`, `verify:cognitive-passport-schema`, `verify:simplex`, **`verify:simplex-email`**, **`verify:simplex-bootstrap`** when live Context / HERALD / bootstrap contract wiring changes |
+| `simplex-v7/wrangler.toml` scaffold + **`scripts/simplex-bootstrap.mjs`** | Cloudflare D1 / KV / queue + remote **`schema.sql`** (operator account) | **`npm run simplex:bootstrap:apply`** — **`simplex-v7/DEPLOY.md`** §0 | **`verify:simplex-bootstrap`** (spawns **`--dry-run --apply`** — no Cloudflare API in CI) |
+| `design-assets/README.md` + `cognitive-passport/p31-style.css` | Spinner SVGs, Apex Forge, Ko-fi engine, STL — see derivation `design-assets-to-canonical-tokens` | Reconcile hex after `npm run apply:p31-style` (see `design-assets/README.md` void note) | `npm run verify:alignment`; spot-check static HTML |
 | `soup.html` + assets | `bonding/public/soup/` | `npm run sync:soup-bonding` | Bonding build + deploy discipline |
 | `cars-contract/p31.carsWire.json` (+ `src/soup.ts`, `spikes/mock-ws-server/server.js`) | (types are in code; JSON is inspectable catalog) | Rename or add WS `type` strings in all three | `npm run verify:cars-wire` |
 | Hub `registry.mjs` + `hub-app-ids.mjs` | `hub-landing.json` | p31ca `hub:build` / postinstall | p31ca `prebuild` hub verify (`scripts/hub/verify.mjs`) |

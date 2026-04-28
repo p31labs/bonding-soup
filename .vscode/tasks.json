@@ -74,6 +74,14 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
+      "label": "P31: verify cognitive passport profiles (audience matrix @p31/shared)",
+      "type": "shell",
+      "command": "npm run verify:cognitive-passport-profiles",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
       "label": "P31: build doc index (markdown → docs/doc-library/index.json)",
       "type": "shell",
       "command": "npm run build:doc-index",
@@ -151,6 +159,46 @@
       "command": "npm run verify:mesh",
       "options": { "cwd": "${workspaceFolder}" },
       "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify simplex worker (SIMPLEX + SENTINEL — tsc + Vitest)",
+      "type": "shell",
+      "command": "npm run verify:simplex",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify simplex email (simplex-email — tsc)",
+      "type": "shell",
+      "command": "npm run verify:simplex-email",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify simplex bootstrap (dry-run CI guard vs wrangler scaffold)",
+      "type": "shell",
+      "command": "npm run verify:simplex-bootstrap",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: simplex bootstrap dry (print wrangler steps — no CF API)",
+      "type": "shell",
+      "command": "npm run simplex:bootstrap:dry",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: simplex bootstrap apply (D1/KV/queue + remote schema — needs wrangler login)",
+      "type": "shell",
+      "command": "npm run simplex:bootstrap:apply",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {

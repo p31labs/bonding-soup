@@ -5,6 +5,8 @@ phosphorus31.org/
 # Dependencies & artifacts
 node_modules/
 **/node_modules/
+simplex-v7/node_modules/
+simplex-email/node_modules/
 dist/
 .cache/
 .npm/

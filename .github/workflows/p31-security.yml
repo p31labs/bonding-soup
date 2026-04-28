@@ -29,6 +29,7 @@ on:
       - "andromeda/04_SOFTWARE/p31ca/src/**"
       - "andromeda/04_SOFTWARE/p31ca/package.json"
       - "andromeda/04_SOFTWARE/p31ca/package-lock.json"
+      - "andromeda/04_SOFTWARE/packages/quantum-core/**"
       - ".github/workflows/p31-security.yml"
   schedule:
     # Weekly on Monday 09:00 UTC — catches newly-disclosed CVEs against pinned deps

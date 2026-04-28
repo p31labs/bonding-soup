@@ -59,6 +59,21 @@
       "role": "p31.envManifest/1.0.0 — catalog of P31_* env vars (names + semantics only); npm run verify:p31-env; npm run list:p31-env"
     },
     {
+      "id": "p31-subscriptions",
+      "path": "p31-subscriptions.json",
+      "role": "p31.subscriptions/1.0.0 — canonical AI subscription stack (Opus + Gemini + Composer 2) + API budget; verify:subscriptions"
+    },
+    {
+      "id": "p31-production-readiness",
+      "path": "p31-production-readiness.json",
+      "role": "p31.productionReadiness/1.0.0 — canonical PRS scoring matrix for all hub cards + key live Workers; verify:production-readiness"
+    },
+    {
+      "id": "deliverable-subscription-stack-md",
+      "path": "docs/DELIVERABLE-SUBSCRIPTION-STACK.md",
+      "role": "Human manifest for p31.subscriptions contract; pairs with verify:subscriptions"
+    },
+    {
       "id": "p31-mission-system-deliverable",
       "path": "docs/P31-MISSION-SYSTEM-DELIVERABLE.md",
       "role": "Final handoff: mission system manifest, prep, assemble, definition of done; links P31-CREATE-CONNECT, fleet-portal, verify bar"
@@ -101,6 +116,16 @@
       "id": "cognitive-passport-source",
       "path": "cognitive-passport/index.html",
       "role": "Cognitive Passport authoring (canonical); p31ca mirror is generated"
+    },
+    {
+      "id": "cognitive-passport-audience-matrix",
+      "path": "docs/COGNITIVE-PASSPORT-AUDIENCE-MATRIX.md",
+      "role": "Normative A/D/R/S matrix — audiences × v5 field groups; serialization_profile + SENTINEL Context + Genesis; unlocks p31.cognitivePassport profiles"
+    },
+    {
+      "id": "cognitive-passport-v5-narrative",
+      "path": "P31 COGNITIVE PASSPORT — v5.md",
+      "role": "Long-form human passport (v5.1); structured store should render this class of content — single source targets"
     },
     {
       "id": "soup-entry",
@@ -210,13 +235,35 @@
       "role": "Edge coherence: wrangler inventory, ecosystem deploy cwd, fleet codePath; npm run quantum:cloud"
     },
     {
-      "id": "p31ca-verify-crypto-surface",
-      "path": "andromeda/04_SOFTWARE/p31ca/scripts/security/verify-crypto-surface.mjs",
-      "role": "PQC supply-chain + quantum-core tests + passkey WebCrypto boundary; npm run pqc:verify (root) → p31ca security:crypto",
-      "optional": true
+      "id": "design-assets-canon",
+      "path": "design-assets/README.md",
+      "role": "Versioned design artefacts (K₄ spinners SVG, Apex Forge, Ko-fi PNG engine, STL); semantic colors align with cognitive-passport/p31-style.css / universal canon"
+    },
+    {
+      "id": "simplex-v7-worker",
+      "path": "simplex-v7/package.json",
+      "role": "SIMPLEX v7 Cloudflare Worker — D1 crew + SENTINEL; verify via npm run verify:simplex; deploy: simplex-v7/DEPLOY.md"
+    },
+    {
+      "id": "simplex-v7-deploy-md",
+      "path": "simplex-v7/DEPLOY.md",
+      "role": "Operator runbook — wrangler D1/KV/Queue, secrets, api.phosphorus31.org route, post-deploy probes"
+    },
+    {
+      "id": "simplex-email-worker",
+      "path": "simplex-email/package.json",
+      "role": "Inbound Email Worker (HERALD/tomograph ingest); npm run verify:simplex-email; see simplex-email/README.md and simplex-v7/DEPLOY.md §9"
     }
   ],
   "derivations": [
+    {
+      "id": "p31-subscriptions-registry",
+      "from": ["p31-subscriptions.json"],
+      "to": ["(verify only)"],
+      "apply": "Edit p31-subscriptions.json when changing the canonical AI subscription stack; keep totals and cancellation targets explicit.",
+      "verify": "npm run verify:subscriptions",
+      "note": "Alignment guard: encodes the most economical + powerful trio (Opus + Gemini + Composer 2) and the agent API budget; not a billing scraper."
+    },
     {
       "id": "p31-facts-registry",
       "from": ["p31-facts.json", "p31-constants.json", ".cursorrules", "CLAUDE.md"],
@@ -232,6 +279,42 @@
       "apply": "edit p31-env-manifest.json when adding or renaming documented P31_* variables",
       "verify": "npm run verify:p31-env",
       "note": "Deploy spine + env lore: docs/P31-DEPLOY-CANON.md; never store secret values in the manifest"
+    },
+    {
+      "id": "p31-production-readiness-suite",
+      "from": [
+        "p31-production-readiness.json",
+        "p31-live-fleet.json",
+        "p31-ecosystem.json",
+        "andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs"
+      ],
+      "to": ["(verify only)"],
+      "apply": "Update p31-production-readiness.json when shipping or hardening a product. Every hub card id and every liveFleet.workersVerified id must have a row; scores must stay 0–10 per dimension.",
+      "verify": "npm run verify:production-readiness",
+      "note": "Locks a single production-readiness rubric to canonical sources (hub card ids + live fleet). Prevents drift and forces remaining steps to stay explicit."
+    },
+    {
+      "id": "simplex-v7-worker-suite",
+      "from": [
+        "simplex-v7/wrangler.toml",
+        "simplex-v7/src/db/schema.sql",
+        "simplex-v7/src/agents/registry.ts",
+        "simplex-v7/DEPLOY.md",
+        "scripts/simplex-bootstrap.mjs",
+        "scripts/verify-simplex-bootstrap.mjs"
+      ],
+      "to": ["Cloudflare D1 + KV + Queue (deploy target)"],
+      "apply": "Follow simplex-v7/DEPLOY.md — or **`npm run simplex:bootstrap:apply`** when `wrangler.toml` has REPLACE_* placeholders; **`wrangler secret put …`; deploy per **§5**. Manually:** wrangler resources, paste IDs (if not using `--update-config`), secrets, d1 execute schema, deploy, attach route; wrangler secret put HA_* when SENTINEL calls HA.",
+      "verify": "npm run verify:simplex && npm run verify:simplex-bootstrap",
+      "note": "Included in root npm run verify after verify:doc-index."
+    },
+    {
+      "id": "simplex-email-worker-suite",
+      "from": ["simplex-email/wrangler.toml", "simplex-email/src/index.ts", "simplex-email/README.md"],
+      "to": ["Cloudflare Email Routing → Worker inbound"],
+      "apply": "Email Routing route → this Worker in zone dashboard; wrangler deploy from simplex-email/; wrangler secret put MAIL_FORWARD_DESTINATION (verified inbox)",
+      "verify": "npm run verify:simplex-email",
+      "note": "Root `npm run verify` after `verify:simplex` + `verify:simplex-bootstrap`."
     },
     {
       "id": "p31-shipbox-snapshot",
@@ -333,6 +416,25 @@
       "apply": "Bump p31.cognitivePassport id: set SCHEMA in index.html then COGNITIVE_PASSPORT_SCHEMA in @p31/shared",
       "verify": "npm run verify:cognitive-passport-schema",
       "note": "Partial clone without andromeda skips; full tree must match"
+    },
+    {
+      "id": "cognitive-passport-audience-matrix-suite",
+      "from": [
+        "docs/COGNITIVE-PASSPORT-AUDIENCE-MATRIX.md",
+        "P31 COGNITIVE PASSPORT — v5.md",
+        "cognitive-passport/index.html",
+        "simplex-v7/package.json"
+      ],
+      "to": [
+        "(planned) structured cognitive store + markdown render",
+        "(planned) p31.cognitivePassport profiles + serialization_profile + Genesis attestation blocks",
+        "andromeda/04_SOFTWARE/packages/shared/src/cognitive-passport-schema.ts",
+        "andromeda/04_SOFTWARE/packages/shared/src/cognitive-passport-profiles.ts",
+        "cognitive-passport/index.html (+ p31ca/public/passport-generator.html via sync:passport)"
+      ],
+      "apply": "Map matrix cells to export allowlists; Core/Context/Archive; LIVE cells → SENTINEL/KV reads (simplex-v7); MEDIC/COUNSEL events → stale flags + rotation; v5 prose is a rendered face, not a parallel lore file.",
+      "verify": "npm run verify:passport; npm run verify:cognitive-passport-schema; npm run verify:cognitive-passport-profiles; npm run verify:simplex; npm run verify:simplex-email; npm run verify:simplex-bootstrap when SENTINEL / Context / HERALD email or simplex bootstrap / wrangler scaffold contract changes",
+      "note": "Audience matrix v1.0.0 locked 2026-04-28 — S cells = pull_from_kv + fallback: static; `child` profile gated on mesh device pairing (see matrix row 8). Joins cognitive prosthetic (serialization_profile) with legal contemporaneity (Genesis) — see COGNITIVE-PASSPORT-AUDIENCE-MATRIX.md"
     },
     {
       "id": "poets-room-lobby-links",
@@ -515,6 +617,22 @@
       "note": "Create = GEODESIC / ephemeralized rigging; Connect = K₄ mesh + same economics the repo proves (see creator-economy transparency.missionLink)"
     },
     {
+      "id": "design-assets-to-canonical-tokens",
+      "from": ["design-assets/README.md", "cognitive-passport/p31-style.css"],
+      "to": [
+        "design-assets/spinners/wye-sequence.svg",
+        "design-assets/spinners/quantum-breath.svg",
+        "design-assets/spinners/ghost-grid.svg",
+        "design-assets/forge/apex-forge.html",
+        "design-assets/kofi/kofi-engine.html",
+        "design-assets/stl/P31_K4_Topology.stl",
+        "scripts/p31-local-command-center.mjs"
+      ],
+      "apply": "After changing design tokens: npm run apply:p31-style — reconcile spinner SVG hex; local command center inlines `design-assets/spinners/*.svg` at HTML build (restart `npm run command-center`).",
+      "verify": "npm run verify:alignment; npm run verify:command-center",
+      "note": "Forge/Ko-fi load Tailwind/Google Fonts from CDN"
+    },
+    {
       "id": "production-state-2026-04-28",
       "from": ["docs/PRODUCTION-STATE-2026-04-28.md"],
       "to": [],
@@ -537,12 +655,15 @@
     "preludeNote": "Fast guard (verify-alignment.mjs): JSON + required sources. Skipped in the `--verify` loop (prelude already satisfied).",
     "scripts": [
       "verify:facts",
+      "verify:subscriptions",
       "verify:p31-env",
       "verify:shipbox",
       "verify:passport",
       "verify:cognitive-passport-schema",
+      "verify:cognitive-passport-profiles",
       "verify:constants",
       "verify:ecosystem",
+        "verify:production-readiness",
       "verify:map-pipeline",
       "verify:p31-style",
       "verify:style-alignment",
@@ -553,7 +674,11 @@
       "verify:poets-room",
       "build:doc-index",
       "verify:doc-index",
-      "build"
+      "verify:simplex",
+      "verify:simplex-email",
+      "verify:simplex-bootstrap",
+      "build",
+      "soup:prep:check"
     ]
   }
 }

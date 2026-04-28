@@ -1,7 +1,7 @@
 {
   "_comment": "Deploy targets + glass-box URLs. Templates: {{mesh.*}}, {{bonding.*}}, {{payment.*}} from p31-constants.json. Consolidated live sites + Workers: p31-live-fleet.json. After edits: npm run verify:ecosystem",
   "schema": "p31.ecosystem/1.0.0",
-  "updated": "2026-04-27",
+  "updated": "2026-04-28",
   "_deployNote": "Order matches docs/ECOSYSTEM-PRODUCTION-11.md §4: constants + pnpm, K₄ trio, geodesic, agent/orchestrator/love-ledger, Google bridge, satellite Workers, passkey, EPCP command-center, donate-api, wcd33, p31ca Pages last. unified-k4-cage/ omitted (same worker name as k4-cage). p31-pwa + sovereign-command-center are Cloudflare Pages (build + pages deploy). Each deployable uses steps[][] argv arrays (no shell — scripts/ecosystem-deploy.mjs). Holistic edge audit: npm run quantum:cloud",
   "glassProbes": [
     {
@@ -89,6 +89,18 @@
       "url": "https://p31ca.org/mesh-start.html",
       "group": "pages",
       "note": "PAR personal landing (CWP-P31-PAR); repo: soup.html → andromeda/.../p31ca/public/mesh-start.html"
+    },
+    {
+      "id": "p31ca-social-molecules-page",
+      "url": "https://p31ca.org/social-molecules.html",
+      "group": "pages",
+      "note": "Social Molecules · C.A.R.S. hub operator shell (boot, load, edge ribbon); registry id social-molecules"
+    },
+    {
+      "id": "p31ca-cars-shorturl",
+      "url": "https://p31ca.org/cars",
+      "group": "pages",
+      "note": "301 → social-molecules.html (_redirects); short path for C.A.R.S. cockpit"
     },
     {
       "id": "p31ca-initial-build-page",

@@ -1,0 +1,117 @@
+{
+  "schema": "p31.subscriptions/1.0.0",
+  "updatedAt": "2026-04-28",
+  "name": "P31 economical + powerful AI subscription stack",
+  "principles": [
+    "Keep the trio: Opus (architect) + Gemini (narrator) + Composer 2 (mechanic).",
+    "Use flat-rate subs for interactive work; use pay-per-token API only for automation/agents.",
+    "Kill redundancies (Copilot vs Cursor, extra seats, nostalgia tools) before adding routing complexity."
+  ],
+  "coreAiInfra": {
+    "subscriptions": [
+      {
+        "id": "claude-pro",
+        "provider": "Anthropic",
+        "plan": "Claude Pro",
+        "primaryModel": "Opus (chat)",
+        "role": "Architect lane (deep QA, architecture, risk review); overflow mechanic.",
+        "triadLane": "architect",
+        "usdPerMonth": { "min": 20, "max": 20 }
+      },
+      {
+        "id": "cursor-pro",
+        "provider": "Cursor",
+        "plan": "Cursor Pro",
+        "primaryModel": "Composer 2 (cloud) + local models optional",
+        "role": "Mechanic lane (WCD execution, multi-file edits, refactors).",
+        "triadLane": "mechanic",
+        "usdPerMonth": { "min": 20, "max": 20 },
+        "redundantWith": ["github-copilot"]
+      },
+      {
+        "id": "google-workspace",
+        "provider": "Google",
+        "plan": "Workspace (optimized seats/tier)",
+        "primaryModel": "Gemini (Docs/Gmail/Sheets)",
+        "role": "Narrator lane (grants, research synthesis, long-context ingestion).",
+        "triadLane": "narrator",
+        "usdPerMonth": { "min": 29, "max": 43 }
+      }
+    ],
+    "apiBudgets": [
+      {
+        "id": "anthropic-api",
+        "provider": "Anthropic",
+        "purpose": "SIMPLEX v7 agent crew (Workers) + batch jobs",
+        "model": "claude-sonnet-4-20250514",
+        "usdPerMonthTarget": { "min": 5, "max": 15 },
+        "notes": [
+          "Separate from Claude Pro chat subscription.",
+          "Used for tool-style, shorter calls; keep monthly burn small and intentional."
+        ]
+      }
+    ],
+    "expectedTotalUsdPerMonth": { "min": 74, "max": 98 }
+  },
+  "triad": {
+    "lanes": [
+      { "id": "architect", "share": 0.01, "bestFit": ["claude-pro"] },
+      { "id": "mechanic", "share": 0.8, "bestFit": ["cursor-pro"] },
+      { "id": "narrator", "share": 0.15, "bestFit": ["google-workspace"] }
+    ],
+    "notes": [
+      "Opus handles the 1% that prevents expensive mistakes.",
+      "Composer 2 (Cursor) ships the work.",
+      "Gemini handles narrative + doc ingestion at scale."
+    ]
+  },
+  "optimizationTargets": {
+    "workspace": {
+      "problem": "Empty or over-tiered Workspace seats inflate cost.",
+      "examplePreviousState": {
+        "seats": 8,
+        "usdPerSeatPerMonth": 26.4,
+        "usdPerMonth": 211.2
+      },
+      "targetStateExample": {
+        "you": { "tier": "Business Standard (annual)", "usdPerMonth": 14 },
+        "family": { "tier": "Starter (annual)", "seats": 3, "usdPerSeatPerMonth": 7 },
+        "usdPerMonth": 35
+      },
+      "note": "Update these numbers when Google pricing changes; the invariant is seat hygiene + tier fit."
+    },
+    "cancellationsToConfirm": [
+      {
+        "id": "github-copilot",
+        "reason": "Redundant with Cursor Pro.",
+        "usdPerMonth": { "min": 10, "max": 10 }
+      },
+      {
+        "id": "flux-ai",
+        "reason": "Nostalgia tool; cancel unless actively used for a current deliverable.",
+        "usdPerMonth": { "min": 15, "max": 39 }
+      },
+      {
+        "id": "xbox-game-pass-ultimate",
+        "reason": "Optional entertainment; downgrade to Core or cancel.",
+        "usdPerMonth": { "min": 30, "max": 30 }
+      },
+      {
+        "id": "workspace-empty-seats",
+        "reason": "Unused seats are pure waste; remove immediately.",
+        "usdPerSeatPerMonth": { "min": 20, "max": 30 }
+      }
+    ]
+  },
+  "revisitWhen": {
+    "oracleRoutingLayer": {
+      "trigger": [
+        "Anthropic API burn >= $30/mo for 2 consecutive months",
+        "Need cheap models for non-critical agents (triage/health checks)",
+        "Offline-first requirement for Node One / low-connectivity operations"
+      ],
+      "defaultDecision": "Do not build local routing (LiteLLM/OpenRouter) until triggers are met."
+    }
+  }
+}
+

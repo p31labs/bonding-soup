@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- P31 K4 spinner — Ghost Grid (faint grid + coral flicker). Coral (--p31-coral #cc6247). -->
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+  <style>
+    .grid circle {
+      fill: #6b7280;
+      opacity: 0.1;
+    }
+    .p31-node {
+      fill: #cc6247;
+      animation: ghost-flicker 2s infinite;
+    }
+    .node-c { animation-delay: 0.1s; }
+    .node-t { animation-delay: 0.8s; }
+    .node-r { animation-delay: 1.2s; }
+    .node-l { animation-delay: 0.5s; }
+    @keyframes ghost-flicker {
+      0%, 100% { opacity: 0.1; }
+      5%, 15% { opacity: 1; filter: drop-shadow(0 0 3px #cc6247); }
+      10%, 20% { opacity: 0.3; }
+      25% { opacity: 0.1; }
+    }
+  </style>
+  <g class="grid">
+    <circle cx="4" cy="4" r="2" />
+    <circle cx="20" cy="4" r="2" />
+    <circle cx="4" cy="12" r="2" />
+    <circle cx="20" cy="12" r="2" />
+    <circle cx="12" cy="20" r="2" />
+  </g>
+  <circle cx="12" cy="12" r="2.5" class="p31-node node-c" />
+  <circle cx="12" cy="4" r="2.5" class="p31-node node-t" />
+  <circle cx="20" cy="20" r="2.5" class="p31-node node-r" />
+  <circle cx="4" cy="20" r="2.5" class="p31-node node-l" />
+</svg>

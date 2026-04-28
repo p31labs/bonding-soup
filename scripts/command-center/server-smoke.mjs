@@ -58,7 +58,7 @@ const child = spawn(process.execPath, [path.join(root, "scripts/p31-local-comman
 
 let bootLineSeen = false;
 function markBoot(chunk) {
-  if (String(chunk).includes("P31 command center:")) bootLineSeen = true;
+  if (String(chunk).includes("P31 command center v")) bootLineSeen = true;
 }
 child.stdout.on("data", markBoot);
 child.stderr.on("data", markBoot);
@@ -70,15 +70,31 @@ async function main() {
     if (mainPage.status !== 200) {
       throw new Error("command-center smoke: / status " + mainPage.status);
     }
-    if (!mainPage.body.includes('id="cc-boot"')) {
-      throw new Error("command-center smoke: missing #cc-boot");
+    if (!mainPage.body.includes('id="cc-k4-spin"')) {
+      throw new Error("command-center smoke: missing #cc-k4-spin (K₄ spinner)");
     }
-    if (!mainPage.body.includes("Operator console")) {
+    if (!mainPage.body.includes("operator control plane")) {
       throw new Error("command-center smoke: missing hero copy");
+    }
+    if (!mainPage.body.includes('data-cc-version="2.0.0"')) {
+      throw new Error("command-center smoke: missing data-cc-version");
     }
     const js = await httpGet(`http://127.0.0.1:${port}/assets/command-center.js`);
     if (js.status !== 200) {
       throw new Error("command-center smoke: command-center.js " + js.status);
+    }
+    const health = await httpGet(`http://127.0.0.1:${port}/api/health`);
+    if (health.status !== 200) {
+      throw new Error("command-center smoke: /api/health " + health.status);
+    }
+    let hj;
+    try {
+      hj = JSON.parse(health.body);
+    } catch {
+      throw new Error("command-center smoke: /api/health not JSON");
+    }
+    if (!hj.ok || hj.version !== "2.0.0") {
+      throw new Error("command-center smoke: health payload shape");
     }
     const css = await httpGet(`http://127.0.0.1:${port}/assets/command-center.css`);
     if (css.status !== 200) {
@@ -92,7 +108,7 @@ async function main() {
     if (man.status !== 200) {
       throw new Error("command-center smoke: manifest " + man.status);
     }
-    if (!man.body.includes("P31 Operator Console")) {
+    if (!man.body.includes("P31 Operator Control Plane")) {
       throw new Error("command-center smoke: manifest body");
     }
     let manifestParsed;

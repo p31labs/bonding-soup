@@ -1,0 +1,102 @@
+# P31 scenes — reference copy for HA `scenes.yaml` / UI import.
+# Apply `scene:` keys exactly — Worker tools map keys → `scene.p31_*` (see `src/agents/tools/sentinel.ts`).
+# Replace entity ids (light.*, switch.*, media_player.*) with your home.
+
+- id: p31_focus
+  name: P31 Focus
+  entities:
+    light.living_room:
+      state: on
+      brightness_pct: 40
+      color_temp_kelvin: 3000
+    light.desk:
+      state: on
+      brightness_pct: 70
+      color_temp_kelvin: 4000
+    switch.notifications: off
+
+- id: p31_reset
+  name: P31 Reset
+  entities:
+    light.living_room:
+      state: off
+    light.bedroom_nightlight:
+      state: on
+      brightness_pct: 10
+      rgb_color: [255, 180, 80]
+
+- id: p31_legal
+  name: P31 Legal
+  entities:
+    light.living_room:
+      state: on
+      brightness_pct: 100
+      color_temp_kelvin: 5500
+    light.desk:
+      state: on
+      brightness_pct: 100
+      color_temp_kelvin: 6000
+
+- id: p31_deep_work
+  name: P31 Deep Work
+  entities:
+    light.living_room:
+      state: on
+      brightness_pct: 85
+      color_temp_kelvin: 5000
+    switch.phone_dnd: on
+
+- id: p31_play
+  name: P31 Play
+  entities:
+    light.living_room:
+      state: on
+      brightness_pct: 80
+      color_temp_kelvin: 3500
+    light.kids_area:
+      state: on
+      brightness_pct: 100
+
+- id: p31_night_mode
+  name: P31 Night Mode
+  entities:
+    light.living_room: off
+    light.bedroom_nightlight:
+      state: on
+      brightness_pct: 5
+      rgb_color: [255, 120, 0]
+
+- id: p31_decompression
+  name: P31 Decompression
+  entities:
+    light.living_room:
+      state: on
+      brightness_pct: 30
+      rgb_color: [80, 160, 180]
+
+- id: p31_morning
+  name: P31 Morning
+  entities:
+    light.living_room:
+      state: on
+      brightness_pct: 60
+      color_temp_kelvin: 4500
+    light.desk:
+      state: on
+      brightness_pct: 40
+
+- id: p31_medication_alert
+  name: P31 Medication Alert
+  entities:
+    light.kitchen:
+      state: on
+      brightness_pct: 100
+      rgb_color: [255, 140, 0]
+
+- id: p31_calcium_timer
+  name: P31 Calcium Timer
+  entities:
+    light.kitchen:
+      state: on
+      brightness_pct: 50
+      rgb_color: [0, 200, 120]

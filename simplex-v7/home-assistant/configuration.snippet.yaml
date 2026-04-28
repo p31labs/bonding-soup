@@ -1,0 +1,49 @@
+# Snippets for `configuration.yaml` (merge manually; paths depend on HA install).
+# Set secrets in HA UI — never commit `secrets.yaml`.
+#
+# Worker base URL (HTTPS, reachable from HA when using cloud):
+#   https://api.phosphorus31.org
+
+# ── Core (adjust coordinates / timezone)
+homeassistant:
+  name: P31 Node
+  latitude: 30.7280
+  longitude: -81.5498
+  elevation: 5
+  unit_system: imperial
+  time_zone: America/New_York
+
+# ── MQTT (Mosquitto add-on or host broker)
+mqtt:
+  broker: core-mosquitto
+  port: 1883
+  username: !secret mqtt_user
+  password: !secret mqtt_password
+  discovery: true
+  discovery_prefix: p31
+
+# ── HA → Worker bridge (rename host; use internal DNS or Tunnel URL)
+# Biometric POST: Worker verifies HMAC only when both X-Device-Signature and DEVICE_SECRET
+# are set; unsigned JSON is accepted if you omit the header (lock down with Cloudflare Access / IP allowlist).
+# For HMAC from HA, use Node-RED, pyscript, or shell_command + openssl — not raw rest_command templates.
+rest_command:
+  simplex_biometric_push:
+    url: "https://api.phosphorus31.org/api/biometric"
+    method: POST
+    headers:
+      Content-Type: application/json
+    payload: "{{ payload }}"
+  simplex_agent_run:
+    url: "https://api.phosphorus31.org/api/agent/{{ agent_id }}"
+    method: POST
+    headers:
+      Content-Type: application/json
+    payload: '{"trigger":"home_assistant"}'
+  simplex_chaos_ingest:
+    url: "https://api.phosphorus31.org/api/chaos"
+    method: POST
+    headers:
+      Content-Type: application/json
+    payload: '{"text":"{{ text }}","sender":"home_assistant"}'
+
+# Google Assistant (optional): expose scenes as voice aliases in Assistant UI.

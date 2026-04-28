@@ -1,0 +1,207 @@
+# P31 automations — reference `automations.yaml` fragments.
+# Stable `id:` values produce entity_ids like `automation.p31_wearable_haptic`
+# (matches `push_haptic` in `sentinel.ts`).
+# Webhook IDs: create random UUIDs in HA secrets — see `secrets.example.list`.
+
+# ── Morning biometric push → Worker (06:05 local) ─────────────────────────────
+- id: p31_biometric_morning_push
+  alias: "P31 biometric morning push"
+  description: "POST last night wearable aggregates to simplex /api/biometric"
+  mode: single
+  trigger:
+    - platform: time
+      at: "06:05:00"
+  condition:
+    - condition: template
+      value_template: >
+        {{ states('sensor.watch_sleep_score') not in ['unavailable','unknown','none',''] }}
+  action:
+    - service: rest_command.simplex_biometric_push
+      data:
+        payload: >
+          {"sleep_score":{{ states('sensor.watch_sleep_score')|float(0) }},
+           "hrv_ms":{{ states('sensor.watch_hrv')|float(0) }},
+           "resting_hr":{{ states('sensor.watch_resting_hr')|float(0) }},
+           "steps":{{ states('sensor.watch_steps')|float(0) }},
+           "source":"home_assistant"}
+
+# ── Wearable haptic (triggered by Worker SENTINEL tool) ────────────────────────
+- id: p31_wearable_haptic
+  alias: "P31 wearable haptic"
+  description: "Notify Pixel → GadgetBridge channel (pattern in webhook JSON)"
+  mode: queued
+  trigger:
+    - platform: webhook
+      webhook_id: !secret webhook_haptic
+  action:
+    - service: notify.mobile_app_pixel
+      data:
+        title: "P31"
+        message: "{{ trigger.json.pattern | default('haptic') }}"
+        data:
+          ttl: 0
+          priority: high
+          channel: p31_haptic
+
+# ── Calcitriol flash (optional webhook from Worker or HA timer) ──────────────
+- id: p31_medication_calcitriol_flash
+  alias: "P31 calcitriol kitchen flash"
+  trigger:
+    - platform: webhook
+      webhook_id: !secret webhook_calcitriol
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.kitchen
+      data:
+        flash: short
+        rgb_color: [255, 140, 0]
+    - delay:
+        seconds: 2
+    - service: light.turn_on
+      target:
+        entity_id: light.kitchen
+      data:
+        flash: short
+        rgb_color: [255, 140, 0]
+    - delay:
+        seconds: 2
+    - service: light.turn_on
+      target:
+        entity_id: light.kitchen
+      data:
+        flash: short
+        rgb_color: [255, 140, 0]
+
+# ── Effexor voice reminder ───────────────────────────────────────────────────
+- id: p31_medication_effexor_alert
+  alias: "P31 Effexor XR alert"
+  trigger:
+    - platform: webhook
+      webhook_id: !secret webhook_effexor
+  action:
+    - service: tts.google_translate_say
+      target:
+        entity_id: media_player.home_hub
+      data:
+        message: "Effexor XR is due."
+        language: en
+
+# ── Kids home → STEWARD nudge + play scene ───────────────────────────────────
+- id: p31_kids_home_detected
+  alias: "P31 kids home detection"
+  trigger:
+    - platform: device_tracker
+      entity_id: device_tracker.sj_tablet
+      to: home
+    - platform: device_tracker
+      entity_id: device_tracker.wj_tablet
+      to: home
+  action:
+    - service: rest_command.simplex_agent_run
+      data:
+        agent_id: STEWARD
+    - service: scene.turn_on
+      target:
+        entity_id: scene.p31_play
+
+# ── Safe mode / meltdown / Q-low — webhooks called from dashboard or Node-Zero ─
+- id: p31_safe_mode_scene
+  alias: "P31 safe mode scene"
+  trigger:
+    - platform: webhook
+      webhook_id: !secret webhook_safe_mode
+  action:
+    - service: scene.turn_on
+      target:
+        entity_id: scene.p31_focus
+
+- id: p31_meltdown_protocol
+  alias: "P31 meltdown protocol"
+  trigger:
+    - platform: webhook
+      webhook_id: !secret webhook_meltdown
+  action:
+    - service: scene.turn_on
+      target:
+        entity_id: scene.p31_reset
+    - service: tts.google_translate_say
+      target:
+        entity_id: media_player.home_hub
+      data:
+        message: "Breathe. You are safe. The system holds."
+        language: en
+
+- id: p31_q_factor_low
+  alias: "P31 low Q-Factor decompression"
+  trigger:
+    - platform: webhook
+      webhook_id: !secret webhook_q_low
+  action:
+    - service: scene.turn_on
+      target:
+        entity_id: scene.p31_decompression
+
+- id: p31_bonding_session_active
+  alias: "P31 BONDING session active"
+  trigger:
+    - platform: webhook
+      webhook_id: !secret webhook_bonding_active
+  action:
+    - service: scene.turn_on
+      target:
+        entity_id: scene.p31_play
+
+# ── STEWARD morning briefing (06:10) ─────────────────────────────────────────
+- id: p31_morning_briefing_tts
+  alias: "P31 morning briefing TTS"
+  trigger:
+    - platform: time
+      at: "06:10:00"
+  condition:
+    - condition: state
+      entity_id: binary_sensor.p31_operator_home
+      state: "on"
+  action:
+    - service: tts.google_translate_say
+      target:
+        entity_id: media_player.home_hub
+      data:
+        message: >-
+          Good morning. Your briefing is ready.
+          {{ states('input_text.p31_briefing_summary') }}
+        language: en
+
+# ── Node Zero heartbeat ───────────────────────────────────────────────────────
+- id: p31_node_zero_watchdog
+  alias: "P31 Node Zero watchdog"
+  trigger:
+    - platform: time_pattern
+      minutes: "/30"
+  condition:
+    - condition: template
+      value_template: >
+        {{ (now().timestamp() - states('sensor.node_zero_last_ping')|float(0)) > 3600 }}
+  action:
+    - service: rest_command.simplex_chaos_ingest
+      data:
+        text: "Node Zero has not pinged in over 60 minutes."
+
+# ── Scheduled deep work weekdays ──────────────────────────────────────────────
+- id: p31_deep_work_morning
+  alias: "P31 deep work morning block"
+  trigger:
+    - platform: time
+      at: "09:30:00"
+  condition:
+    - condition: time
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+  action:
+    - service: scene.turn_on
+      target:
+        entity_id: scene.p31_deep_work

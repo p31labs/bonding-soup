@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- P31 K4 spinner — Quantum Breath (center pulse then outer ring). Cyan (--p31-cyan #4db8a8). -->
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+  <style>
+    circle { fill: #4db8a8; opacity: 0.2; animation: breath-pulse 1.5s ease-in-out infinite; transform-origin: center; }
+    .node-c { animation-delay: 0s; }
+    .node-t,
+    .node-r,
+    .node-l { animation-delay: 0.75s; }
+    @keyframes breath-pulse {
+      0%, 100% { opacity: 0.15; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.15); filter: drop-shadow(0 0 6px #4db8a8); }
+    }
+  </style>
+  <circle cx="12" cy="12" r="2.5" class="node-c" />
+  <circle cx="12" cy="4" r="2.5" class="node-t" />
+  <circle cx="20" cy="20" r="2.5" class="node-r" />
+  <circle cx="4" cy="20" r="2.5" class="node-l" />
+</svg>

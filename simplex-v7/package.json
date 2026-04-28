@@ -1,0 +1,25 @@
+{
+  "name": "@p31/simplex-v7-worker",
+  "private": true,
+  "version": "0.1.0",
+  "description": "SIMPLEX v7 — Cloudflare Workers + D1 agent crew scaffold (bonding-soup subtree)",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "d1:schema": "echo 'Use: wrangler d1 execute <DB_NAME> --file=src/db/schema.sql (after create + binding)'",
+    "discover:sites": "node scripts/discover-sites.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.33.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241127.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0",
+    "wrangler": "^3.99.0"
+  }
+}

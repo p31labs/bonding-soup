@@ -385,6 +385,96 @@ body.p31-cc::after {
   display: none;
 }
 
+/* Chromebook + iPhone quick rail — matches hub tokens; sits above prose callout */
+.p31-cc__device-plane {
+  margin-bottom: var(--p31-space-6);
+  padding: var(--p31-space-5) var(--p31-space-5);
+  background: linear-gradient(
+    155deg,
+    rgba(139, 124, 201, 0.08),
+    rgba(77, 184, 168, 0.06),
+    rgba(204, 98, 71, 0.05)
+  );
+  border: 1px solid rgba(139, 124, 201, 0.22);
+  border-radius: var(--p31-radius-xl);
+  box-shadow: var(--p31-shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.p31-cc__device-plane-head {
+  margin-bottom: var(--p31-space-4);
+}
+
+.p31-cc__device-plane-kicker {
+  display: inline-block;
+  margin: 0 0 var(--p31-space-2);
+  font-family: var(--p31-font-mono);
+  font-size: var(--p31-text-xs);
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: rgba(139, 124, 201, 0.95);
+}
+
+.p31-cc__device-plane-lede {
+  margin: 0;
+  font-size: var(--p31-text-sm);
+  color: var(--p31-muted);
+  line-height: var(--p31-leading-relaxed);
+}
+
+.p31-cc__device-plane-lede code {
+  font-size: 0.94em;
+  color: var(--p31-cloud);
+}
+
+.p31-cc__device-grid {
+  display: grid;
+  gap: var(--p31-space-3);
+}
+
+@media (min-width: 640px) {
+  .p31-cc__device-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--p31-space-4);
+  }
+}
+
+.p31-cc__device-card {
+  margin: 0;
+  padding: var(--p31-space-4);
+  border-radius: var(--p31-radius-lg);
+  border: 1px solid rgba(77, 184, 168, 0.2);
+  background: rgba(15, 17, 21, 0.55);
+}
+
+.p31-cc__device-card-label {
+  margin: 0 0 var(--p31-space-2);
+  font-family: var(--p31-font-mono);
+  font-size: var(--p31-text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--p31-teal);
+}
+
+.p31-cc__device-card-body {
+  margin: 0;
+  font-size: var(--p31-text-sm);
+  color: var(--p31-cloud);
+  opacity: 0.9;
+  line-height: var(--p31-leading-relaxed);
+}
+
+.p31-cc__device-card-body code {
+  font-size: 0.93em;
+  color: var(--p31-cloud);
+}
+
+.p31-cc__chips .p31-cc__chip--link:nth-last-child(-n + 3) {
+  border-color: rgba(139, 124, 201, 0.35);
+  color: rgba(216, 214, 208, 0.88);
+}
+
 /* Callout */
 .p31-cc__callout {
   position: relative;

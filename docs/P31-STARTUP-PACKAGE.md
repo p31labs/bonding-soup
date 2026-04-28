@@ -5,6 +5,19 @@
 
 ---
 
+## Chromebook + iPhone ↔ local command center (**3131**)
+
+Everything below is **`npm run command-center`** (Node on the machine that holds this repo).
+
+| Surface | Hook up |
+|---------|---------|
+| **Desktop · loopback** | `npm run command-center` → **http://127.0.0.1:3131/** (`P31_CMD_CENTER_NO_OPEN=1` skips auto-browser) |
+| **Chromebook (Crostini / Linux)** | Same command in Linux → Chrome `:3131` · LAN to another PC: **`P31_CMD_CENTER_LAN=1`** on the host · printouts in **`docs/P31-CHROMEBOOK-COMMAND-READINESS.md`** |
+| **iPhone · trusted Wi‑Fi** | **`P31_CMD_CENTER_LAN=1 npm run command-center`** → header badge **`phone:`** URL in Safari → **Add to Home Screen** · **`docs/P31-IPHONE-COMMAND-READINESS.md`** |
+| **Static walkthrough (:8080)** | One spine: **`docs/P31-DEVICE-SETUP-CHROMEBOOK-MOBILE.md`** · same content as **`npm run demo`** → **`http://127.0.0.1:8080/p31-device-setup.html`** |
+
+---
+
 ## 60-second path
 
 | Step | Command / action |
@@ -12,15 +25,16 @@
 | 1. Clone + enter | `git clone` home + `git clone` Andromeda into `~/p31/andromeda` (see `npm run git:remotes`) |
 | 2. One-shot setup | `npm run setup` — installs root + `p31ca`, `apply:constants` / `apply:p31-style` when present, runs **`npm run verify`** |
 | 3. Big monorepo deps (optional) | `npm run setup:andromeda` *or* `cd andromeda/04_SOFTWARE && pnpm install` |
-| 4. Daily driver | `npm run morning` — pull, `p31:converge`, **LAN** command center (**3131**) for phone |
-| 5. Ship hub | `npm run deploy:p31ca` (needs `CLOUDFLARE_API_TOKEN` or `wrangler login`) |
+| 4. Devices + LAN CC | Rows above (`3131`). Optional: **`npm run demo`** (:8080) for **`p31-device-setup.html`** |
+| 5. Daily driver | `npm run morning` — pull, `p31:converge`, **`P31_CMD_CENTER_LAN=1`** command center for Safari / LAN Chrome |
+| 6. Ship hub | `npm run deploy:p31ca` (needs `CLOUDFLARE_API_TOKEN` or `wrangler login`) |
 
 ---
 
 ## What to read (order)
 
-1. **`P31-ROOT-MAP.md`** — which folder is Soup vs hub vs org site.  
-1b. **`docs/P31-DEVICE-SETUP-CHROMEBOOK-MOBILE.md`** (or `p31-device-setup.html` under `npm run demo`) — Chromebook + mobile operator layout.  
+1. **`P31-ROOT-MAP.md`** — which folder is Soup vs hub vs org site.
+1b. **`docs/P31-DEVICE-SETUP-CHROMEBOOK-MOBILE.md`** (or `p31-device-setup.html` under `npm run demo`) — Chromebook + mobile operator layout (**supersedes lone-device guesswork when both apply**).
 2. **`AGENTS.md`** — full ship bar, command center, CI, alignment.  
 2b. **`docs/P31-DESIGN-DOCTRINE.md`** — Gray Rock → Alive visual rules, canonical layouts, passport-driven prefs.  
 3. **`docs/cwp-convergence/INDEX.md`** — convergence CWP scorecard (what’s closed vs open).  
@@ -46,7 +60,9 @@ Cheat sheet (commands only): **`docs/P31-PERSONAL-HOW-TO.md`**.
 | `bash validate-p31-full.sh` | Extended **validate:full** scorecard (mesh + quantum egg + more) |
 | `npm run deploy:p31ca` | **p31ca** `predeploy` (verify) → `wrangler pages deploy` |
 | `npm run doctor` | Node, remotes, `gh`, Andromeda presence — when something’s weird |
-| `npm run command-center` | Local **3131** operator UI (add `P31_CMD_CENTER_LAN=1` for iPhone same Wi-Fi) |
+| `npm run command-center` | Local **3131** UI — **`P31_CMD_CENTER_LAN=1`** for Chromebook LAN / iPhone (see top of file) |
+
+**npm run startup** echoes the **first ~54 lines** here (Chromebook + iPhone paths included).
 
 **BONDING (game) tests:** `cd andromeda/04_SOFTWARE && pnpm --filter @p31/bonding test` — expect **424 tests / 32 files** when green.
 
@@ -97,4 +113,4 @@ Searchable index: build with **`npm run build:doc-index`** (in **`verify`**). Op
 
 ---
 
-**Version:** 1.0.0 — 2026-04-28 (startup package) · aligns with `clean-room-2026-04-27` proof run.
+**Version:** 1.1.0 — 2026-04-28 (startup · Chromebook + iPhone + command center surfaced in startup banner) · aligns with **`npm run startup`** (**54-line** teaser) + **`npm run verify`** spine.

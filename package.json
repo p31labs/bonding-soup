@@ -58,7 +58,7 @@
     "apply:pwa:home": "node scripts/generate-bonding-pwa-icons.mjs && node scripts/apply-pwa-manifest-bonding-html.mjs",
     "generate:bonding-pwa-icons": "node scripts/generate-bonding-pwa-icons.mjs",
     "verify:p31-style": "node scripts/verify-p31-style.mjs",
-    "verify:style-alignment": "node andromeda/04_SOFTWARE/p31ca/scripts/verify-style-alignment.mjs",
+    "verify:style-alignment": "node scripts/verify-style-alignment-home.mjs",
     "verify:ground-truth": "npm run verify:ground-truth --prefix andromeda/04_SOFTWARE/p31ca",
     "verify:fleet-entities": "npm run verify:fleet-entities --prefix andromeda/04_SOFTWARE/p31ca",
     "verify:synergetic": "npm run verify:synergetic --prefix andromeda/04_SOFTWARE/p31ca",

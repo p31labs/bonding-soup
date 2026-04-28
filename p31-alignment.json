@@ -380,6 +380,7 @@
     {
       "id": "registry-cockpit-vs-legacy-mvpdata",
       "from": [
+        "docs/ADR-ECO-HUB-SINGLE-SOURCE.md",
         "docs/ADR-ECO-MVPDATA-COCKPIT-DUAL-TRACK.md",
         "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs",
         "andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs"
@@ -387,9 +388,9 @@
       "to": [
         "andromeda/04_SOFTWARE/p31ca/src/data/hub-landing.json"
       ],
-      "apply": "New hub cards: registry + hub-app-ids + hub:build. Legacy public/legacy-mvp-hub.html retired (CWP-P31-PHASE-D Track A); 301 → /.",
-      "verify": "p31ca prebuild: scripts/hub/diff-index-sources.mjs (hub-landing vs hub-app-ids; [warn] index.astro inline coreProducts if any)",
-      "note": "COCKPIT+prototypes + hub-landing are authoritative; legacy mvpData file removed"
+      "apply": "New hub cards: registry + hub-app-ids + hub:build. Legacy mvpData / legacy-mvp-hub.html retired — see docs/ADR-ECO-HUB-SINGLE-SOURCE.md.",
+      "verify": "p31ca prebuild: scripts/hub/diff-index-sources.mjs (hub-landing order vs hub-app-ids HUB_COCKPIT_ORDER; [warn] legacy mvpData or inline index.astro coreProducts if regressions)",
+      "note": "COCKPIT + prototypes + hub-landing authoritative; parity sealed 2026-04 — ADR."
     },
     {
       "id": "dome-constants-to-quantum-clock",

@@ -364,7 +364,7 @@
         "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
       ],
       "apply": "Edit WORKER_SPA_LAUNCHES; registry uses appUrlForWorkerSpa(<id>). Then npm run sync:worker-spa-launch (repo root or p31ca). Refresh Launch copy if needed: npm run hub:about:generate (from p31ca)",
-      "verify": "npm run verify:worker-spa-launch; chained after verify:ground-truth inside npm run verify:p31ca-contracts (home verify) and p31ca prebuild",
+      "verify": "npm run verify:worker-spa-launch; chained after verify:ground-truth inside npm run verify:p31ca-contracts (home verify) and p31ca prebuild; same checks run first in npm run hub:diff:p31ca from home (no Astro build)",
       "note": "@generated worker-spa-launch block in _redirects; Launch URLs https://p31ca.org/<path> → 302 → *.trimtab-signal.workers.dev"
     },
     {

@@ -1,0 +1,40 @@
+{
+  "schema": "p31.carsWire/0.1.0",
+  "title": "C.A.R.S. mock WebSocket wire vocabulary",
+  "description": "Canonical message-type names shared by spikes/mock-ws-server/server.js and SoupEngine (src/soup.ts). Drift breaks npm run verify:cars-wire. Normative narrative: docs/wcd-32-websocket-spec.md; naming: docs/CARS-NAMING.md.",
+  "implementations": {
+    "mockWebSocketServer": "spikes/mock-ws-server/server.js",
+    "browserClient": "src/soup.ts"
+  },
+  "soupEngine": {
+    "handlesIncomingTypes": [
+      "moleculeStateUpdate",
+      "ping",
+      "eventLog",
+      "connectionInit",
+      "heartbeat"
+    ],
+    "note": "Handled in handleWebSocketMessage switch; unknown types log in debug only."
+  },
+  "mockServer": {
+    "sendsToClientTypes": [
+      "connectionInit",
+      "moleculeStateUpdate",
+      "heartbeat",
+      "ping",
+      "eventLog"
+    ],
+    "acceptsClientParsingTypes": ["playerState", "heartbeat", "ping"]
+  },
+  "browserClientOutbound": {
+    "sendsTypes": ["playerState", "heartbeat", "ping"],
+    "note": "playerState only when room !== mock (family mode); heartbeat in mock room; ping is spatial emoji ping."
+  },
+  "moleculePayloadFields": {
+    "description": "sanitizeMolecule (server) / ghost update (client) — inspectable shape for classrooms",
+    "required": ["id", "x", "y", "vx", "vy", "personality", "element"],
+    "worldBoundsPx": { "width": 1600, "height": 800 }
+  },
+  "heartbeatIntervalMs": 5000,
+  "moleculeBroadcastIntervalMs": 500
+}

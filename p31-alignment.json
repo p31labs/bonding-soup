@@ -105,7 +105,12 @@
     {
       "id": "soup-entry",
       "path": "soup.html",
-      "role": "BONDING Soup browser entry; bonding deploy copy via sync"
+      "role": "C.A.R.S. (`soup.html`) — Collaborative Affective Realtime Sim; bonding deploy via sync"
+    },
+    {
+      "id": "cars-wire-contract",
+      "path": "cars-contract/p31.carsWire.json",
+      "role": "p31.carsWire/0.1.0 — WebSocket message-type catalog for mock server + SoupEngine; verify:cars-wire"
     },
     {
       "id": "poets-room-lobby",
@@ -303,6 +308,35 @@
       "note": "scripts/sync-soup-to-bonding.mjs — bonding.p31ca.org/soup"
     },
     {
+      "id": "cars-wire-triple-lock",
+      "from": [
+        "cars-contract/p31.carsWire.json",
+        "andromeda/04_SOFTWARE/packages/shared/src/cars-wire.ts",
+        "src/soup.ts",
+        "spikes/mock-ws-server/server.js"
+      ],
+      "to": ["(verify only)"],
+      "apply": "When adding/removing WS message kinds: update the wire JSON first, then @p31/shared/cars-wire.ts, then switch + mock literals, run npm run verify:cars-wire",
+      "verify": "npm run verify:cars-wire",
+      "note": "JSON ≡ soup + mock + shared schema/arrays; educators introspect JSON"
+    },
+    {
+      "id": "cognitive-passport-schema-shared",
+      "from": ["cognitive-passport/index.html"],
+      "to": ["andromeda/04_SOFTWARE/packages/shared/src/cognitive-passport-schema.ts"],
+      "apply": "Bump p31.cognitivePassport id: set SCHEMA in index.html then COGNITIVE_PASSPORT_SCHEMA in @p31/shared",
+      "verify": "npm run verify:cognitive-passport-schema",
+      "note": "Partial clone without andromeda skips; full tree must match"
+    },
+    {
+      "id": "poets-room-lobby-links",
+      "from": ["poets-room.html"],
+      "to": ["(verify only — repo-relative href targets)"],
+      "apply": "Add relative links only to files that exist, or use https:// hub URLs",
+      "verify": "npm run verify:poets-room",
+      "note": "External https:// links are not probed"
+    },
+    {
       "id": "hub-landing-data",
       "from": [
         "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs",
@@ -486,6 +520,7 @@
       "verify:p31-env",
       "verify:shipbox",
       "verify:passport",
+      "verify:cognitive-passport-schema",
       "verify:constants",
       "verify:ecosystem",
       "verify:map-pipeline",
@@ -494,6 +529,8 @@
       "verify:command-center",
       "verify:p31ca-contracts",
       "verify:egg-hunt",
+      "verify:cars-wire",
+      "verify:poets-room",
       "build:doc-index",
       "verify:doc-index",
       "build"

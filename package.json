@@ -24,6 +24,8 @@
     "gh:pr:automerge": "node scripts/gh-pr-automerge.mjs",
     "pr:ensure": "node scripts/ensure-pr.mjs",
     "pr": "node scripts/pr.mjs",
+    "pr:andromeda": "P31_PR_IN_ANDROMEDA=1 node scripts/pr.mjs",
+    "ship:andromeda": "pnpm --dir andromeda run ship:pr",
     "git:autopr:on": "node scripts/git-autopr.mjs on",
     "git:autopr:off": "node scripts/git-autopr.mjs off",
     "git:autopr:status": "node scripts/git-autopr.mjs status",

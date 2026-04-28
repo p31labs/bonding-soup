@@ -184,6 +184,13 @@ const actions = {
     cmd: "npm",
     args: ["run", "build:fleet-portal"],
   },
+  "home-build-fleet-entities": {
+    title:
+      "build:fleet-entities (p31-fleet-entities.json + /agent/* stubs — reads p31ca public/p31-live-fleet.json; see p31-alignment live-fleet-to-fleet-entities-hub)",
+    cwd: root,
+    cmd: "npm",
+    args: ["run", "build:fleet-entities"],
+  },
   "home-apply-constants": {
     title: "apply:constants (JSON → ground-truth fragments, generated TS)",
     cwd: root,
@@ -455,6 +462,7 @@ const SECTIONS = [
       "home-verify-facts",
       "home-mesh-budgets",
       "home-build-fleet-portal",
+      "home-build-fleet-entities",
       "home-verify",
       "home-apply-constants",
       "home-sync-passport",

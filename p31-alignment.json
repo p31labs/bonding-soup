@@ -74,6 +74,18 @@
       "role": "Generated index of all live URLs (npm run build:fleet-portal); polish → p31ca public/fleet-portal.html"
     },
     {
+      "id": "p31-fleet-entities-json",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/p31-fleet-entities.json",
+      "role": "p31.fleetEntities/1.0.0 — merged Workers + supplemental bots/agents + probe hints; npm run build:fleet-entities in p31ca; NOT fleet-portal or live-fleet raw bundle",
+      "optional": true
+    },
+    {
+      "id": "fleet-agents-console-html",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/fleet-agents.html",
+      "role": "Fleet agents room SPA — roster + probes — short /agents → fleet-agents.html in ground-truth; pairs with public/agent/*/ stubs",
+      "optional": true
+    },
+    {
       "id": "p31-universal-canon",
       "path": "andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json",
       "role": "Colors, type scale, motion, focus — hub/org; mobileMeshFirst (touch, safe areas) in generated p31-style.css",
@@ -224,7 +236,19 @@
       "to": ["fleet-portal.html", "andromeda/04_SOFTWARE/p31ca/public/fleet-portal.html"],
       "apply": "npm run build:fleet-portal; npm run polish (rewrites CSS href for hub copy)",
       "verify": "verify:facts pathsMustExist fleet-portal.html + build script; optional manual open",
-      "note": "One-page directory of every tracked production URL; p31ca short https://p31ca.org/fleet-portal and /fleet-portal.html after deploy"
+      "note": "One-page URL table (every production link). Different product from fleet-agents room (Workers/bots/agents UX) — see derivation live-fleet-to-fleet-entities-hub."
+    },
+    {
+      "id": "live-fleet-to-fleet-entities-hub",
+      "from": ["p31-live-fleet.json", "andromeda/04_SOFTWARE/p31ca/scripts/build-fleet-entities.mjs"],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/p31-fleet-entities.json",
+        "andromeda/04_SOFTWARE/p31ca/public/fleet-agents.html",
+        "andromeda/04_SOFTWARE/p31ca/public/agent/*/index.html"
+      ],
+      "apply": "Author p31-live-fleet.json at P31 home root; polish copies → p31ca/public/p31-live-fleet.json; then from p31ca npm run build:fleet-entities — or rely on hub prebuild. Supplemental Cortex/Discord roster: SUPPLEMENT_ENTITIES in build-fleet-entities.mjs.",
+      "verify": "npm run verify:p31ca-contracts (includes build:fleet-entities + verify:fleet-entities before verify-ground-truth) or from p31ca npm run verify:fleet-entities alone",
+      "note": "Names: Fleet map = live-fleet-demo + raw p31.liveFleet bundle; Fleet portal = build-fleet-portal URL index; Fleet agents room = /fleet-agents.html + entities JSON + per-slug /agent/<slug>/ — no synonym mixing."
     },
     {
       "id": "constants-to-ground-truth-numbering",
@@ -293,9 +317,9 @@
       "id": "mesh-urls-constants-to-live-fleet",
       "from": ["p31-constants.json"],
       "to": ["p31-live-fleet.json"],
-      "apply": "When `mesh` or `payment` URLs change in p31-constants, update `p31-live-fleet.json` `meshAndPayments` (and `sources` if needed) so the bundle matches",
-      "verify": "npm run verify:ecosystem",
-      "note": "verify-ecosystem.mjs compares `p31-ecosystem.json` templates, then asserts live-fleet mesh/payment block tracks constants"
+      "apply": "When `mesh` or `payment` URLs change in p31-constants, update home `p31-live-fleet.json` `meshAndPayments` (and `sources` if needed). Mirror to hub: npm run polish copies home → `p31ca/public/p31-live-fleet.json`, then derivation live-fleet-to-fleet-entities-hub regenerates `p31-fleet-entities.json` stubs.",
+      "verify": "npm run verify:ecosystem; hub `verify-live-fleet-mesh.mjs` in p31ca matches mesh block to shipped `p31-mesh-constants.json`",
+      "note": "verify-ecosystem.mjs asserts live-fleet mesh/payment URLs track constants. Home bundle is canonical author; polish syncs copy into Andromeda for deploy + fleet-entities generator."
     },
     {
       "id": "cf-workers-allowlist",

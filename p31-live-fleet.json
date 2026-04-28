@@ -44,6 +44,7 @@
     "featuredPublicPaths": [
       { "path": "/demos", "note": "Demo labs index (static demos)" },
       { "path": "/fleet", "note": "Live fleet map (sites + Workers)" },
+      { "path": "/agents", "note": "Fleet agents room — each Worker · bot · Cortex sub-agent interactive + probes (/fleet-agents)" },
       { "path": "/delta", "note": "Wye→Delta narrative" },
       { "path": "/why", "note": "short redirect" },
       { "path": "/connect.html", "note": "K₄ Three.js navigator" },

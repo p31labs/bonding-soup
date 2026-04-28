@@ -58,13 +58,14 @@
       "id": "command-center-health",
       "url": "https://command-center.trimtab-signal.workers.dev/api/health",
       "group": "command-center",
-      "note": "EPCP operator glass"
+      "note": "EPCP liveness. If Cloudflare Access wraps this path without bypass, fetch may follow login HTML — prefer Access bypass for GET /api/health (EDGE-SECURITY); operator-shift-public carries JSON shape check"
     },
     {
       "id": "operator-shift-public",
       "url": "https://command-center.trimtab-signal.workers.dev/api/operator/shift",
       "group": "command-center",
-      "note": "GET public operator shift (PII-free); POST requires Access (CWP-P31-UI Phase C)"
+      "note": "GET public operator shift (PII-free); POST requires Access + operator role",
+      "expectJsonKey": "public"
     },
     {
       "id": "p31ca-hub-root",

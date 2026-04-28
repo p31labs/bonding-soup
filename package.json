@@ -9,6 +9,7 @@
   "scripts": {
     "startup": "node -e \"const fs=require('fs'),p=require('path');const f=p.join(process.cwd(),'docs/P31-STARTUP-PACKAGE.md');if(!fs.existsSync(f)){console.error('Missing',f);process.exit(1);}const t=fs.readFileSync(f,'utf8');const lines=t.split('\\n');const SHOW=54;console.log('━ P31 startup package (first '+SHOW+' lines) ━\\n');console.log(lines.slice(0,SHOW).join('\\n'));console.log('\\n… full: docs/P31-STARTUP-PACKAGE.md ('+lines.length+' lines)\\n');\"",
     "p31": "node scripts/cli/index.mjs",
+    "p31:link": "bash scripts/install-p31-cli.sh",
     "p31:open": "node scripts/cli/index.mjs open",
     "setup": "node scripts/setup.mjs",
     "git:hooks": "node scripts/git-hooks-config.mjs",

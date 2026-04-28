@@ -18,7 +18,7 @@ This tree is a **multi-root** home: **C.A.R.S.** (**Collaborative Affective Real
 
    - **Chromebook + mobile (device spine, hub tokens):** **`p31-device-setup.html`** (open with **`npm run demo`**) · **`docs/P31-DEVICE-SETUP-CHROMEBOOK-MOBILE.md`** — clone path, **`P31_DEMO_PORT`**, Crostini, LAN **3131**; command-center deep dives **`docs/P31-CHROMEBOOK-COMMAND-READINESS.md`**, **`docs/P31-IPHONE-COMMAND-READINESS.md`**. **Static path/port:** **`docs/SOUP-LOCAL-DEMO.md`**.
 
-   - **`p31` CLI:** **`npm run p31`** — `boot`, `doctor`, `connect`, `verify`, `ci`, `cc`, `hub-diff` (same family as command center; **`hub-diff`** runs **`npm run hub:diff:p31ca`** when `andromeda/04_SOFTWARE/p31ca` exists); **`scripts/cli/`**; global **`p31`** via **`npm link`**; **`P31_CLI_MINIMAL`**, **`NO_COLOR`**.
+   - **`p31` CLI:** **`npm run p31`** — `boot`, `doctor`, `connect`, `verify`, `ci`, `cc`, `hub-diff`, `art` … (see **`scripts/cli/`**). **On PATH from any terminal (Linux / penguin):** run **`npm run p31:link`** from repo root → **`~/.local/bin/p31`**; ensure **`~/.local/bin`** on **`PATH`** (see **`docs/P31-STARTUP-PACKAGE.md`**). Fallback: **`npm link`** when npm global bin is on **`PATH`**; **`P31_CLI_MINIMAL`**, **`NO_COLOR`**.
 
    - **Normative docs:** **`docs/P31-ENGINEERING-STANDARD.md`** (DoD: **`verify`**, **`release:check`**, constants/canon/passport, secrets, **`docs/files/`** in Andromeda). Fleet / 11.10: **`docs/ECOSYSTEM-PRODUCTION-11.md`**. Monorepo bar: **`andromeda/docs/ENTERPRISE_QUALITY.md`**.
 

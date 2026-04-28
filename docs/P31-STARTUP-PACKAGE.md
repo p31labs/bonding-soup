@@ -18,6 +18,20 @@ Everything below is **`npm run command-center`** (Node on the machine that holds
 
 ---
 
+## `p31` on your PATH (any terminal — Chromebook Linux / penguin)
+
+`npm link` only works if npm’s global **`bin`** directory is on **`PATH`** (often missing on Crostini). One-shot:
+
+| Step | Command |
+|------|--------|
+| 1. From the **home repo root** | `npm run p31:link` |
+| 2. If the installer says `p31` is not found | `echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc` then **open a new terminal** (or `source ~/.bashrc`) |
+| 3. Test | `p31 --version` · `p31 boot` |
+
+This installs **`~/.local/bin/p31`** → `scripts/p31-launcher.sh` (realpath resolves the repo no matter **cwd**).
+
+---
+
 ## 60-second path
 
 | Step | Command / action |
@@ -113,4 +127,4 @@ Searchable index: build with **`npm run build:doc-index`** (in **`verify`**). Op
 
 ---
 
-**Version:** 1.1.0 — 2026-04-28 (startup · Chromebook + iPhone + command center surfaced in startup banner) · aligns with **`npm run startup`** (**54-line** teaser) + **`npm run verify`** spine.
+**Version:** 1.2.0 — 2026-04-28 ( **`npm run p31:link`** · `~/.local/bin/p31` on PATH) · prior: Chromebook + iPhone + CC · aligns with **`npm run startup`** (**54-line** teaser; extend file for full steps) + **`npm run verify`** spine.

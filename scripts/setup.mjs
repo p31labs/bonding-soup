@@ -58,7 +58,10 @@ if (exists(path.join(p31ca, "package.json"))) {
   );
 }
 
-console.log("Local demo:  npm run demo  →  http://127.0.0.1:8080/soup.html  (docs/SOUP-LOCAL-DEMO.md; P31_DEMO_PORT if :8080 busy)\n");
+console.log(
+  "Local demo:  npm run demo  →  http://127.0.0.1:8080/soup.html  (docs/SOUP-LOCAL-DEMO.md; P31_DEMO_PORT if :8080 busy)\n\n" +
+    "p31 on PATH: npm run p31:link   (then open a new terminal or: export PATH=\"$HOME/.local/bin:$PATH\")\n"
+);
 
 try {
   execSync("node scripts/git-hooks-config.mjs", { cwd: root, stdio: "inherit" });

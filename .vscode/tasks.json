@@ -98,6 +98,22 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
+      "label": "P31: docs prep hub (index + sync → p31ca)",
+      "type": "shell",
+      "command": "npm run docs:prep:hub",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify doc-library p31ca mirror",
+      "type": "shell",
+      "command": "npm run verify:doc-library:p31ca-mirror",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
       "label": "P31: doc library e2e (Playwright, headless)",
       "type": "shell",
       "command": "npm run test:doc-library:e2e",

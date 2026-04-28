@@ -69,6 +69,11 @@
       "role": "p31.productionReadiness/1.0.0 — canonical PRS scoring matrix for all hub cards + key live Workers; verify:production-readiness"
     },
     {
+      "id": "cwp-p31-prod-equilibrium-wrapup-2026-04-28",
+      "path": "docs/CWP-P31-PROD-EQUILIBRIUM-WRAPUP-2026-04-28.md",
+      "role": "CWP-P31-PROD-EQUILIBRIUM-WRAPUP-2026-04-28 — final wrap-up: PRS system + proof ladder + parallel convergence operating rules"
+    },
+    {
       "id": "deliverable-subscription-stack-md",
       "path": "docs/DELIVERABLE-SUBSCRIPTION-STACK.md",
       "role": "Human manifest for p31.subscriptions contract; pairs with verify:subscriptions"
@@ -522,7 +527,7 @@
         "andromeda/04_SOFTWARE/p31ca/public/doc-library/index.json"
       ],
       "apply": "npm run sync:doc-library:p31ca (invokes build:doc-index; requires andromeda tree)",
-      "verify": "p31ca npm run verify:ground-truth (fileSnippets docLibrary.hubMirror, edgeRedirect /doc-library)",
+      "verify": "npm run verify:doc-library:p31ca-mirror (after verify:doc-index; fails if Andromeda mirror not committed). p31ca verify:ground-truth fileSnippets docLibrary.hubMirror, edgeRedirect /doc-library",
       "note": "PLAN-DOCUMENT-LIBRARY.md Phase 3; optional partial clone without p31ca"
     },
     {
@@ -674,6 +679,7 @@
       "verify:poets-room",
       "build:doc-index",
       "verify:doc-index",
+      "verify:doc-library:p31ca-mirror",
       "verify:simplex",
       "verify:simplex-email",
       "verify:simplex-bootstrap",

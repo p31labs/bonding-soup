@@ -169,6 +169,18 @@ export const ACTIONS = {
     cmd: "npm",
     args: ["run", "verify:doc-index"],
   },
+  "home-docs-prep-hub": {
+    title: "docs:prep:hub (build:doc-index + sync doc-library → p31ca public)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "docs:prep:hub"],
+  },
+  "home-verify-doc-library-p31ca-mirror": {
+    title: "verify:doc-library:p31ca-mirror (sync + fail if Andromeda mirror uncommitted)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "verify:doc-library:p31ca-mirror"],
+  },
   "home-test-doc-library-e2e": {
     title: "test:doc-library:e2e (Playwright — static server + headless search; install chromium once: npx playwright install chromium)",
     cwd: repoRoot,
@@ -457,6 +469,8 @@ export const SECTIONS_RAW = [
       "home-verify-mesh",
       "home-build-doc-index",
       "home-verify-doc-index",
+      "home-docs-prep-hub",
+      "home-verify-doc-library-p31ca-mirror",
       "home-test-doc-library-e2e",
       "home-test-physics-learn-e2e",
       "home-test-k4market-smoke",

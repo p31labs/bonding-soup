@@ -2,7 +2,7 @@
 
 This tree is a **multi-root** home: **BONDING Soup** at the top level, **Andromeda** under `andromeda/`, other sites, `docs/`, and tooling. The **P31 home** root may be its own git repository (e.g. Soup + `cognitive-passport` + `scripts` + `wcd33-global-archive/`; `.gitignore` excludes `andromeda/` and `phosphorus31.org/`, which have separate remotes). `andromeda/` remains the monorepo for `04_SOFTWARE` and GitHub Actions.
 
-0. **New clone / machine** — start here, then depth is elsewhere ( **`docs/P31-STARTUP-PACKAGE.md`**; **`npm run startup`** = first 40 lines in terminal ).
+0. **New clone / machine** — start here, then depth is elsewhere ( **`docs/P31-STARTUP-PACKAGE.md`** ; **`npm run startup`** prints **~first 54 lines**, including **Chromebook · iPhone → command center (:3131)** ).
 
    - **`npm run setup`** — root + **`p31ca`** **`npm install`**, **`apply:constants`**, **`apply:p31-style`** when design tokens exist, **`npm run verify`**. Optional **`git config core.hooksPath .githooks`** ( **`npm run git:hooks`** ) so **`.githooks/pre-commit`** runs **`verify:monetary`** when payment/creator-economy files are staged (bypass **`P31_SKIP_MONETARY_HOOK=1`** ).
 

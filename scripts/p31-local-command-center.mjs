@@ -444,6 +444,29 @@ function getLocalPreviewLinks(p31ca) {
 /** Section order: { id, title, ids[] } */
 const SECTIONS = [
   {
+    id: "chromebook-iphone",
+    title: "Chromebook & iPhone ↔ this console (3131)",
+    ids: [],
+    links: [
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/docs/P31-DEVICE-SETUP-CHROMEBOOK-MOBILE.md",
+        label: "Spine · Chromebook + mobile (readme)",
+      },
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/docs/P31-CHROMEBOOK-COMMAND-READINESS.md",
+        label: "Chromebook readiness (Crostini · LAN · PWA)",
+      },
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/docs/P31-IPHONE-COMMAND-READINESS.md",
+        label: "iPhone readiness (LAN bind · Home Screen)",
+      },
+      {
+        href: "http://127.0.0.1:8080/p31-device-setup.html",
+        label: "Interactive device setup (:8080 after npm run demo)",
+      },
+    ],
+  },
+  {
     id: "local",
     title: "Local previews (after demo server on 8080)",
     ids: ["home-demo"],
@@ -699,13 +722,40 @@ function buildPageHtml() {
           <p class="p31-cc__filter-meta p31-cc__filter-meta--mobile">Tap field to search · matches labels</p>
         </div>
 
+        <section class="p31-cc__device-plane" aria-labelledby="cc-device-plane-title">
+          <div class="p31-cc__device-plane-head">
+            <span class="p31-cc__device-plane-kicker" id="cc-device-plane-title">Chromebook &amp; iPhone · same command center</span>
+            <p class="p31-cc__device-plane-lede">
+              Both hit this Node server on port <strong>3131</strong> — LAN bind exposes the badge’s <strong>phone:</strong> URL;
+              Safari and Chrome rewrite <code>127.0.0.1</code> previews to your host IP automatically.
+            </p>
+          </div>
+          <div class="p31-cc__device-grid">
+            <div class="p31-cc__device-card">
+              <p class="p31-cc__device-card-label">Chromebook</p>
+              <p class="p31-cc__device-card-body">
+                Run inside <strong>Linux (Crostini)</strong>:
+                <code>npm run command-center</code> → Chrome <strong>:3131</strong>.
+                Reach another LAN host by starting that machine with <code>P31_CMD_CENTER_LAN=1</code> and opening the printed
+                <code>http://&lt;IPv4&gt;:3131/</code>.
+              </p>
+            </div>
+            <div class="p31-cc__device-card">
+              <p class="p31-cc__device-card-label">iPhone</p>
+              <p class="p31-cc__device-card-body">
+                Trusted Wi‑Fi: <code>P31_CMD_CENTER_LAN=1 npm run command-center</code> → open badge <strong>phone:</strong>
+                URL in Safari → <strong>Add to Home Screen</strong>. Use <code>P31_CMD_CENTER_NO_OPEN=1</code> without a GUI.
+              </p>
+            </div>
+          </div>
+        </section>
+
         <div class="p31-cc__callout">
           <p><strong>CONNECTION.</strong> Deploy canon · ecosystem order · env catalog · edge coherence · operator UI — <code>npm run connection</code> · <a href="https://github.com/p31labs/bonding-soup/blob/main/docs/P31-DEPLOY-CANON.md" rel="noopener" target="_blank">DEPLOY-CANON</a> · live <a href="https://p31ca.org/connect.html" rel="noopener" target="_blank">Create · Connect</a>.</p>
           <p><strong>Ship bar, without the amnesia.</strong> From repo root: <code>npm run command-center</code> (or VS Code <strong>Run Task</strong> → <em>P31: local command center</em>). Under the hood: <code>execFile</code> whitelist only.</p>
           <p><strong>Command mode (ops):</strong> whitelisted <strong>ecosystem:glass</strong> (all edge probes) and <strong>operator:shift-status / -in / -out</strong> (local <code>~/.p31/operator-shift.jsonl</code>). Production glass + shift line: <a href="https://p31ca.org/ops/" rel="noopener" target="_blank">p31ca.org/ops</a> · <a href="https://command-center.trimtab-signal.workers.dev/api/operator/shift" rel="noopener" target="_blank">edge shift (JSON)</a>. Pre-deploy: <code>npm run p31:converge</code> at home, then <code>npm run deploy</code> in <code>andromeda/04_SOFTWARE/p31ca</code> (runs <code>predeploy</code> = verify + build + Pages). <a href="https://github.com/p31labs/bonding-soup/blob/main/docs/MOBILE-OPS-PHASE3.md" rel="noopener" target="_blank">PHASE3</a></p>
           <p><strong>Create (build):</strong> one dev server at a time — p31ca <code>npm run dev</code> (Astro), BONDING <code>npm run dev</code> (Vite, port 5188). Gates: <code>npm run mobile-ops:phase4</code> · <a href="https://github.com/p31labs/bonding-soup/blob/main/docs/MOBILE-OPS-PHASE4.md" rel="noopener" target="_blank">PHASE4</a> · <a href="https://p31ca.org/dome/" rel="noopener" target="_blank">/dome</a> <a href="https://p31ca.org/education/" rel="noopener" target="_blank">/education</a></p>
           <p><strong>Connect (ship):</strong> passkey + mesh + BONDING on edge. Quick check: <code>npm run mobile-ops:phase5</code> · <a href="https://github.com/p31labs/bonding-soup/blob/main/docs/MOBILE-OPS-PHASE5.md" rel="noopener" target="_blank">PHASE5</a> · <a href="https://p31ca.org/connect" rel="noopener" target="_blank">/connect</a> <a href="https://bonding.p31ca.org/" rel="noopener" target="_blank">BONDING</a> · <a href="https://github.com/p31labs/bonding-soup/blob/main/docs/MOBILE-OPS-PHASE6.md" rel="noopener" target="_blank">PHASE6</a> (two-device checklist). <code>npm run mobile-ops:full</code> = phases 2→5 in one chain.</p>
-          <p><strong>iPhone · same Wi‑Fi:</strong> <code>P31_CMD_CENTER_LAN=1 npm run command-center</code> — open the <strong>phone:</strong> URL in the header badge (LAN can run whitelisted actions; trusted networks only). Then Safari → <em>Add to Home Screen</em> for a standalone app tile. <code>127.0.0.1</code> preview links rewrite to this host’s LAN IP automatically.</p>
           <p>Passport → <strong>sync:passport</strong>. Home <code>docs/*.md</code> → <strong>build:doc-index</strong> or <code>verify</code>. Client bundle: <code>scripts/command-center/</code>.</p>
         </div>
 
@@ -739,6 +789,9 @@ function buildPageHtml() {
           <a class="p31-cc__chip p31-cc__chip--link" href="https://p31ca.org/integrations/" rel="noopener" target="_blank">Integrations →</a>
           <a class="p31-cc__chip p31-cc__chip--link" href="https://p31ca.org/build" rel="noopener" target="_blank">p31ca /build →</a>
           <a class="p31-cc__chip p31-cc__chip--link" href="https://p31ca.org/connect.html" rel="noopener" target="_blank">p31ca /connect →</a>
+          <a class="p31-cc__chip p31-cc__chip--link" href="https://github.com/p31labs/bonding-soup/blob/main/docs/P31-DEVICE-SETUP-CHROMEBOOK-MOBILE.md" rel="noopener" target="_blank">Chromebook+iPhone spine →</a>
+          <a class="p31-cc__chip p31-cc__chip--link" href="https://github.com/p31labs/bonding-soup/blob/main/docs/P31-CHROMEBOOK-COMMAND-READINESS.md" rel="noopener" target="_blank">Chromebook 3131 →</a>
+          <a class="p31-cc__chip p31-cc__chip--link" href="https://github.com/p31labs/bonding-soup/blob/main/docs/P31-IPHONE-COMMAND-READINESS.md" rel="noopener" target="_blank">iPhone LAN 3131 →</a>
         </div>
 
         <div id="sections"></div>

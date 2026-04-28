@@ -24,6 +24,10 @@
 2. **Remove a surface:** remove id from both files, delete is not needed if you re-run `generate-about-pages` after shrink (or delete orphan `*-about.html` manually).
 3. **`related[]`:** must only reference ids that exist in `registry.mjs` (enforced by existing hub verify loop).
 
+## Posture labels (PRS)
+
+When **`p31-production-readiness.json`** exists at the bonding-soup repo root (typical full checkout), `scripts/hub/build-landing-data.mjs` and `scripts/generate-about-pages.mjs` map each **hubCard** PRS tier to grid/about badges: **LIVE** (P0–P1), **BETA** (P2), **ALPHA** (P3), **CONCEPT** (P4). **HARDWARE** on `node-one` is preserved. Logic lives in **`scripts/hub/prs-production-posture.mjs`**. p31ca-only clones without the home file keep registry `statusLabel` only.
+
 ## Social Molecules / C.A.R.S. (`social-molecules`)
 
 **Hub static app:** `public/social-molecules.html` — operator shell: boot veil, load menu (live soup, BONDING app, mesh assistant, field-only), settings (local prefs), upgraded field chat staging (local echo; real DO chat via `/mesh-start.html`). Header strip probes **`/p31-mesh-constants.json`**, **k4-personal `/api/health`**, and same-origin **`/api/health`** (Refresh repeats the snapshot; last-good time from cache if offline).

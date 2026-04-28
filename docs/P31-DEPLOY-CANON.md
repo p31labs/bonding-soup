@@ -2,7 +2,7 @@
 
 **Purpose:** One place for **who deploys what**, **which workflow fires**, and **which secrets** touch production—so overlapping paths (local Wrangler, bonding-soup Actions, Andromeda Actions) do not drift into conflicting lore.
 
-**Related:** **`docs/P31-ENGINEERING-STANDARD.md`** (gates and secrets overview). **`npm run connection`** (CONNECTION spine — ties this doc to ecosystem, env catalog, and hub URLs via **`scripts/p31-connection.mjs`**). **`P31_*` environment catalog:** root **`p31-env-manifest.json`**, **`npm run list:p31-env`**, **`npm run verify:p31-env`**.
+**Related:** **`docs/P31-ENGINEERING-STANDARD.md`** (gates and secrets overview). **`docs/P31-RELEASE-LADDER-CI.md`** (PR/main/nightly/proof tiers + branch protection names + deploy-day order). **`npm run connection`** (CONNECTION spine — ties this doc to ecosystem, env catalog, and hub URLs via **`scripts/p31-connection.mjs`**). **`P31_*` environment catalog:** root **`p31-env-manifest.json`**, **`npm run list:p31-env`**, **`npm run verify:p31-env`**. **Incident runbooks (mesh / hub / payments / passkeys / glass strict):** **`docs/runbooks/README.md`**.
 
 ---
 

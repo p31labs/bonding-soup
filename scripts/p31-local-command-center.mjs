@@ -941,11 +941,11 @@ server.listen(port, listenHost, () => {
   }
   try {
     if (process.platform === "win32") {
-      execFileSync("cmd", ["/c", "start", "", url], { stdio: "ignore" });
+      execFileSync("cmd", ["/c", "start", "", urlLoop], { stdio: "ignore" });
     } else if (process.platform === "darwin") {
       execFileSync("open", [urlLoop], { stdio: "ignore" });
     } else {
-      execFileSync("xdg-open", [url], { stdio: "ignore" });
+      execFileSync("xdg-open", [urlLoop], { stdio: "ignore" });
     }
   } catch {
     /* open browser failed */

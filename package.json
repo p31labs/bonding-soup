@@ -114,6 +114,7 @@
     "ecosystem:deploy:dry": "node scripts/ecosystem-deploy.mjs dry-run",
     "ecosystem:deploy": "node scripts/ecosystem-deploy.mjs execute",
     "full:automation": "node scripts/p31-full-automation.mjs",
+    "automate:full": "npm run apply:constants && P31_VFR_AUTO_GLASS=1 P31_GLASS_STRICT=1 npm run vfr:auto",
     "vfr": "node scripts/p31-vfr.mjs",
     "vfr:auto": "node scripts/p31-vfr.mjs auto",
     "vfr:manual": "node scripts/p31-vfr.mjs manual",

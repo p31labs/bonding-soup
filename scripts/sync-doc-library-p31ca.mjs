@@ -49,6 +49,27 @@ async function main() {
     fs.copyFileSync(path.join(vendor, n), path.join(outVendor, n));
   }
 
+  /** Minimal home assets so /doc-library/ resolves under p31ca dist (verify-internal-hub-links). */
+  const copyIntoPublic = async (fromRel, toRel) => {
+    const from = path.join(root, fromRel);
+    const to = path.join(p31ca, "public", toRel);
+    if (!fs.existsSync(from)) {
+      throw new Error(`sync-doc-library-p31ca: missing ${fromRel}`);
+    }
+    await fsp.mkdir(path.dirname(to), { recursive: true });
+    await fsp.copyFile(from, to);
+  };
+  await copyIntoPublic("p31-bonding.webmanifest", "p31-bonding.webmanifest");
+  await copyIntoPublic("p31-bonding-icons/p31-icon.svg", "p31-bonding-icons/p31-icon.svg");
+  await copyIntoPublic(
+    "cognitive-passport/p31-responsive-surface.css",
+    "cognitive-passport/p31-responsive-surface.css"
+  );
+  await copyIntoPublic(
+    "cognitive-passport/lib/p31-subject-prefs.js",
+    "cognitive-passport/lib/p31-subject-prefs.js"
+  );
+
   let html = await fsp.readFile(homeIndex, "utf8");
   if (html.includes('<base ')) {
     throw new Error("home doc-library index already has <base>; re-read template");
@@ -58,8 +79,31 @@ async function main() {
     'href="../../cognitive-passport/p31-style.css"',
     'href="/p31-style.css"'
   );
+  html = html.replace(
+    'href="../../p31-bonding.webmanifest"',
+    'href="/p31-bonding.webmanifest"'
+  );
+  html = html.replace(
+    'href="../../p31-bonding-icons/p31-icon.svg"',
+    'href="/p31-bonding-icons/p31-icon.svg"'
+  );
+  html = html.replace(
+    'href="../../cognitive-passport/p31-responsive-surface.css"',
+    'href="/cognitive-passport/p31-responsive-surface.css"'
+  );
+  html = html.replace(
+    'src="../../cognitive-passport/lib/p31-subject-prefs.js"',
+    'src="/cognitive-passport/lib/p31-subject-prefs.js"'
+  );
   // Hub footer: file links → GitHub (canonical) or p31ca static
   const repl = [
+    ['href="../physics-learn/index.html"', `href="${githubBlob("docs/physics-learn/index.html")}"`],
+    [
+      'href="../../andromeda/04_SOFTWARE/p31ca/public/k4market.html"',
+      'href="/k4market.html"',
+    ],
+    ['href="../P31-DEPLOY-CANON.md"', `href="${githubBlob("docs/P31-DEPLOY-CANON.md")}"`],
+    ['href="../PLAN-BONDING-SOUP-WHEN-SCALE.md"', `href="${githubBlob("docs/PLAN-BONDING-SOUP-WHEN-SCALE.md")}"`],
     ['href="../../poets-room.html"', 'href="/"'],
     ['href="../../soup.html"', 'href="https://bonding.p31ca.org"'],
     ['href="../../P31-ROOT-MAP.md"', `href="${githubBlob("P31-ROOT-MAP.md")}"`],

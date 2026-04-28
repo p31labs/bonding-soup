@@ -43,6 +43,14 @@ jobs:
           CI: "true"
         run: node scripts/p31-ci.mjs
 
+      - name: Require hub dist (full andromeda/p31ca checkout)
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+        run: |
+          if [ ! -f andromeda/04_SOFTWARE/p31ca/dist/index.html ]; then
+            echo "::error::Missing andromeda/04_SOFTWARE/p31ca/dist/index.html — deploy needs a full tree + successful hub build. See docs/P31-RELEASE-LADDER-CI.md"
+            exit 1
+          fi
+
       - name: Deploy to Cloudflare Pages
         if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
         env:

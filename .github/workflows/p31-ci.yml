@@ -2,6 +2,7 @@
 # Andromeda/ often absent from checkout — first job still enforces the home bar; second job is best-effort.
 # No path filters: every push/PR to main or master runs (cannot miss CI by file path).
 # Branch protection: require check "P31 / root verify" (required) and "P31 / full stack" (recommended).
+# Apex proof mapping + deploy order: docs/P31-RELEASE-LADDER-CI.md
 # workflow_dispatch: manual.
 name: P31 CI
 

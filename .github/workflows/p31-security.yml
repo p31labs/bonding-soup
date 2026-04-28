@@ -3,6 +3,9 @@
 # Policy: exits 1 on P0 only (unsuppressed prod-runtime vulns, broken PQC tests).
 # P1 warnings are printed but don't block merges.
 #
+# bonding-soup remote often has NO andromeda/ in git — preflight job detects p31ca; security jobs skip (clean pass).
+# Full proof: Andromeda p31ca-hub.yml + local npm run security:check. See docs/P31-RELEASE-LADDER-CI.md
+#
 # Required secrets (optional — job gracefully skips if absent):
 #   CLOUDFLARE_API_TOKEN — for optional wrangler dry-run in future phases
 
@@ -22,6 +25,7 @@ on:
       - "andromeda/04_SOFTWARE/packages/quantum-core/**"
       - ".github/workflows/p31-security.yml"
   pull_request:
+    branches: [main, master]
     paths:
       - "andromeda/04_SOFTWARE/p31ca/scripts/security/**"
       - "andromeda/04_SOFTWARE/p31ca/security/**"
@@ -40,19 +44,32 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  meta:
+    name: P31 / security preflight
+    runs-on: ubuntu-latest
+    outputs:
+      has_p31ca: ${{ steps.detect.outputs.has_p31ca }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: detect
+        run: |
+          if [ -f andromeda/04_SOFTWARE/p31ca/package.json ]; then
+            echo "has_p31ca=true" >> $GITHUB_OUTPUT
+            echo "p31ca subtree present — security jobs will run."
+          else
+            echo "has_p31ca=false" >> $GITHUB_OUTPUT
+            echo "::notice::andromeda/04_SOFTWARE/p31ca not in this Git tree — security jobs skipped (expected for bonding-soup without committed Andromeda). See docs/P31-RELEASE-LADDER-CI.md"
+          fi
+
   security:
     name: Security (SCA + Workers + Crypto)
+    needs: meta
+    if: needs.meta.outputs.has_p31ca == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          # Sparse checkout: only need p31ca tree and quantum-core if present
-          sparse-checkout: |
-            andromeda/04_SOFTWARE/p31ca
-            andromeda/04_SOFTWARE/packages/quantum-core
-          sparse-checkout-cone-mode: false
 
       - uses: actions/setup-node@v4
         with:
@@ -101,19 +118,15 @@ jobs:
   # Promoted to blocking after noise is triaged.
   sast:
     name: SAST (Semgrep)
+    needs: meta
+    if: github.event_name != 'schedule' && needs.meta.outputs.has_p31ca == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       security-events: write
-    if: github.event_name != 'schedule'  # Skip scheduled run to reduce noise
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            andromeda/04_SOFTWARE/p31ca/src
-            andromeda/04_SOFTWARE/p31ca/workers
-          sparse-checkout-cone-mode: false
 
       - name: Semgrep scan
         uses: semgrep/semgrep-action@v1

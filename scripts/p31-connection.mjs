@@ -41,6 +41,7 @@ export function getConnectionSummary() {
     opsUrl: "https://p31ca.org/ops/",
     connectLiveUrl: "https://p31ca.org/connect.html",
     deployCanonDoc: "docs/P31-DEPLOY-CANON.md",
+    runbooksIndexDoc: "docs/runbooks/README.md",
     engineeringStandardDoc: "docs/P31-ENGINEERING-STANDARD.md",
     meshPersonalWorkerUrl: constants?.mesh?.k4PersonalWorkerUrl ?? null,
   };
@@ -64,6 +65,7 @@ export function printConnectionFull() {
   );
   console.log("");
   console.log("\x1b[36mDocs\x1b[0m     " + s.deployCanonDoc + " — CI vs manual vs local CLI");
+  console.log("         " + s.runbooksIndexDoc + " — mesh · hub · payments · passkeys · glass strict");
   console.log("         " + s.engineeringStandardDoc + " — gates and secrets");
   console.log("");
   console.log(

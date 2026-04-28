@@ -176,6 +176,60 @@
       "group": "integrations",
       "note": "Set integrations.endpoints.homeAssistantLanBase in p31-constants (e.g. http://hass:8123). Omitted from CLI + /ops/ when empty. LAN-only; same network as HA.",
       "skipIfEmpty": true
+    },
+    {
+      "id": "worker-spa-appointment-tracker",
+      "url": "https://p31-appointment-tracker.trimtab-signal.workers.dev/",
+      "group": "worker-spa",
+      "note": "Worker SPA bundle (p31ca /appointment-tracker 302); PRS concept-tier unless promoted — edge HTML up"
+    },
+    {
+      "id": "worker-spa-love-ledger",
+      "url": "https://p31-love-ledger.trimtab-signal.workers.dev/",
+      "group": "worker-spa",
+      "note": "Worker SPA /love-ledger short URL target"
+    },
+    {
+      "id": "worker-spa-medical-tracker",
+      "url": "https://p31-medical-tracker.trimtab-signal.workers.dev/",
+      "group": "worker-spa",
+      "note": "Worker SPA /medical-tracker — wellness logging only per registry copy"
+    },
+    {
+      "id": "worker-spa-somatic-anchor",
+      "url": "https://p31-somatic-anchor.trimtab-signal.workers.dev/",
+      "group": "worker-spa",
+      "note": "Worker SPA /somatic-anchor"
+    },
+    {
+      "id": "worker-spa-legal-evidence",
+      "url": "https://p31-legal-evidence.trimtab-signal.workers.dev/",
+      "group": "worker-spa",
+      "note": "Worker SPA /legal-evidence"
+    },
+    {
+      "id": "worker-spa-contact-locker",
+      "url": "https://p31-contact-locker.trimtab-signal.workers.dev/",
+      "group": "worker-spa",
+      "note": "Worker SPA /contact-locker"
+    },
+    {
+      "id": "worker-spa-sleep-tracker",
+      "url": "https://p31-sleep-tracker.trimtab-signal.workers.dev/",
+      "group": "worker-spa",
+      "note": "Worker SPA /sleep-tracker"
+    },
+    {
+      "id": "worker-spa-budget-tracker",
+      "url": "https://p31-budget-tracker.trimtab-signal.workers.dev/",
+      "group": "worker-spa",
+      "note": "Worker SPA /budget-tracker"
+    },
+    {
+      "id": "worker-spa-genesis-gate",
+      "url": "https://genesis-gate.trimtab-signal.workers.dev/health",
+      "group": "worker-spa",
+      "note": "genesis-gate API Worker — GET /health (root / is 404 by design)"
     }
   ],
   "deployables": [

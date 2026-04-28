@@ -31,7 +31,7 @@ const TARGETS = {
   soup: {
     kind: "http",
     href: `http://${LOCAL.host}:${LOCAL.port.demo}/soup.html`,
-    desc: "BONDING Soup; starts static :8080 if free",
+    desc: "C.A.R.S. (soup.html); starts static :8080 if free",
     footnote: "WebSocket (optional): node spikes/mock-ws-server/server.js",
   },
   demo: { alias: "soup" },

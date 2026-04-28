@@ -51,7 +51,7 @@ Backend Workers and related edge surface — operational, instrumented, producti
 |---|------------|---------------|---------------------------|
 | 17 | **phosphorus31.org** | Live; **parallel** repo and deploy vs p31ca | Keep pipelines explicit; content/deploy checklist per site owner. |
 | 18 | **WCD-33 Soup archive Worker** | `wcd33-global-archive/DEPLOY.md`, KV, CORS | Confirm production Worker URL, health checks, and client `BONDING_ARCHIVE_URL` wiring. |
-| 19 | **Root BONDING Soup engine** | `tsc`, `soup.html`, archive hook | Full molecular/world MVP still roadmap Phase 3–4 (`docs/development-roadmap.md`); **core engine** is buildable now. |
+| 19 | **Root C.A.R.S. engine** | `tsc`, `soup.html`, archive hook | Full molecular/world MVP still roadmap Phase 3–4 (`docs/development-roadmap.md`); **core engine** is buildable now. |
 | 19a | **BONDING home — Scale & PWA pack** | **Assembled:** `p31-bonding.webmanifest` + icons, when-scale plan + room runbook, `npm run soup:room-scale`, fleet portal generator, create/connect/monetization bridge doc, entry-page parity, passport transform/footer. **Manifest:** **`docs/DELIVERABLE-BONDING-HOME-SCALE-PACK.md`**. | Bonding mirror: **`npm run sync:soup-bonding`** when deploy path active; production WS still mock/roadmap. |
 | 20 | **Children’s picture book** | *Mother Nature and Father Time: The Spark and the Cage* — illustrated PDF / flipbook tracks | Print + public flipbook polish as needed. |
 | 21 | **Ko-fi** | **`https://ko-fi.com/trimtab69420`** (`p31-constants.json` → `contact.kofiUrl`) | Low-friction; align with grant/funder CTAs. |

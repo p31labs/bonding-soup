@@ -1,6 +1,6 @@
 /**
- * BONDING Soup Demo
- * Demonstration of the integrated molecular physics engine
+ * C.A.R.S. Demo
+ * Demonstration of the integrated molecular physics engine (SoupEngine)
  */
 
 import { SoupEngine } from './soup';
@@ -174,7 +174,7 @@ soup.onMoleculeDestroyed = (moleculeId) => {
 
 // Demo initialization
 async function initializeSynthesisDemo() {
-  console.log('🚀 Starting BONDING Soup - Synthesis Reactions Demo');
+  console.log('🚀 Starting C.A.R.S. — Synthesis Reactions Demo');
   console.log('===================================================');
 
   // Resume audio context

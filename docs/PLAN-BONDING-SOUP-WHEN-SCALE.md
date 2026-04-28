@@ -1,6 +1,8 @@
-# BONDING Soup — when-scale plan (not if)
+# C.A.R.S. — when-scale plan (not if)
 
-**Assumption:** Small-circle, co-presence interfaces **will** eat a growing share of what people mean by “social.” Soup is an early **reference implementation** of that shift — bounded rooms, ethical UX, mesh-backed identity. This doc is the **execution spine**: plan the work, work the plan, prove it with **`verify`** and deploy discipline.
+**Naming:** **`docs/CARS-NAMING.md`**.
+
+**Assumption:** Small-circle, co-presence interfaces **will** eat a growing share of what people mean by “social.” C.A.R.S. is an early **reference implementation** of that shift — bounded rooms, ethical UX, mesh-backed identity. This doc is the **execution spine**: plan the work, work the plan, prove it with **`verify`** and deploy discipline.
 
 **Entry points:** Linked from **`soup.html`**, **`poets-room.html`**, **`p31-personal-howto.html`**, **`docs/doc-library/index.html`**, **`docs/physics-learn/index.html`**, **`cognitive-passport/index.html`** (footer), **`fleet-portal.html`** (footer); command-center **ribbon** (`scripts/p31-local-command-center.mjs`). **`AGENTS.md`** §1c for agents.
 

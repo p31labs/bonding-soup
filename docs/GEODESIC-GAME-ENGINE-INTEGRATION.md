@@ -1,7 +1,9 @@
 # Geodesic — game engine integration (external clients)
 
-**Updated:** 2026-04-26  
-**Wire contract (normative source):** `andromeda/04_SOFTWARE/geodesic-room/src/index.ts` (file header + `Op` / message types). **Schema label:** `p31.geodesicRoomWire/0.2.0` (version tracks `geodesic-room` **0.2.0**). **TypeScript (optional):** `andromeda/04_SOFTWARE/packages/shared/src/geodesic-room-wire.ts` — import as **`@p31/shared/geodesic-room-wire`** (`GEODESIC_ROOM_WIRE_SCHEMA`, `GeodesicClientMessage`, `GeodesicServerMessage`, `GeodesicRoomStateSnapshot`, limits). Keep types aligned when the Worker changes.
+**Updated:** 2026-04-27  
+**Wire contract (normative source):** `andromeda/04_SOFTWARE/geodesic-room/src/index.ts` (file header + `Op` / message types). **Schema label:** `p31.geodesicRoomWire/0.2.1` (version tracks `geodesic-room` **0.2.1**). **TypeScript (optional):** `andromeda/04_SOFTWARE/packages/shared/src/geodesic-room-wire.ts` — import as **`@p31/shared/geodesic-room-wire`** (`GEODESIC_ROOM_WIRE_SCHEMA`, `GeodesicClientMessage`, `GeodesicServerMessage`, `GeodesicRoomStateSnapshot`, limits). Keep types aligned when the Worker changes.
+
+**Shape rotation (`rotY`):** `ADD_SHAPE` / `MOVE_SHAPE` / `hello.shapes[*]` may include **`rotY`** (radians, tabletop spin about +Y, Three.js). If omitted (legacy rooms/clients), treat as **`0`**. **`MOVE_SHAPE`** updates position every time; include **`rotY`** whenever yaw changes so multiplayer stays aligned.
 
 **Purpose:** Let **any** runtime with WebSocket + JSON (Unity, Unreal, Godot, Bevy, custom C++) participate in the same **authoritative** K₄ + platonic build state as the browser (`p31ca/public/geodesic.html` in `?room=` live mode). The **geodesic-room** Worker is the game-agnostic **net layer**; your engine owns **rendering, input, and scene graph**.
 
@@ -18,7 +20,7 @@
 
 - **`roomId`:** `1–64` chars `[a-zA-Z0-9_-]` (same as `?room=` on the hub).
 - **Production `WORKER` host:** recorded in `andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json` under `routes.geodesic` **note** and inline **`WS_BASE`** in `geodesic.html` — **keep in sync** when the deployment URL changes.
-- **Root health:** `GET /` (non-matching path) returns `{ service: 'geodesic-room', version: 2, ok: true }`.
+- **Root health:** `GET /` (non-matching path) returns JSON `{ service: 'geodesic-room', version: 2, ok: true, wireSchema, packageVersion? }` — **`version`** remains a numeric probe-level field; **`wireSchema`** is `p31.geodesicRoomWire/…`; **`packageVersion`** is set when `WORKER_VERSION` is configured (wrangler `[vars]`).
 
 ---
 
@@ -27,8 +29,8 @@
 | `type` | Required fields | Behavior |
 |--------|------------------|----------|
 | `SET_VERTEX` | `id` ∈ `v0`…`v3`, `x`, `y`, `z` | Moves cage vertex; clamped (see server). |
-| `ADD_SHAPE` | `shapeId`, `shapeType` ∈ `tet\|oct\|ico\|cube`, `x`, `y`, `z` | New shape; **SHAPE_CAP** 50. |
-| `MOVE_SHAPE` | `shapeId`, `x`, `y`, `z` | Repositions existing shape. |
+| `ADD_SHAPE` | `shapeId`, `shapeType` ∈ `tet\|oct\|ico\|cube`, `x`, `y`, `z`, optional `rotY` | New shape (default **`rotY` = 0**); **SHAPE_CAP** 50. |
+| `MOVE_SHAPE` | `shapeId`, `x`, `y`, `z`, optional `rotY` | Updates position; **`rotY`** sets tabletop yaw — omit **`rotY`** to keep stored rotation unchanged. |
 | `REMOVE_SHAPE` | `shapeId` | Deletes shape. |
 | `RESET_SHAPES` | — | Clears all shapes. |
 | `RESET` | — | Resets **vertices** to default labels (family cage), not shapes. |
@@ -64,7 +66,22 @@
 
 ---
 
-## 5. Limits and operations reality
+## 5. Solo portable tableau (`p31.geodesicBuildSnapshot/1.0.0`)
+
+**Not network state** — the hub page’s **Export / Import JSON** button (solo mode only): one file with mesh poses, tabletop **`rotY`**, wire/solid prefs, Maxwell counts. Canonical label: **`p31.geodesicBuildSnapshot/1.0.0`**.
+
+| Source | Path / import |
+|--------|----------------|
+| Stub + intent | `p31ca/ground-truth/geodesic-build-snapshot.json` |
+| Browser runtime | `p31ca/public/geodesic.html` (`GEODESIC_BUILD_SNAPSHOT_SCHEMA` + `applyGeodesicSnapshotPayload`) |
+| Game engines | `import type { GeodesicBuildSnapshotPayload, GEODESIC_BUILD_SNAPSHOT_SCHEMA } from '@p31/shared/geodesic-build-snapshot'` |
+| Integrity | **`npm run verify:geodesic-build-snapshot`** (p31ca **prebuild**) — `.schema` ≡ HTML ≡ TS literal |
+
+Treat like any other **`p31.*`** artifact: drift fails CI — no scraping the DOM.
+
+---
+
+## 6. Limits and operations reality
 
 | Limit | Value |
 |-------|--------|
@@ -76,7 +93,7 @@
 
 ---
 
-## 6. Related docs
+## 7. Related docs
 
 - **Product + browser UX:** `docs/GEODESIC-CAMPAIGN.md`  
 - **Synergetic / dome stack (R3F, Spaceship Earth):** `docs/WORK-PACKAGE-SYNERGETIC-GEODESIC-STACK.md`  

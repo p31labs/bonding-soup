@@ -108,6 +108,7 @@ The campaign is defined **inline** in `geodesic.html` as `CAMPAIGN.tracks[]`. Ea
 ## 8. K₄ live room (Durable Object)
 
 - **GeodesicRoom** (see `geodesic-room` package): 4 vertices, default labels (family cage), **WebSocket** broadcast, `GET /api/geodesic/:id/state` snapshot.  
+- **Builder shapes (live):** Shared **x,y,z** and tabletop **rotY** (yaw, radians) on **`ADD_SHAPE`** / **`MOVE_SHAPE`** — wire **`p31.geodesicRoomWire/0.2.1`**; normative types in **`geodesic-room/src/index.ts`** and **`@p31/shared/geodesic-room-wire`**.  
 - **Security inventory:** `p31ca/security/worker-allowlist.json` — public rooms by name, POC; document **P2** auth in allowlist `notes` if you harden.  
 - **p31** operator note: the live mesh is **not** the same product as the **K₄** “cage” Worker (`k4-cage`); **geodesic-room** is a **separate** package so family-mesh production traffic stays isolated.
 
@@ -127,6 +128,7 @@ The campaign is defined **inline** in `geodesic.html` as `CAMPAIGN.tracks[]`. Ea
 ## 10. Operations
 
 - **Change campaign copy or steps:** edit the `CAMPAIGN` object in `public/geodesic.html` and bump `localStorage` key if you break old saves, or document migration.  
+- **Solo JSON snapshot (portable tableau):** Canonical schema **`p31.geodesicBuildSnapshot/1.0.0`** in `ground-truth/geodesic-build-snapshot.json`; TypeScript import **`@p31/shared/geodesic-build-snapshot`** (`GEODESIC_BUILD_SNAPSHOT_SCHEMA`, `GeodesicBuildSnapshotPayload`); mirrored as `GEODESIC_BUILD_SNAPSHOT_SCHEMA` in `public/geodesic.html`. Verifier **`npm run verify:geodesic-build-snapshot`** (p31ca prebuild) — **ground-truth ≡ HTML ≡ shared** literal. **`Export` / `Import`** on the page (solo): position, tabletop **rotY**, wire/solid prefs, snap pref, Maxwell fingerprint — one file replaces a gallery of screenshots ; teach forward.
 - **Change worker URL:** `WS_BASE` in `geodesic.html` + `p31.ground-truth.json` `routes.geodesic.note` + any hub copy that links to live mode.  
 - **CI:** `cd andromeda/04_SOFTWARE/p31ca && npm run verify:ground-truth` — the `geodesic` **route** and **label** are part of the contract.  
 - **Full hub gate:** `npm run hub:ci` in p31ca per `DEPLOY.md` after public HTML edits.

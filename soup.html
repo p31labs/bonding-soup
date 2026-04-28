@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
-    <title>BONDING Soup</title>
-    <meta name="description" content="BONDING Soup — calm molecular sim: co-presence, family rooms, clear feedback, P31 colors. bonding.p31ca.org/soup" />
-    <meta property="og:title" content="BONDING Soup" />
-    <meta property="og:description" content="Molecular sim built for togetherness—clear colors, soft motion, honest rewards." />
+    <title>C.A.R.S.</title>
+    <meta name="description" content="C.A.R.S. — Collaborative Affective Realtime Sim: social molecules, co-presence, family rooms, P31 colors. bonding.p31ca.org/soup" />
+    <meta property="og:title" content="C.A.R.S. · Collaborative Affective Realtime Sim" />
+    <meta property="og:description" content="C.A.R.S. · Social molecules — clear colors, soft motion, together in one sim." />
     <meta name="theme-color" content="#0f1115" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="P31 home" />
@@ -37,15 +37,15 @@
 </head>
 <body class="p31-mesh-m-first">
     <div id="container">
-        <header class="soup-app-header soup-app-header--psych" aria-label="BONDING Soup">
-            <h1 class="soup-app-header__title">BONDING Soup</h1>
+        <header class="soup-app-header soup-app-header--psych" aria-label="C.A.R.S. · Collaborative Affective Realtime Sim">
+            <h1 class="soup-app-header__title"><abbr title="Collaborative Affective Realtime Sim">C.A.R.S.</abbr></h1>
             <p class="soup-app-header__welcome" id="soup-welcome">Same bowl, same room—<strong>your people first</strong>. Calm defaults, clear feedback, no stranger scoreboard.</p>
             <ul class="soup-psych-pillars" aria-label="What this interface optimizes for">
                 <li><span class="soup-psych-dot soup-psych-dot--calm" aria-hidden="true"></span> Calm (teal · safety)</li>
                 <li><span class="soup-psych-dot soup-psych-dot--warm" aria-hidden="true"></span> Warmth (coral · energy)</li>
                 <li><span class="soup-psych-dot soup-psych-dot--belong" aria-hidden="true"></span> Belonging (phosphor · we)</li>
             </ul>
-            <p class="soup-aaso"><em>As above, so below:</em> the same <code>demo</code> / <code>build:doc-index</code> bar shows up in the <a class="p31-mesh-tap" href="docs/doc-library/index.html">doc library</a>, <a class="p31-mesh-tap" href="docs/physics-learn/index.html">physics learn</a>, <a class="p31-mesh-tap" href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (with <code>andromeda/</code>), <a class="p31-mesh-tap" href="fleet-portal.html">live fleet &amp; every URL</a> (<code>npm run build:fleet-portal</code>), <a class="p31-mesh-tap" href="p31-personal-howto.html">interactive how-to</a>, <a class="p31-mesh-tap" href="p31-device-setup.html">Chromebook &amp; phone setup</a>, <a class="p31-mesh-tap" href="poets-room.html">Poets room</a>, <a class="p31-mesh-tap" href="http://127.0.0.1:3131/">local command center</a> (<code>npm run command-center</code> — 3131), and <a class="p31-mesh-tap" href="docs/P31-DEPLOY-CANON.md">CONNECTION</a> (<code>npm run connection</code> — deploy · ecosystem · env · ops). <strong>When-scale</strong> (plan the work, work the plan): <a class="p31-mesh-tap" href="docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">BONDING Soup — when-scale plan</a>. Prose in the tree, comfort in the tab. <span class="aaso-love" title="love">&#9829;</span><span class="aaso-3" title="&lt;3" aria-label="less than three"> &lt;3</span></p>
+            <p class="soup-aaso"><em>As above, so below:</em> the same <code>demo</code> / <code>build:doc-index</code> bar shows up in the <a class="p31-mesh-tap" href="docs/doc-library/index.html">doc library</a>, <a class="p31-mesh-tap" href="docs/physics-learn/index.html">physics learn</a>, <a class="p31-mesh-tap" href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (with <code>andromeda/</code>), <a class="p31-mesh-tap" href="fleet-portal.html">live fleet &amp; every URL</a> (<code>npm run build:fleet-portal</code>), <a class="p31-mesh-tap" href="p31-personal-howto.html">interactive how-to</a>, <a class="p31-mesh-tap" href="p31-device-setup.html">Chromebook &amp; phone setup</a>, <a class="p31-mesh-tap" href="poets-room.html">Poets room</a>, <a class="p31-mesh-tap" href="http://127.0.0.1:3131/">local command center</a> (<code>npm run command-center</code> — 3131), and <a class="p31-mesh-tap" href="docs/P31-DEPLOY-CANON.md">CONNECTION</a> (<code>npm run connection</code> — deploy · ecosystem · env · ops). <strong>Naming:</strong> <a class="p31-mesh-tap" href="docs/CARS-NAMING.md">C.A.R.S.</a>. <strong>When-scale</strong> (plan the work, work the plan): <a class="p31-mesh-tap" href="docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">when-scale plan</a>. Prose in the tree, comfort in the tab. <span class="aaso-love" title="love">&#9829;</span><span class="aaso-3" title="&lt;3" aria-label="less than three"> &lt;3</span></p>
         </header>
 
         <div class="soup-larmor" id="soup-larmor" hidden>
@@ -220,11 +220,11 @@
             if (ptitle) ptitle.textContent = 'Who is here with you';
         }
         if (isParents && isKids) {
-            document.title = 'BONDING Soup (family)';
+            document.title = 'C.A.R.S. (family)';
         } else if (isParents) {
-            document.title = 'BONDING Soup (guardian)';
+            document.title = 'C.A.R.S. (guardian)';
         } else if (isKids) {
-            document.title = 'BONDING Soup (big play)';
+            document.title = 'C.A.R.S. (big play)';
         }
 
         (function initSoupWelcomeCopy() {
@@ -893,7 +893,7 @@
 
         // Initialize synthesis run
         async function init() {
-            log('BONDING Soup — engine running.');
+            log('C.A.R.S. — engine running.');
             if (isKids) {
                 log('🌈 Kids: bigger UI, bottom action bar. WebSocket needs the mock server (grown-up or runbook).');
             }
@@ -917,7 +917,7 @@
                 // Auto-start tutorial for first-time users
                 if (tutorial.shouldShowTutorial()) {
                     setTimeout(() => {
-                        log('🎓 First time here? Click the "Tutorial" button to learn about BONDING!');
+                        log('🎓 First time here? Click the "Tutorial" button to learn how the sim works!');
                         const reduce =
                             typeof window.matchMedia === 'function' &&
                             window.matchMedia('(prefers-reduced-motion: reduce)').matches;

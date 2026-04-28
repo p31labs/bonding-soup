@@ -2,7 +2,7 @@
 
 ## 1. Core Architecture and Networking Overview
 
-This specification defines the multiplayer networking layer for BONDING's "The Soup" environment. Building upon the validated local simulation engine (WCD-31), this layer enables real-time sharing of molecular states between players while maintaining strict mobile performance constraints.
+This specification defines the multiplayer networking layer for C.A.R.S. (“The Soup” sim in code). Building upon the validated local simulation engine (WCD-31), this layer enables real-time sharing of molecular states between players while maintaining strict mobile performance constraints.
 
 The core architecture relies on a persistent WebSocket connection with a 2Hz update frequency for molecular state synchronization. This low-frequency update is made visually smooth through client-side Hermite spline interpolation (validated in SPIKE-03), which upsamples the 2Hz network stream to the local 60fps render loop.
 

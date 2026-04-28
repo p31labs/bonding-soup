@@ -22,7 +22,7 @@
         "urlParams.has('debug')",
         "debug: isDebug"
       ],
-      "trigger": "URL phases ?debug, ?ws — BONDING Soup lab prepared state."
+      "trigger": "URL phases ?debug, ?ws — C.A.R.S. lab prepared state."
     },
     {
       "id": "SOUP-ARCHIVE",

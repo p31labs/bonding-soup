@@ -1,72 +1,111 @@
-# Enterprise launch prep — P31 Labs / p31ca
+# Enterprise launch prep — P31 ecosystem pre-flight
 
-**Last updated:** 2026-04-26  
-**Purpose:** Bridge **operator reality** (Cloudflare, GitHub, Zenodo, Stripe) with narrative launch docs under `andromeda/docs/` (Genesis / Phosphorus31 SOPs). Execute in order where possible; skip rows that do not apply to your cut of the stack.
+**Role:** Final gate before Launch Ops on the sovereign edge stack (`p31ca.org`, Cloudflare Workers, Stripe, GitHub).  
+**Audience:** Operators merging Andromeda, rotating secrets, running D1 migrations, and confirming Pages + Zenodo parity.
 
----
-
-**Normative ship bar:** **`docs/P31-ENGINEERING-STANDARD.md`**.
-
-## A. Truth and gates (local)
-
-| Step | Command / action | Notes |
-|------|------------------|--------|
-| 1 | `npm run verify` (P31 home root) | Passport, constants, p31-style, p31ca contracts, egg-hunt, `tsc`. |
-| 2 | `npm run release:public` | **One-shot public prep:** root **`verify`** → strict mesh + k4-personal → **`p31ca` `hub:ci`** (regenerates about pages + full build) → **`security:check`**. Optional: **`npm run release:public -- --content`** (runs **`hub:about:enrich`**). **`--no-security`** skips the security suite. |
-| 2b | `npm run release:check` or `npm run p31:ci` | Adds p31ca build when tree present (no `hub:about:generate`). For CI parity without about regen: **`npm run release:all`** (strict mesh + p31ca **`verify`** + **`security:check`**). |
-| 3 | `npm run validate:full` | Optional: live mesh audits + extended shell checks (needs network). |
-| 4 | `npm run fleet:probe` / `fleet:probe:strict` (from `p31ca/`) | Worker fleet health. |
+Related: **`docs/P31-ENGINEERING-STANDARD.md`**, **`docs/P31-DEPLOY-CANON.md`**, **`andromeda/docs/ENTERPRISE_QUALITY.md`**, hub **`npm run hub:ci`** / **`npm run deploy:p31ca`**.
 
 ---
 
-## B. Secrets and rotation (post-batch)
+## Rolling status
 
-| Secret | Where | Action |
-|--------|--------|--------|
-| **Zenodo** | [Application tokens](https://zenodo.org/account/settings/applications/) | **Rotate** after any token exposure; never commit. Batch uploader: `andromeda/docs/files/zenodo_upload.py` + optional `.env` (gitignored). |
-| **`ZENODO_TOKEN` / `ZENODO_API_TOKEN`** | GitHub Actions, Forge Worker | Set to **new** token after rotation; align name with workflow (`ZENODO_TOKEN` vs `ZENODO_API_TOKEN` per target). |
-| **`CLOUDFLARE_API_TOKEN`**, **`CLOUDFLARE_ACCOUNT_ID`** | GitHub, local wrangler | Required for Pages deploy workflows; least-privilege token. |
-| Stripe / Discord / social | `donate-api`, Forge, ecosystem bots | See `andromeda/04_SOFTWARE/cloudflare-worker/bouncer/src/secrets-index.json` and package READMEs. |
+| Phase | State |
+|--------|--------|
+| **Secrets** | **Complete** — production rotation applied (Wrangler-scoped tokens, **`wrangler secret`**, Stripe webhook signing secrets). |
+| **D1 · Pages deploy · Zenodo** | **Outstanding** — operator completes unchecked rows below per release window. **`hub:ci`** must pass locally/CI **before** every **`dist/`** deploy (see Commands). |
+| **Post-deploy smoke** | Run **`npm run launch:smoke:net`** from the **home** repo after **`p31ca`** **`dist/`** is live (requires HTTPS egress). Skip offline: **`P31_LAUNCH_SMOKE_SKIP=1`**. |
 
----
+### Commands
 
-## C. Andromeda CI and merge path
-
-Per **`andromeda/04_SOFTWARE/integration-handoff/SHIFT-TURNOVER-2026-04-26.md`**:
-
-1. Confirm **`p31ca-hub`** (or equivalent) is green on the integration branch tip.
-2. Merge integration PR when green (operator discretion).
-3. **Commit high-value untracked** items called out in that handoff: passkey worker source, new workflows (`donate-api`, `p31-google-bridge`), security stack if CI depends on it.
-4. **Regenerated hub HTML** — prefer CI regeneration; avoid committing noise from local `hub:about:generate` unless copy/generator changed.
+| Goal | Where | Command |
+|------|--------|---------|
+| Hub bundle gate (Pages **`dist/`** input) | `andromeda/04_SOFTWARE/p31ca` | **`npm run hub:ci`** |
+| Monetary + ecosystem proofs | Home repo root | **`npm run verify:monetary`** (or **`npm run verify`**) |
+| Live edge probes post-deploy | Home repo root | **`npm run launch:smoke:net`** |
 
 ---
 
-## D. Research and constants
+## Secret rotation
 
-| Item | Location |
-|------|----------|
-| Published DOIs **V–XX** (+ existing **IV**, **defensive**) | `p31-constants.json` → `research.papers` |
-| Batch result IDs | `andromeda/docs/files/zenodo_results.json` |
-| Optional: Zenodo **related identifiers** (`cites` → Paper XII) for XI / XIII / XIX / XVIII / XX | Edit metadata in Zenodo UI if deposits were created before XII DOI was live. |
-
-After any `p31-constants.json` edit: **`npm run apply:constants`** && **`npm run verify:constants`**.
+- [x] **Wrangler:** Production Workers use **scoped** API tokens via CI / operator secrets — never commit long-lived API tokens alongside source.
+- [x] **`M2M_BEARER_TOKEN` / M2M auth:** Production values live in **Cloudflare secrets** / **`wrangler secret`**, not in **`wrangler.toml`** or **`public/`**.
+- [x] **Stripe webhooks:** **`STRIPE_WEBHOOK_SECRET`** rotated with Stripe Dashboard + Worker secret; **`stripe-signature`** validation aligned.
 
 ---
 
-## E. Deploy surfaces
+## D1 migrations (production)
 
-| Surface | Check |
-|---------|--------|
-| **p31ca.org** | `p31ca` **`hub:ci`** / Pages deploy per `p31ca/DEPLOY.md`; ground-truth + redirects. |
-| **phosphorus31.org** | Parallel repo; SUPER-CENTAUR bridge per CWP / `mesh-bridge.ts` handoff. |
-| **BONDING** | `bonding.p31ca.org`; test baseline 424 / 32 in `p31-constants.json`. |
+- [ ] **Schema parity:** Canonical SQL for each D1-backed Worker (`schema.sql` or migration scripts in-repo) reviewed for the release.
+- [ ] **Apply in prod:** **`wrangler d1 execute`** (or your approved migration runner) against the **production** D1 binding has been run successfully for this release cycle — no destructive test against prod without rollback plan.
+- [ ] **Post-migrate verification:** Smoke read paths (health, keyed lookups) documented in the Worker runbook succeed after migration.
+
+**Passkey / edge identity (`p31ca` Worker)** — authoritative D1 in active use (`binding` **`DB`**, database **`p31-passkey-db`**):
+
+- Schema: **`andromeda/04_SOFTWARE/p31ca/workers/passkey/schema.sql`**
+- When `schema.sql` changes, apply **remote** prod (after review):
+
+```bash
+cd andromeda/04_SOFTWARE/p31ca/workers/passkey
+npx wrangler d1 execute p31-passkey-db --remote --file=schema.sql
+```
+
+(Local dev: use **`--local`** instead of **`--remote`** — see **`workers/passkey/README.md`**.)
 
 ---
 
-## F. Narrative / ARG launch docs (optional)
+## Cloudflare Pages (hub)
 
-`andromeda/docs/DAY_0_GENESIS_LAUNCH_PROTOCOL.md` and **`PHOSPHORUS31_LAUNCH_SOP.md`** describe Discord oracle, Redis, IPNS — **validate** each dependency still matches production before treating checklists as blocking. Prefer **this file (A–E)** for **enterprise** (legal entity + hub + edge + research) launch.
+- [ ] **`npm run build`** in **`andromeda/04_SOFTWARE/p31ca`** completes; **`npm run hub:ci`** passes ( **`verify:ground-truth`**, **`verify:economy`**, **`postbuild`** dist checks).
+- [ ] **`dist/` deployment** matches **edge redirects & route notes** in **`andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json`** (**`edgeRedirects`** and documented **`routes`**). After deploy: **`npm run launch:smoke:net`** or manual **`curl -I https://p31ca.org/donate`** **`200`**; spot-check **`MAP`** surfaces (`/donate.html`).
 
 ---
 
-*Geometry is destiny — ship with verify green.*
+## Zenodo archival
+
+- [ ] **v1.0.0 Sovereign Infrastructure** (or tagged release artifact set) archived on Zenodo with a **stable DOI** recorded in release notes / changelog (`https://p31ca.org/changelog` when publishing policy applies).
+- [ ] Snapshot includes **deterministic manifests** referenced by ground-truth where applicable — no undisclosed divergence between “paper” artifact and deployed edge.
+
+**Deposit checklist (minimal):**
+
+- Annotated **git** tag + **commit SHA** cited in Zenodo metadata.
+- **`ground-truth/creator-economy.json`** (+ mirror **`public/creator-economy.json`**) — **`p31.creatorEconomy/1.0.0`** disclosure block.
+- **`ground-truth/p31.ground-truth.json`** snapshot (edge redirects + key **`routes`** rows).
+- Brief **`AGENTS.md`** / **`verify`** bar reference so reproducibility is cited (no secrets in archive).
+
+*(Record DOI inline here when minted — e.g.* `10.5281/zenodo.xxxxx`.)*
+
+---
+
+## Monetary endpoints (canonical)
+
+Single source for public-facing financial routing for the MAP hub (**`/donate` → `/donate.html`**):
+
+| Route | Purpose |
+|--------|---------|
+| `https://buy.stripe.com/5kQ14g827gmpcHFb0W8Ra00` | **Stripe Payment Link** — Operator Grant / customer-chosen amount. Optional **`?client_reference_id=`** when **`localStorage.p31_subject_id`** matches **`/^u_[0-9a-f]{32}$|^guest_[0-9a-f]{20}$/`** — **no Stripe.js**, **vanilla `<a href>`** only on the hub surface. |
+| `https://github.com/sponsors/p31labs` | **GitHub Sponsors** — developer-centric sponsorship billing. |
+
+**Optional / programmatic:** **`https://donate-api.phosphorus31.org`** — **`POST /create-checkout`** + webhooks; not required for the primary Payment Link UI on **`donate.html`**.
+
+Document deliberate URL changes in **`ground-truth/p31.ground-truth.json`** (**`mapDonateCheckout`**) and **`docs/P31-DEPLOY-CANON.md`** when routing shifts.
+
+---
+
+## Andromeda merge path (operators)
+
+1. Feature-complete branch in **Andromeda** per **`CONTRIBUTING.md`**; home multi-root discipline per **`docs/P31-PARALLEL-WORK-TRACKS.md`**.
+2. Merge into **`main`** with clean **`verify`** + **`hub:ci`** locally when **`p31ca`** paths change.
+3. Deploy **`p31ca`** **`dist/`** via CI or **`npm run deploy:p31ca`** with Cloudflare secrets present.
+
+---
+
+## Smoke after deploy
+
+- [ ] **`/donate`** / **`donate.html`** — **Operator Grant** and **Developer Sponsorship** links resolve; **SUBJECT_BINDING** toggles with a mocked valid **`localStorage.p31_subject_id`** in DevTools (or automate: **`npm run launch:smoke:net`**).
+- [ ] **`https://donate-api.phosphorus31.org/health`** — **`200`** (**`launch:smoke:net`** includes this probe).
+- [ ] **`creator-economy.json`** — reachable and **`verify:economy`** unchanged vs ground truth in CI.
+
+---
+
+**When D1 · Pages · Zenodo · smoke rows are green,** Launch Ops shifts to **steady-state**: mesh monitoring, changelog cadence, and stakeholder comms — not speculative refactors.
+

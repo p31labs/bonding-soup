@@ -41,6 +41,9 @@ signal-*.sources
 .cursor/
 .kilo/
 **/.kilo/
+*.swp
+*~
+.viminfo
 
 # Test artifacts
 playwright/test-results/

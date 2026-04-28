@@ -1,5 +1,5 @@
 /**
- * BONDING Mock WebSocket — WCD-32 + family rooms
+ * C.A.R.S. mock WebSocket — WCD-32 + family rooms · wire catalog: cars-contract/p31.carsWire.json
  * - room=mock (default): synthetic ghost players (original behavior)
  * - any other ?room=…: only real clients; each sends playerState with molecules
  */
@@ -374,7 +374,7 @@ function startServer() {
   setInterval(broadcastMoleculeUpdates, MOLECULE_UPDATE_INTERVAL);
   startHeartbeat();
   wss.on('connection', handleConnection);
-  console.log(`BONDING mock WS on :${PORT}`);
+  console.log(`C.A.R.S. mock WS on :${PORT}`);
   console.log(`  room=${MOCK_ROOM} (or omit): synthetic + NPC molecules`);
   console.log('  ?room=your-house-phrase&name=Initials : family sync (no NPCs)');
   console.log('  e.g. soup.html?ws=ws://localhost:8082&room=kitchen&name=SJ');

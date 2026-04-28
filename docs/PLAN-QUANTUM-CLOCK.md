@@ -10,7 +10,7 @@
 
 ## 1. Why this exists (problem statement)
 
-P31 already carries a **31P Larmor** reference in Earth’s field (**863 Hz**) and **derived** cockpit frequencies. Those pieces are **scattered** across BONDING Soup, p31ca **dome/landing**, **static tomography**, **soundtrack zones**, and **somatic** tools. Operators and future agents have no **named module** that explains:
+P31 already carries a **31P Larmor** reference in Earth’s field (**863 Hz**) and **derived** cockpit frequencies. Those pieces are **scattered** across C.A.R.S., p31ca **dome/landing**, **static tomography**, **soundtrack zones**, and **somatic** tools. Operators and future agents have no **named module** that explains:
 
 - which clock is “running” in the UI;
 - which events are **continuous** (rhythmic) vs **one-shot** (episodic);
@@ -186,7 +186,7 @@ optional global strip      future Worker push, operator shift
 
 1. Should **863** and **0.86** be **generated** into `p31-constants.json` as explicit fields (`displaySlowHz`) so **static** `public/*.html` can **fetch** one JSON? (Adds network; better for **single** truth, worse for **offline** first paint — **compromise:** inline **micro** JSON in build from `apply:constants` **mirror** in p31ca public, already used for mesh constants pattern.)
 2. Is **Cuckoo** ever allowed to use **system notification** (browser `Notification` API) — likely **out of scope** (permission friction, youth policy in **`PLAN-KIDS-VIBE-CODING.md`**).
-3. **BONDING Soup** `SoupEngine` — should **Larmor strip** get a **shared** thin client from the same package as p31ca, or stay **duplicated** with **one** Hz fetch only (minimal footprint)?
+3. **C.A.R.S.** `SoupEngine` — should **Larmor strip** get a **shared** thin client from the same package as p31ca, or stay **duplicated** with **one** Hz fetch only (minimal footprint)?
 
 ---
 

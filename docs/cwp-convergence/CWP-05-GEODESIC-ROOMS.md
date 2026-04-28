@@ -5,7 +5,7 @@
 
 ## Objective
 
-**Single contract** across `geodesic-campaign.json`, `public/geodesic.html` inline campaign, `packages/shared` types, and **geodesic-room** Worker wire (`p31.geodesicRoomWire`); static + DO story stays aligned with `docs/GEODESIC-*.md`.
+**Single contract** across `geodesic-campaign.json`, `public/geodesic.html` inline campaign, `packages/shared` types, and **geodesic-room** Worker wire (`p31.geodesicRoomWire/0.2.1` incl. shape `rotY`); static + DO story stays aligned with `docs/GEODESIC-*.md`.
 
 ## In scope
 

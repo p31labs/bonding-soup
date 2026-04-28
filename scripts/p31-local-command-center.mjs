@@ -423,7 +423,7 @@ const P31CA_PUBLIC_BASE = "http://127.0.0.1:8080/andromeda/04_SOFTWARE/p31ca/pub
  */
 function getLocalPreviewLinks(p31ca) {
   const links = [
-    { href: "http://127.0.0.1:8080/soup.html", label: "BONDING Soup" },
+    { href: "http://127.0.0.1:8080/soup.html", label: "C.A.R.S." },
     { href: "http://127.0.0.1:8080/cognitive-passport/index.html", label: "Cognitive Passport" },
     { href: "http://127.0.0.1:8080/docs/doc-library/index.html", label: "Document library" },
     { href: "http://127.0.0.1:8080/docs/physics-learn/index.html", label: "Physics learn" },
@@ -760,7 +760,7 @@ function buildPageHtml() {
         </div>
 
         <p class="p31-cc__ribbon"><em>As above, so below</em> — same <code>demo</code> / <code>build:doc-index</code> bar as
-          <a href="http://127.0.0.1:8080/soup.html" rel="noopener" target="_blank">BONDING Soup</a>,
+          <a href="http://127.0.0.1:8080/soup.html" rel="noopener" target="_blank">C.A.R.S.</a>,
           <a href="http://127.0.0.1:8080/p31-personal-howto.html" rel="noopener" target="_blank">How-to</a>,
           <a href="http://127.0.0.1:8080/poets-room.html" rel="noopener" target="_blank">Poets room</a>,
           <a href="http://127.0.0.1:8080/docs/doc-library/index.html" rel="noopener" target="_blank">Document library</a>

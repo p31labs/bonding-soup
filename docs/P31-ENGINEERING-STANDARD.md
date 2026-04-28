@@ -16,14 +16,14 @@ This document is the **single checklist** agents and humans use before calling w
 
 ---
 
-## 2. Home repository (BONDING Soup root)
+## 2. Home repository (C.A.R.S. root)
 
 Applies to the repo that contains `p31-constants.json`, `cognitive-passport/`, and `scripts/`.
 
 | Gate | Command | When |
 |------|---------|------|
 | First clone / new machine | **`npm run setup`** | Installs root + p31ca deps, `apply:constants` (+ `apply:p31-style` when design tokens exist), then **`verify`**. |
-| Default CI | **`npm run verify`** | Alignment registry, passport, constants, **ecosystem** (probe templates + monetary invariants), **Andromeda MAP** (**`verify:map-pipeline`** — donate-api + donate page + no `sk_*` in public trees; skips if `andromeda/` missing), style, p31ca contracts (when `andromeda/` present), egg-hunt, **doc index** (**`build:doc-index`** → **`verify:doc-index`**), `tsc`. |
+| Default CI | **`npm run verify`** | Alignment registry, passport, constants, **ecosystem** (probe templates + monetary invariants), **Andromeda MAP** (**`verify:map-pipeline`** — donate-api + donate page + no `sk_*` in public trees; skips if `andromeda/` missing), style, p31ca contracts (when `andromeda/` present), egg-hunt, **`verify:cars-wire`** (C.A.R.S. mock WS message types vs **`cars-contract/p31.carsWire.json`**), **doc index** (**`build:doc-index`** → **`verify:doc-index`**), `tsc`. |
 | Payment / creator-economy (fast) | **`npm run verify:monetary`** | Full gate: re-runs ecosystem + constants + **MAP** + **`verify:economy`**. Use after edits to **`p31-constants.json`** `payment.*` (donate + **Stripe API** health URLs), **`p31-ecosystem.json`** monetary/probe rows, or creator-economy JSON. Skips p31ca steps on partial clone. |
 | Git pre-commit (optional) | **`npm run git:hooks`** | Sets **`core.hooksPath`** to **`.githooks`**. When payment/economy paths are staged, **`.githooks/pre-commit`** runs **`verify:monetary`**. Bypass: **`P31_SKIP_MONETARY_HOOK=1 git commit`**. Also runs at end of **`npm run setup`**. |
 | Release | **`npm run release:check`** | Before merge or tag; includes **p31ca** build when `andromeda/04_SOFTWARE/p31ca` exists. Match GitHub mesh strictness: **`MESH_LIVE_STRICT=1 npm run p31:ci`** (or `release:check` with CI env). Optional before hub release: **`npm run security:check`** in **p31ca** (triage P1 inventory warnings). |
@@ -82,7 +82,7 @@ Never paste tokens into issues, commits, or agent chat; revoke and rotate if exp
 
 **Andromeda** (`p31labs/andromeda`): many workflows use **`on: pull_request`**. Pushes to a branch **do not** substitute for an **open PR** against `main` if that workflow only lists `pull_request`. Keep a PR open (e.g. [**#49**](https://github.com/p31labs/andromeda/pull/49) for `ci/phosphorus31-workflow`) while iterating; merge when required checks are green.
 
-**P31 home** (BONDING Soup root): add **`git remote add origin <url>`** if missing, push a branch, then **`gh pr create`** so **`.github/workflows/`** runs on PRs to `main`. **Branch protection (GitHub → Settings → Rules):** require status checks **`P31 / root verify`** and **`P31 / full stack`** from workflow **`P31 CI`** (`.github/workflows/p31-ci.yml`) so pushes and PRs to **`main`/`master`** run **`npm run verify`**, then **`p31:all`** with **no duplicate** root verify after the preflight job).
+**P31 home** (C.A.R.S. root): add **`git remote add origin <url>`** if missing, push a branch, then **`gh pr create`** so **`.github/workflows/`** runs on PRs to `main`. **Branch protection (GitHub → Settings → Rules):** require status checks **`P31 / root verify`** and **`P31 / full stack`** from workflow **`P31 CI`** (`.github/workflows/p31-ci.yml`) so pushes and PRs to **`main`/`master`** run **`npm run verify`**, then **`p31:all`** with **no duplicate** root verify after the preflight job).
 
 **CLI:** use the **official** GitHub CLI (\`apt install gh\` on Debian). The npm package name **`gh`** is **not** GitHub CLI — uninstall it (\`npm uninstall -g gh\`) if it shadows `/usr/bin/gh`.
 

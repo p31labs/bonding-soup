@@ -1,4 +1,4 @@
-# BONDING Soup — local static demo (path + port)
+# C.A.R.S. — local static demo (path + port)
 
 `npm run demo` runs **Python** `http.server` with the **repository root** as the document root (so `soup.html`, `docs/`, `cognitive-passport/`, etc. resolve correctly). Implementation: **`scripts/demo-server.mjs`**.
 
@@ -75,3 +75,9 @@ Stop the other process, or keep using `P31_DEMO_PORT` and do not free 8080.
 **Perf / frame budget** notes: **`docs/SOUP-PERF-BUDGET.md`**.
 
 **Full device spine (Spin-class Chromebook + phone):** **`docs/P31-DEVICE-SETUP-CHROMEBOOK-MOBILE.md`** · **`p31-device-setup.html`**.
+
+## 6. Multiplayer / wire contract (inspectable)
+
+**Canonical types** (mock server ↔ browser client): **`cars-contract/p31.carsWire.json`**. **Integrity:** **`npm run verify:cars-wire`** (also part of root **`npm run verify`**). Change order: edit the JSON and implementation together or CI fails—no silent renames.
+
+**Story + physics:** **`docs/wcd-32-websocket-spec.md`** · mock process: **`spikes/mock-ws-server/server.js`** (default **`MOCK_WS_PORT`** **8082**).

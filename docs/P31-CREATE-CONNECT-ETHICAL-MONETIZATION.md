@@ -124,7 +124,7 @@ Alignment **creates the map**; CI and humans **connect** edits to proof.
 | Doc | Role |
 |-----|------|
 | **`docs/P31-MISSION-SYSTEM-DELIVERABLE.md`** | **Final handoff** — prep, assemble, definition of done, one manifest |
-| **`docs/PLAN-BONDING-SOUP-WHEN-SCALE.md`** | BONDING Soup — phased **when** plan (cadence, gates, mesh scale) |
+| **`docs/PLAN-BONDING-SOUP-WHEN-SCALE.md`** | C.A.R.S. — phased **when** plan (cadence, gates, mesh scale) |
 | **`P31-ROOT-MAP.md`** | Which tree to edit (home / Andromeda / hub / org) |
 | **`docs/PLAN-DOCUMENT-LIBRARY.md`** | Searchable `docs/` index — `build:doc-index` |
 | **`docs/P31-ALIGNMENT-SYSTEM.md`** | Ephemeralization mechanics |

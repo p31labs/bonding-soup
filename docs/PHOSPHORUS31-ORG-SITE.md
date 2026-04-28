@@ -4,7 +4,7 @@
 
 ## When the org tree is on disk
 
-1. `cd` to the **phosphorus31.org** clone (separate remote from BONDING Soup; often **not** present in a **home-only** checkout).
+1. `cd` to the **phosphorus31.org** clone (separate remote from C.A.R.S.; often **not** present in a **home-only** checkout).
 2. Open that repo’s **`package.json`**, **`DEPLOY`**, or **`README`** and run the same deploy script your CI uses (e.g. `npm run build` + Cloudflare Pages/Workers, as **that** project defines).
 3. Ship **p31ca.org** and **phosphorus31.org** in **separate PRs** unless you **intentionally** align one release.
 

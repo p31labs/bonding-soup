@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Copy home BONDING Soup (quantum lab static surface) into bonding/public/soup/
+ * Copy home C.A.R.S. (`soup.html` quantum lab static surface) into bonding/public/soup/
  * so Vite copies it to dist/soup/ — https://bonding.p31ca.org/soup/
  * Alignment: p31-alignment.json derivation "soup-to-bonding"; doc: docs/P31-ALIGNMENT-SYSTEM.md
  */

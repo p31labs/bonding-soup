@@ -1,4 +1,4 @@
-# BONDING Soup — performance budget (Chromebook-class)
+# C.A.R.S. — performance budget (Chromebook-class)
 
 **Pairs with:** `docs/CWP-SOUP-MVP-SEQUENCE-2026-01.md` (step 2).  
 **Scope:** `soup.html` + 2D canvas + `requestAnimationFrame` main loop, local static delivery (`npm run demo` or equivalent; **path/port:** `docs/SOUP-LOCAL-DEMO.md`).

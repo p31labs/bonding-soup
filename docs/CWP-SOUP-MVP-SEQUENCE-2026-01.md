@@ -1,4 +1,4 @@
-# CWP — BONDING Soup product sequence (MVP) — 2026-01
+# CWP — C.A.R.S. product sequence (MVP) — 2026-01
 
 **Status:** planning / execution spine (home repo).  
 **Does not replace:** `docs/PLAN-BONDING-SOUP-WHEN-SCALE.md` (ephemeralize one when-scale plan; this doc is *sequencing* advice layered on it).  

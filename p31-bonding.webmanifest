@@ -1,7 +1,7 @@
 {
   "name": "P31 BONDING home",
   "short_name": "P31 home",
-  "description": "Local P31 home — create and connect: same loop as the hub (ephemeralization, alignment verify) and the same money disclosure story (ethical monetization). BONDING Soup, doc library, physics learn. Browser-first.",
+  "description": "Local P31 home — create and connect: same loop as the hub (ephemeralization, alignment verify) and the same money disclosure story (ethical monetization). C.A.R.S. (Collaborative Affective Realtime Sim), doc library, physics learn. Browser-first.",
   "start_url": "soup.html",
   "scope": "./",
   "display": "standalone",

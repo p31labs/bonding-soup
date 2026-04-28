@@ -1,6 +1,6 @@
 /**
- * BONDING Soup Engine
- * Main orchestration layer for The Soup molecular environment
+ * C.A.R.S. — Collaborative Affective Realtime Sim
+ * Main orchestration (SoupEngine): molecular environment + ghost molecules + WebSocket rooms
  * Integrates physics, personalities, reactions, and audio systems
  */
 
@@ -794,7 +794,7 @@ export class SoupEngine {
   }
 
   /**
-   * Create a new molecule in The Soup
+   * Create a new molecule in the sim
    */
   createMolecule(atoms: Atom[], bonds: Bond[] = [], personality: string = 'mediator'): string {
     const moleculeId = `molecule_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;

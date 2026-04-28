@@ -26,7 +26,7 @@
 
 ## Poets room (`poets`)
 
-**Home tree (BONDING Soup repo):** `poets-room.html` — static lobby linking Cognitive Passport, doc library, mesh-start, geodesic, delta, and normative docs (SOULSAFE, geodesic campaign, MVP picture-book row).
+**Home tree (C.A.R.S. repo):** `poets-room.html` — static lobby linking Cognitive Passport, doc library, mesh-start, geodesic, delta, and normative docs (SOULSAFE, geodesic campaign, MVP picture-book row).
 
 **Andromeda / p31ca (same change set when the monorepo is checked out):**
 

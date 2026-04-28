@@ -138,6 +138,14 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
+      "label": "P31: verify C.A.R.S. wire (mock WS types vs cars-contract)",
+      "type": "shell",
+      "command": "npm run verify:cars-wire",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
       "label": "P31: verify mesh (k4-personal dry-run + live /api/*)",
       "type": "shell",
       "command": "npm run verify:mesh",

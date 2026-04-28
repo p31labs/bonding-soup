@@ -237,7 +237,7 @@ h2("P31 home, hub, and source links", "local");
   const rows = [
     {
       href: `${bondingBase}/soup`,
-      label: "BONDING Soup (live)",
+      label: "C.A.R.S. (live)",
       note: "Bonding deploy; local: npm run soup:prep then npm run demo → :8080",
     },
     { href: `${bondingBase}/poets-room.html`, label: "Poets room (live)", note: "Bonding" },
@@ -484,7 +484,7 @@ const html = `<!DOCTYPE html>
 ${sections.join("\n")}
     </main>
     <footer class="fp-meta">
-      <p><a href="${bondingBase}/soup">← BONDING Soup</a> · <a href="${ghMain}/p31-personal-howto.html">How-to</a> · <a href="${ghMain}/docs/P31-DEPLOY-CANON.md">CONNECTION</a> · <a href="${ghMain}/docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">When-scale plan</a> · <a href="https://p31ca.org/">p31ca.org</a></p>
+      <p><a href="${bondingBase}/soup">← C.A.R.S.</a> · <a href="${ghMain}/p31-personal-howto.html">How-to</a> · <a href="${ghMain}/docs/P31-DEPLOY-CANON.md">CONNECTION</a> · <a href="${ghMain}/docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">When-scale plan</a> · <a href="https://p31ca.org/">p31ca.org</a></p>
     </footer>
   </div>
 </body>

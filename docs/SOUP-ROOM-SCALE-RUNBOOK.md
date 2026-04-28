@@ -1,6 +1,6 @@
 # Soup — room scale runbook (scaffold)
 
-**Purpose:** Repeatable **Phase 1** checks for BONDING Soup co-presence — after **`npm run verify`**, before you call “room scale” done. Part of **`docs/PLAN-BONDING-SOUP-WHEN-SCALE.md`**.
+**Purpose:** Repeatable **Phase 1** checks for C.A.R.S. co-presence — after **`npm run verify`**, before you call “room scale” done. Part of **`docs/PLAN-BONDING-SOUP-WHEN-SCALE.md`**.
 
 **Fast gate (automated):** from repo root:
 

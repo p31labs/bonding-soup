@@ -1,7 +1,6 @@
 /**
- * BONDING Reaction Engine
- * Chemical reaction system for emotional events
- * Implements 6 reaction types from affective chemistry spec
+ * C.A.R.S. Reaction Engine
+ * Chemical metaphor for emotional events in the sim — 6 reaction types (affective chemistry spec)
  */
 
 import { Atom, Bond } from './soupPhysics';

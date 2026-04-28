@@ -1,7 +1,6 @@
 /**
- * BONDING Personalities Engine
- * Emotional kinematics system for molecule behavior
- * Maps 7 personality archetypes to movement patterns
+ * C.A.R.S. — Personalities engine (affective layer)
+ * Emotional kinematics for molecule behavior; maps 7 archetypes to movement patterns
  */
 
 import { Atom } from './soupPhysics';

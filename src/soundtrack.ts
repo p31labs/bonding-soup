@@ -1,7 +1,7 @@
 /**
- * BONDING Soundtrack Engine
- * Generative audio system for The Soup
- * Manages molecule chords, zone audio, and 8-oscillator limit
+ * C.A.R.S. Soundtrack Engine
+ * Generative audio for the sim (Collaborative Affective Realtime Sim)
+ * Molecule chords, zone audio, 8-oscillator limit
  */
 
 import { P31_CONSTANTS } from "./p31-constants-generated";

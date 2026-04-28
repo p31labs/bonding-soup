@@ -1,6 +1,6 @@
 /**
- * BONDING Soup Physics Engine
- * Core physics simulation for The Soup molecular environment
+ * C.A.R.S. physics core (SoupPhysics)
+ * Atoms, bonds, spatial grid — core simulation for the Collaborative Affective Realtime Sim
  * Based on SPIKE-01 validated Posner molecule stability
  */
 
@@ -148,7 +148,7 @@ export class SoupPhysics {
     atom.x += atom.vx * dt * 100;
     atom.y += atom.vy * dt * 100;
 
-    // Boundary wrapping (The Soup is infinite)
+    // Boundary wrapping (world torus)
     if (atom.x < 0) atom.x += this.config.width;
     if (atom.x >= this.config.width) atom.x -= this.config.width;
     if (atom.y < 0) atom.y += this.config.height;
@@ -331,7 +331,7 @@ export class SoupPhysics {
   }
 }
 
-// Default configuration for The Soup
+// Default configuration for C.A.R.S. / SoupPhysics
 export const DEFAULT_SOUP_CONFIG: PhysicsConfig = {
   width: 4000,
   height: 4000,

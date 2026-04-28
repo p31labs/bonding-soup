@@ -15,7 +15,9 @@ This file is the **single map of record** for what lives under **`/home/p31`**: 
 | **Edge** | Cloudflare Workers, KV, DO where needed; rate limits and CORS at the door. |
 | **WCD lineage** | `docs/` — WCD-31 physics, WCD-32 ghosts/WS, WCD-33 archive; implementation may live in more than one tree. |
 
-## 2. Primary vertical — **this folder** (standalone BONDING Soup)
+## 2. Primary vertical — **this folder** (C.A.R.S. · `bonding-soup`)
+
+**C.A.R.S.** — **Collaborative Affective Realtime Sim** — see **`docs/CARS-NAMING.md`**. Repo package name stays **`bonding-soup`** (`package.json`).
 
 **Owns:** the **thin, shippable** sim + demo + archive worker at repo root.
 
@@ -43,7 +45,7 @@ This file is the **single map of record** for what lives under **`/home/p31`**: 
 
 **p31ca static hub** (under `p31ca/public/`): `index.html` (vector catalog), `lattice.html` (3D Fibonacci sphere), `passport-generator.html` — last is a **deploy mirror** of root `cognitive-passport/index.html` (header/footer transform: **`p31ca/scripts/passport-p31ca-transform.mjs`**, re-exported at root `scripts/`); from repo root **`npm run sync:passport`** / **`npm run verify:passport`**; from **`andromeda/04_SOFTWARE/p31ca`**, **`npm run passport:sync`** / **`npm run passport:verify`**. **`npm run deploy`** in `p31ca` runs **`passport:verify`** first (`predeploy`).
 
-**Rule of thumb:** new **product** or **full-stack** work often lands **here**. The **root** `src/` Soup is the **lightweight** vertical for engine + demo + archive without the monorepo weight.
+**Rule of thumb:** new **product** or **full-stack** work often lands **here**. The **root** `src/` engine is the **lightweight** vertical for C.A.R.S. + demo + archive without the monorepo weight.
 
 ## 4. Parallel path — **`phosphorus31.org/`**
 
@@ -57,7 +59,7 @@ This file is the **single map of record** for what lives under **`/home/p31`**: 
 |--------|------------|----------------------------------------|
 | **A — Technical hub** | **`p31ca.org`** (Astro hub, `*-about.html`, passport mirror) | `andromeda/04_SOFTWARE/p31ca`: `npm run hub:ci`, passport verify/sync, `npm run deploy`; workflows **`p31ca-hub.yml`**, **P31 Automation** / Pages. Registry + home grid id order: `scripts/hub/registry.mjs` and `scripts/hub/hub-app-ids.mjs` — **`docs/P31-HUB-CARD-ECOSYSTEM.md`**. |
 | **B — Public org / programs site** | **`phosphorus31.org`** | That repo’s own `package.json`, CI, and `DEPLOY` docs — **not** the p31ca path above. |
-| **C — P31 home vertical** | Soup, passport authoring, wcd33 archive | Root `npm run verify` / `release:check`, `wcd33-global-archive` per its `DEPLOY.md`. |
+| **C — P31 home vertical** | C.A.R.S. (`soup.html`), passport authoring, wcd33 archive | Root `npm run verify` / `release:check`, `wcd33-global-archive` per its `DEPLOY.md`. |
 
 **Rule:** “Site update” in standups means: pick **A**, **B**, or **C** (or more than one **explicitly**), run the matching checks, then deploy the matching project name on Cloudflare — never assume one build updates every domain.
 
@@ -95,7 +97,7 @@ Design notes, WCD readiness, websocket spec, roadmap, affective-chemistry spec. 
 | Goal | Start here |
 |------|------------|
 | **New agent / IDE session** (where am I, what to sync) | `AGENTS.md` → this map → target tree |
-| Tweak **Soup** physics, rehydration, WCD-33 client, **soup** | Root `src/`, `soup.html`, `wcd33-global-archive/` |
+| Tweak **C.A.R.S.** physics, rehydration, WCD-33 client, **`soup.html`** | Root `src/`, `soup.html`, `wcd33-global-archive/` |
 | **Deploy** archive Worker | `wcd33-global-archive/DEPLOY.md` |
 | **Full** BONDING app / Vite / HUD / org integration | `andromeda/04_SOFTWARE/bonding` (or `frontend` as per that repo) |
 | **K₄ / cage / hubs** | `k4-cage`, `k4-hubs`, `t4-cage`, etc. under `andromeda/04_SOFTWARE/` |
@@ -103,7 +105,7 @@ Design notes, WCD readiness, websocket spec, roadmap, affective-chemistry spec. 
 
 ## 8. Intentional non-goals
 
-- **Merging** root Soup into Andromeda (or the reverse) is a **project decision**, not required for coherence.
+- **Merging** root C.A.R.S. / `bonding-soup` vertical into Andromeda (or the reverse) is a **project decision**, not required for coherence.
 - **One Git repo** is not implied by this map; the map is for **human navigation** across co-located trees.
 
 ---

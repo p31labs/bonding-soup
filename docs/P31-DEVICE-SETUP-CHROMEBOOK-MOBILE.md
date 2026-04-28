@@ -69,7 +69,7 @@ A **single spine** for:
 | Goal | How |
 |------|-----|
 | **Read hub / connect surfaces** | Browser: `https://p31ca.org` (TLS). |
-| **BONDING Soup (deployed)** | `https://bonding.p31ca.org/soup` — PWA install optional (`p31-bonding.webmanifest` pattern on local pages). |
+| **C.A.R.S. (deployed)** | `https://bonding.p31ca.org/soup` — PWA install optional (`p31-bonding.webmanifest` pattern on local pages). |
 | **Tap operator actions against the Chromebook (LAN only)** | On the **Spin**, run `P31_CMD_CENTER_LAN=1 npm run command-center` (default **3131**). On the phone, open `http://<CHROMEBOOK_LAN_IP>:3131` — the UI shows a **phone:** URL. **Trusted network only**; no port exposure beyond LAN. iOS: Safari → **Add to Home Screen** for a home-screen tile (see `docs/MOBILE-OPS-PHASE2.md`). |
 
 **Get LAN IP (Linux on Chromebook):** e.g. `hostname -I | awk '{print $1}'` (pick the Wi‑Fi address).

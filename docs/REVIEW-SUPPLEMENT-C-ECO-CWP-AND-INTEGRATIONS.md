@@ -17,7 +17,7 @@
 
 ---
 
-## C.1b Personal Agent Room (PAR) — BONDING Soup + k4-personal
+## C.1b Personal Agent Room (PAR) — C.A.R.S. + k4-personal
 
 **Sister** to ECO (catalog) and SUPER-CENTAUR (Ring D); **does not** merge those tracks. Owns stable `subject_id` → `k4-personal` Durable Object + p31ca static onboard/mesh-start.
 

@@ -1,6 +1,8 @@
-# BONDING Soup
+# C.A.R.S.
 
-TypeScript molecular / affective sim (`src/`), built to `dist/`. Entry for local play: **`soup.html`**.
+**Collaborative Affective Realtime Sim** — a browser sim of **social molecules** (local atoms + networked **ghost molecules** in shared rooms). TypeScript engine in **`src/`**, built to **`dist/`**. Entry: **`soup.html`**.
+
+**Naming:** **`docs/CARS-NAMING.md`**. npm package name remains **`bonding-soup`**; live deploy path unchanged (`bonding.p31ca.org/soup`).
 
 **Workspace context:** this directory also holds **Andromeda**, **phosphorus31.org**, spikes, and docs. For how those paths relate without merging repos, read **`P31-ROOT-MAP.md`**. For agents/IDE: **`AGENTS.md`**. **Personal command/repo cheat sheet:** **`docs/P31-PERSONAL-HOW-TO.md`** (interactive UI: **`p31-personal-howto.html`**, e.g. with **`npm run demo`**).
 

@@ -39,6 +39,7 @@
 | Design canon | `p31-style.css` (passport + p31ca public) | `npm run apply:p31-style` | `npm run verify:p31-style` |
 | `cognitive-passport/index.html` | `p31ca/public/passport-generator.html` | `npm run sync:passport` | `npm run verify:passport` |
 | `soup.html` + assets | `bonding/public/soup/` | `npm run sync:soup-bonding` | Bonding build + deploy discipline |
+| `cars-contract/p31.carsWire.json` (+ `src/soup.ts`, `spikes/mock-ws-server/server.js`) | (types are in code; JSON is inspectable catalog) | Rename or add WS `type` strings in all three | `npm run verify:cars-wire` |
 | Hub `registry.mjs` + `hub-app-ids.mjs` | `hub-landing.json` | p31ca `hub:build` / postinstall | p31ca `prebuild` hub verify (`scripts/hub/verify.mjs`) |
 | `p31-constants.json` (`mesh` / `payment` URLs) | `p31-live-fleet.json` | Edit live-fleet to mirror operator-locked URLs | `npm run verify:ecosystem` |
 | `docs/doc-index.manifest.json` + allowlisted `.md` | `docs/doc-library/index.json` | `npm run build:doc-index` | `npm run verify:doc-index` (runs after `build:doc-index` in root `verify`); headless e2e `npm run test:doc-library:e2e` in `p31:all` unless `--skip-e2e` |

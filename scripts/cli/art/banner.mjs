@@ -3,24 +3,15 @@
  * Tiered by terminal width in splash.mjs + boot.mjs.
  */
 
-/** ~76 cols: frame + tetrahedron wireframe + “P31” in # only (reads clearly everywhere). */
+import { P31_HASH_WORDMARK, TETRA_LINES } from "../ascii-boot.mjs";
+
+/** Full-width telemetry frame + shared wordmark (_ascii-boot.mjs_) — splash only tints ANSI in splash.mjs */
 export const BANNER_HERO = [
   "  ════════════════════════════════════════════════════════════════════════════",
-  "                                   ∘",
-  "                            /|\\",
-  "                           / | \\",
-  "                          /  |  \\",
-  "                         /___|___\\",
-  "                        /\\   |   /\\",
-  "                       /__\\__|__/__\\",
-  "                         \\_____________/",
+  TETRA_LINES,
   "  ────────────────────────────────────────────────────────────────────────────",
   "",
-  "           #####       ####        ##    ",
-  "           #   #           #         #   ",
-  "           #####       ####          #   ",
-  "           #           #             #   ",
-  "           #           ####      #####   ",
+  ...P31_HASH_WORDMARK.split("\n").map((l) => "   " + l),
   "  ════════════════════════════════════════════════════════════════════════════",
 ].join("\n");
 

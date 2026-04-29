@@ -61,7 +61,7 @@ function printHelp() {
       "  " + cyan("hub-diff") + "      p31ca " + dim("hub:diff") + " · needs " + dim("andromeda/"),
       "  " + cyan("command-center") + "  local operator UI (:3131)",
       "  " + cyan("cc") + "            alias for " + cyan("command-center"),
-      "  " + cyan("open") + "         local demos / passport — " + dim("p31 open -h"),
+      "  " + cyan("open") + "         local demos / passport / lab / slicer — " + dim("p31 open -h"),
       "  " + cyan("mesh") + "          " + dim("p31-mesh") + " CLI",
       "",
       dim("Flags:"),

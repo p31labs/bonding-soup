@@ -67,6 +67,17 @@ const TARGETS = {
     desc: "command center; starts :3131 if free",
   },
   "command-center": { alias: "cc" },
+  lab: {
+    kind: "http",
+    href: `http://${LOCAL.host}:${LOCAL.port.demo}/p31-sovereign-lab.html`,
+    desc: "Sovereign Lab (dome · serial · optional C.A.R.S. labTelemetry); :8080 if free",
+  },
+  "sovereign-lab": { alias: "lab" },
+  slicer: {
+    kind: "http",
+    href: `http://${LOCAL.host}:${LOCAL.port.demo}/p31-slicer.html`,
+    desc: "browser slicer (Kiri shell + K₄ STL); :8080 if free",
+  },
 };
 
 /**
@@ -194,9 +205,10 @@ function isDocTarget(name) {
   return k === "doc-library" || k === "docs";
 }
 
+/** Any target served from the same static demo root as soup (:8080). */
 function isSoupTarget(name) {
   const k = (name || "").toLowerCase();
-  return k === "soup" || k === "demo";
+  return k === "soup" || k === "demo" || k === "lab" || k === "slicer" || k === "sovereign-lab";
 }
 
 function isCcTarget(name) {
@@ -284,13 +296,17 @@ export async function runOpen(argv) {
         dim(
           "When ports are free, " +
             cyan("soup") +
-            " / " +
-            cyan("cc") +
-            " start the same servers as " +
+            " · " +
+            cyan("lab") +
+            " · " +
+            cyan("slicer") +
+            " share " +
             dim("npm run demo") +
-            " and " +
+            " (:8080); " +
+            cyan("cc") +
+            " is " +
             dim("command-center") +
-            "."
+            " (:3131)."
         ),
         "",
         ...lines,
@@ -299,6 +315,10 @@ export async function runOpen(argv) {
           cyan("npx p31 open doc-library") +
           "   " +
           cyan("npx p31 open soup -q") +
+          "   " +
+          cyan("npx p31 open lab") +
+          "   " +
+          cyan("npx p31 open slicer --print-only") +
           "   " +
           cyan("npx p31 open cc --print-only"),
         "",
@@ -410,7 +430,8 @@ export async function runOpen(argv) {
 
   const href = spec.kind === "file" ? pathToFileURL(path.resolve(spec.href)).href : spec.href;
 
-  if (spec.footnote && isSoupTarget(name) && !quiet) {
+  const nk = (name || "").toLowerCase();
+  if (spec.footnote && (nk === "soup" || nk === "demo") && !quiet) {
     errDim(spec.footnote, false);
   }
 

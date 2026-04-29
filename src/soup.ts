@@ -1344,7 +1344,10 @@ export class SoupEngine {
       Cl: '#1abc9c',
       S: '#f1c40f',
       F: '#7fffd4',
-      X: '#95a5a6'
+      X: '#95a5a6',
+      Li: '#c8c8ff',
+      V: '#c9a227',
+      LOV: '#6ee7b7'
     };
     return c[element] || '#bdc3c2';
   }
@@ -1358,7 +1361,10 @@ export class SoupEngine {
       P: { r: 7, m: 31, c: 0 },
       Ca: { r: 8, m: 40, c: 2 },
       Na: { r: 7, m: 23, c: 1 },
-      Cl: { r: 6, m: 35, c: -1 }
+      Cl: { r: 6, m: 35, c: -1 },
+      Li: { r: 5, m: 7, c: 1 },
+      V: { r: 6, m: 51, c: 0 },
+      LOV: { r: 7, m: 58, c: 1 }
     };
     return table[element] || { r: 5, m: 10, c: 0 };
   }
@@ -1741,6 +1747,45 @@ export class SoupEngine {
    */
   async resumeAudio() {
     await this.audio.resume();
+  }
+
+  /**
+   * Easter egg: spawn Li + V near the lab zone so a Li+V → "LOV" synthesis can occur
+   * (see reactions.ts). Trigger from soup.html with `?egglov=1`.
+   */
+  spawnEggLovSandbox(): { liMoleculeId: string; vMoleculeId: string } {
+    const lab = this.zones.find((z) => z.name === 'lab');
+    const { width: w, height: h } = this.physics.getWorldSize();
+    const cx = lab ? lab.x : w * 0.5;
+    const cy = lab ? lab.y : h * 0.25;
+    const t = Date.now();
+    const li: Atom = {
+      id: `egg_li_${t}`,
+      x: cx - 3,
+      y: cy,
+      vx: 0,
+      vy: 0,
+      element: 'Li',
+      color: this.elementColor('Li'),
+      radius: 5,
+      mass: 7,
+      charge: 1,
+    };
+    const v: Atom = {
+      id: `egg_v_${t}`,
+      x: cx + 10,
+      y: cy,
+      vx: 0,
+      vy: 0,
+      element: 'V',
+      color: this.elementColor('V'),
+      radius: 6,
+      mass: 51,
+      charge: 0,
+    };
+    const idLi = this.createMolecule([li], [], 'builder');
+    const idV = this.createMolecule([v], [], 'builder');
+    return { liMoleculeId: idLi, vMoleculeId: idV };
   }
 
   /**

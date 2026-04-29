@@ -8,6 +8,28 @@
 2. **Pauli check** — `hub-landing.json` must not contain `"/orchestrator"` (orchestrator page stays out of the hub-landing *subspace*).
 3. **Larmor coherence** — the string **`{larmor}Hz`** from `p31-constants.json` must appear in `dome.astro` and `index.astro` (ties UI to the same canonical 31P line as the rest of P31).
 
+**Verify as presence (OQE for joy):** Most verify steps ask “does it work?” Egg-hunt asks “**is it still there?**” Removing an anchor string is a regression the same way removing a test would be—the manifest is **Objective Quality Evidence** that intentional off-path / human touches were not optimized away.
+
+**Physics Learn (repo-local) eggs** — same manifest; no `andromeda/` required:
+
+| ID | Operator | Vertex | Trigger | Source file |
+|----|----------|--------|---------|-------------|
+| PHYSICS-FULLER-EGG | weak-coupling | 4 | Screen-reader-only Fuller quotation | `docs/physics-learn/index.html` |
+| PHYSICS-COORD-EGG | weak-coupling | 4 | Home lat/lon signature in HTML comment | `docs/physics-learn/index.html` |
+| PHYSICS-LARMOR-MS-EGG | povm-measurement | 2 | `863ms` animation on `.p31-egg-larmor-ms` (Larmor as *timebase* in CSS) | `docs/physics-learn/index.html` |
+
+**Also manifest-locked (joy + ops):**
+
+| ID | What | Where |
+|----|------|-------|
+| SOUP-LOV-REACTION | Li+V → `LOV` synthesis label + disclaimer | `src/reactions.ts` |
+| SOUP-LOV-SPAWN | `?egglov=1` seeds Li+V (`spawnEggLovSandbox`) | `soup.html` + `SoupEngine` |
+| SIMPLEX-ORACLE-SPOON-EGG | At **0/12** spoons, ORACLE output appends *“Empty cup, full day. Rest.”* (online + offline stub) | `simplex-v7/src/agents/runner.ts` |
+
+**Sketch / not yet manifest-locked:** further ORACLE template prose beyond the single benediction line; additional hub-only eggs.
+
+**Why eggs stay in CI:** They are load-bearing **play**—curiosity on-ramps that cost no “should I open this?” decision. They do not replace accommodations; they prove there is still person left after risk, law, and medicine are served.
+
 | ID | Operator (basis tag) | Vertex | Trigger | Source file |
 |----|----------------------|--------|---------|-------------|
 | SOUP-DBG-WS | parametric-superposition | 1 | `?debug`, `?ws=` | `soup.html` |

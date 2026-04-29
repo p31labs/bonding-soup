@@ -4,6 +4,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
+import { syncAccommodationInterval, utcDayRangeMs } from '../lib/accommodation-sync';
 import { resolveSentinelContext } from '../lib/context-fallback';
 import { AGENTS } from './registry';
 import { TOOL_REGISTRY } from './tools/index';
@@ -98,10 +99,17 @@ export async function runAgent(
     });
   }
 
-  const text = response.content
+  let text = response.content
     .filter((b) => b.type === 'text')
     .map((b) => (b as Anthropic.TextBlock).text)
     .join('\n');
+
+  if (agentId === 'ORACLE' && context.operator_spoons === 0) {
+    const eggLine = 'Empty cup, full day. Rest.';
+    if (!text.includes(eggLine)) {
+      text += `\n\n— ${eggLine}`;
+    }
+  }
 
   const output = parseAgentOutput(agentId, text, context);
   output.duration_ms = Date.now() - startMs;
@@ -178,6 +186,14 @@ function extractQueueTarget(triggerData: unknown): AgentId | undefined {
 export async function handleScheduled(event: ScheduledEvent, env: Env): Promise<void> {
   if (event.cron === '*/5 * * * *') {
     await runAgent('SENTINEL', await buildContext('cron', env), env);
+    return;
+  }
+  if (event.cron === '5 0 * * *') {
+    const prev = new Date(event.scheduledTime);
+    prev.setUTCDate(prev.getUTCDate() - 1);
+    const { start, end } = utcDayRangeMs(prev.toISOString());
+    const r = await syncAccommodationInterval(env, start, end);
+    console.log(`accommodation_log: synced UTC window [${start},${end}) inserted=${r.inserted} skipped=${r.skipped}`);
     return;
   }
   await handleCron(new Date(event.scheduledTime).toISOString(), env);
@@ -272,11 +288,15 @@ Execute your standard run for this trigger. Use your tools. Be precise.`;
 
 function offlineStubOutput(agentId: AgentId, context: AgentContext): AgentOutput {
   const runId = crypto.randomUUID();
+  const spoonEgg =
+    agentId === 'ORACLE' && context.operator_spoons === 0
+      ? ' — Empty cup, full day. Rest.'
+      : '';
   return {
     agent: agentId,
     run_id: runId,
     trigger: context.trigger,
-    summary: 'ANTHROPIC_API_KEY not set — tool-only / offline stub.',
+    summary: 'ANTHROPIC_API_KEY not set — tool-only / offline stub.' + spoonEgg,
     items: [],
     messages_sent: [],
     voltage: 'YELLOW',

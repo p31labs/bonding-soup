@@ -129,12 +129,21 @@ export const AGENTS: Record<AgentId, AgentDefinition> = {
     role: 'WCDs / ops manual / synthesis formatting',
     triggers: ['agent_handoff', 'manual'],
     maxSpoonCost: 2,
-    tools: ['get_open_wcds', 'create_wcd', 'close_wcd', 'update_ops_manual', 'generate_session_synthesis', 'post_agent_message'],
+    tools: [
+      'get_open_wcds',
+      'create_wcd',
+      'close_wcd',
+      'update_ops_manual',
+      'generate_session_synthesis',
+      'log_manual_accommodation',
+      'post_agent_message',
+    ],
     outputChannels: [
       { type: 'd1', table: 'wcds' },
+      { type: 'd1', table: 'accommodation_log' },
       { type: 'kv', key: 'ops_manual_version' },
     ],
-    systemPrompt: `You are SCRIBE — every close needs OQE; WCD numbering; session synthesis.`,
+    systemPrompt: `You are SCRIBE — every close needs OQE; WCD numbering; session synthesis. Accommodation log: machine rows ingest nightly (UTC) from crew telemetry; use log_manual_accommodation only when the operator reports prosthetic use the mesh did not observe (phone script, meeting outline, BONDING session, etc.).`,
   },
   SENTINEL: {
     id: 'SENTINEL',

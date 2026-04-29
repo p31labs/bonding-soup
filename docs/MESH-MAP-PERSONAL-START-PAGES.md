@@ -3,6 +3,8 @@
 **Updated:** 2026-04-26  
 **Audience:** Operator, product, agents implementing onboarding + edge.
 
+**Canon (shipped vs next vs doctrine):** `docs/MESH-ARCHITECTURE-CANON.md` — grant-safe one-line summary, what `k4-personal` / `k4-cage` actually expose, and explicit separation from north-star narrative. **`npm run verify:mesh-canon`**.
+
 ## Vision
 
 Every **mesh member** (family, friends who opt in, public participants you invite) gets:

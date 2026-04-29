@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Read-only GeodesicRoom state snapshot (GET /api/geodesic/:room/state)" />
+    <title>Geodesic room · state preview</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="hero">
+        <p class="kicker">P31 spike · GeodesicRoom</p>
+        <h1>State preview</h1>
+        <p class="lede">
+          Polls <code>GET /api/geodesic/:room/state</code> — same JSON as
+          <code>docs/GEODESIC-GAME-ENGINE-INTEGRATION.md</code> in the home repo.
+          Dev server proxies <code>/api</code> to the Worker (no CORS pain). Types mirror
+          <code>andromeda/04_SOFTWARE/packages/shared/src/geodesic-room-wire.ts</code> when you have the monorepo;
+          this folder stays standalone (<code>src/types.ts</code>).
+        </p>
+      </header>
+
+      <section class="panel" aria-label="Request">
+        <div class="row">
+          <label for="room">Room id</label>
+          <input id="room" type="text" maxlength="64" autocomplete="off" spellcheck="false" value="demo" />
+        </div>
+        <div class="row row-actions">
+          <button type="button" id="fetch-once">Fetch now</button>
+          <label class="inline"><input type="checkbox" id="auto" /> Auto every 3s</label>
+          <span id="status" class="status" role="status"></span>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="Derived">
+        <h2>Derived (local UI)</h2>
+        <dl class="kv">
+          <dt>Shape count</dt>
+          <dd id="d-shapes">—</dd>
+          <dt>Version</dt>
+          <dd id="d-version">—</dd>
+          <dt>Rigidity</dt>
+          <dd id="d-rigid">—</dd>
+          <dt>Coherence hint (0–1)</dt>
+          <dd id="d-coh">—</dd>
+        </dl>
+        <p class="hint">
+          Coherence hint = clamp(0.15 + 0.02×shapes + (rigid?0.12:0), 0, 1) — demo mapping only, not wire truth.
+        </p>
+      </section>
+
+      <section class="panel" aria-label="JSON">
+        <h2>Raw JSON</h2>
+        <pre id="raw" class="raw">—</pre>
+      </section>
+
+      <footer class="foot">
+        <a href="http://127.0.0.1:8080/p31-sovereign-lab.html">← Sovereign Lab</a> (with <code>npm run demo</code> at repo root)
+        ·
+        <a href="https://p31ca.org/geodesic" rel="noopener" target="_blank">Hub geodesic</a>
+      </footer>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -87,12 +87,15 @@ Canonical work control: **1,445 lines, 11 CWPs, 41 WCDs** per operator record. *
 
 ## C.6 Research publication inventory (DOIs)
 
+Canonical list: **`p31-constants.json`** → `research.papers`, **`docs/P31-ZENODO-PUBLICATION-REGISTRY.md`**. **22** Zenodo records (series **I–XX** + **2** standalone).
+
 | Item | Title / description | DOI / ID | Status (Apr 2026) |
 |------|--------------------|---------|--------------------|
-| Papers I–III | P31 research series | Zenodo DOIs under ORCID 0009-0002-2492-9079 | Complete |
+| Series I–XX | P31 Research Series | Zenodo DOIs under ORCID 0009-0002-2492-9079 | Complete on Zenodo |
+| Standalone ×2 | GA domestic-relations analyses | **10.5281/zenodo.19432309**, **10.5281/zenodo.19432313** | Published 2026-04-05 |
 | Paper IV | “Universal Bridge at the Phase Transition” | **10.5281/zenodo.19503542** | Published Apr 10, 2026 |
 | Paper XII | Sovereign Stack | **10.5281/zenodo.19782969** | Published 2026-04-26; optional Zenodo metadata `cites` refresh vs XI/XIX |
-| Defensive | “The Tetrahedron Protocol” | **10.5281/zenodo.18627420** | Zenodo + Internet Archive |
+| Paper I (defensive) | “The Tetrahedron Protocol” | **10.5281/zenodo.19004485** | Zenodo (prior version **10.5281/zenodo.18627420**) + Internet Archive narrative |
 
 **ORCID:** 0009-0002-2492-9079
 

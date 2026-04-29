@@ -47,6 +47,7 @@ You are not juggling twenty products—you are juggling **three layers**:
 | **Soup prep — check only** | `npm run soup:prep:check` | No rebuild; use after **`npm run verify`**. **Command center:** `home-soup-prep-check`. |
 | **Soup room-scale gate** | `npm run soup:room-scale` | Mock WS protocol probe + **`docs/SOUP-ROOM-SCALE-RUNBOOK.md`**. **Command center:** `home-soup-room-scale`. |
 | **Soup + passport in browser** | `npm run demo` → **`soup.html`**, **`cognitive-passport/index.html`**, doc library | Port **8080** default. **`soup.html`** dev row links the document library and repeats the refresh + shortcut story in the link title. |
+| **Fleet portal (URL index + ATC radar)** | `npm run build:fleet-portal` · **`npm run build:fleet-portal:live`** (glass probes, then rebuild) · **`npm run verify:fleet-portal`** | **`npm run verify`** includes **`verify:fleet-portal`**. Copy to hub: **`npm run polish`** or mirror **`fleet-portal.html`** → **`andromeda/04_SOFTWARE/p31ca/public/`**. Live **`https://p31ca.org/fleet-portal`**. |
 
 ---
 

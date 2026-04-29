@@ -21,6 +21,7 @@ P31 **ethical psych** (calm, clarity, belonging, no dark patterns) applies every
 
 | Principle | Do | Don’t |
 |-----------|----|--------|
+| **Gray Rock (architecture)** | Default UI is **inert**: void background, muted hierarchy, no brand chroma or self-started motion until the **operator** interacts (`docs/P31-DESIGN-DOCTRINE.md` §1, §7 `?alive=1`) | Manufactured urgency, timed “reveal” animations, badges that nag on load |
 | **Autonomy** | Obvious affordances; explain what happened and why | Fake scarcity, hidden defaults, mislabeled controls |
 | **Transparency** | Name systems honestly (sim, co-presence, family room) | “Mystery” mechanics, obscured state |
 | **Dignity** | Copy treats adults and kids as whole people; no shame/FOMO as the main lever | Stranger leaderboards, streak-as-identity, guilt trips |
@@ -102,7 +103,7 @@ Style with attribute selectors in **`soup-quantum.css`**; extend in **that** fil
 
 **Related docs**
 
-- **`docs/P31-DESIGN-DOCTRINE.md`** — layout templates, Gray Rock → Alive rules, and how tokens become surfaces (pair with this map for motion ethics)
+- **`docs/P31-DESIGN-DOCTRINE.md`** — **Gray Rock → Alive → Personal** as the normative interaction model (psychology, physics shorthand, agent norms, IRWE language, `?alive=1` contract); layout templates; how tokens become surfaces (pair with this map for motion ethics)
 - **`docs/P31-CREATE-CONNECT-ETHICAL-MONETIZATION.md`** — create / connect, ephemeralization, and ethical monetization (contracts + verify hooks)
 - **`docs/P31-ALIGNMENT-SYSTEM.md`**, **`p31-alignment.json`** — canonical sources vs derived artefacts; **`npm run verify:alignment`**
 - **`docs/P31-ENGINEERING-STANDARD.md`** — verify / release bar

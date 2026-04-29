@@ -29,6 +29,31 @@ if (j.count !== j.documents.length) {
   console.error("verify-doc-index: count !== documents.length");
   process.exit(1);
 }
+
+const pathSet = new Set(j.documents.map((d) => d.path));
+let refErr = 0;
+for (const d of j.documents) {
+  if (!Array.isArray(d.references)) {
+    console.error("verify-doc-index: missing references[] for", d.id);
+    refErr++;
+    continue;
+  }
+  for (const r of d.references) {
+    if (!pathSet.has(r)) {
+      console.error("verify-doc-index: dangling reference", d.path, "→", r);
+      refErr++;
+    }
+  }
+  if (typeof d.x !== "number" || typeof d.y !== "number" || d.x < 0 || d.x > 1 || d.y < 0 || d.y > 1) {
+    console.error("verify-doc-index: bad constellation x/y for", d.path, d.x, d.y);
+    refErr++;
+  }
+  if (d.cluster != null && typeof d.cluster !== "string") {
+    console.error("verify-doc-index: cluster must be string for", d.path);
+    refErr++;
+  }
+}
+if (refErr) process.exit(1);
 if (typeof j.fingerprint !== "string" || !/^[0-9a-f]{64}$/.test(j.fingerprint)) {
   console.error("verify-doc-index: missing or invalid fingerprint (expected sha256 hex)");
   process.exit(1);

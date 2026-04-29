@@ -73,6 +73,9 @@ async function main() {
     if (!mainPage.body.includes('id="cc-k4-spin"')) {
       throw new Error("command-center smoke: missing #cc-k4-spin (K₄ spinner)");
     }
+    if (!mainPage.body.includes('id="cc-simplex-strip"')) {
+      throw new Error("command-center smoke: missing #cc-simplex-strip");
+    }
     if (!mainPage.body.includes("operator control plane")) {
       throw new Error("command-center smoke: missing hero copy");
     }
@@ -95,6 +98,19 @@ async function main() {
     }
     if (!hj.ok || hj.version !== "2.0.0") {
       throw new Error("command-center smoke: health payload shape");
+    }
+    const sx = await httpGet(`http://127.0.0.1:${port}/api/simplex-state`);
+    if (sx.status !== 200) {
+      throw new Error("command-center smoke: /api/simplex-state " + sx.status);
+    }
+    let sxj;
+    try {
+      sxj = JSON.parse(sx.body);
+    } catch {
+      throw new Error("command-center smoke: /api/simplex-state not JSON");
+    }
+    if (typeof sxj.ok !== "boolean") {
+      throw new Error("command-center smoke: simplex-state missing ok");
     }
     const css = await httpGet(`http://127.0.0.1:${port}/assets/command-center.css`);
     if (css.status !== 200) {

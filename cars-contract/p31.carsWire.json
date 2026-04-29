@@ -24,7 +24,8 @@
       "ping",
       "eventLog"
     ],
-    "acceptsClientParsingTypes": ["playerState", "heartbeat", "ping"]
+    "acceptsClientParsingTypes": ["playerState", "heartbeat", "ping", "labTelemetry"],
+    "labTelemetryNote": "Sovereign Lab (p31-sovereign-lab.html) streams trim coherence as labTelemetry; mock appends to room eventLog and broadcasts eventLog. Not sent by soup.ts — optional parallel client."
   },
   "browserClientOutbound": {
     "sendsTypes": ["playerState", "heartbeat", "ping"],

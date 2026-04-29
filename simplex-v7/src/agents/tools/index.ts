@@ -843,6 +843,105 @@ const update_ops_manual: Tool = {
   },
 };
 
+function manualAccommodationCopy(limitation_kind: string): {
+  accommodation: string;
+  limitation: string;
+  alternative: string;
+} {
+  switch (limitation_kind) {
+    case 'serialization':
+      return {
+        accommodation:
+          'Generative AI structured and externalized output the operator could not reliably serialize unassisted.',
+        limitation:
+          'AuDHD serialization bottleneck — accurate internal state with lossy real-time written or verbal output channel.',
+        alternative:
+          'Without AI: multi-day drafting, inconsistent structure, dropped relationships between concepts.',
+      };
+    case 'medical':
+      return {
+        accommodation: 'Structured recall and timing support for medical self-management tasks.',
+        limitation:
+          'Executive timing and chronic endocrine care — external audit trail and cueing required for safe windows.',
+        alternative: 'Without assistive tooling: timing errors, missed context for care decisions.',
+      };
+    case 'sensory':
+      return {
+        accommodation: 'Load-buffering and pacing support for high-sensory communications and tasks.',
+        limitation:
+          'AuDHD sensory and social load — unfiltered demand overwhelms executive bandwidth and invites fawn escalation.',
+        alternative:
+          'Without tooling: meltdown risk, people-pleasing escalation, unsafe context switches.',
+      };
+    default:
+      return {
+        accommodation:
+          'Externalized planning, tracking, and sequencing outside a depleted executive stack.',
+        limitation:
+          'Executive dysfunction — inability to reliably sustain multi-step tracking without prosthetic tooling.',
+        alternative:
+          'Without AI: missed deadlines, unpaid work debt, unsafe omissions under variable spoon load.',
+      };
+  }
+}
+
+const log_manual_accommodation: Tool = {
+  name: 'log_manual_accommodation',
+  description:
+    'Append one operator-curated accommodation row when telemetry missed the event (phone script, meeting outline, BONDING, etc.).',
+  input_schema: {
+    type: 'object',
+    properties: {
+      task_line: { type: 'string' },
+      tool: { type: 'string', enum: ['Claude', 'Cursor', 'Gemini', 'Ollama', 'BONDING', 'Other'] },
+      limitation_kind: {
+        type: 'string',
+        enum: ['executive', 'serialization', 'medical', 'sensory'],
+      },
+    },
+    required: ['task_line', 'tool', 'limitation_kind'],
+  },
+  async handler(input, env) {
+    const task_line = String(input.task_line ?? '').trim();
+    if (!task_line) return { error: 'task_line required' };
+    const tools = new Set(['Claude', 'Cursor', 'Gemini', 'Ollama', 'BONDING', 'Other']);
+    const tool = tools.has(String(input.tool)) ? String(input.tool) : 'Other';
+    const kinds = new Set(['executive', 'serialization', 'medical', 'sensory']);
+    const limitation_kind = kinds.has(String(input.limitation_kind))
+      ? String(input.limitation_kind)
+      : 'executive';
+    const copy = manualAccommodationCopy(limitation_kind);
+    const now = Date.now();
+    const ref = `manual:${crypto.randomUUID()}`;
+    const entry_date = new Date(now).toISOString().slice(0, 10);
+    const entry_time = new Date(now).toISOString().slice(11, 19);
+    await env.DB.prepare(
+      `INSERT INTO accommodation_log (
+        entry_date, entry_time, task, tool, accommodation, duration_min, limitation, alternative, outcome,
+        source, is_auto, limitation_kind, source_ref, created_at
+      ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+    )
+      .bind(
+        entry_date,
+        entry_time,
+        task_line,
+        tool,
+        copy.accommodation,
+        null,
+        copy.limitation,
+        copy.alternative,
+        'Operator attested; mesh did not observe raw channel.',
+        'SCRIBE_manual',
+        0,
+        limitation_kind,
+        ref,
+        now,
+      )
+      .run();
+    return { logged: true, source_ref: ref };
+  },
+};
+
 const generate_session_synthesis: Tool = {
   name: 'generate_session_synthesis',
   description: 'Queue SCRIBE↔ORACLE synthesis ping.',
@@ -930,6 +1029,7 @@ export const TOOL_REGISTRY: Record<string, Tool> = {
   close_wcd,
   update_ops_manual,
   generate_session_synthesis,
+  log_manual_accommodation,
   /* SENTINEL */
   get_home_state: sentinel_get_home_state,
   set_home_scene: sentinel_set_home_scene,

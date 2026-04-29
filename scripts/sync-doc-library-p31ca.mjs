@@ -26,8 +26,12 @@ if (!fs.existsSync(p31ca)) {
 }
 
 async function main() {
-  console.log("sync-doc-library-p31ca: build:doc-index …");
-  execSync("npm run build:doc-index", { cwd: root, stdio: "inherit" });
+  if (process.env.P31_SYNC_DOC_LIB_SKIP_BUILD === "1") {
+    console.log("sync-doc-library-p31ca: skip build:doc-index (P31_SYNC_DOC_LIB_SKIP_BUILD=1)");
+  } else {
+    console.log("sync-doc-library-p31ca: build:doc-index …");
+    execSync("npm run build:doc-index", { cwd: root, stdio: "inherit" });
+  }
   await fsp.mkdir(out, { recursive: true });
 
   const copy = (rel) => {
@@ -41,6 +45,7 @@ async function main() {
 
   copy("index.json");
   copy("app.js");
+  copy("constellation-ui.js");
   copy("doc-search-worker.js");
   const vendor = path.join(root, "docs", "doc-library", "vendor");
   const outVendor = path.join(out, "vendor");

@@ -34,6 +34,7 @@
     "scripts/lib/mesh-budgets.mjs",
     "scripts/print-mesh-budgets.mjs",
     "scripts/build-fleet-portal.mjs",
+    "scripts/verify-fleet-portal.mjs",
     "fleet-portal.html",
     "docs/P31-MISSION-SYSTEM-DELIVERABLE.md",
     "docs/DELIVERABLE-BONDING-HOME-SCALE-PACK.md",

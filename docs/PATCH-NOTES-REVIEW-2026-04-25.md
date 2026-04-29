@@ -41,7 +41,7 @@ renumber, Triad + KwaiPilot.
 |------|--------------------|------------------------|
 | Entity | HCB / sponsor narrative varied | P31 Labs, Inc. Apr 3; EIN Apr 13; HCB dead path → **Stripe** Worker |
 | BONDING | In-flight | **Shipped** Mar 10; **424 / 32** canonical (raised 2026-04-26; see `p31-constants.json`) |
-| Research | I–III + defensive | I–IV + **Paper IV DOI**; **Paper XII** gated |
+| Research | I–III + defensive | Full series **I–XX** + 2 standalone (**22** Zenodo DOIs); **Paper XII** published (**10.5281/zenodo.19782969**) |
 | Node Zero | Concept | **Firmware sprint** — hardware + ESP-IDF + LVGL + QSPI + LoRa / PSRAM rules |
 | Edge fleet | Generic | **10** Worker fleet, telemetry + KV + spoons (per operator snapshot) |
 | WCDs | Open batches | **Batch 3 (26–32) closed**, `tsc` clean |

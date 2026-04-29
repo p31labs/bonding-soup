@@ -1,6 +1,6 @@
 -- P31 AGENT CREW — D1 schema — SIMPLEX v7
 -- OQE: wrangler d1 execute <DB_NAME> --command="SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name"
--- Expect 22 user-defined tables below (core crew + SENTINEL physical layer).
+-- Expect 23 user-defined tables below (core crew + SENTINEL physical layer + accommodation_log).
 
 CREATE TABLE IF NOT EXISTS agent_runs (
   run_id      TEXT PRIMARY KEY,
@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS wcds (
 );
 
 INSERT OR IGNORE INTO wcds (id, scope, agent_lane, oqe, status, close_evidence, est_days, created_at, updated_at) VALUES
- ('WCD-SIMPLEX-01','D1 schema + seeds','Mechanic','22 user tables + automations seeded; sqlite_master','OPEN',NULL,0.5, strftime('%s','now')*1000,strftime('%s','now')*1000),
+ ('WCD-SIMPLEX-01','D1 schema + seeds','Mechanic','23 user tables + automations seeded; sqlite_master','OPEN',NULL,0.5, strftime('%s','now')*1000,strftime('%s','now')*1000),
  ('WCD-SIMPLEX-02','simplex-worker HTTP+HMAC','Mechanic','Routes+HMAC behave per matrix','OPEN',NULL,1,strftime('%s','now')*1000,strftime('%s','now')*1000),
  ('WCD-SIMPLEX-03','cron → runner','Mechanic','wrangler tail shows scheduled cohort','OPEN',NULL,0.5,strftime('%s','now')*1000,strftime('%s','now')*1000),
  ('WCD-SIMPLEX-04','Tomograph Email Worker','Mechanic','inbound hostile redacts + D1 logs','OPEN',NULL,0.5,strftime('%s','now')*1000,strftime('%s','now')*1000),
@@ -261,3 +261,25 @@ CREATE TABLE IF NOT EXISTS mqtt_log (
   created_at INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_mqtt_topic ON mqtt_log(topic, created_at DESC);
+
+-- ── ACCOMMODATION LOG — machine-derived disability / IRWE evidence chain ───────
+
+CREATE TABLE IF NOT EXISTS accommodation_log (
+  id              INTEGER PRIMARY KEY AUTOINCREMENT,
+  entry_date      TEXT NOT NULL,
+  entry_time      TEXT NOT NULL,
+  task            TEXT NOT NULL,
+  tool            TEXT NOT NULL,
+  accommodation TEXT NOT NULL,
+  duration_min    REAL,
+  limitation      TEXT NOT NULL,
+  alternative     TEXT,
+  outcome         TEXT,
+  source          TEXT NOT NULL,
+  is_auto         INTEGER NOT NULL DEFAULT 1,
+  limitation_kind TEXT NOT NULL DEFAULT 'executive',
+  source_ref      TEXT,
+  created_at      INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_accommodation_date ON accommodation_log(entry_date DESC, created_at DESC);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_accommodation_source_ref ON accommodation_log(source_ref) WHERE source_ref IS NOT NULL;

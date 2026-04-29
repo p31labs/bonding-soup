@@ -1,211 +1,588 @@
 <!DOCTYPE html>
-<html lang="en" data-p31-appearance="hub" data-p31-physics-learn="1.0.0">
+<html lang="en" data-p31-appearance="hub" data-p31-physics-learn="2.0.0">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
-  <meta name="description" content="Progressive physics learning — local progress, small labs, P31 home." />
+  <meta name="description" content="Why is everything a tetrahedron? P31 Physics Learn — geometry, frequency, biology, and tools in eight rooms." />
   <meta name="theme-color" content="#0f1115" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="P31 home" />
+  <meta name="apple-mobile-web-app-title" content="P31 Physics Learn" />
   <link rel="manifest" href="../../p31-bonding.webmanifest" crossorigin="anonymous" />
   <link rel="apple-touch-icon" href="../../p31-bonding-icons/p31-icon.svg" />
-  <title>P31 — physics learning engine</title>
+  <title>P31 — Physics Learn · why the shapes</title>
   <link rel="stylesheet" href="../../cognitive-passport/p31-style.css" />
   <link rel="stylesheet" href="../../cognitive-passport/p31-responsive-surface.css" />
   <script src="../../cognitive-passport/lib/p31-subject-prefs.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700&family=Outfit:wght@500;600;700&display=optional" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Outfit:wght@500;600&display=optional" rel="stylesheet" />
   <style>
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
     body {
       margin: 0;
-      min-height: 100vh;
-      min-height: 100dvh;
-      font-family: var(--p31-font-sans, "Atkinson Hyperlegible", system-ui, sans-serif);
+      font-family: "Atkinson Hyperlegible", var(--p31-font-sans, system-ui, sans-serif);
       background: var(--p31-void, #0f1115);
       color: var(--p31-cloud, #d8d6d0);
+      line-height: 1.65;
     }
-    .pl-bg {
+    .codec-skip {
+      position: absolute;
+      left: -9999px;
+      top: 0.5rem;
+      z-index: 300;
+      padding: 0.5rem 1rem;
+      background: var(--p31-cyan, #4db8a8);
+      color: #0a0c10;
+      font-weight: 700;
+      border-radius: 6px;
+    }
+    .codec-skip:focus { left: 0.5rem; outline: 2px solid #fff; }
+    .codec-bg {
       position: fixed;
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      background:
-        radial-gradient(ellipse 90% 50% at 50% -10%, rgba(37, 137, 125, 0.12), transparent 55%),
-        var(--p31-void, #0f1115);
+      background: radial-gradient(ellipse 80% 45% at 50% -8%, rgba(37, 137, 125, 0.1), transparent 50%), var(--p31-void, #0f1115);
     }
-    .pl-wrap { position: relative; z-index: 1; }
-    .pl-hero {
+    .codec-rail {
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
-      flex-wrap: wrap;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: var(--p31-space-4);
-      margin-bottom: var(--p31-space-5);
-    }
-    h1 {
-      font-family: "Outfit", var(--p31-font-sans, system-ui, sans-serif);
-      font-size: clamp(1.4rem, 3vw, 1.9rem);
-      font-weight: 700;
-      margin: 0;
-      letter-spacing: -0.02em;
-    }
-    h1 .grad {
-      background: linear-gradient(110deg, var(--p31-cloud) 0%, var(--p31-cyan) 45%, var(--p31-butter) 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .pl-hero p { margin: 0.4rem 0 0; font-size: var(--p31-text-sm); color: var(--p31-muted, #6b7280); max-width: 30rem; }
-    .pl-stats {
-      text-align: right;
-      font-family: var(--p31-font-mono, ui-monospace, monospace);
-      font-size: 0.75rem;
-      color: var(--p31-muted, #6b7280);
-    }
-    .pl-stats .xp { color: var(--p31-butter, #cda852); font-size: 1.1rem; font-weight: 600; }
-    .pl-pbar { width: 12rem; max-width: 100%; height: 4px; background: var(--p31-surface2, #1c2028); border-radius: 2px; margin-top: 0.35rem; overflow: hidden; }
-    .pl-pbar__fill { height: 100%; background: linear-gradient(90deg, var(--p31-cyan), var(--p31-butter)); transition: width 0.4s ease; }
-    .pl-grid { display: grid; grid-template-columns: 16rem 1fr; gap: var(--p31-space-5); }
-    @media (max-width: 800px) {
-      .pl-grid { grid-template-columns: 1fr; }
-    }
-    .pl-aside {
-      position: sticky;
-      top: var(--p31-space-4);
-      align-self: start;
-      border: 1px solid var(--p31-border-subtle, rgba(255, 255, 255, 0.08));
-      border-radius: var(--p31-radius-lg, 12px);
-      background: color-mix(in srgb, var(--p31-surface) 92%, transparent);
-      max-height: calc(100vh - 2rem);
+      flex-direction: column;
+      gap: 0.15rem;
+      padding: 0.5rem 0.35rem;
+      max-height: 90vh;
       overflow: auto;
-    }
-    @supports (height: 100dvh) {
-      .pl-aside {
-        max-height: calc(100dvh - 2rem);
-      }
+      font-size: 0.68rem;
+      background: color-mix(in srgb, var(--p31-surface, #161920) 94%, transparent);
+      border: 1px solid var(--p31-border-subtle, rgba(255,255,255,0.08));
+      border-left: none;
+      border-radius: 0 10px 10px 0;
     }
     @supports not (background: color-mix(in srgb, red, blue)) {
-      .pl-aside { background: var(--p31-surface, #161920); }
+      .codec-rail { background: rgba(22, 25, 32, 0.95); }
     }
-    .pl-aside h2 { margin: 0; padding: var(--p31-space-3) var(--p31-space-3) 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--p31-muted); }
-    .pl-stage-lbl { padding: var(--p31-space-2) var(--p31-space-3) 0; font-size: 0.65rem; color: var(--p31-cyan, #4db8a8); text-transform: uppercase; letter-spacing: 0.1em; }
-    .pl-unit {
+    .codec-rail a {
+      color: var(--p31-muted, #6b7280);
+      text-decoration: none;
+      padding: 0.2rem 0.35rem;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .codec-rail a:hover, .codec-rail a:focus-visible { color: var(--p31-cyan, #4db8a8); background: rgba(77, 184, 168, 0.08); outline: none; }
+    @media (max-width: 720px) {
+      .codec-rail {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        transform: none;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-height: none;
+        border-radius: 10px 10px 0 0;
+        border: 1px solid var(--p31-border-subtle);
+        border-bottom: none;
+        font-size: 0.62rem;
+      }
+      .codec-main { padding-bottom: 5.5rem; }
+    }
+    .codec-main { position: relative; z-index: 1; padding-left: 7.5rem; }
+    @media (max-width: 720px) {
+      .codec-main { padding-left: var(--p31-space-3, 0.75rem); padding-right: var(--p31-space-3, 0.75rem); }
+    }
+    .codec-room {
+      min-height: 100vh;
+      min-height: 100dvh;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
       display: flex;
-      gap: 0.5rem;
-      width: 100%;
-      text-align: left;
-      padding: var(--p31-space-3);
-      font: inherit;
-      border: none;
-      background: none;
-      color: var(--p31-cloud);
-      cursor: pointer;
-      border-left: 3px solid transparent;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2.5rem) 2.5rem;
+      border-bottom: 1px solid var(--p31-border-subtle, rgba(255,255,255,0.06));
+      position: relative;
     }
-    .pl-unit:hover:not(:disabled) { background: rgba(255, 255, 255, 0.04); }
-    .pl-unit.is-active { border-left-color: var(--p31-cyan); background: rgba(77, 184, 168, 0.07); }
-    .pl-unit.is-locked { opacity: 0.45; cursor: not-allowed; }
-    .pl-unit.is-done .pl-unit__icon { color: var(--p31-butter, #cda852); }
-    .pl-unit__icon { flex: 0 0 1.2rem; }
-    .pl-unit__t { display: block; font-weight: 600; font-size: 0.85rem; }
-    .pl-unit__b { display: block; font-size: 0.7rem; color: var(--p31-muted); line-height: 1.4; margin-top: 0.2rem; }
-    .pl-main { border: 1px solid var(--p31-border-subtle); border-radius: var(--p31-radius-xl, 16px); padding: var(--p31-space-5); background: var(--p31-surface, #161920); }
-    .pl-ribbon { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: var(--p31-space-3); font-size: 0.7rem; font-family: var(--p31-font-mono, monospace); }
-    .pl-ribbon span { color: var(--p31-lavender, #8b7cc9); }
-    .pl-h2 { font-family: "Outfit", var(--p31-font-sans, sans-serif); font-size: 1.35rem; margin: 0 0 var(--p31-space-3); }
-    .pl-theory { color: var(--p31-muted, #6b7280); line-height: 1.7; }
-    .pl-theory code { color: var(--p31-cyan, #4db8a8); }
-    .pl-theory p { margin: 0 0 0.75em; }
-    .p31-muted, .pl-small { color: var(--p31-muted); font-size: 0.85em; }
-    .pl-lab { margin: var(--p31-space-4) 0; }
-    .pl-lab__hint { font-size: var(--p31-text-sm); color: var(--p31-butter, #cda852); margin: 0 0 var(--p31-space-2); }
-    .pl-cv { width: 100%; max-width: 360px; height: auto; border-radius: var(--p31-radius-md); background: var(--p31-surface2, #1c2028); display: block; }
-    .pl-sliders { display: grid; gap: 0.35rem; margin-top: var(--p31-space-2); font-size: 0.8rem; }
-    .pl-sliders label { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
-    .pl-metric { font-family: var(--p31-font-mono, monospace); color: var(--p31-butter, #cda852); margin: 0.5rem 0 0; }
-    .pl-inline { display: block; margin: 0.4rem 0; font-size: 0.9rem; }
-    .pl-h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--p31-muted); margin: 0 0 var(--p31-space-2); }
-    .pl-check { border-top: 1px solid var(--p31-border-subtle); margin-top: var(--p31-space-4); padding-top: var(--p31-space-4); }
-    .pl-q { margin: 0 0 var(--p31-space-2); }
-    .pl-inp { width: 100%; max-width: 16rem; padding: 0.5rem 0.75rem; border-radius: var(--p31-radius-md); border: 1px solid var(--p31-border-subtle); background: var(--p31-void, #0f1115); color: var(--p31-cloud); font: inherit; }
-    .pl-mc { display: block; margin: 0.35rem 0; cursor: pointer; }
-    .pl-row { margin-top: var(--p31-space-3); }
-    .pl-btn { padding: 0.55rem 1.1rem; border-radius: var(--p31-radius-md); font: inherit; font-weight: 600; border: 1px solid var(--p31-border-subtle); background: var(--p31-surface2); color: var(--p31-cloud); cursor: pointer; }
-    .pl-btn--primary { background: var(--p31-cyan, #4db8a8); color: #0a0c10; border-color: transparent; }
-    .pl-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .pl-barwrap { max-width: 20rem; height: 6px; background: var(--p31-surface2); border-radius: 3px; overflow: hidden; margin-top: 0.5rem; }
-    .pl-bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--p31-cyan), var(--p31-butter)); transform-origin: left center; }
-    .pl-toast { position: fixed; bottom: max(var(--p31-space-4), env(safe-area-inset-bottom, 0px)); right: max(var(--p31-space-4), env(safe-area-inset-right, 0px)); z-index: 200; max-width: min(20rem, calc(100vw - 2rem)); padding: var(--p31-space-3) var(--p31-space-4); background: var(--p31-surface, #161920); border: 1px solid var(--p31-cyan, #4db8a8); border-radius: var(--p31-radius-md); font-size: var(--p31-text-sm); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4); }
-    .pl-toast[hidden] { display: none; }
-    .pl-toplinks { display: flex; flex-wrap: wrap; align-items: center; gap: var(--p31-space-2); font-size: var(--p31-text-xs); margin-top: var(--p31-space-2); }
-    .pl-toplinks a { color: var(--p31-cyan, #4db8a8); }
-    .pl-toplinks__mission { color: var(--p31-muted, #6b7280); font-weight: 600; letter-spacing: 0.04em; }
-    .pl-toplinks__sep { color: var(--p31-border-subtle, #2a2f3a); user-select: none; }
-    .pl-toplinks__heart { color: var(--p31-coral, #c97b6b); }
+    .codec-room__inner { max-width: 38rem; width: 100%; margin: 0 auto; }
+    .codec-room h2 {
+      font-family: "Outfit", sans-serif;
+      font-weight: 600;
+      font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+      letter-spacing: -0.02em;
+      margin: 0 0 0.75rem;
+      color: var(--p31-cloud);
+    }
+    .codec-lede {
+      font-size: clamp(1rem, 2.4vw, 1.12rem);
+      color: var(--p31-muted, #9ca3af);
+      margin: 0 0 1rem;
+      font-style: italic;
+    }
+    .codec-body { color: var(--p31-muted, #9ca3af); margin: 0 0 0.85rem; font-size: 0.98rem; }
+    .codec-body strong { color: var(--p31-cloud); }
+    .codec-foot {
+      margin-top: 1.25rem;
+      font-size: 0.82rem;
+      color: var(--p31-muted, #6b7280);
+      font-style: italic;
+    }
+    .codec-teal { color: var(--p31-cyan, #4db8a8); }
+    .codec-green { color: var(--p31-phosphor-green, #6ee7b7); }
+    .codec-spin {
+      animation: codec-spin 24s linear infinite;
+      transform-origin: 50% 55%;
+    }
+    @keyframes codec-spin {
+      to { transform: rotate(360deg); }
+    }
+    html.pl-reduced-motion .codec-spin { animation: none; }
+    .codec-hero-tri { width: min(200px, 45vw); height: auto; margin: 0 auto 1rem; display: block; }
+    .codec-interactive {
+      margin: 1.25rem 0;
+      padding: 1rem;
+      border-radius: var(--p31-radius-lg, 12px);
+      border: 1px solid var(--p31-border-subtle);
+      background: var(--p31-surface, #161920);
+    }
+    .codec-interactive svg { display: block; margin: 0 auto; max-width: 100%; touch-action: none; }
+    .codec-bridge {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .codec-bridge svg { flex: 0 0 72px; width: 72px; height: 40px; opacity: 0.85; }
+    @keyframes codec-k4-vertex {
+      0%, 42% { opacity: 1; }
+      50%, 92% { opacity: 0.12; }
+      100% { opacity: 1; }
+    }
+    html:not(.pl-reduced-motion) .codec-k4-pulse { animation: codec-k4-vertex 5.5s ease-in-out infinite; }
+    html.pl-reduced-motion .codec-k4-pulse { opacity: 1; }
+    .codec-wave-wrap { margin: 1rem 0; }
+    .codec-wave-wrap svg { width: 100%; max-width: 280px; height: 80px; }
+    #codec-larmor-hit {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(110, 231, 183, 0.15);
+      color: var(--p31-phosphor-green, #6ee7b7);
+      font-weight: 700;
+      font-family: var(--p31-font-mono, ui-monospace, monospace);
+    }
+    #codec-larmor-hit[hidden] { display: none; }
+    .codec-row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin: 0.75rem 0; }
+    .codec-row input[type="range"] { flex: 1; min-width: 140px; }
+    .codec-btn {
+      font: inherit;
+      cursor: pointer;
+      padding: 0.45rem 0.9rem;
+      border-radius: var(--p31-radius-md, 8px);
+      border: 1px solid var(--p31-border-subtle);
+      background: var(--p31-surface2, #1c2028);
+      color: var(--p31-cloud);
+    }
+    .codec-btn:hover { border-color: var(--p31-cyan, #4db8a8); }
+    .codec-spoon-row { display: flex; gap: 0.25rem; flex-wrap: wrap; margin: 0.75rem 0; }
+    .codec-spoon {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(110, 231, 183, 0.35);
+      background: transparent;
+    }
+    .codec-spoon.is-full { background: var(--p31-phosphor-green, #6ee7b7); border-color: transparent; }
+    .codec-acts { display: flex; flex-direction: column; gap: 0.35rem; align-items: flex-start; margin: 0.5rem 0; }
+    .codec-acts button { font: inherit; font-size: 0.85rem; cursor: pointer; text-align: left; padding: 0.35rem 0.65rem; border-radius: 6px; border: 1px solid var(--p31-border-subtle); background: var(--p31-surface2); color: var(--p31-cloud); }
+    .codec-acts button:hover { border-color: var(--p31-cyan); }
+    .codec-serial {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+      align-items: stretch;
+    }
+    @media (max-width: 560px) { .codec-serial { grid-template-columns: 1fr; } }
+    .codec-serial-panel {
+      border: 1px solid var(--p31-border-subtle);
+      border-radius: 10px;
+      padding: 0.75rem;
+      background: var(--p31-surface, #161920);
+      min-height: 140px;
+      font-size: 0.78rem;
+      color: var(--p31-muted);
+    }
+    #codec-serial-mesh {
+      position: relative;
+      overflow: hidden;
+    }
+    #codec-serial-mesh::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 40%, rgba(77, 184, 168, 0.15), transparent 55%),
+        repeating-linear-gradient(90deg, transparent, transparent 7px, rgba(77, 184, 168, 0.08) 7px, rgba(77, 184, 168, 0.08) 8px);
+      opacity: 0.35;
+      animation: codec-mesh-pulse 2.2s ease-in-out infinite;
+    }
+    html.pl-reduced-motion #codec-serial-mesh::before { animation: none; opacity: 0.25; }
+    #codec-serial-mesh.is-active::before { opacity: 0.85; animation-duration: 0.9s; }
+    @keyframes codec-mesh-pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.65; }
+    }
+    .codec-serial-panel strong { color: var(--p31-cloud); display: block; margin-bottom: 0.35rem; }
+    #codec-serial-pipe .codec-dots { margin-top: 0.5rem; height: 4rem; border-left: 2px solid var(--p31-muted); margin-left: 0.5rem; padding-left: 0.5rem; position: relative; }
+    #codec-serial-pipe .codec-dots::after {
+      content: "···";
+      letter-spacing: 0.2em;
+      color: var(--p31-cyan);
+      animation: codec-drip 1.2s linear infinite;
+    }
+    html.pl-reduced-motion #codec-serial-pipe .codec-dots::after { animation: none; }
+    @keyframes codec-drip {
+      0% { opacity: 0.2; }
+      50% { opacity: 1; }
+      100% { opacity: 0.2; }
+    }
+    #codec-serial-pipe.is-wide .codec-dots::after { content: "· · · · · · ·"; }
+    .codec-gray-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1rem 0; }
+    @media (max-width: 560px) { .codec-gray-grid { grid-template-columns: 1fr; } }
+    .codec-gray-box {
+      border-radius: 10px;
+      padding: 0.65rem;
+      font-size: 0.75rem;
+      min-height: 160px;
+    }
+    .codec-gray-loud {
+      background: #f3f4f6;
+      color: #111;
+      border: 2px solid #ef4444;
+    }
+    .codec-gray-loud .badge {
+      display: inline-block;
+      background: #ef4444;
+      color: #fff;
+      border-radius: 999px;
+      padding: 0.1rem 0.45rem;
+      font-weight: 800;
+      font-size: 0.65rem;
+      animation: codec-bell 0.8s ease-in-out infinite;
+    }
+    html.pl-reduced-motion .codec-gray-loud .badge { animation: none; }
+    @keyframes codec-bell {
+      0%, 100% { transform: rotate(0); }
+      25% { transform: rotate(-8deg); }
+      75% { transform: rotate(8deg); }
+    }
+    .codec-gray-quiet {
+      background: var(--p31-void, #0f1115);
+      color: var(--p31-muted);
+      border: 1px solid var(--p31-border-subtle);
+    }
+    .codec-gray-quiet [data-expand] {
+      margin: 0.35rem 0;
+      padding: 0.35rem 0.45rem;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: default;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .codec-gray-quiet [data-expand].is-open {
+      border-color: rgba(77, 184, 168, 0.35);
+      background: rgba(77, 184, 168, 0.06);
+      color: var(--p31-cloud);
+    }
+    .codec-graph-pre {
+      font-family: var(--p31-font-mono, ui-monospace, monospace);
+      font-size: 0.72rem;
+      line-height: 1.35;
+      color: var(--p31-muted);
+      background: var(--p31-surface, #161920);
+      padding: 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--p31-border-subtle);
+      overflow: auto;
+      white-space: pre;
+      margin: 1rem 0;
+    }
+    .codec-outro {
+      font-family: "Atkinson Hyperlegible", system-ui, sans-serif;
+      font-size: 1.02rem;
+      color: var(--p31-cloud);
+      margin: 1.5rem 0 0;
+    }
+    .codec-outro:last-child { margin-bottom: 0; }
+    .codec-toplinks {
+      font-size: 0.72rem;
+      margin-top: 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.65rem;
+      color: var(--p31-muted);
+    }
+    .codec-toplinks a { color: var(--p31-cyan, #4db8a8); }
+    .codec-ribbon { font-size: 0.65rem; font-family: var(--p31-font-mono, monospace); color: var(--p31-lavender, #8b7cc9); margin-bottom: 0.5rem; }
+    .codec-ribbon--top { max-width: 38rem; margin: 0.75rem auto 0; padding: 0 var(--p31-space-3, 0.75rem); }
+    @media (min-width: 721px) {
+      .codec-ribbon--top { padding-left: 7.5rem; }
+    }
+    .codec-final-tetra { display: block; margin: 0 auto 1rem; max-width: 280px; height: auto; }
+    .codec-egg-sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    @keyframes p31-egg-larmor-opacity {
+      0%, 100% { opacity: 0.35; }
+      50% { opacity: 0.98; }
+    }
+    .p31-egg-larmor-ms {
+      position: fixed;
+      width: 1px;
+      height: 1px;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      opacity: 0.35;
+    }
+    html:not(.pl-reduced-motion) .p31-egg-larmor-ms {
+      animation: p31-egg-larmor-opacity 863ms ease-in-out infinite;
+    }
+    html.pl-reduced-motion .p31-egg-larmor-ms { animation: none; opacity: 0.5; }
   </style>
-  <script src="physics-engine.js" defer></script>
+  <script src="codec-rooms.js" defer></script>
 </head>
 <body class="p31-mesh-m-first p31-responsive-surface">
-  <div class="pl-bg" aria-hidden="true"></div>
-  <div class="pl-wrap p31-shell" style="--p31-shell-max: 72rem; --p31-shell-pad: var(--p31-space-4)">
-    <header class="pl-hero">
-      <div>
-        <h1><span class="grad">Progressive physics engine</span></h1>
-        <p>Local-only progression: read, manipulate small labs, pass checks to unlock the next idea. Resets on clear data — no account.</p>
-        <p class="pl-toplinks" style="margin:0.35rem 0 0" aria-label="P31 mission: Build, Create, Connect">
-          <a href="https://p31ca.org/build" rel="noopener" class="pl-toplinks__mission" style="text-decoration:none;font-weight:600" title="Initial build — CWP">Build</a>
-          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
-          <a href="../../poets-room.html" title="Poets room — write, read, make">Create</a>
-          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
-          <a href="https://p31ca.org/connect.html" rel="noopener" title="K₄ family mesh navigator">Connect</a>
-          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
-          <span class="pl-toplinks__heart" title="love" aria-hidden="true">&#9829;</span>
-          <span class="p31-muted" title="&lt;3" aria-label="less than three">&lt;3</span>
+  <!-- P31 quantum egg · home anchor (Saint Marys, GA): lat 30.7333 lon -81.5556 — not telemetry; signature -->
+  <!-- P31 quantum egg · Fuller quotation also in #p31-egg-fuller-sr for screen readers -->
+  <p id="p31-egg-fuller-sr" class="codec-egg-sr-only">
+    You never change things by fighting the existing reality. To change something, build a new model that makes the existing model obsolete. Buckminster Fuller — P31 accessibility egg; Physics Learn.
+  </p>
+  <span class="p31-egg-larmor-ms" aria-hidden="true"></span>
+  <a class="codec-skip" href="#room-triangle">Skip to first room</a>
+  <div class="codec-bg" aria-hidden="true"></div>
+  <nav class="codec-rail" aria-label="Rooms">
+    <a href="#room-triangle">1 · Triangle</a>
+    <a href="#room-tetra">2 · Tetrahedron</a>
+    <a href="#room-frequency">3 · Frequency</a>
+    <a href="#room-molecule">4 · Molecule</a>
+    <a href="#room-spoon">5 · Spoons</a>
+    <a href="#room-serial">6 · Serialization</a>
+    <a href="#room-gray">7 · Gray Rock</a>
+    <a href="#room-graph">8 · Complete graph</a>
+    <a href="labs.html" style="margin-top:0.35rem;border-top:1px solid var(--p31-border-subtle);padding-top:0.35rem">Labs track</a>
+  </nav>
+
+  <main class="codec-main">
+    <p class="codec-ribbon codec-ribbon--top" id="codec-hero-ribbon">
+      <span data-p31-physics-learn-badge>Physics Learn</span> · eight rooms · one question: why a tetrahedron?
+    </p>
+
+    <section class="codec-room" id="room-triangle" data-pl-room="1">
+      <div class="codec-room__inner">
+        <h2>Room 1 · The triangle</h2>
+        <svg class="codec-hero-tri codec-spin" viewBox="0 0 100 90" aria-hidden="true">
+          <polygon points="50,8 92,82 8,82" fill="none" stroke="#4db8a8" stroke-width="1.2" />
+        </svg>
+        <p class="codec-lede">A triangle is the simplest shape that can’t be squished. Push on one corner and the whole shape resists. A square collapses. A triangle holds.</p>
+        <div id="codec-rigidity" class="codec-interactive">
+          <p class="codec-body" style="margin-top:0;font-size:0.8rem">Drag any vertex. Square: each corner moves alone. Triangle: the shape turns as one rigid piece.</p>
+          <svg viewBox="0 0 320 160" width="320" height="160" role="img" aria-label="Interactive square and triangle">
+            <polygon data-role="sq-poly" fill="rgba(77,184,168,0.06)" stroke="#4db8a8" stroke-width="1.4" />
+            <polygon data-role="tri-poly" fill="rgba(77,184,168,0.06)" stroke="#4db8a8" stroke-width="1.4" />
+            <circle data-sq="0" r="7" fill="#161920" stroke="#4db8a8" stroke-width="1.5" />
+            <circle data-sq="1" r="7" fill="#161920" stroke="#4db8a8" stroke-width="1.5" />
+            <circle data-sq="2" r="7" fill="#161920" stroke="#4db8a8" stroke-width="1.5" />
+            <circle data-sq="3" r="7" fill="#161920" stroke="#4db8a8" stroke-width="1.5" />
+            <circle data-tri="0" r="7" fill="#161920" stroke="#6ee7b7" stroke-width="1.5" />
+            <circle data-tri="1" r="7" fill="#161920" stroke="#6ee7b7" stroke-width="1.5" />
+            <circle data-tri="2" r="7" fill="#161920" stroke="#6ee7b7" stroke-width="1.5" />
+            <text x="70" y="18" fill="#6b7280" font-size="10" text-anchor="middle">Square</text>
+            <text x="230" y="18" fill="#6b7280" font-size="10" text-anchor="middle">Triangle</text>
+          </svg>
+        </div>
+        <p class="codec-foot">This is why bridges have trusses.</p>
+        <div class="codec-bridge" aria-hidden="true">
+          <svg viewBox="0 0 120 40" aria-hidden="true"><path d="M5 35 L25 10 L45 35 M35 35 L55 10 L75 35 M65 35 L85 10 L105 35 M95 35 L115 10" fill="none" stroke="#6b7280" stroke-width="1.2"/></svg>
+          <span>Those triangles are load paths—not decoration.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="codec-room" id="room-tetra" data-pl-room="2">
+      <div class="codec-room__inner">
+        <h2>Room 2 · The tetrahedron</h2>
+        <p class="codec-lede">A tetrahedron is a triangle in every direction. Four faces; all triangles. Push from any angle—it holds.</p>
+        <div id="codec-tetra-stage" class="codec-interactive" style="max-width:220px;cursor:grab;touch-action:none">
+          <p class="codec-body" style="margin-top:0;font-size:0.8rem">Drag to rotate. Watch one vertex fade: K₄ still leaves a rigid triangle (K₃).</p>
+          <svg viewBox="0 0 200 176" width="200" height="176" data-role="tetra-rot" aria-hidden="true">
+            <line data-edge="0" stroke="#4db8a8" stroke-width="1.4" />
+            <line data-edge="1" stroke="#4db8a8" stroke-width="1.4" />
+            <line data-edge="2" stroke="#4db8a8" stroke-width="1.4" />
+            <line data-edge="3" stroke="#4db8a8" stroke-width="1.4" />
+            <line data-edge="4" stroke="#4db8a8" stroke-width="1.4" />
+            <line data-edge="5" stroke="#4db8a8" stroke-width="1.4" />
+            <circle data-vert="0" r="5" fill="#6ee7b7" class="codec-k4-pulse" />
+            <circle data-vert="1" r="5" fill="#4db8a8" />
+            <circle data-vert="2" r="5" fill="#4db8a8" />
+            <circle data-vert="3" r="5" fill="#4db8a8" />
+          </svg>
+        </div>
+        <p class="codec-body">In graph theory this is <strong>K₄</strong>—a complete graph on four vertices: every point connects to every other. No single center. Remove one vertex and the remaining three still form a triangle: still rigid, still connected.</p>
+        <p class="codec-foot">This is how P31 organizes its family mesh—the shape <em>is</em> the explanation.</p>
+      </div>
+    </section>
+
+    <section class="codec-room" id="room-frequency" data-pl-room="3">
+      <div class="codec-room__inner">
+        <h2>Room 3 · The frequency</h2>
+        <p class="codec-lede">Everything vibrates. Voice, light, the atoms in your body—some frequencies are natural resonances of a particular nucleus in a magnetic field.</p>
+        <div class="codec-wave-wrap">
+          <svg viewBox="0 0 280 80" aria-hidden="true"><path id="codec-wave-path" fill="none" stroke="#4db8a8" stroke-width="2" d="M0 40 L280 40"/></svg>
+        </div>
+        <div class="codec-row">
+          <label for="codec-freq-slider" class="codec-body" style="margin:0;width:100%">Frequency</label>
+          <input id="codec-freq-slider" type="range" min="200" max="1400" value="600" />
+        </div>
+        <p id="codec-freq-readout" class="codec-body" style="font-family:var(--p31-font-mono,monospace)">600 Hz</p>
+        <div id="codec-larmor-hit" hidden>863 Hz — 31P Larmor (Earth field, order of magnitude)</div>
+        <p class="codec-body">Around <strong class="codec-green">863 Hz</strong> you hit the Larmor frequency associated with phosphorus-31 in Earth’s field—used here as the canonical teaching anchor (order of magnitude; not a medical device readout).</p>
+        <p class="codec-body"><button type="button" class="codec-btn" id="codec-larmor-play">Play 863 Hz for one second</button> <span class="p31-muted" style="font-size:0.8rem">(tap only—no autoplay)</span></p>
+        <p id="codec-constants-hz" class="codec-body" style="font-size:0.8rem"></p>
+        <p class="codec-foot">Ko-fi targets and heartbeat metaphors in the repo echo this frequency on purpose.</p>
+      </div>
+    </section>
+
+    <section class="codec-room" id="room-molecule" data-pl-room="4">
+      <div class="codec-room__inner">
+        <h2>Room 4 · The molecule</h2>
+        <p class="codec-body">Matthew Fisher (UC Santa Barbara) published a <strong>hypothesis</strong>: Posner clusters—Ca₉(PO₄)₆—might participate in protected quantum dynamics relevant to cognition. The idea is debated; the geometry is still a useful map.</p>
+        <div id="codec-mol-stage" class="codec-interactive" style="max-width:240px;cursor:grab;touch-action:none">
+          <svg viewBox="0 0 200 140" width="200" height="140" aria-label="Schematic Posner cluster — not to scale">
+            <g data-role="mol-spin" transform="rotate(0 100 70)">
+              <g fill="rgba(77,184,168,0.25)" stroke="#4db8a8" stroke-width="1">
+                <circle cx="100" cy="38" r="10"/><circle cx="130" cy="55" r="10"/><circle cx="118" cy="88" r="10"/><circle cx="82" cy="88" r="10"/><circle cx="70" cy="55" r="10"/><circle cx="145" cy="78" r="10"/><circle cx="55" cy="78" r="10"/><circle cx="100" cy="105" r="10"/>
+              </g>
+              <circle cx="100" cy="70" r="6" fill="#6ee7b7" />
+              <path d="M100 64 L100 52 M96 70 L88 70" stroke="#6ee7b7" stroke-width="1.2" opacity="0.8" />
+              <text x="100" y="128" text-anchor="middle" fill="#6b7280" font-size="9">Schematic cage + P — rotate</text>
+            </g>
+          </svg>
+        </div>
+        <p class="codec-body">Whether or not every detail of Fisher’s picture holds, the <em>metaphor</em> matches the engineering: a calcium cage shields phosphate phosphorus from some environmental noise long enough for coherent dynamics to matter in models.</p>
+        <p class="codec-body"><strong>P31 Labs</strong> is named for the phosphorus nucleus. The operator is the phosphorus—reactive, essential, unstable alone. The organization, tooling, and mesh are the cage: infrastructure that keeps the signal from burning in open air.</p>
+        <p class="codec-foot">The name is not vanity—it is a compressed description.</p>
+      </div>
+    </section>
+
+    <section class="codec-room" id="room-spoon" data-pl-room="5">
+      <div class="codec-room__inner">
+        <h2>Room 5 · The spoon</h2>
+        <p class="codec-body">Christine Miserandino’s <strong>spoon theory</strong> (2003) names a budget: you wake with limited energy; each task spends spoons; when they are gone, they are gone.</p>
+        <div id="codec-spoons-row" class="codec-spoon-row" role="group" aria-label="Spoons remaining"></div>
+        <div id="codec-spoon-acts" class="codec-acts">
+          <button type="button" data-cost="1">Take medication — 1 spoon</button>
+          <button type="button" data-cost="2">Write an email — 2 spoons</button>
+          <button type="button" data-cost="3">Process a hostile email — 3 spoons</button>
+          <button type="button" data-cost="5">Attend a hearing — 5 spoons</button>
+        </div>
+        <p class="codec-row">
+          <button type="button" class="codec-btn" id="codec-spoon-refill">Refill day (12 spoons)</button>
+          <button type="button" class="codec-btn" id="codec-spoon-day">Hard day (5 spoons)</button>
         </p>
-        <div class="pl-toplinks" role="navigation" aria-label="Local tools">
+        <p class="codec-body">With AuDHD and chronic illness, the count moves. Some days twelve spoons; some days five; some days three—and the hearing still costs five. The disability is partly the arithmetic: choosing what you can afford.</p>
+        <p class="codec-body">P31’s agent crew and instrumentation are aimed at <strong>measuring and scheduling against that budget</strong> so the operator is not re-doing the same subtraction in every doorway.</p>
+        <p class="codec-foot">Cognitive prosthetic: a calculator for a math problem you must solve every day.</p>
+      </div>
+    </section>
+
+    <section class="codec-room" id="room-serial" data-pl-room="6">
+      <div class="codec-room__inner">
+        <h2>Room 6 · The serialization bottleneck</h2>
+        <p class="codec-body">The operator’s cognition can run richly in parallel—patterns, isomorphisms, geometry—<strong>all at once</strong>. Speech and typing are serial: one token after another. The mesh does not fit down the pipe unchanged.</p>
+        <div class="codec-serial">
+          <div class="codec-serial-panel" id="codec-serial-mesh"><strong>Parallel</strong> Many simultaneous links (lossless in the head, lossy on the wire).</div>
+          <div class="codec-serial-panel" id="codec-serial-pipe"><strong>Serial</strong> One lane. Queue, drop, reorder.<div class="codec-dots" aria-hidden="true"></div></div>
+        </div>
+        <p class="codec-body"><button type="button" class="codec-btn" id="codec-serial-run" aria-pressed="false">Toggle: AI widens the pipe (metaphor)</button></p>
+        <p class="codec-body">What sounds “tangential” can be <strong>packet loss on the serialization layer</strong>—not wrong ideas. Trusted AI can translate a dense brain dump into serial prose. The Cognitive Passport’s <code class="codec-teal">serialization_profile</code> asks readers to expect richer internals than the voice implies.</p>
+      </div>
+    </section>
+
+    <section class="codec-room" id="room-gray" data-pl-room="7">
+      <div class="codec-room__inner">
+        <h2>Room 7 · Gray Rock</h2>
+        <p class="codec-body">Most consumer software is built on <strong>manufactured urgency</strong>: badges, streaks, red dots. For AuDHD, each ping is an interrupt; interrupts collapse the current stack and spend spoons to rebuild.</p>
+        <div class="codec-gray-grid">
+          <div class="codec-gray-box codec-gray-loud">
+            <span class="badge" aria-hidden="true">3</span> <strong>Noisy dashboard</strong>
+            <div style="margin-top:0.5rem">Welcome back! 5 tasks due! Bell animating!</div>
+          </div>
+          <div class="codec-gray-box codec-gray-quiet" id="codec-gray-quiet">
+            <strong>P31-style surface</strong>
+            <div data-expand>Spoons: <span class="codec-teal">7</span> <span class="p31-muted">(hover)</span></div>
+            <div data-expand>Q-factor / mesh ledger…</div>
+            <div data-expand>Next medication window…</div>
+            <p class="p31-muted" style="margin:0.5rem 0 0;font-size:0.7rem">Quiet until curiosity opens a row.</p>
+          </div>
+        </div>
+        <p class="codec-body">Gray Rock (from abuse-survival language: become boring to what feeds on reactivity) maps to UI: <strong>no motion, color, or sound until you reach</strong>. The tool does not chase you across the room.</p>
+        <p class="codec-foot">For a judge or co-parent: stillness here is not neglect—it is <strong>accommodation architecture</strong> so messages can land without weaponizing the notification channel.</p>
+      </div>
+    </section>
+
+    <section class="codec-room" id="room-graph" data-pl-room="8">
+      <div class="codec-room__inner">
+        <h2>Room 8 · The complete graph</h2>
+        <svg class="codec-final-tetra" viewBox="0 0 200 170" width="280" height="238" aria-hidden="true">
+          <line x1="100" y1="28" x2="44" y2="118" stroke="#4db8a8" stroke-width="1.4" />
+          <line x1="100" y1="28" x2="156" y2="118" stroke="#4db8a8" stroke-width="1.4" />
+          <line x1="100" y1="28" x2="100" y2="142" stroke="#4db8a8" stroke-width="1.4" />
+          <line x1="44" y1="118" x2="156" y2="118" stroke="#4db8a8" stroke-width="1.4" />
+          <line x1="44" y1="118" x2="100" y2="142" stroke="#4db8a8" stroke-width="1.4" />
+          <line x1="156" y1="118" x2="100" y2="142" stroke="#4db8a8" stroke-width="1.4" />
+          <circle cx="100" cy="28" r="5" fill="#6ee7b7" /><circle cx="44" cy="118" r="4" fill="#4db8a8" /><circle cx="156" cy="118" r="4" fill="#4db8a8" /><circle cx="100" cy="142" r="4" fill="#4db8a8" />
+        </svg>
+        <pre class="codec-graph-pre" aria-label="Concept tetrahedron">        Geometry
+       /   |   \
+      /    |    \
+  Frequency-+--Biology
+      \    |    /
+       \   |   /
+      Technology</pre>
+        <p class="codec-body">The tetrahedron is not only a logo. It is the <strong>compression format</strong> for four commitments that must stay coupled: geometry (rigidity, K₄), frequency (31P anchor), biology (Posner metaphor, spoons, calcium), technology (edge tools, agents, Gray Rock interfaces).</p>
+        <p class="codec-body">Six edges, four vertices—the minimum complete structure in this telling. Geometry ↔ frequency (precession), geometry ↔ biology (cage), geometry ↔ technology (mesh), frequency ↔ biology (body), frequency ↔ technology (heartbeat), biology ↔ technology (prosthetic).</p>
+        <p class="codec-body" style="margin-top:1.5rem;font-size:1.05rem;color:var(--p31-cloud)"><strong>This is P31.</strong></p>
+        <p class="codec-outro">If you understood all of this, you now have the context—and with the right context, the things this project builds follow.</p>
+        <p class="codec-outro">If you did not follow every step, that is all right too. <strong>The shapes still hold</strong> whether or not you see them.</p>
+        <p class="codec-body p31-muted" style="font-size:0.85rem;margin-top:1.5rem">S.J. or W.J. at twelve: the names on the hubs are not mythology pulled from air—they are readings of physics and graphs, then built as infrastructure. A family-court reader: Gray Rock is how attention is protected so bonding work can be real without feeding the interrupt economy.</p>
+        <div class="codec-toplinks">
+          <a href="labs.html">Curriculum labs (gated XP)</a>
           <a href="../../soup.html">C.A.R.S.</a>
-          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
           <a href="../doc-library/index.html">Document library</a>
-          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
-          <a href="../../andromeda/04_SOFTWARE/p31ca/public/k4market.html" title="Needs andromeda checkout">K4 market</a>
-          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
-          <a href="../../p31-personal-howto.html">How-to (UI)</a>
-          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
-          <a href="../PLAN-BONDING-SOUP-WHEN-SCALE.md">When-scale plan</a>
-          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
-          <a href="http://127.0.0.1:3131/" title="npm run command-center">Command center</a>
-          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
-          <a href="../P31-DEPLOY-CANON.md" title="npm run connection — deploy · ecosystem · env">CONNECTION</a>
-          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
-          <a href="../../P31-ROOT-MAP.md">P31-ROOT-MAP</a>
+          <a href="../../poets-room.html">Poets room</a>
+          <a href="../../cognitive-passport/index.html">Cognitive Passport</a>
+          <a href="https://p31ca.org/connect.html" rel="noopener">Connect (K₄ navigator)</a>
         </div>
       </div>
-      <div class="pl-stats" aria-label="Progress">
-        <div>Progress <span id="pl-xp">0</span> <span class="xp">XP</span></div>
-        <div class="pl-pbar" role="progressbar" id="pl-progress" aria-label="Units completed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-          <div class="pl-pbar__fill" id="pl-progress-fill" style="width:0%"></div>
-        </div>
-        <button type="button" class="pl-btn" id="pl-reset" style="margin-top:0.5rem">Reset progress</button>
-      </div>
-    </header>
-    <div class="pl-grid">
-      <aside class="pl-aside" aria-label="Curriculum">
-        <h2>Units</h2>
-        <div id="pl-track"></div>
-      </aside>
-      <main class="pl-main" id="pl-main">
-        <div class="pl-ribbon"><span>schema</span> p31.physicsLearn/1.0.0 <span>·</span> <span>storage</span> localStorage</div>
-        <p class="pl-ribbon" id="pl-stage" style="margin:0 0 0.5rem"></p>
-        <h2 class="pl-h2" id="pl-title">—</h2>
-        <div class="pl-theory" id="pl-theory"></div>
-        <div id="pl-lab" class="pl-lab-host"></div>
-        <div class="pl-check" id="pl-check"></div>
-      </main>
-    </div>
-  </div>
-  <div class="pl-toast" id="pl-toast" role="status" aria-live="polite" hidden></div>
+    </section>
+  </main>
 </body>
 </html>

@@ -250,6 +250,25 @@ function handleClientMessage(ws, message, clientData) {
   try { data = JSON.parse(message); } catch { return; }
 
   const room = clientData.room;
+  if (data.type === 'labTelemetry') {
+    const eventEntry = {
+      id: `lab_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+      type: 'labTelemetry',
+      actorId: clientData.id,
+      message: typeof data.message === 'string' ? data.message.slice(0, 240) : '',
+      payload: {
+        q: typeof data.q === 'number' && Number.isFinite(data.q) ? Math.max(0, Math.min(1, data.q)) : null,
+        v: typeof data.v === 'number' && Number.isFinite(data.v) ? Math.max(0, Math.min(100, data.v)) : null,
+        btn: data.btn != null ? String(data.btn).slice(0, 48) : null,
+        source: typeof data.source === 'string' ? data.source.slice(0, 48) : 'sovereign-lab',
+      },
+      timestamp: Date.now(),
+    };
+    appendEventForRoom(room, eventEntry);
+    broadcastEventLog(room);
+    return;
+  }
+
   if (data.type === 'playerState' && room !== MOCK_ROOM) {
     if (!familyPlayerStates.has(room)) familyPlayerStates.set(room, new Map());
     const raw = Array.isArray(data.molecules) ? data.molecules : [];

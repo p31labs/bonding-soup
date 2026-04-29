@@ -6,7 +6,7 @@
 
 ## THE ARC IN ONE SENTENCE
 
-What started as "build a digital geodesic dome fortress" is now a fully incorporated Georgia nonprofit, a shipped product running live, a complete four-paper research series, a Cloudflare production fleet, an active grant pipeline, and a legal defense that survived a contempt hearing — all built by one AuDHD engineer in 74 days.
+What started as "build a digital geodesic dome fortress" is now a fully incorporated Georgia nonprofit, a shipped product running live, a **22-publication** Zenodo research program (20 series papers I–XX plus 2 standalone analyses), a Cloudflare production fleet, an active grant pipeline, and a legal defense that survived a contempt hearing — all built by one AuDHD engineer in 74 days.
 
 ---
 
@@ -19,7 +19,7 @@ What started as "build a digital geodesic dome fortress" is now a fully incorpor
 | Entity bridge | HCB fiscal sponsorship | ⚠️ **PIVOT** — HCB unresponsive (ref 4XDUXX); pivoting to Stripe direct via api.phosphorus31.org CF Worker |
 | Domain registrar | Cloudflare | ✅ Live — p31ca.org + phosphorus31.org both active |
 | Website tech | Single-file → evolved | ✅ **EXPANDED** — Dual-site: phosphorus31.org (Astro 5 static) + p31ca.org (React PWA) |
-| IP protection sequence | Zenodo timestamps + defensive pub | ✅ **5 Zenodo publications** with DOIs; defensive pub on Internet Archive Feb 25, 2026 |
+| IP protection sequence | Zenodo timestamps + defensive pub | ✅ **22 Zenodo publications** with DOIs (see `p31-constants.json` → `research`, `docs/P31-ZENODO-PUBLICATION-REGISTRY.md`); defensive pub on Internet Archive Feb 25, 2026 |
 | Visibility model | Strategic — public face, private guts | ✅ Holding |
 
 ---
@@ -48,17 +48,18 @@ What started as "build a digital geodesic dome fortress" is now a fully incorpor
 
 ### Research Published
 
-| Paper | Date | DOI/Location |
-|-------|------|------|
-| Paper I | Feb 25, 2026 | Internet Archive defensive publication |
-| Paper II | Earlier | Genesis Whitepaper (Zenodo) |
-| Paper III | Earlier | Consciousness Memory Architecture (Zenodo) |
-| **Paper IV** | **April 10, 2026** | "Universal Bridge at the Phase Transition" — DOI: 10.5281/zenodo.19503542 |
+**ORCID:** 0009-0002-2492-9079 · **Total Zenodo DOIs:** **22** (P31 Research Series **I–XX** = 20; **2** standalone legal/public-interest papers). Canonical list: `p31-constants.json` → `research.papers`, `docs/P31-ZENODO-PUBLICATION-REGISTRY.md`.
 
-**P31 Research Series: COMPLETE at 4 papers.**  
-ORCID: 0009-0002-2492-9079
+| Group | Dates | DOI / note |
+|-------|-------|------------|
+| Paper I (Tetrahedron / defensive) | 2026-01-26 | 10.5281/zenodo.19004485 |
+| Genesis (II), Consciousness (III), Universal Bridge (IV) | 2026-04-04 — 2026-04-10 | DOIs in constants |
+| Papers V–XX (batch) | 2026-04-26 | DOIs **19782969**–**19783001** band per constants |
+| Standalone GA DR analyses | 2026-04-05 | 10.5281/zenodo.19432309, 10.5281/zenodo.19432313 |
 
-**Paper XII (Sovereign Stack):** Gated. Zenodo-ready (11pp, 17 refs, triple-verified). Held.
+**P31 Research Series:** **20** papers (**I–XX**), all on Zenodo.
+
+**Paper XII (Sovereign Stack):** **Published** — DOI **10.5281/zenodo.19782969** (2026-04-26).
 
 ### Organizational
 
@@ -189,7 +190,7 @@ ORCID: 0009-0002-2492-9079
 
 ## THE UNIFIED NARRATIVE — UPDATED
 
-*"I am a 40-year-old AuDHD engineer with 16 years of federal service. My body can't regulate calcium. These conditions ended my career. In 74 days since that first session, I have: incorporated a nonprofit, shipped a game to my kids on my son's birthday, published a four-paper research series, deployed a 10-worker Cloudflare production fleet, survived a contempt hearing, and kept the grid alive on SNAP. P31 is the Posner molecule — it protects what's reactive and essential. The disability was never the obstacle. It was always the engine."*
+*"I am a 40-year-old AuDHD engineer with 16 years of federal service. My body can't regulate calcium. These conditions ended my career. In 74 days since that first session, I have: incorporated a nonprofit, shipped a game to my kids on my son's birthday, published a **22-deposit** Zenodo research program (series I–XX plus standalone analyses), deployed a 10-worker Cloudflare production fleet, survived a contempt hearing, and kept the grid alive on SNAP. P31 is the Posner molecule — it protects what's reactive and essential. The disability was never the obstacle. It was always the engine."*
 
 ---
 
@@ -209,7 +210,7 @@ ORCID: 0009-0002-2492-9079
 
 - O.C.G.A. §§ 24-9-901(b)(9), 24-9-902(11), 24-8-803(6), 24-7-702 (Daubert)
 - Server-side SHA-256 + forensic metadata
-- 5 Zenodo publications with DOIs
+- 22 Zenodo publications with DOIs
 - Every BONDING session: timestamped parental engagement log
 
 ---

@@ -38,6 +38,11 @@ const listenHost =
     ? "0.0.0.0"
     : process.env.P31_CMD_CENTER_HOST || "127.0.0.1";
 const badgeHost = listenHost === "0.0.0.0" ? "LAN" : listenHost;
+/** Origin only (no path). Server-side proxy for UI — avoids browser CORS to SIMPLEX Worker. */
+const simplexOrigin = String(process.env.P31_SIMPLEX_ORIGIN || "")
+  .trim()
+  .replace(/\/$/, "");
+const cmdCenterLan = process.env.P31_CMD_CENTER_LAN === "1";
 
 function getLanIPv4() {
   const nets = os.networkInterfaces();
@@ -221,10 +226,25 @@ function buildPageHtml() {
   <link rel="stylesheet" href="/assets/p31-style.css" />
   <link rel="stylesheet" href="/assets/p31-responsive-surface.css" />
   <link rel="stylesheet" href="/assets/command-center.css" />
+  <script>
+(function () {
+  var r = document.documentElement;
+  if (/[?&]alive=1(?:&|$)/.test(location.search)) {
+    r.setAttribute("data-cc-alive-bypass", "1");
+    return;
+  }
+  r.classList.add("cc-gray-rock");
+  function wake() {
+    r.classList.remove("cc-gray-rock");
+  }
+  document.addEventListener("pointerdown", wake, { once: true, capture: true });
+  document.addEventListener("keydown", wake, { once: true, capture: true });
+})();
+  </script>
   <script type="application/json" id="cc-boot">${bootJson}</script>
   <script src="/assets/command-center.js" defer></script>
 </head>
-<body class="cc-v2" data-cc-version="${CC_VERSION}">
+<body class="cc-v2" data-cc-gate-armed="0" data-cc-version="${CC_VERSION}"${cmdCenterLan ? ' data-cc-lan="1"' : ""}>
   <a class="cc-skip-link" href="#cc-main">Skip to actions</a>
 
   <header class="cc-header">
@@ -261,6 +281,18 @@ function buildPageHtml() {
         </div>
         <p class="cc-safety__hint">LAN bind (<code>P31_CMD_CENTER_LAN=1</code>) exposes the same whitelist to your network — trusted Wi‑Fi only.</p>
       </section>
+
+      <div
+        id="cc-simplex-strip"
+        class="cc-simplex-strip"
+        data-loading="1"
+        role="status"
+        aria-live="polite"
+        title="SIMPLEX v7 via local proxy — set P31_SIMPLEX_ORIGIN to your Worker URL (no trailing slash)"
+      >
+        <span class="cc-simplex-strip__spin" aria-hidden="true"></span>
+        <span class="cc-simplex-strip__text cc-mono">SIMPLEX · loading…</span>
+      </div>
 
       <section class="cc-essentials" aria-labelledby="cc-ess-heading">
         <h2 id="cc-ess-heading" class="cc-section-heading">Essentials</h2>
@@ -332,6 +364,59 @@ const manifestBody = buildManifestJson();
 const p31StylePath = path.join(repoRoot, "cognitive-passport", "p31-style.css");
 const p31ResponsiveSurfacePath = path.join(repoRoot, "cognitive-passport", "p31-responsive-surface.css");
 
+function sendJson(res, status, obj) {
+  res.writeHead(status, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" });
+  res.end(JSON.stringify(obj));
+}
+
+/**
+ * Browser cannot call SIMPLEX Worker from arbitrary origins (Worker CORS allowlist).
+ * Local command center proxies GET /api/state server-side when P31_SIMPLEX_ORIGIN is set.
+ */
+async function proxySimplexState(res) {
+  try {
+    if (!simplexOrigin) {
+      sendJson(res, 200, { ok: false, reason: "not_configured" });
+      return;
+    }
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 4500);
+    let upstream;
+    try {
+      upstream = await fetch(simplexOrigin + "/api/state", {
+        signal: ctrl.signal,
+        headers: { Accept: "application/json" },
+      });
+    } finally {
+      clearTimeout(t);
+    }
+    const text = await upstream.text();
+    if (!upstream.ok) {
+      sendJson(res, 200, { ok: false, reason: "upstream_http", status: upstream.status });
+      return;
+    }
+    let body;
+    try {
+      body = JSON.parse(text);
+    } catch {
+      sendJson(res, 200, { ok: false, reason: "upstream_bad_json" });
+      return;
+    }
+    sendJson(res, 200, {
+      ok: true,
+      state: body.state ?? null,
+      health: body.health ?? null,
+      briefing: body.briefing ?? null,
+    });
+  } catch (e) {
+    sendJson(res, 200, {
+      ok: false,
+      reason: "unreachable",
+      detail: String(e && e.message ? e.message : e),
+    });
+  }
+}
+
 function sendAsset(res, absPath, contentType) {
   fs.readFile(absPath, (err, buf) => {
     if (err) {
@@ -361,6 +446,12 @@ const server = http.createServer((req, res) => {
         actions: Object.keys(ACTIONS).length,
       })
     );
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/api/simplex-state") {
+    proxySimplexState(res).catch(() => {
+      sendJson(res, 200, { ok: false, reason: "unreachable" });
+    });
     return;
   }
   if (req.method === "GET" && assetBase === "/assets/p31-responsive-surface.css") {

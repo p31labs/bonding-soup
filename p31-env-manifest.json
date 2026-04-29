@@ -66,6 +66,13 @@
       "refs": ["scripts/command-center/server-smoke.mjs"]
     },
     {
+      "name": "P31_SIMPLEX_ORIGIN",
+      "tier": "ops",
+      "risk": "low",
+      "description": "SIMPLEX v7 Worker origin (no path, no trailing slash). Enables command-center /api/simplex-state proxy + live status strip.",
+      "refs": ["scripts/p31-local-command-center.mjs", "scripts/command-center/command-center.js"]
+    },
+    {
       "name": "P31_CONVERGE_REPORT",
       "tier": "ops",
       "risk": "low",

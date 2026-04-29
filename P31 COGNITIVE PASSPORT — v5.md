@@ -96,7 +96,7 @@
 | :---- | :---- | :---- |
 | EPCP Command Center | Edge-native Zero Trust Control Panel | **DEPLOYED 4/24/2026** — 26 nodes, D1 Audit, R2 Forensics. |
 | BONDING | Chemistry web game (React \+ R3F \+ Zustand \+ Vitest) | **SHIPPED 3/10/2026** at bonding.p31ca.org — 424 tests / 32 suites |
-| P31 Research Series | Zenodo peer-style papers | **4 PAPERS PUBLISHED** (DOIs mapped) |
+| P31 Research Series | Zenodo peer-style papers | **22 ZENODO PUBLICATIONS** — series **I–XX** (20) + **2** standalone; DOIs in **`p31-constants.json`** → `research`; **`docs/P31-ZENODO-PUBLICATION-REGISTRY.md`** |
 | Enterprise Agentic RAG | Outbound Sales Asset | **LIVE** at p31ca.org/at/brief.md. Ready for Fortune 500 CIOs. |
 | Everything Development Environment (EDE) | Zero-dependency cognitive prosthetic IDE | Deployed at p31ca.org/ede |
 

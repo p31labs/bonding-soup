@@ -259,7 +259,7 @@ The filesystem IS the proof:
 - `/hardware/calcium/` is WHY the entity exists (medical necessity)
 - `/kernel/patterns/` is HOW a motor rewinder became a quantum theorist
 - `/connections/children/` is WHO it's all for — and the bridge is now live
-- `/builds/` is WHAT came out — a shipped game, four papers, an incorporated nonprofit
+- `/builds/` is WHAT came out — a shipped game, the Zenodo research program (**22** DOIs in `p31-constants.json`), an incorporated nonprofit
 - `/legal/` is the DEFENSE of all of the above — and it held on April 16
 - `/grants/` is the FUEL — first $1K in deliberation
 - `/upcoming/` is the NEXT FOLD

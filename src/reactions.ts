@@ -152,7 +152,12 @@ export class ReactionEngine {
     // Bonus for complementary emotional profiles (personality synergy)
     const personalityBonus = this.getPersonalitySynergy(atom1, atom2);
 
-    const probability = (compatibility + personalityBonus) * this.reactionRates[ReactionType.SYNTHESIS];
+    let probability = (compatibility + personalityBonus) * this.reactionRates[ReactionType.SYNTHESIS];
+    const isLovPair =
+      (atom1.element === 'Li' && atom2.element === 'V') || (atom1.element === 'V' && atom2.element === 'Li');
+    if (isLovPair) {
+      probability = Math.max(probability, 0.62);
+    }
 
     // Create product molecule with inherited traits
     const product = this.createSynthesisProduct(atom1, atom2);
@@ -220,6 +225,9 @@ export class ReactionEngine {
     if ((elem1 === 'Ca' && elem2 === 'O') || (elem1 === 'O' && elem2 === 'Ca')) {
       return 'CaO'; // Calcium oxide
     }
+    if ((elem1 === 'Li' && elem2 === 'V') || (elem1 === 'V' && elem2 === 'Li')) {
+      return 'LOV'; // Easter egg: Li–O–V letterplay (operator note for S.J. / W.J.); not a real stoichiometry claim
+    }
     // Default compound naming
     return `${elem1}${elem2}`;
   }
@@ -233,7 +241,8 @@ export class ReactionEngine {
 
     // Simple synergy based on element complementarity
     const complementaryPairs = [
-      ['H', 'O'], ['H', 'N'], ['C', 'O'], ['Ca', 'O']
+      ['H', 'O'], ['H', 'N'], ['C', 'O'], ['Ca', 'O'],
+      ['Li', 'V']
     ];
 
     const isComplementary = complementaryPairs.some(([a, b]) =>
@@ -507,7 +516,8 @@ export class ReactionEngine {
     // Simplified bonding rules
     const compatiblePairs = [
       ['H', 'O'], ['H', 'C'], ['C', 'O'], ['C', 'N'],
-      ['N', 'H'], ['O', 'Na'], ['Ca', 'O'], ['P', 'O']
+      ['N', 'H'], ['O', 'Na'], ['Ca', 'O'], ['P', 'O'],
+      ['Li', 'V']
     ];
 
     return compatiblePairs.some(([a, b]) =>
@@ -518,7 +528,8 @@ export class ReactionEngine {
 
   private getValenceElectrons(element: string): number {
     const valenceMap: { [key: string]: number } = {
-      'H': 1, 'C': 4, 'N': 3, 'O': 2, 'P': 3, 'Ca': 2, 'Na': 1, 'Cl': 1
+      'H': 1, 'C': 4, 'N': 3, 'O': 2, 'P': 3, 'Ca': 2, 'Na': 1, 'Cl': 1,
+      'Li': 1, 'V': 5
     };
     return valenceMap[element] || 1;
   }

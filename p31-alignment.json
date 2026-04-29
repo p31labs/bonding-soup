@@ -181,6 +181,21 @@
       "role": "@p31/mesh — mesh fleet probe (personal+cage+hubs), agent client, `src/browser.mjs` (no fs); `scripts/verify-mesh-live.mjs`, `p31-mesh` / `p31 mesh` CLI"
     },
     {
+      "id": "mesh-architecture-canon-md",
+      "path": "docs/MESH-ARCHITECTURE-CANON.md",
+      "role": "Grant/README/regulator-safe mesh substrate canon — shipped vs next vs doctrine; verify:mesh-canon"
+    },
+    {
+      "id": "p31-zenodo-publication-registry-md",
+      "path": "docs/P31-ZENODO-PUBLICATION-REGISTRY.md",
+      "role": "Human-readable Zenodo inventory; pairs with p31-constants.json research.* counts and DOIs"
+    },
+    {
+      "id": "morning-operator-arc-md",
+      "path": "docs/MORNING-OPERATOR-ARC.md",
+      "role": "Operator morning experience arc — lived-time Gray Rock→Alive; shipped/partial/vision ladder vs simplex-v7 + HA assembly; not a deploy contract"
+    },
+    {
       "id": "p31ca-worker-allowlist",
       "path": "andromeda/04_SOFTWARE/p31ca/security/worker-allowlist.json",
       "role": "p31.workerAllowlist/1.0.0 — named Workers + paths; inventory compares to all `wrangler.toml` under andromeda/04_SOFTWARE",
@@ -199,7 +214,17 @@
     {
       "id": "physics-learn-shell",
       "path": "docs/physics-learn/index.html",
-      "role": "Progressive physics labs static shell; paired with physics-learn-engine"
+      "role": "Physics Learn shape codec — eight full-viewport rooms; paired with physics-learn-codec-js"
+    },
+    {
+      "id": "physics-learn-codec-js",
+      "path": "docs/physics-learn/codec-rooms.js",
+      "role": "Room interactives (rigidity, tetra, Larmor slider + tap-to-play, spoons, serialization, Gray Rock); honors prefers-reduced-motion"
+    },
+    {
+      "id": "physics-learn-labs-shell",
+      "path": "docs/physics-learn/labs.html",
+      "role": "Gated curriculum track (XP, units); paired with physics-learn-engine"
     },
     {
       "id": "physics-learn-engine",
@@ -278,6 +303,19 @@
       "note": "Declarative invariants: required paths, mesh + org keys, https worker URLs, no credential-like substrings in policy files"
     },
     {
+      "id": "mesh-architecture-canon-suite",
+      "from": [
+        "docs/MESH-ARCHITECTURE-CANON.md",
+        "andromeda/04_SOFTWARE/packages/k4-mesh-core/scopes.js",
+        "andromeda/04_SOFTWARE/packages/k4-mesh-core/personal-handlers.js",
+        "andromeda/04_SOFTWARE/k4-cage/src/index.js"
+      ],
+      "to": ["(verify only)"],
+      "apply": "Edit docs/MESH-ARCHITECTURE-CANON.md when shipped vs next vs doctrine boundaries change; bump Shipped text when k4-mesh-core MESH_PAYLOAD_VERSION or vertex sets change.",
+      "verify": "npm run verify:mesh-canon",
+      "note": "Doc anchors + code invariants (partial clone: doc-only when andromeda/ missing)"
+    },
+    {
       "id": "p31-env-catalog",
       "from": ["p31-env-manifest.json"],
       "to": ["(verify only)"],
@@ -331,11 +369,16 @@
     },
     {
       "id": "fleet-to-portal-html",
-      "from": ["p31-live-fleet.json", "p31-ecosystem.json", "p31-constants.json"],
+      "from": [
+        "p31-live-fleet.json",
+        "p31-ecosystem.json",
+        "p31-constants.json",
+        "optional: /tmp/p31_glass_report.json or P31_GLASS_REPORT after npm run ecosystem:glass — merged into ATC colors at build time"
+      ],
       "to": ["fleet-portal.html", "andromeda/04_SOFTWARE/p31ca/public/fleet-portal.html"],
-      "apply": "npm run build:fleet-portal; npm run polish (rewrites CSS href for hub copy)",
-      "verify": "verify:facts pathsMustExist fleet-portal.html + build script; optional manual open",
-      "note": "One-page URL table (every production link). Different product from fleet-agents room (Workers/bots/agents UX) — see derivation live-fleet-to-fleet-entities-hub."
+      "apply": "npm run build:fleet-portal (or npm run build:fleet-portal:live after glass); npm run polish copies → hub public with CSS rewrites",
+      "verify": "verify:fleet-portal + verify:facts pathsMustExist fleet-portal.html + scripts/build-fleet-portal.mjs",
+      "note": "ATC radar + Gray Rock shell + optional glass-merge blip colors. Different product from fleet-agents room — see live-fleet-to-fleet-entities-hub."
     },
     {
       "id": "live-fleet-to-fleet-entities-hub",
@@ -395,11 +438,40 @@
     },
     {
       "id": "soup-to-bonding",
-      "from": ["soup.html", "soup-quantum.css", "p31-constants.json", "dist/"],
+      "from": [
+        "soup.html",
+        "soup-quantum.css",
+        "p31-constants.json",
+        "dist/",
+        "p31-sovereign-lab.html",
+        "p31-slicer.html",
+        "cognitive-passport/p31-responsive-surface.css",
+        "cognitive-passport/lib/p31-subject-prefs.js",
+        "p31-bonding.webmanifest",
+        "p31-bonding-icons/p31-icon.svg",
+        "design-assets/stl/"
+      ],
       "to": ["andromeda/04_SOFTWARE/bonding/public/soup/"],
       "apply": "npm run sync:soup-bonding",
       "verify": "implicit in bonding build; run hub build after sync when shipping",
-      "note": "scripts/sync-soup-to-bonding.mjs — bonding.p31ca.org/soup"
+      "note": "scripts/sync-soup-to-bonding.mjs — bonding.p31ca.org/soup + Sovereign Lab + slicer + STL assets"
+    },
+    {
+      "id": "sovereign-pages-to-p31ca",
+      "from": [
+        "p31-sovereign-lab.html",
+        "p31-slicer.html",
+        "design-assets/stl/",
+        "scripts/sync-sovereign-pages-to-p31ca.mjs"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/p31-sovereign-lab.html",
+        "andromeda/04_SOFTWARE/p31ca/public/p31-slicer.html",
+        "andromeda/04_SOFTWARE/p31ca/public/design-assets/stl/"
+      ],
+      "apply": "npm run sync:sovereign-p31ca",
+      "verify": "npm run verify:ground-truth (p31ca package; edgeRedirects + routes)",
+      "note": "Hub static mirror + short /lab and /slicer; ground-truth routes.sovereignLab + routes.browserSlicer"
     },
     {
       "id": "cars-wire-triple-lock",
@@ -453,12 +525,13 @@
       "id": "hub-landing-data",
       "from": [
         "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs",
-        "andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs"
+        "andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs",
+        "p31-constants.json"
       ],
       "to": ["andromeda/04_SOFTWARE/p31ca/src/data/hub-landing.json"],
-      "apply": "postinstall / p31ca: hub:build (scripts/hub/build-landing-data.mjs)",
+      "apply": "postinstall / p31ca: hub:build (scripts/hub/build-landing-data.mjs) — cockpit + prototypes from registry ids; `research[]` titles/DOIs from `p31-constants.json` → `research.papers` (fallback list in script if constants unreadable)",
       "verify": "p31ca prebuild: scripts/hub/verify.mjs",
-      "note": "Joint constraint: same id set in both from[] files. index.astro grid is data-driven. Spec: docs/P31-HUB-CARD-ECOSYSTEM.md"
+      "note": "Joint constraint: same id set in registry + hub-app-ids. Hub Whitepapers section (`research[]`) tracks home Zenodo registry (see docs/P31-ZENODO-PUBLICATION-REGISTRY.md). index.astro grid is data-driven. Spec: docs/P31-HUB-CARD-ECOSYSTEM.md"
     },
     {
       "id": "worker-spa-launch-triple",
@@ -667,6 +740,7 @@
       "verify:cognitive-passport-schema",
       "verify:cognitive-passport-profiles",
       "verify:constants",
+      "verify:mesh-canon",
       "verify:ecosystem",
         "verify:production-readiness",
       "verify:map-pipeline",
@@ -675,6 +749,8 @@
       "verify:command-center",
       "verify:p31ca-contracts",
       "verify:egg-hunt",
+      "verify:onboarding",
+      "verify:fleet-portal",
       "verify:cars-wire",
       "verify:poets-room",
       "build:doc-index",

@@ -14,6 +14,28 @@ Every P31 surface loads in Gray Rock state: minimal, calm, zero demands on atten
 
 Neurodivergent processing (AuDHD in particular) treats visual noise as cognitive load. A surface that presents everything simultaneously creates a processing wall — the user cannot begin because beginning requires parsing the whole. Gray Rock removes the parse step. One thing to look at. One action available. Everything else is reachable but not present.
 
+### 1.1 Origin (psychology → interfaces)
+
+Gray Rock is borrowed, with consent and care, from abuse-recovery language: when you cannot leave a high-demand relationship, you become **boring on purpose** — flat affect, short answers, no hooks. P31 maps that onto **software as the demanding party**: badges, streaks, “you have 3 unread,” auto-play, infinite scroll, and manufactured urgency are attention-seeking behaviors. For an AuDHD operator, each interrupt is a **cognitive attack vector**; executive serialization makes recovery from context loss disproportionately expensive.
+
+**Design move:** the default relationship between surface and operator is **nothing happening**. The screen does not ask for attention, reward presence, or punish absence. It is present like furniture. **Only when the operator reaches** (pointer, keyboard, intentional scroll threshold, or explicit “show more”) does the interface spend kinetic energy — Layer 2.
+
+### 1.2 Three layers as physics (normative shorthand)
+
+| Layer | Name | Physics metaphor | What the operator sees |
+|-------|------|------------------|-------------------------|
+| 1 | **Gray Rock** | Potential energy — vector equilibrium at rest | Void `#05080c`, `cloud` / `muted` text, structural borders only, **no** teal / coral / phosphor / butter on first paint, **no** decorative motion or self-started animation |
+| 2 | **Alive** | Kinetic energy — jitterbug fold under applied force | Teal on safe exploration, coral on weight, phosphor on *confirmed* belonging / success — only after **operator-supplied** interaction |
+| 3 | **Personal** | Larmor-style resonance | Passport + `p31-subject-prefs` (contrast, density, motion, temperature) tune *how* information is rendered; audience matrix (Cognitive Passport) tunes *what* may be exported — same field, operator frequency |
+
+**Hard rule:** Layer 2 must **never** self-start (no timed hero reveals “for delight,” no load-in confetti, no autoplay audio). Exception path: **medical safety** (see §8) overrides Gray Rock.
+
+### 1.3 IRWE / reasonable accommodation (documentation string)
+
+Operators may cite this doctrine when describing workplace or benefits accommodations. Suggested log language (adapt with counsel as needed):
+
+> *P31 products implement a “Gray Rock” interaction model: the default interface state is low-stimulus, non-demanding, and does not initiate operator attention. This accommodates AuDHD-related executive dysfunction by reducing decision fatigue at load, lowering sensory load, and avoiding fawn-response triggers from engagement-style metrics. The model is documented in `docs/P31-DESIGN-DOCTRINE.md` (schema `p31.designDoctrine/1.0.0`) and implemented on shipped surfaces as verified in-repo.*
+
 ### Gray Rock visual rules
 
 - Background: `var(--p31-void)` only. No gradients, no patterns, no background images on load.
@@ -234,7 +256,56 @@ Every P31 surface uses ONE of three canonical layouts. Agents do not invent new 
 
 ---
 
-## 7. Verification
+## 7. Gray Rock test bypass — `?alive=1` (contract)
+
+Any surface that **withholds** content or chroma for Gray Rock MUST expose the same **deterministic** bypass for demos, screenshots, accessibility audits, and CI:
+
+```text
+https://…/surface?alive=1
+```
+
+**Rules**
+
+- Parse `location.search` for `[?&]alive=1(?:&|$)`; when present, **skip** Gray Rock withholding for that navigation (full palette and layout available without requiring a decoy interaction).
+- Do **not** use `alive=1` to bypass **security** gates (e.g. command-center automation whitelist still applies); it only skips **sensory / progressive-disclosure** withholding.
+- **C.A.R.S.** (`soup.html`): removes `soup-app--gray-rock` from `<html>` when the flag is set (reference implementation).
+
+Shipped / in-repo surfaces implementing this contract should be listed in **`p31-alignment.json`** or verified by the same release ladder as other static checks when a new surface adds Gray Rock.
+
+---
+
+## 8. Agent crew alignment (normative)
+
+Gray Rock is also an **agent behavior** default: systems write state, buffer messages, and compute syntheses **without** pushing unless the operator pulls or a documented safety exception fires.
+
+| Agent | Gray Rock default | Documented exception |
+|-------|--------------------|-------------------------|
+| **HERALD** | Triage buffers high-voltage comms; inbox stays inert until the operator opens it | Expand when policy requires |
+| **STEWARD** | Briefing lands in KV / static store; no proactive ping | Operator pulls via dome, command center, or device |
+| **ORACLE** | EOD synthesis stored; no outbound nag | Narrow medical / coherence exception per ops spec |
+| **MEDIC** | **Breaks** Gray Rock for **medical safety only** (missed critical medication, hypocalcemia risk, etc.) — haptic / light / TTS as prescribed | Never for engagement or “you haven’t logged spoons” |
+
+**Hierarchy:** Gray Rock is the rule; MEDIC (and other safety-critical paths) are **scoped exceptions** that prove the rule.
+
+---
+
+## 9. Cross-surface roll-out (living checklist)
+
+| Surface | Layer 1 goal | `?alive=1` | Notes |
+|---------|--------------|------------|--------|
+| **C.A.R.S.** (`soup.html`) | `soup-app--gray-rock` | Yes | Reference |
+| **Cognitive Passport** | `html.p31-gray-rock` | Yes | Generator cards + backdrop toned until wake |
+| **Local command center** | `html.cc-gray-rock` + withheld actions until gate armed | Yes | Essentials / sections hidden while **locked** |
+| **p31ca hub home** (`index.astro`) | `html.p31-hub-gray-rock` | Yes | Hero + mission only until wake; `#technical-hub-boundary` siblings collapsed; WebGL backdrop off; nav telemetry muted |
+| **Dome** (`dome-cockpit.ts`) | Gray Rock 3D until first input; spoons ≤ 3 keeps suppression; bloom off | Yes (`?alive=1`) | `body.dome-gray-rock` HUD damp in `dome.astro` |
+| **BONDING game shell** | Palette desaturate until first place | Planned | bonding.p31ca.org |
+| **phosphorus31.org** | Light-theme typographic first paint | Planned | Institutional |
+
+**Immediate engineering tasks:** first-paint audit (void, muted, no accent), `prefers-reduced-motion` on any timed motion, `?alive=1` on every surface that withholds. **Next sprint:** spoon-aware depth (e.g. CSS custom property from SIMPLEX snapshot), deeper dome / game integration.
+
+---
+
+## 10. Verification
 
 - `npm run verify:style-alignment` — checks about pages for token compliance
 - Visual: load any surface on Chromebook at `soup.html?perf=1` — if FPS drops below 30 during idle, the surface is too heavy (see **`docs/SOUP-PERF-BUDGET.md`**)

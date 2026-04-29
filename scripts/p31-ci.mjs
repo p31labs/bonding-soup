@@ -96,6 +96,8 @@ function main() {
       run("P31 constants vs ground-truth", "npm run verify:constants", root);
       run("p31ca contracts (ground-truth + synergetic)", "npm run verify:p31ca-contracts", root);
       run("quantum egg hunt (manifest + Larmor)", "npm run verify:egg-hunt", root);
+      run("planetary onboard (threshold HTML anchors)", "npm run verify:onboarding", root);
+      run("fleet portal (ATC + glass strip anchors)", "npm run verify:fleet-portal", root);
     }
   } else {
     console.log(

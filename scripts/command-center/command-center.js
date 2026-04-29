@@ -75,6 +75,7 @@
 
   function applyGateToButtons() {
     const armed = readGateState() === "armed";
+    document.body.setAttribute("data-cc-gate-armed", armed ? "1" : "0");
     const indicator = document.getElementById("cc-gate-indicator");
     const label = document.getElementById("cc-gate-label");
     const btnUnlock = document.getElementById("cc-gate-unlock");
@@ -170,11 +171,11 @@
       .then((r) => r.json())
       .then((j) => {
         out.textContent = (j.stderr || "") + (j.stdout || "") + (j.code ? "\n[exit " + j.code + "]" : "");
-        setTermStatus(j.code ? "exit " + j.code : "ok", j.code ? "bad" : "ok");
+        setTermStatus(j.code ? "failed" : "ok", j.code ? "bad" : "ok");
       })
       .catch((e) => {
         out.textContent = String(e);
-        setTermStatus("error", "bad");
+        setTermStatus("failed", "bad");
       })
       .finally(() => {
         applyGateToButtons();
@@ -257,7 +258,9 @@
 
       const sum = document.createElement("summary");
       sum.className = "cc-section-summary";
-      sum.textContent = sec.title;
+      const nActs = sec.ids && sec.ids.length ? sec.ids.length : 0;
+      sum.textContent =
+        nActs === 0 ? sec.title : sec.title + " (" + nActs + " action" + (nActs === 1 ? "" : "s") + ")";
       det.appendChild(sum);
 
       const inner = document.createElement("div");
@@ -337,7 +340,7 @@
         await navigator.clipboard.writeText(out.textContent || "");
         setTermStatus("copied", "ok");
       } catch {
-        setTermStatus("copy failed", "bad");
+        setTermStatus("failed", "bad");
       }
     });
     document.getElementById("cc-out-clear")?.addEventListener("click", () => {
@@ -364,6 +367,81 @@
     });
   }
 
+  /** Wall clock for FERS close — matches simplex-v7/src/lib/fers-countdown.ts */
+  const FERS_DEADLINE_MS = Date.parse("2026-09-30T21:00:00.000Z");
+  function fersDaysRemaining() {
+    return Math.ceil((FERS_DEADLINE_MS - Date.now()) / 86400000);
+  }
+
+  function renderSimplexStrip(payload) {
+    const wrap = document.getElementById("cc-simplex-strip");
+    if (!wrap) return;
+    const text = wrap.querySelector(".cc-simplex-strip__text");
+    const spin = wrap.querySelector(".cc-simplex-strip__spin");
+    wrap.removeAttribute("data-loading");
+    if (spin) spin.hidden = true;
+
+    if (!payload || payload.ok !== true || !payload.state || typeof payload.state !== "object") {
+      if (text) text.textContent = "SIMPLEX: offline (local-only mode)";
+      return;
+    }
+
+    const state = /** @type {Record<string, unknown>} */ (payload.state);
+    const health =
+      payload.health && typeof payload.health === "object"
+        ? /** @type {Record<string, unknown>} */ (payload.health)
+        : null;
+
+    const spoonsRaw = Number(state.current_spoons);
+    const maxRaw = Number(state.max_spoons);
+    const max = Number.isFinite(maxRaw) && maxRaw > 0 ? maxRaw : 12;
+    const spoons = Number.isFinite(spoonsRaw) ? spoonsRaw : NaN;
+    const qRaw = state.q_factor;
+    let q = "—";
+    if (typeof qRaw === "number" && Number.isFinite(qRaw)) q = qRaw.toFixed(2);
+    else if (typeof qRaw === "string" && qRaw.trim()) q = qRaw.trim();
+
+    const fers = fersDaysRemaining();
+    const src = String(state.sentinel_context_source || "—");
+
+    let agentsBit = "AGENTS: 11/11 ●";
+    if (health) {
+      const ah = Number(health.agents_healthy);
+      const at = Number(health.agents_total);
+      if (Number.isFinite(ah) && Number.isFinite(at) && at > 0) {
+        agentsBit = "AGENTS: " + ah + "/" + at + " ●";
+      }
+    }
+
+    if (text) {
+      text.textContent =
+        agentsBit +
+        " | SPOONS: " +
+        (Number.isFinite(spoons) ? String(spoons) : "—") +
+        "/" +
+        max +
+        " | Q: " +
+        q +
+        " | FERS: " +
+        fers +
+        "d | SENTINEL: " +
+        src;
+    }
+  }
+
+  async function loadSimplexStrip() {
+    const wrap = document.getElementById("cc-simplex-strip");
+    const text = wrap && wrap.querySelector(".cc-simplex-strip__text");
+    if (!wrap || !text) return;
+    try {
+      const r = await fetch("/api/simplex-state", { cache: "no-store" });
+      const j = await r.json();
+      renderSimplexStrip(j);
+    } catch {
+      renderSimplexStrip({ ok: false });
+    }
+  }
+
   mountEssentials();
   mountSections();
   rewriteLocalhostLinks();
@@ -372,6 +450,7 @@
   bindFilter();
   applyGateToButtons();
   applyActionFilter();
+  loadSimplexStrip();
 
   console.info("P31 control plane loaded", boot.VERSION || "?");
 })();

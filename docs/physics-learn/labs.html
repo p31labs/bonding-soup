@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" data-p31-appearance="hub" data-p31-physics-learn="1.0.0-labs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+  <meta name="description" content="Progressive physics learning — local progress, small labs, P31 home." />
+  <meta name="theme-color" content="#0f1115" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="P31 home" />
+  <link rel="manifest" href="../../p31-bonding.webmanifest" crossorigin="anonymous" />
+  <link rel="apple-touch-icon" href="../../p31-bonding-icons/p31-icon.svg" />
+  <title>P31 — physics labs (curriculum track)</title>
+  <link rel="stylesheet" href="../../cognitive-passport/p31-style.css" />
+  <link rel="stylesheet" href="../../cognitive-passport/p31-responsive-surface.css" />
+  <script src="../../cognitive-passport/lib/p31-subject-prefs.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700&family=Outfit:wght@500;600;700&display=optional" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      font-family: var(--p31-font-sans, "Atkinson Hyperlegible", system-ui, sans-serif);
+      background: var(--p31-void, #0f1115);
+      color: var(--p31-cloud, #d8d6d0);
+    }
+    .pl-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 90% 50% at 50% -10%, rgba(37, 137, 125, 0.12), transparent 55%),
+        var(--p31-void, #0f1115);
+    }
+    .pl-wrap { position: relative; z-index: 1; }
+    .pl-hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: var(--p31-space-4);
+      margin-bottom: var(--p31-space-5);
+    }
+    h1 {
+      font-family: "Outfit", var(--p31-font-sans, system-ui, sans-serif);
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+    h1 .grad {
+      background: linear-gradient(110deg, var(--p31-cloud) 0%, var(--p31-cyan) 45%, var(--p31-butter) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .pl-hero p { margin: 0.4rem 0 0; font-size: var(--p31-text-sm); color: var(--p31-muted, #6b7280); max-width: 30rem; }
+    .pl-stats {
+      text-align: right;
+      font-family: var(--p31-font-mono, ui-monospace, monospace);
+      font-size: 0.75rem;
+      color: var(--p31-muted, #6b7280);
+    }
+    .pl-stats .xp { color: var(--p31-butter, #cda852); font-size: 1.1rem; font-weight: 600; }
+    .pl-pbar { width: 12rem; max-width: 100%; height: 4px; background: var(--p31-surface2, #1c2028); border-radius: 2px; margin-top: 0.35rem; overflow: hidden; }
+    .pl-pbar__fill { height: 100%; background: linear-gradient(90deg, var(--p31-cyan), var(--p31-butter)); transition: width 0.4s ease; }
+    .pl-grid { display: grid; grid-template-columns: 16rem 1fr; gap: var(--p31-space-5); }
+    @media (max-width: 800px) {
+      .pl-grid { grid-template-columns: 1fr; }
+    }
+    .pl-aside {
+      position: sticky;
+      top: var(--p31-space-4);
+      align-self: start;
+      border: 1px solid var(--p31-border-subtle, rgba(255, 255, 255, 0.08));
+      border-radius: var(--p31-radius-lg, 12px);
+      background: color-mix(in srgb, var(--p31-surface) 92%, transparent);
+      max-height: calc(100vh - 2rem);
+      overflow: auto;
+    }
+    @supports (height: 100dvh) {
+      .pl-aside {
+        max-height: calc(100dvh - 2rem);
+      }
+    }
+    @supports not (background: color-mix(in srgb, red, blue)) {
+      .pl-aside { background: var(--p31-surface, #161920); }
+    }
+    .pl-aside h2 { margin: 0; padding: var(--p31-space-3) var(--p31-space-3) 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--p31-muted); }
+    .pl-stage-lbl { padding: var(--p31-space-2) var(--p31-space-3) 0; font-size: 0.65rem; color: var(--p31-cyan, #4db8a8); text-transform: uppercase; letter-spacing: 0.1em; }
+    .pl-unit {
+      display: flex;
+      gap: 0.5rem;
+      width: 100%;
+      text-align: left;
+      padding: var(--p31-space-3);
+      font: inherit;
+      border: none;
+      background: none;
+      color: var(--p31-cloud);
+      cursor: pointer;
+      border-left: 3px solid transparent;
+    }
+    .pl-unit:hover:not(:disabled) { background: rgba(255, 255, 255, 0.04); }
+    .pl-unit.is-active { border-left-color: var(--p31-cyan); background: rgba(77, 184, 168, 0.07); }
+    .pl-unit.is-locked { opacity: 0.45; cursor: not-allowed; }
+    .pl-unit.is-done .pl-unit__icon { color: var(--p31-butter, #cda852); }
+    .pl-unit__icon { flex: 0 0 1.2rem; }
+    .pl-unit__t { display: block; font-weight: 600; font-size: 0.85rem; }
+    .pl-unit__b { display: block; font-size: 0.7rem; color: var(--p31-muted); line-height: 1.4; margin-top: 0.2rem; }
+    .pl-main { border: 1px solid var(--p31-border-subtle); border-radius: var(--p31-radius-xl, 16px); padding: var(--p31-space-5); background: var(--p31-surface, #161920); }
+    .pl-ribbon { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: var(--p31-space-3); font-size: 0.7rem; font-family: var(--p31-font-mono, monospace); }
+    .pl-ribbon span { color: var(--p31-lavender, #8b7cc9); }
+    .pl-h2 { font-family: "Outfit", var(--p31-font-sans, sans-serif); font-size: 1.35rem; margin: 0 0 var(--p31-space-3); }
+    .pl-theory { color: var(--p31-muted, #6b7280); line-height: 1.7; }
+    .pl-theory code { color: var(--p31-cyan, #4db8a8); }
+    .pl-theory p { margin: 0 0 0.75em; }
+    .p31-muted, .pl-small { color: var(--p31-muted); font-size: 0.85em; }
+    .pl-lab { margin: var(--p31-space-4) 0; }
+    .pl-lab__hint { font-size: var(--p31-text-sm); color: var(--p31-butter, #cda852); margin: 0 0 var(--p31-space-2); }
+    .pl-cv { width: 100%; max-width: 360px; height: auto; border-radius: var(--p31-radius-md); background: var(--p31-surface2, #1c2028); display: block; }
+    .pl-sliders { display: grid; gap: 0.35rem; margin-top: var(--p31-space-2); font-size: 0.8rem; }
+    .pl-sliders label { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+    .pl-metric { font-family: var(--p31-font-mono, monospace); color: var(--p31-butter, #cda852); margin: 0.5rem 0 0; }
+    .pl-inline { display: block; margin: 0.4rem 0; font-size: 0.9rem; }
+    .pl-h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--p31-muted); margin: 0 0 var(--p31-space-2); }
+    .pl-check { border-top: 1px solid var(--p31-border-subtle); margin-top: var(--p31-space-4); padding-top: var(--p31-space-4); }
+    .pl-q { margin: 0 0 var(--p31-space-2); }
+    .pl-inp { width: 100%; max-width: 16rem; padding: 0.5rem 0.75rem; border-radius: var(--p31-radius-md); border: 1px solid var(--p31-border-subtle); background: var(--p31-void, #0f1115); color: var(--p31-cloud); font: inherit; }
+    .pl-mc { display: block; margin: 0.35rem 0; cursor: pointer; }
+    .pl-row { margin-top: var(--p31-space-3); }
+    .pl-btn { padding: 0.55rem 1.1rem; border-radius: var(--p31-radius-md); font: inherit; font-weight: 600; border: 1px solid var(--p31-border-subtle); background: var(--p31-surface2); color: var(--p31-cloud); cursor: pointer; }
+    .pl-btn--primary { background: var(--p31-cyan, #4db8a8); color: #0a0c10; border-color: transparent; }
+    .pl-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .pl-barwrap { max-width: 20rem; height: 6px; background: var(--p31-surface2); border-radius: 3px; overflow: hidden; margin-top: 0.5rem; }
+    .pl-bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--p31-cyan), var(--p31-butter)); transform-origin: left center; }
+    .pl-toast { position: fixed; bottom: max(var(--p31-space-4), env(safe-area-inset-bottom, 0px)); right: max(var(--p31-space-4), env(safe-area-inset-right, 0px)); z-index: 200; max-width: min(20rem, calc(100vw - 2rem)); padding: var(--p31-space-3) var(--p31-space-4); background: var(--p31-surface, #161920); border: 1px solid var(--p31-cyan, #4db8a8); border-radius: var(--p31-radius-md); font-size: var(--p31-text-sm); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4); }
+    .pl-toast[hidden] { display: none; }
+    .pl-toplinks { display: flex; flex-wrap: wrap; align-items: center; gap: var(--p31-space-2); font-size: var(--p31-text-xs); margin-top: var(--p31-space-2); }
+    .pl-toplinks a { color: var(--p31-cyan, #4db8a8); }
+    .pl-toplinks__mission { color: var(--p31-muted, #6b7280); font-weight: 600; letter-spacing: 0.04em; }
+    .pl-toplinks__sep { color: var(--p31-border-subtle, #2a2f3a); user-select: none; }
+    .pl-toplinks__heart { color: var(--p31-coral, #c97b6b); }
+  </style>
+  <script src="physics-engine.js" defer></script>
+</head>
+<body class="p31-mesh-m-first p31-responsive-surface">
+  <div class="pl-bg" aria-hidden="true"></div>
+  <div class="pl-wrap p31-shell" style="--p31-shell-max: 72rem; --p31-shell-pad: var(--p31-space-4)">
+    <header class="pl-hero">
+      <div>
+        <h1><span class="grad">Physics labs (curriculum)</span></h1>
+        <p>Local-only progression: read, manipulate small labs, pass checks to unlock the next idea. For the <strong>why tetrahedron</strong> walkthrough, open <a href="index.html">Physics Learn · shape codec</a>.</p>
+        <p class="pl-toplinks" style="margin:0.35rem 0 0" aria-label="P31 mission: Build, Create, Connect">
+          <a href="https://p31ca.org/build" rel="noopener" class="pl-toplinks__mission" style="text-decoration:none;font-weight:600" title="Initial build — CWP">Build</a>
+          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
+          <a href="../../poets-room.html" title="Poets room — write, read, make">Create</a>
+          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
+          <a href="https://p31ca.org/connect.html" rel="noopener" title="K₄ family mesh navigator">Connect</a>
+          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
+          <span class="pl-toplinks__heart" title="love" aria-hidden="true">&#9829;</span>
+          <span class="p31-muted" title="&lt;3" aria-label="less than three">&lt;3</span>
+        </p>
+        <div class="pl-toplinks" role="navigation" aria-label="Local tools">
+          <a href="../../soup.html">C.A.R.S.</a>
+          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
+          <a href="../doc-library/index.html">Document library</a>
+          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
+          <a href="../../andromeda/04_SOFTWARE/p31ca/public/k4market.html" title="Needs andromeda checkout">K4 market</a>
+          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
+          <a href="../../p31-personal-howto.html">How-to (UI)</a>
+          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
+          <a href="../PLAN-BONDING-SOUP-WHEN-SCALE.md">When-scale plan</a>
+          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
+          <a href="http://127.0.0.1:3131/" title="npm run command-center">Command center</a>
+          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
+          <a href="../P31-DEPLOY-CANON.md" title="npm run connection — deploy · ecosystem · env">CONNECTION</a>
+          <span class="pl-toplinks__sep" aria-hidden="true">·</span>
+          <a href="../../P31-ROOT-MAP.md">P31-ROOT-MAP</a>
+        </div>
+      </div>
+      <div class="pl-stats" aria-label="Progress">
+        <div>Progress <span id="pl-xp">0</span> <span class="xp">XP</span></div>
+        <div class="pl-pbar" role="progressbar" id="pl-progress" aria-label="Units completed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="pl-pbar__fill" id="pl-progress-fill" style="width:0%"></div>
+        </div>
+        <button type="button" class="pl-btn" id="pl-reset" style="margin-top:0.5rem">Reset progress</button>
+      </div>
+    </header>
+    <div class="pl-grid">
+      <aside class="pl-aside" aria-label="Curriculum">
+        <h2>Units</h2>
+        <div id="pl-track"></div>
+      </aside>
+      <main class="pl-main" id="pl-main">
+        <div class="pl-ribbon"><span>schema</span> p31.physicsLearn/1.0.0 <span>·</span> <span>storage</span> localStorage</div>
+        <p class="pl-ribbon" id="pl-stage" style="margin:0 0 0.5rem"></p>
+        <h2 class="pl-h2" id="pl-title">—</h2>
+        <div class="pl-theory" id="pl-theory"></div>
+        <div id="pl-lab" class="pl-lab-host"></div>
+        <div class="pl-check" id="pl-check"></div>
+      </main>
+    </div>
+  </div>
+  <div class="pl-toast" id="pl-toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

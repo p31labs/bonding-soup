@@ -912,17 +912,17 @@
       "score": {
         "liveReachable": 9,
         "deployability": 7,
-        "verificationHooks": 5,
+        "verificationHooks": 7,
         "testingDepth": 1,
         "contractsSchemas": 3,
         "observability": 2,
         "securityPosture": 6,
-        "operationalClarity": 5,
+        "operationalClarity": 6,
         "uxCompleteness": 8,
         "ephemeralizationAlignment": 6
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Implement passkey Phase 5 beyond stub + add e2e smoke"]
+      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": ["npm run verify:onboarding"] },
+      "nextSteps": ["Room-code query param parity with bonding-soup BONDING UI; invite token validation server-side when Worker ships"]
     },
     {
       "id": "appointment-tracker",

@@ -65,4 +65,31 @@ fs.copyFileSync(
 );
 console.log("  cognitive-passport/p31-style.css → public/soup/…");
 
+/** Sovereign Lab + slicer + STL — same relative paths as repo root (`npm run demo`). */
+const extra = [
+  ["cognitive-passport/p31-responsive-surface.css", "cognitive-passport/p31-responsive-surface.css"],
+  ["cognitive-passport/lib/p31-subject-prefs.js", "cognitive-passport/lib/p31-subject-prefs.js"],
+  ["p31-sovereign-lab.html", "p31-sovereign-lab.html"],
+  ["p31-slicer.html", "p31-slicer.html"],
+  ["p31-bonding.webmanifest", "p31-bonding.webmanifest"],
+  ["p31-bonding-icons/p31-icon.svg", "p31-bonding-icons/p31-icon.svg"],
+];
+for (const [fromRel, toRel] of extra) {
+  const from = path.join(root, fromRel);
+  if (!fs.existsSync(from)) {
+    console.warn("sync-soup-to-bonding: skip missing " + fromRel);
+    continue;
+  }
+  copyFile(fromRel, toRel);
+  console.log(`  ${fromRel} → public/soup/${toRel}`);
+}
+
+const stlSrc = path.join(root, "design-assets", "stl");
+if (fs.existsSync(stlSrc)) {
+  const stlOut = path.join(out, "design-assets", "stl");
+  fs.mkdirSync(path.dirname(stlOut), { recursive: true });
+  fs.cpSync(stlSrc, stlOut, { recursive: true });
+  console.log("  design-assets/stl/* → public/soup/design-assets/stl/");
+}
+
 console.log("sync-soup-to-bonding: OK — next: cd andromeda/04_SOFTWARE/bonding && npm run build && npx wrangler pages deploy dist --project-name bonding");

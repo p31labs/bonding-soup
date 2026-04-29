@@ -27,7 +27,7 @@ wrangler d1 execute simplex --local --file=src/db/schema.sql
 
 Then **`npm run deploy`** or **`wrangler deploy`** — see **`DEPLOY.md`** §5–§7.
 
-**OQE:** `SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'` → **22** rows after apply (physical layer: `device_states`, `biometric_log`, `home_events`, `automation_rules`, `mqtt_log`).
+**OQE:** `SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'` → **23** rows after apply (adds **`accommodation_log`**; physical layer: `device_states`, `biometric_log`, `home_events`, `automation_rules`, `mqtt_log`).
 
 ## Dev / typecheck / tests (WCD-SIMPLEX-06)
 
@@ -60,6 +60,8 @@ GET **`/api/spoons`** and **`GET /api/state`** `state` use the same layered reso
 | GET | `/api/agents` |
 | GET | `/api/deadlines` |
 | GET | `/api/spoons` — envelope includes `sentinel_context_source`, `sentinel_stale_ms`, optional `operator_note` |
+| GET | `/api/accommodation-log?days=14` — machine + manual accommodation rows (UTC ingest; see **`docs/P31-ACCOMMODATION-LOG-SYSTEM.md`**) |
+| POST | `/api/accommodation-log` — minimal manual row `{ "task_line", "tool", "limitation_kind" }` |
 | POST | `/api/hardware` — body string + header `X-Device-Signature` hex HMAC-SHA256 |
 | POST | `/api/medical` `{ "medication": "Vyvanse" }` |
 | POST | `/api/spoons` `{ "activity": "email", "cost": 2 }` |
@@ -78,7 +80,7 @@ CORS allowlist: `https://p31ca.org` (adjust for preview origins if needed).
 - **SENTINEL** — outward bridge: HA scenes, TTS, haptics, MQTT/Meshtastic mirrors; **`*/5 * * * *`** cron when bound in `wrangler.toml`. See **`docs/SENTINEL-PHYSICAL-LAYER.md`** and **`home-assistant/README.md`** (reference YAML + secrets list).
 - **Delta:** `post_agent_message` → D1 `agent_messages` (queue consumer stub until wired).
 - **Spoon gates:** Implemented in `agents/runner.ts`; MEDIC / FORGE baseline **0** cost.
-- **Cron:** `handleScheduled` maps `*/5 * * * *` → **SENTINEL**; `handleCron` maps other **UTC** hours — shift expressions if you need Eastern civil time.
+- **Cron:** `handleScheduled` maps `*/5 * * * *` → **SENTINEL**; **`5 0 * * *`** → **accommodation_log** ingest for the **previous UTC day** (`accommodation-sync`); `handleCron` maps other **UTC** hours — shift expressions if you need Eastern civil time.
 
 ## Next
 

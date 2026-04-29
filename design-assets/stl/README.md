@@ -1,5 +1,7 @@
 # P31_K4_Topology.stl — regular tetrahedron (K₄ in 3D)
 
+**In-browser slicer (home repo):** open **`p31-slicer.html`** (with `npm run demo` or any static host) for an embedded **Kiri:Moto** shell — slice to G-code locally in the browser, then export. Drag this STL into the workspace or use the file picker; see page notes on HTTPS vs local demo.
+
 **Vertices** (alternating-sign corners of the cube \([-1,1]^3\)):
 
 - A = (1, 1, 1)

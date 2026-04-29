@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Headless E2E: static server from repo root → physics-learn page boots, first lab renders,
- * first check accepts answer "5" (| (3,4) |) and XP updates.
+ * Headless E2E: static server from repo root → Physics Learn (eight-room codec)
+ * loads, rooms present, Larmor UI without autoplay, pointer paths respond,
+ * prefers-reduced-motion adds html.pl-reduced-motion.
  * Requires: root `playwright` devDependency, `npx playwright install chromium`.
  */
 import net from "node:net";
@@ -79,34 +80,89 @@ async function main() {
   const nav = pageUrl(port);
   await waitForHttp(nav);
 
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: true, timeout: 120000 });
   try {
     const page = await browser.newPage();
     await page.goto(nav, { waitUntil: "domcontentloaded", timeout: 60000 });
-    await page.locator("#pl-title").first().waitFor({ state: "attached", timeout: 30000 });
-    const h2 = await page.locator("#pl-title").textContent();
-    if (!h2 || h2 === "—" || !/vector|resultant/i.test(h2)) {
-      throw new Error("unexpected #pl-title: " + h2);
+
+    const rooms = page.locator("[data-pl-room]");
+    await rooms.first().waitFor({ state: "attached", timeout: 30000 });
+    const n = await rooms.count();
+    if (n !== 8) {
+      throw new Error("expected 8 [data-pl-room] sections, got " + n);
     }
-    await page.locator("canvas#pl-cv-vec").waitFor({ state: "attached", timeout: 30000 });
-    await page.locator(".pl-inp").first().fill("5");
-    await page.getByRole("button", { name: "Submit" }).click();
+
+    const playBtn = page.locator("#codec-larmor-play");
+    await playBtn.waitFor({ state: "visible", timeout: 15000 });
+    const playedBefore = await playBtn.evaluate((el) => el.dataset.played || "");
+    if (playedBefore === "1") {
+      throw new Error("863 Hz control should not set data-played before user tap");
+    }
+
+    await page.locator("#codec-freq-slider").evaluate((el) => {
+      el.value = "863";
+      el.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    const hitVisible = await page.locator("#codec-larmor-hit").isVisible();
+    if (!hitVisible) {
+      throw new Error("#codec-larmor-hit should show near 863 Hz");
+    }
+
+    await playBtn.click();
     await page.waitForFunction(
       () => {
-        const el = document.getElementById("pl-xp");
-        return el && el.textContent && el.textContent.trim() === "25";
+        const b = document.getElementById("codec-larmor-play");
+        return b && b.dataset.played === "1";
       },
-      { timeout: 20000 }
+      { timeout: 8000 }
     );
-    const passed = await page.locator("#pl-check .p31-muted").first().textContent();
-    if (!passed || !/passed/i.test(passed)) {
-      const ct = await page.locator("#pl-check").textContent();
-      throw new Error("check section did not show passed: " + (ct || ""));
+
+    const rig = page.locator("#codec-rigidity svg");
+    const box = await rig.boundingBox();
+    if (!box) throw new Error("rigidity svg bounding box");
+    await page.mouse.move(box.x + 40, box.y + 100);
+    await page.mouse.down();
+    await page.mouse.move(box.x + 90, box.y + 130);
+    await page.mouse.up();
+
+    await page.locator("#codec-spoon-acts button[data-cost='1']").first().click();
+    const spoonsLeft = await page.locator("#codec-spoons-row").getAttribute("data-remaining");
+    if (spoonsLeft !== "11") {
+      throw new Error("expected 11 spoons after 1-spoon activity, got " + spoonsLeft);
     }
+
+    await page.locator("#codec-serial-run").click();
+    const wide = await page.locator("#codec-serial-pipe").evaluate((el) => el.classList.contains("is-wide"));
+    if (!wide) throw new Error("serialization pipe should widen after toggle");
+
+    await page.locator("#room-gray").scrollIntoViewIfNeeded();
+    const expandRow = page.locator("#codec-gray-quiet [data-expand]").first();
+    await expandRow.scrollIntoViewIfNeeded();
+    await expandRow.hover({ force: true });
+    const opened = await expandRow.evaluate((el) => el.classList.contains("is-open"));
+    if (!opened) throw new Error("Gray Rock row should open on hover");
+
+    const pageRm = await browser.newPage();
+    await pageRm.emulateMedia({ reducedMotion: "reduce" });
+    await pageRm.goto(nav, { waitUntil: "domcontentloaded", timeout: 60000 });
+    const hasRm = await pageRm.evaluate(() => document.documentElement.classList.contains("pl-reduced-motion"));
+    if (!hasRm) {
+      throw new Error("expected html.pl-reduced-motion when prefers-reduced-motion is reduce");
+    }
+    const spin = pageRm.locator("#room-triangle .codec-spin").first();
+    const anim = await spin.evaluate((el) => ({
+      name: getComputedStyle(el).animationName,
+      duration: getComputedStyle(el).animationDuration,
+    }));
+    const stopped = anim.name === "none" || anim.name === "" || anim.duration === "0s";
+    if (!stopped) {
+      throw new Error("reduced motion should stop .codec-spin; got " + JSON.stringify(anim));
+    }
+    await pageRm.close();
   } finally {
     await browser.close();
   }
-  console.log("physics-learn-e2e: ok — first unit lab + check + 25 XP in headless Chromium");
+  console.log("physics-learn-e2e: ok — eight rooms, Larmor tap-to-play, interactives, reduced-motion");
 }
 
 function shutdown() {

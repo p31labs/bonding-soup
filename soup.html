@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html class="soup-app soup-app--gray-rock" lang="en" data-p31-appearance="hub">
+<!-- P31 egg: ?egglov=1 → spawnEggLovSandbox() — Li + V collide → LOV (src/reactions.ts); operator note for S.J. / W.J. -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
@@ -45,7 +46,7 @@
                 <li><span class="soup-psych-dot soup-psych-dot--warm" aria-hidden="true"></span> Warmth (coral · energy)</li>
                 <li><span class="soup-psych-dot soup-psych-dot--belong" aria-hidden="true"></span> Belonging (phosphor · we)</li>
             </ul>
-            <p class="soup-aaso"><em>As above, so below:</em> the same <code>demo</code> / <code>build:doc-index</code> bar shows up in the <a class="p31-mesh-tap" href="docs/doc-library/index.html">doc library</a>, <a class="p31-mesh-tap" href="docs/physics-learn/index.html">physics learn</a>, <a class="p31-mesh-tap" href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (with <code>andromeda/</code>), <a class="p31-mesh-tap" href="fleet-portal.html">live fleet &amp; every URL</a> (<code>npm run build:fleet-portal</code>), <a class="p31-mesh-tap" href="p31-personal-howto.html">interactive how-to</a>, <a class="p31-mesh-tap" href="p31-device-setup.html">Chromebook &amp; phone setup</a>, <a class="p31-mesh-tap" href="poets-room.html">Poets room</a>, <a class="p31-mesh-tap" href="http://127.0.0.1:3131/">local command center</a> (<code>npm run command-center</code> — 3131), and <a class="p31-mesh-tap" href="docs/P31-DEPLOY-CANON.md">CONNECTION</a> (<code>npm run connection</code> — deploy · ecosystem · env · ops). <strong>Naming:</strong> <a class="p31-mesh-tap" href="docs/CARS-NAMING.md">C.A.R.S.</a>. <strong>When-scale</strong> (plan the work, work the plan): <a class="p31-mesh-tap" href="docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">when-scale plan</a>. Prose in the tree, comfort in the tab. <span class="aaso-love" title="love">&#9829;</span><span class="aaso-3" title="&lt;3" aria-label="less than three"> &lt;3</span></p>
+            <p class="soup-aaso"><em>As above, so below:</em> the same <code>demo</code> / <code>build:doc-index</code> bar shows up in the <a class="p31-mesh-tap" href="docs/doc-library/index.html">doc library</a>, <a class="p31-mesh-tap" href="docs/physics-learn/index.html">physics learn</a>, <a class="p31-mesh-tap" href="p31-slicer.html" title="Kiri:Moto — browser FDM/CAM slicer (embedded)">browser slicer</a>, <a class="p31-mesh-tap" href="p31-sovereign-lab.html" title="Sovereign Lab — dome panes, serial, voice, foundry links">sovereign lab</a>, <a class="p31-mesh-tap" href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (with <code>andromeda/</code>), <a class="p31-mesh-tap" href="fleet-portal.html">live fleet &amp; every URL</a> (<code>npm run build:fleet-portal</code>), <a class="p31-mesh-tap" href="p31-personal-howto.html">interactive how-to</a>, <a class="p31-mesh-tap" href="p31-device-setup.html">Chromebook &amp; phone setup</a>, <a class="p31-mesh-tap" href="poets-room.html">Poets room</a>, <a class="p31-mesh-tap" href="http://127.0.0.1:3131/">local command center</a> (<code>npm run command-center</code> — 3131), and <a class="p31-mesh-tap" href="docs/P31-DEPLOY-CANON.md">CONNECTION</a> (<code>npm run connection</code> — deploy · ecosystem · env · ops). <strong>Naming:</strong> <a class="p31-mesh-tap" href="docs/CARS-NAMING.md">C.A.R.S.</a>. <strong>When-scale</strong> (plan the work, work the plan): <a class="p31-mesh-tap" href="docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">when-scale plan</a>. Prose in the tree, comfort in the tab. <span class="aaso-love" title="love">&#9829;</span><span class="aaso-3" title="&lt;3" aria-label="less than three"> &lt;3</span></p>
         </header>
 
         <div class="soup-larmor" id="soup-larmor" hidden>
@@ -121,6 +122,12 @@
                     <a href="docs/doc-library/index.html" title="Prose in docs/ and AGENTS (above) → searchable index in-browser (below). After editing docs/*.md: npm run build:doc-index. In the UI: / to focus, ↓ first result, try chips, optional ?q=mesh.">Document library</a>
                     <span class="soup-dev-sep"> · </span>
                     <a href="docs/physics-learn/index.html" title="Progressive physics labs — local XP, p31.physicsLearn.v1">Physics learn</a>
+                    <span class="soup-dev-sep"> · </span>
+                    <a href="p31-sovereign-lab.html" title="Sovereign Lab — K₄ dome panes, trim coherence, serial, voice">Sovereign Lab</a>
+                    <span class="soup-dev-sep"> · </span>
+                    <a href="p31-slicer.html" title="Browser slicer — Kiri:Moto embedded">Slicer</a>
+                    <span class="soup-dev-sep"> · </span>
+                    <a href="http://127.0.0.1:5174/" title="GeodesicRoom GET /state preview — run npm run demo:geodesic-preview">Geodesic state</a>
                     <span class="soup-dev-sep"> · </span>
                     <a href="andromeda/04_SOFTWARE/p31ca/public/k4market.html" title="K4 market — live USDT spot klines on a tetrahedron (needs andromeda checkout)">K4 market</a>
                     <span class="soup-dev-sep"> · </span>
@@ -443,12 +450,31 @@
                 if (event.products.length > 0) {
                     log(`   New compound: ${event.products[0].element}`);
                 }
+                const el0 = event.products[0] && event.products[0].element;
+                if (el0 === 'LOV') {
+                    log('💚 LOV — operator Easter egg (for S.J. / W.J.).');
+                    const toast = document.getElementById('soup-reward-toast');
+                    if (toast) {
+                        toast.textContent =
+                            'LOV — a compound that spells affection. Hidden on purpose. (Egg)';
+                        toast.hidden = false;
+                        setTimeout(() => {
+                            toast.hidden = true;
+                            toast.textContent = '';
+                        }, 4200);
+                    }
+                }
             }
         };
 
         soup.onMoleculeDestroyed = (moleculeId) => {
             log(`💥 Molecule destroyed: ${moleculeId}`);
         };
+
+        if (new URLSearchParams(window.location.search).get('egglov') === '1') {
+            soup.spawnEggLovSandbox();
+            log('Egglov: Li + V seeded in the lab — collide for LOV (operator note for S.J. / W.J.).');
+        }
 
         // Rendering function
         function render() {

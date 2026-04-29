@@ -309,7 +309,7 @@ P31 Labs, Inc. — Georgia domestic nonprofit (inc. Apr 3, 2026). EIN 42-1888158
 
 ### 12.3 Research
 
-Papers I–IV complete with DOIs under ORCID 0009-0002-2492-9079. Paper IV: “Universal Bridge at the Phase Transition” — DOI **10.5281/zenodo.19503542** (Apr 10, 2026). Papers **V–XX** batch published Apr 26, 2026 (DOIs in **`p31-constants.json`** → `research.papers`; log **`andromeda/docs/files/zenodo_results.json`**). Paper XII (Sovereign Stack) **10.5281/zenodo.19782969**. Defensive “Tetrahedron Protocol” **10.5281/zenodo.18627420**.
+**22** Zenodo publications under ORCID 0009-0002-2492-9079: P31 Research Series **I–XX** (20) + **2** standalone legal/public-interest papers. DOIs in **`p31-constants.json`** → `research.papers`; index **`docs/P31-ZENODO-PUBLICATION-REGISTRY.md`**. Paper IV: “Universal Bridge at the Phase Transition” — **10.5281/zenodo.19503542** (Apr 10, 2026). Papers **V–XX** batch **2026-04-26**. Paper XII (Sovereign Stack) **10.5281/zenodo.19782969** (published). Paper I (Tetrahedron / defensive) **10.5281/zenodo.19004485**.
 
 ### 12.4 Legal (snapshot)
 

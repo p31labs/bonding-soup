@@ -27,6 +27,16 @@ export const ACTIONS = {
     confirm:
       "Starts Python http.server on 8080 in the background (see docs/SOUP-LOCAL-DEMO.md; P31_DEMO_PORT=… if port busy). Second click may fail if port busy. Continue?",
   },
+  "home-geodesic-preview": {
+    title: "demo:geodesic-preview (Vite — GeodesicRoom GET /state UI on port 5174)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "demo:geodesic-preview"],
+    background: true,
+    network: true,
+    confirm:
+      "Starts Vite for spikes/sovereign-geodesic-preview (port 5174; see vite.config). Uses /api proxy to geodesic-room Worker. Continue?",
+  },
 
   // —— Daily & diagnostics
   "home-doctor": {
@@ -124,6 +134,14 @@ export const ACTIONS = {
     cmd: "npm",
     args: ["run", "mesh:budgets"],
   },
+  "home-build-fleet-portal-live": {
+    title: "build:fleet-portal:live (ecosystem:glass then fleet portal — merges probe colors into ATC)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "build:fleet-portal:live"],
+    network: true,
+    slow: true,
+  },
   "home-build-fleet-portal": {
     title: "build:fleet-portal (live URL index → fleet-portal.html; polish copies to p31ca public)",
     cwd: repoRoot,
@@ -149,6 +167,12 @@ export const ACTIONS = {
     cwd: repoRoot,
     cmd: "npm",
     args: ["run", "sync:passport"],
+  },
+  "home-sync-sovereign-p31ca": {
+    title: "sync:sovereign-p31ca (Sovereign Lab + slicer + STL → p31ca public)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "sync:sovereign-p31ca"],
   },
   "home-inventory-cf": {
     title: "inventory:cf (wrangler inventory markdown)",
@@ -189,7 +213,7 @@ export const ACTIONS = {
     slow: true,
   },
   "home-test-physics-learn-e2e": {
-    title: "test:physics-learn:e2e (Playwright — first unit vector lab + check)",
+    title: "test:physics-learn:e2e (Playwright — eight-room codec + interactives)",
     cwd: repoRoot,
     cmd: "npm",
     args: ["run", "test:physics-learn:e2e"],
@@ -393,11 +417,16 @@ export function getLocalPreviewLinks(hasP31caFn) {
     links.push(
       { href: `${P31CA_PUBLIC_BASE}/initial-build.html`, label: "Create (initial build)" },
       { href: `${P31CA_PUBLIC_BASE}/connect.html`, label: "Connect (K₄)" },
+      { href: "https://p31ca.org/lab", label: "Hub Sovereign Lab (/lab)" },
+      { href: "https://p31ca.org/slicer", label: "Hub slicer (/slicer)" },
     );
   }
   links.push(
     { href: "http://127.0.0.1:8080/poets-room.html", label: "Poets room" },
     { href: "http://127.0.0.1:8080/p31-personal-howto.html", label: "Personal how-to" },
+    { href: "http://127.0.0.1:8080/p31-sovereign-lab.html", label: "Sovereign Lab" },
+    { href: "http://127.0.0.1:8080/p31-slicer.html", label: "Browser slicer" },
+    { href: "http://127.0.0.1:5174/", label: "Geodesic state (5174)" },
   );
   return links;
 }
@@ -424,7 +453,11 @@ export const SECTIONS_RAW = [
       { href: "http://127.0.0.1:8080/p31-device-setup.html", label: "Device setup wizard (:8080)" },
     ],
   },
-  { id: "local", title: "Local previews (needs demo on :8080)", ids: ["home-demo"] },
+  {
+    id: "local",
+    title: "Local previews (demo :8080 — Geodesic preview :5174)",
+    ids: ["home-demo", "home-geodesic-preview"],
+  },
   {
     id: "diagnostics",
     title: "Diagnostics & ship bar",
@@ -442,10 +475,12 @@ export const SECTIONS_RAW = [
       "home-simplex-bootstrap-apply",
       "home-mesh-budgets",
       "home-build-fleet-portal",
+      "home-build-fleet-portal-live",
       "home-build-fleet-entities",
       "home-verify",
       "home-apply-constants",
       "home-sync-passport",
+      "home-sync-sovereign-p31ca",
       "home-inventory-cf",
     ],
   },

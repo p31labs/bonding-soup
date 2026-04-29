@@ -8,6 +8,7 @@ node_modules/
 simplex-v7/node_modules/
 simplex-email/node_modules/
 dist/
+spikes/sovereign-geodesic-preview/dist/
 .cache/
 .npm/
 wcd33-global-archive/node_modules/

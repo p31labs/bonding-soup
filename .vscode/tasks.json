@@ -10,6 +10,14 @@
       "presentation": { "reveal": "always", "panel": "dedicated", "focus": true }
     },
     {
+      "label": "P31: geodesic preview (Vite :5174; Ctrl+C to stop)",
+      "type": "shell",
+      "command": "npm run demo:geodesic-preview",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true }
+    },
+    {
       "label": "P31: install git hooks (core.hooksPath = .githooks)",
       "type": "shell",
       "command": "npm run git:hooks",
@@ -29,6 +37,14 @@
       "label": "P31: sync passport → p31ca",
       "type": "shell",
       "command": "npm run sync:passport",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: sync Sovereign Lab + slicer → p31ca public",
+      "type": "shell",
+      "command": "npm run sync:sovereign-p31ca",
       "options": { "cwd": "${workspaceFolder}" },
       "group": "build",
       "presentation": { "reveal": "always", "panel": "shared" }
@@ -63,6 +79,22 @@
       "command": "npm run build:fleet-portal",
       "options": { "cwd": "${workspaceFolder}" },
       "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: build fleet portal live (ecosystem:glass → merge ATC colors)",
+      "type": "shell",
+      "command": "npm run build:fleet-portal:live",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify fleet portal (ATC + hub mirror anchors)",
+      "type": "shell",
+      "command": "npm run verify:fleet-portal",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {

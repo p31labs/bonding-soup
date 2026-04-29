@@ -2,181 +2,575 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="P31 home" />
-  <link rel="manifest" href="p31-bonding.webmanifest" crossorigin="anonymous" />
-  <link rel="apple-touch-icon" href="p31-bonding-icons/apple-touch-180.png" sizes="180x180" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
-  <title>P31 — Poets room (lobby)</title>
-  <meta name="description" content="Poetry, prose, narrative, and visual making — one lobby linking Cognitive Passport, doc library, mesh agent, geodesic, and hub stories." />
-  <link rel="stylesheet" href="cognitive-passport/p31-style.css" />
-  <link rel="stylesheet" href="cognitive-passport/p31-responsive-surface.css" />
-  <script src="cognitive-passport/lib/p31-subject-prefs.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Poets Room</title>
+  <meta name="description" content="A quiet room. No tasks. No metrics. One line a day, a shelf of meaning, and words only you keep." />
+  <meta id="poets-config" data-quotes-href="./poets-room-quotes.json" data-leave-href="soup.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Playfair+Display:ital,wght@1,400;1,500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --po-panel: rgba(18, 18, 28, 0.92);
-      --po-border: rgba(90, 200, 190, 0.22);
+      --void: #05080c;
+      --chalk: #e8e6e3;
+      --chalk-dim: rgba(232, 230, 227, 0.6);
+      --edge: rgba(255, 255, 255, 0.06);
     }
-    * { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; }
+    html {
+      scroll-behavior: smooth;
+    }
     body {
       margin: 0;
+      background: var(--void);
+      color: var(--chalk);
+      font-family: "JetBrains Mono", ui-monospace, monospace;
       min-height: 100vh;
       min-height: 100dvh;
-      font-family: system-ui, "Atkinson Hyperlegible", sans-serif;
-      background: radial-gradient(1200px 800px at 20% -10%, #1a2840 0%, #0a0a12 55%);
-      color: #e8e8f0;
+    }
+    .skip {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      padding: 0.5rem 1rem;
+      background: #111;
+      color: var(--chalk);
+      z-index: 100;
+    }
+    .skip:focus {
+      left: 0.5rem;
+      top: 0.5rem;
+    }
+    /* Layer 1 — void + quote (full viewport) */
+    .layer-void {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(1rem, 4vw, 2.5rem);
+      position: relative;
+    }
+    .daily-quote {
+      max-width: 36rem;
+      margin: 0;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+    .daily-quote.is-lit {
+      opacity: 0.6;
+    }
+    .daily-quote p {
+      margin: 0;
+      font-family: "Playfair Display", Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(1.05rem, 2.2vw + 0.85rem, 1.45rem);
       line-height: 1.55;
+      color: var(--chalk);
     }
-    a { color: #5eead4; text-underline-offset: 3px; }
-    a:hover { color: #a5b4fc; }
-    header {
-      border-bottom: 1px solid var(--po-border);
-      padding-bottom: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    header h1 {
-      margin: 0;
-      font-size: clamp(1.15rem, 3vw + 0.75rem, 1.45rem);
-      font-weight: 650;
-      letter-spacing: -0.03em;
-    }
-    header .lede {
-      margin: 0.5rem 0 0;
-      color: #9ca3c4;
-      font-size: 0.95rem;
-      max-width: 40rem;
-    }
-    .aaso {
-      margin: 0.85rem 0 0;
-      font-size: 0.82rem;
-      color: #7c7c9a;
-    }
-    .aaso em { color: #a5b4fc; }
-    section {
-      background: var(--po-panel);
-      border: 1px solid var(--po-border);
-      border-radius: 12px;
-      padding: 1rem 1.1rem;
-      margin-bottom: 1rem;
-    }
-    section h2 {
-      margin: 0 0 0.5rem;
+    .daily-quote footer {
+      margin-top: 1.25rem;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
       font-size: 0.72rem;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: #8b8ba8;
-      font-weight: 600;
+      color: rgba(232, 230, 227, 0.45);
     }
-    section p { margin: 0 0 0.65rem; font-size: 0.92rem; }
-    section p:last-child { margin-bottom: 0; }
-    ul.links {
+    .scroll-hint {
+      position: absolute;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(232, 230, 227, 0.22);
+      opacity: 0;
+      transition: opacity 1.2s ease 1.6s;
+      pointer-events: none;
+    }
+    .daily-quote.is-lit + .scroll-hint {
+      opacity: 1;
+    }
+    /* Layer 2 — shelf + writing (revealed by scroll) */
+    .layer-deep {
+      padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 2rem) 5rem;
+      max-width: 52rem;
+      margin: 0 auto;
+      border-top: 1px solid var(--edge);
+    }
+    .shelf-title {
+      font-size: 0.65rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(232, 230, 227, 0.28);
+      text-align: center;
+      margin: 0 0 1.5rem;
+    }
+    .poets-tool-strip {
+      text-align: center;
+      margin: -0.5rem 0 1.35rem;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.06em;
+      line-height: 1.85;
+    }
+    .poets-tool-strip a {
+      color: rgba(94, 234, 212, 0.5);
+      text-decoration: none;
+      margin: 0 0.4rem;
+    }
+    .poets-tool-strip a:hover {
+      color: rgba(170, 230, 215, 0.92);
+      text-decoration: underline;
+    }
+    .shelf {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: center;
+      gap: clamp(0.75rem, 3vw, 1.75rem);
+      padding: 0.5rem 0 2.5rem;
+    }
+    .shelf-item {
+      width: 5.5rem;
+      text-align: center;
+      color: rgba(232, 230, 227, 0.38);
+      font-size: 0.58rem;
+      line-height: 1.35;
+      letter-spacing: 0.02em;
+    }
+    .shelf-item .thumb {
+      height: 4.25rem;
+      margin: 0 auto 0.45rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--edge);
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.35);
+    }
+    .shelf-item a.thumb {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: border-color 0.25s ease, background 0.25s ease;
+    }
+    .shelf-item a.thumb:hover,
+    .shelf-item a.thumb:focus-visible {
+      border-color: rgba(232, 230, 227, 0.18);
+      background: rgba(0, 0, 0, 0.5);
+      outline: none;
+    }
+    .shelf-item button.thumb {
+      cursor: pointer;
+      font: inherit;
+      color: inherit;
+      width: 100%;
+      padding: 0;
+      transition: border-color 0.25s ease;
+    }
+    .shelf-item button.thumb:focus-visible {
+      outline: 1px solid rgba(232, 230, 227, 0.25);
+      outline-offset: 2px;
+    }
+    .tetra-stage {
+      perspective: 140px;
+      width: 3rem;
+      height: 3rem;
+    }
+    .tetra {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      animation: tetra-spin 140s linear infinite;
+    }
+    @keyframes tetra-spin {
+      to { transform: rotateX(360deg) rotateY(19deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .tetra { animation: none; }
+    }
+    .photo-slot {
+      position: relative;
+      overflow: hidden;
+    }
+    .photo-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 2px;
+    }
+    .photo-slot.is-empty::after {
+      content: "Drop a photo";
+      font-size: 0.55rem;
+      letter-spacing: 0.06em;
+      color: rgba(232, 230, 227, 0.22);
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .photo-slot.drag {
+      border-color: rgba(120, 180, 200, 0.35);
+    }
+    .writing-block {
+      position: relative;
+      margin-top: 1rem;
+    }
+    .writing-block label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+    #private-draft {
+      width: 100%;
+      min-height: 14rem;
+      resize: vertical;
+      padding: 1rem 1.1rem;
       margin: 0;
-      padding-left: 1.1rem;
-      font-size: 0.9rem;
+      border: 1px solid var(--edge);
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.25);
+      color: rgba(232, 230, 227, 0.78);
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      caret-color: rgba(232, 230, 227, 0.85);
     }
-    ul.links li { margin: 0.35rem 0; }
-    .note {
-      font-size: 0.8rem;
-      color: #9ca3c4;
-      border-left: 3px solid rgba(165, 180, 252, 0.45);
-      padding-left: 0.75rem;
-      margin-top: 0.75rem;
+    #private-draft:focus {
+      outline: none;
+      border-color: rgba(232, 230, 227, 0.12);
     }
-    code { font-size: 0.85em; background: #12121c; padding: 0.1em 0.35em; border-radius: 4px; }
-    footer {
-      margin-top: 2rem;
-      font-size: 0.82rem;
-      color: #6b6b88;
+    #private-draft::placeholder {
+      color: transparent;
     }
-    footer a { margin-right: 0.75rem; }
+    .clear-draft {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      width: 1.75rem;
+      height: 1.75rem;
+      border: none;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.45);
+      color: rgba(232, 230, 227, 0.45);
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .clear-draft:hover {
+      color: rgba(232, 230, 227, 0.75);
+    }
+    .leave-quiet {
+      margin: 2.5rem 0 0;
+      text-align: center;
+      font-size: 0.72rem;
+    }
+    .leave-quiet a {
+      color: rgba(232, 230, 227, 0.28);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .leave-quiet a:hover {
+      color: rgba(232, 230, 227, 0.48);
+      border-bottom-color: rgba(232, 230, 227, 0.2);
+    }
+    canvas.wave-thumb {
+      display: block;
+      width: 100%;
+      height: 3rem;
+    }
   </style>
 </head>
-<body class="p31-mesh-m-first p31-responsive-surface">
-  <div class="wrap p31-shell" style="--p31-shell-max: 44rem; --p31-shell-pad: 1rem; --p31-shell-pad-top: 1.25rem; --p31-shell-pad-bottom: 3rem">
-    <header>
-      <h1>Poets room</h1>
-      <p class="lede">
-        A single lobby for <strong>writing</strong>, <strong>reading</strong>, <strong>dialogue</strong>, and <strong>visual making</strong>
-        across the P31 home tree and the public hub. Nothing here uploads your work — open each tool on purpose.
-      </p>
-      <p class="aaso"><em>As above, so below:</em> same rhythm as
-        <a href="soup.html">C.A.R.S.</a>,
-        <a href="docs/doc-library/index.html">doc library</a>,
-        <a href="docs/physics-learn/index.html">physics learn</a>,
-        <a href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (with <code>andromeda/</code>),
-        <a href="p31-personal-howto.html">interactive how-to</a>,
-        <a href="docs/P31-DEPLOY-CANON.md">CONNECTION</a> (<code>npm run connection</code>), and the
-        <a href="docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">when-scale plan</a>.
-        <span title="love" aria-hidden="true">&#9829;</span>
-        <span title="&lt;3" aria-label="less than three">&lt;3</span>
-      </p>
-    </header>
-
-    <main>
-      <section aria-labelledby="sec-write">
-        <h2 id="sec-write">Write</h2>
-        <p>Structured slice and machine-readable passport JSON — advocacy and self-description, not a medical record.</p>
-        <ul class="links">
-          <li><a href="cognitive-passport/index.html">Cognitive Passport generator</a> (local)</li>
-          <li><a href="https://p31ca.org/passport" rel="noopener">Cognitive Passport</a> (hub)</li>
-          <li>Long-form edition: <code>P31 COGNITIVE PASSPORT — v5.md</code> (repo root)</li>
-        </ul>
-      </section>
-
-      <section aria-labelledby="sec-read">
-        <h2 id="sec-read">Read &amp; search</h2>
-        <p>Full-text search over home <code>docs/*.md</code> — maps, specs, handoffs.</p>
-        <ul class="links">
-          <li><a href="docs/doc-library/index.html">Document library</a> (run <code>npm run build:doc-index</code> after edits)</li>
-          <li><a href="docs/physics-learn/index.html">Progressive physics learn</a> (local units + labs)</li>
-          <li><a href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (hub static: live klines on a K₄ — needs <code>andromeda/</code>; <a href="https://p31ca.org/k4market.html" rel="noopener">live</a> · pairs with <a href="https://p31ca.org/tomography.html" rel="noopener">tomography</a>)</li>
-        </ul>
-      </section>
-
-      <section aria-labelledby="sec-dialogue">
-        <h2 id="sec-dialogue">Dialogue workshop</h2>
-        <p>Personal agent chat (isolated Durable Object). Optional <strong>SOULSAFE</strong> fusion includes a <strong>creation</strong> lane — useful for revision and expansion, not a substitute for human editors.</p>
-        <ul class="links">
-          <li><a href="https://p31ca.org/mesh-start.html" rel="noopener">Mesh start</a> · <a href="https://p31ca.org/start" rel="noopener">/start</a></li>
-          <li><a href="docs/SOULSAFE-TETRA-SPEC.md">SOULSAFE tetra spec</a> (local doc)</li>
-          <li><a href="docs/PLAN-KIDS-VIBE-CODING.md">Kids / teens vibe coding</a> — privacy boundaries for minors</li>
-        </ul>
-      </section>
-
-      <section aria-labelledby="sec-visual">
-        <h2 id="sec-visual">Visual studio</h2>
-        <p>Three.js geodesic builder — spatial “drawing” and optional live room.</p>
-        <ul class="links">
-          <li><a href="https://p31ca.org/geodesic.html" rel="noopener">Geodesic coach + builder</a></li>
-          <li>Live room: append <code>?room=your-id</code> (see <a href="docs/GEODESIC-CAMPAIGN.md">GEODESIC campaign</a>)</li>
-        </ul>
-      </section>
-
-      <section aria-labelledby="sec-story">
-        <h2 id="sec-story">Story &amp; narrative frame</h2>
-        <ul class="links">
-          <li><strong>Create &amp; connect</strong> — <a href="https://p31ca.org/build" rel="noopener">p31ca.org/build</a> (intake) · <a href="https://p31ca.org/connect.html" rel="noopener">connect</a> (K₄ cage); local: <a href="andromeda/04_SOFTWARE/p31ca/public/initial-build.html">initial-build</a> · <a href="andromeda/04_SOFTWARE/p31ca/public/connect.html">connect.html</a></li>
-          <li><a href="https://p31ca.org/delta.html" rel="noopener">Delta</a> — Wye→Delta resilience narrative</li>
-          <li><a href="https://p31ca.org/planetary-onboard.html?welcome=kid&amp;a=child" rel="noopener">Planetary onboard</a> (child archetype)</li>
-          <li>Picture book track: <a href="docs/MVP-DELIVERABLES-INVENTORY.md">MVP deliverables</a> (Tier 3)</li>
-        </ul>
-      </section>
-
-      <section aria-labelledby="sec-ship">
-        <h2 id="sec-ship">Ship on p31ca.org</h2>
-        <p>This page lives in the <strong>home</strong> repo first. To add a hub card, about page, and clean URL, follow the checklist in <a href="docs/P31-HUB-CARD-ECOSYSTEM.md"><code>docs/P31-HUB-CARD-ECOSYSTEM.md</code></a> (section <em>Poets room</em>).</p>
-        <p class="note">Requires an <code>andromeda/</code> checkout: <code>registry.mjs</code>, <code>hub-app-ids.mjs</code>, <code>public/poets.html</code> (or equivalent), ground-truth + <code>_redirects</code> if you add a short path.</p>
-      </section>
-    </main>
-
-    <footer>
-      <a href="soup.html">Soup</a>
-      <a href="docs/P31-DEPLOY-CANON.md" title="npm run connection">CONNECTION</a>
-      <a href="http://127.0.0.1:3131/" title="npm run command-center">Command center</a>
-      <a href="docs/doc-library/index.html">Document library</a>
-      <a href="docs/physics-learn/index.html">Physics learn</a>
-      <a href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a>
-    </footer>
+<body>
+  <a class="skip" href="#shelf-anchor">Skip to the shelf and writing space</a>
+  <div class="layer-void">
+    <blockquote class="daily-quote" id="daily-quote">
+      <p id="quote-text"></p>
+      <footer id="quote-attribution"></footer>
+    </blockquote>
+    <p class="scroll-hint" aria-hidden="true">Scroll</p>
   </div>
+
+  <div class="layer-deep" id="shelf-anchor">
+    <p class="shelf-title">The shelf</p>
+    <nav class="poets-tool-strip" aria-label="C.A.R.S. lab and mesh">
+      <a href="soup.html">C.A.R.S.</a>
+      <a href="p31-sovereign-lab.html">Lab</a>
+      <a href="p31-slicer.html">Slicer</a>
+      <a href="https://p31ca.org/geodesic" target="_blank" rel="noopener">Geodesic</a>
+    </nav>
+    <div class="shelf" role="list">
+      <div class="shelf-item" role="listitem">
+        <div class="thumb" aria-hidden="true">
+          <div class="tetra-stage">
+            <div class="tetra">
+              <svg viewBox="0 0 64 64" width="48" height="48" aria-hidden="true">
+                <g fill="none" stroke="rgba(180,200,210,0.35)" stroke-width="0.8">
+                  <path d="M32 8 L54 48 L10 48 Z" />
+                  <path d="M32 8 L32 56" />
+                  <path d="M10 48 L44 30" />
+                  <path d="M54 48 L20 30" />
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+        K₄ — the shape holds
+      </div>
+      <div class="shelf-item" role="listitem">
+        <div class="thumb" aria-hidden="true" title="Posner cluster — Ca₉(PO₄)₆">
+          <svg viewBox="0 0 64 64" width="52" height="52" aria-hidden="true">
+            <polygon points="32,10 52,42 12,42" fill="none" stroke="rgba(160,190,210,0.3)" stroke-width="0.7" />
+            <circle cx="32" cy="28" r="5" fill="rgba(200,210,230,0.15)" stroke="rgba(160,190,210,0.35)" />
+            <circle cx="22" cy="40" r="3" fill="rgba(180,200,220,0.12)" />
+            <circle cx="42" cy="40" r="3" fill="rgba(180,200,220,0.12)" />
+            <circle cx="28" cy="44" r="2.5" fill="rgba(180,200,220,0.1)" />
+            <circle cx="36" cy="44" r="2.5" fill="rgba(180,200,220,0.1)" />
+          </svg>
+        </div>
+        Posner — cage of calcium
+      </div>
+      <div class="shelf-item" role="listitem">
+        <div class="thumb" aria-hidden="true" title="First BONDING molecule">
+          <svg viewBox="0 0 64 64" width="50" height="50" aria-hidden="true">
+            <circle cx="22" cy="32" r="8" fill="none" stroke="rgba(160,200,255,0.35)" stroke-width="1" />
+            <circle cx="42" cy="32" r="8" fill="none" stroke="rgba(160,200,255,0.35)" stroke-width="1" />
+            <circle cx="32" cy="20" r="6" fill="none" stroke="rgba(255,200,160,0.35)" stroke-width="1" />
+            <line x1="28" y1="24" x2="26" y2="28" stroke="rgba(255,255,255,0.2)" stroke-width="0.8" />
+            <line x1="36" y1="24" x2="38" y2="28" stroke="rgba(255,255,255,0.2)" stroke-width="0.8" />
+          </svg>
+        </div>
+        March 10, 2026 — BONDING shipped · birthday
+      </div>
+      <div class="shelf-item" role="listitem">
+        <a class="thumb" href="https://doi.org/10.5281/zenodo.19503542" rel="noopener noreferrer" title="Zenodo — Paper IV">
+          <span style="display:block;padding:0.35rem 0.25rem;font-family:'Playfair Display',serif;font-style:italic;font-size:0.52rem;line-height:1.25;color:rgba(232,230,227,0.42);">
+            Universal Bridge at the Phase Transition
+          </span>
+        </a>
+        <span style="display:block;margin-top:0.2rem;font-size:0.5rem;">10.5281/zenodo.19503542</span>
+      </div>
+      <div class="shelf-item" role="listitem">
+        <button type="button" class="thumb wave-btn" id="wave-863" aria-label="Play 863 Hz for one second (Larmor)">
+          <canvas class="wave-thumb" id="wave-canvas" width="88" height="48" aria-hidden="true"></canvas>
+        </button>
+        863 Hz — one second, then silence
+      </div>
+      <div class="shelf-item" role="listitem">
+        <div
+          class="thumb photo-slot is-empty"
+          id="photo-slot"
+          tabindex="0"
+          role="button"
+          aria-label="Photo place — drop an image file from your device"
+        ></div>
+        Your picture — local only
+      </div>
+    </div>
+
+    <div class="writing-block">
+      <label for="private-draft">Words that never leave this browser</label>
+      <button type="button" class="clear-draft" id="clear-draft" aria-label="Clear writing" title="Clear">×</button>
+      <textarea id="private-draft" spellcheck="false" autocomplete="off" rows="12"></textarea>
+    </div>
+
+    <p class="leave-quiet"><a id="poets-leave" href="soup.html">When you need the rest of the house</a></p>
+  </div>
+
+  <script>
+(function () {
+  var STORAGE_KEY = 'poets-room-private-v1';
+  var PHOTO_KEY = 'poets-room-shelf-photo-v1';
+
+  function dayOfYearLocal(d) {
+    var start = new Date(d.getFullYear(), 0, 0);
+    return Math.floor((d - start) / 86400000);
+  }
+
+  function suspendLooseAudio() {
+    if (typeof window.__p31SuspendAllAudio === 'function') {
+      try { window.__p31SuspendAllAudio(); } catch (e) {}
+    }
+    var auds = document.querySelectorAll('audio');
+    for (var i = 0; i < auds.length; i++) {
+      try { auds[i].pause(); } catch (e) {}
+    }
+  }
+
+  function pickQuote(data) {
+    var list = data && data.quotes;
+    if (!list || !list.length) return null;
+    var idx = dayOfYearLocal(new Date()) % list.length;
+    return list[idx];
+  }
+
+  function showQuote(q) {
+    document.getElementById('quote-text').textContent = q.text;
+    document.getElementById('quote-attribution').textContent = '— ' + q.attribution;
+  }
+
+  function fallbackQuote() {
+    showQuote({
+      text: 'Something hit me very hard once, thinking about what one little man could do.',
+      attribution: 'Buckminster Fuller'
+    });
+  }
+
+  function lightQuote() {
+    var el = document.getElementById('daily-quote');
+    el.classList.add('is-lit');
+  }
+
+  function drawWave() {
+    var c = document.getElementById('wave-canvas');
+    if (!c || !c.getContext) return;
+    var ctx = c.getContext('2d');
+    var w = c.width;
+    var h = c.height;
+    ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = 'rgba(180, 200, 210, 0.35)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    for (var x = 0; x <= w; x++) {
+      var t = (x / w) * Math.PI * 2;
+      var y = h / 2 + Math.sin(t) * (h * 0.35);
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  function play863() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    suspendLooseAudio();
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    var ctx = new AC();
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    gain.gain.value = 0.08;
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(863, ctx.currentTime);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 1);
+    osc.onended = function () {
+      ctx.close().catch(function () {});
+    };
+  }
+
+  function loadDraft() {
+    var ta = document.getElementById('private-draft');
+    try {
+      ta.value = localStorage.getItem(STORAGE_KEY) || '';
+    } catch (e) {
+      ta.value = '';
+    }
+    ta.addEventListener('input', function () {
+      try {
+        localStorage.setItem(STORAGE_KEY, ta.value);
+      } catch (e) {}
+    });
+  }
+
+  function wireClear() {
+    document.getElementById('clear-draft').addEventListener('click', function () {
+      if (!confirm('Clear everything in the writing space? This cannot be undone.')) return;
+      document.getElementById('private-draft').value = '';
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (e) {}
+    });
+  }
+
+  function wirePhoto() {
+    var slot = document.getElementById('photo-slot');
+    function applyDataUrl(url) {
+      slot.innerHTML = '';
+      if (!url) {
+        slot.classList.add('is-empty');
+        return;
+      }
+      var img = document.createElement('img');
+      img.src = url;
+      img.alt = 'Your photo on the shelf';
+      slot.appendChild(img);
+      slot.classList.remove('is-empty');
+    }
+    try {
+      applyDataUrl(localStorage.getItem(PHOTO_KEY) || '');
+    } catch (e) {
+      slot.classList.add('is-empty');
+    }
+    slot.addEventListener('dragover', function (e) {
+      e.preventDefault();
+      slot.classList.add('drag');
+    });
+    slot.addEventListener('dragleave', function () {
+      slot.classList.remove('drag');
+    });
+    slot.addEventListener('drop', function (e) {
+      e.preventDefault();
+      slot.classList.remove('drag');
+      var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (!f || !f.type || f.type.indexOf('image') !== 0) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        var url = String(reader.result || '');
+        try {
+          localStorage.setItem(PHOTO_KEY, url);
+        } catch (err) {}
+        applyDataUrl(url);
+      };
+      reader.readAsDataURL(f);
+    });
+  }
+
+  document.getElementById('wave-863').addEventListener('click', play863);
+  drawWave();
+  window.addEventListener('resize', drawWave);
+
+  var cfg = document.getElementById('poets-config');
+  var quotesHref = (cfg && cfg.getAttribute('data-quotes-href')) || './poets-room-quotes.json';
+  var leaveHref = (cfg && cfg.getAttribute('data-leave-href')) || 'soup.html';
+  var leaveA = document.getElementById('poets-leave');
+  if (leaveA) leaveA.setAttribute('href', leaveHref);
+
+  fetch(quotesHref)
+    .then(function (r) {
+      if (!r.ok) throw new Error('quotes');
+      return r.json();
+    })
+    .then(function (data) {
+      var q = pickQuote(data);
+      if (!q) throw new Error('empty');
+      showQuote(q);
+    })
+    .catch(function () {
+      fallbackQuote();
+    })
+    .then(function () {
+      setTimeout(lightQuote, 2000);
+    });
+
+  loadDraft();
+  wireClear();
+  wirePhoto();
+})();
+  </script>
 </body>
 </html>

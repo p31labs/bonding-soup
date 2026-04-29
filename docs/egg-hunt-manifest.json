@@ -115,9 +115,10 @@
         "elder",
         "child",
         "elder-mode",
-        "child-mode"
+        "child-mode",
+        "data-door=\"understand\""
       ],
-      "trigger": "?a=child (haptic preset, diamond sphere layout, Phase 5 auto-skip) or ?a=elder (110px spheres, larger touch targets). Default is 'default'."
+      "trigger": "Threshold onboard: hidden archetype anchors for tooling; ?a=child or ?welcome=kid opens Door 2 parent path. Legacy dial→connect flow lives on /connect.html?dial=…"
     },
     {
       "id": "CONNECT-DIAL",
@@ -130,6 +131,72 @@
         "welcome-toast"
       ],
       "trigger": "?dial=N on /connect.html is the post-onboarding handoff signal from planetary-onboard.html. Shows welcome toast, then cleans the URL via history.replaceState."
+    },
+    {
+      "id": "PHYSICS-FULLER-EGG",
+      "operator": "weak-coupling",
+      "vertex": 4,
+      "file": "docs/physics-learn/index.html",
+      "require": [
+        "p31-egg-fuller-sr",
+        "build a new model that makes the existing model obsolete"
+      ],
+      "trigger": "Physics Learn: Fuller quote in a screen-reader-only paragraph (accessibility Easter egg)."
+    },
+    {
+      "id": "PHYSICS-COORD-EGG",
+      "operator": "weak-coupling",
+      "vertex": 4,
+      "file": "docs/physics-learn/index.html",
+      "require": [
+        "30.7333",
+        "-81.5556"
+      ],
+      "trigger": "Physics Learn: home latitude/longitude signature in HTML comment (not tracking)."
+    },
+    {
+      "id": "PHYSICS-LARMOR-MS-EGG",
+      "operator": "povm-measurement",
+      "vertex": 2,
+      "file": "docs/physics-learn/index.html",
+      "require": [
+        "p31-egg-larmor-ms",
+        "863ms"
+      ],
+      "trigger": "Physics Learn: invisible pulse uses 863ms animation period (Larmor Hz as timebase; see physics.larmorHz in p31-constants.json)."
+    },
+    {
+      "id": "SOUP-LOV-REACTION",
+      "operator": "parametric-superposition",
+      "vertex": 1,
+      "file": "src/reactions.ts",
+      "require": [
+        "return 'LOV'",
+        "Li–O–V letterplay"
+      ],
+      "trigger": "C.A.R.S.: hidden Li+V synthesis label LOV (family Easter egg; not a stoichiometry claim)."
+    },
+    {
+      "id": "SOUP-LOV-SPAWN",
+      "operator": "parametric-superposition",
+      "vertex": 1,
+      "file": "soup.html",
+      "require": [
+        "egglov",
+        "spawnEggLovSandbox"
+      ],
+      "trigger": "soup.html: ?egglov=1 seeds Li+V near lab for LOV discovery."
+    },
+    {
+      "id": "SIMPLEX-ORACLE-SPOON-EGG",
+      "operator": "povm-measurement",
+      "vertex": 2,
+      "file": "simplex-v7/src/agents/runner.ts",
+      "require": [
+        "Empty cup, full day. Rest.",
+        "context.operator_spoons === 0"
+      ],
+      "trigger": "ORACLE run at exactly 0/12 spoons appends spoon-theory benediction (online + offline stub)."
     }
   ],
   "assertions": [

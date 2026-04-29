@@ -42,7 +42,15 @@ function main() {
     return;
   }
 
-  execSync("npm run sync:doc-library:p31ca", { cwd: root, stdio: "inherit" });
+  execSync("npm run sync:doc-library:p31ca", {
+    cwd: root,
+    stdio: "inherit",
+    env: {
+      ...process.env,
+      /** Same bar already ran build:doc-index; avoid second build (timestamp drift vs Andromeda git). */
+      P31_SYNC_DOC_LIB_SKIP_BUILD: "1",
+    },
+  });
 
   const out = execFileSync(
     "git",

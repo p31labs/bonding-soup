@@ -7,6 +7,7 @@
 | File | Role |
 |------|------|
 | **`p31-alignment.json`** | Schema `p31.alignment/1.0.0` — `sources` (canonical paths), `derivations` (edges: from → to, `apply`, `verify`), `verifyPipeline` (ordered `npm run` list — **keep in sync** with root `package.json` **`verify`**) |
+| **`docs/MESH-ARCHITECTURE-CANON.md`** | Mesh substrate canon (shipped / next / doctrine); **`npm run verify:mesh-canon`** after `k4-mesh-core` or cage vertex/version changes |
 | **`scripts/verify-alignment.mjs`** | Fast check: JSON valid, required `sources` exist. Flags: `--verify` runs the full `verifyPipeline` (same as chained `npm run verify` when run from a full checkout) |
 | **`docs/P31-HUB-CARD-ECOSYSTEM.md`** | Normative p31ca hub: registry **id** set = **`hub-app-ids.mjs`** **HUB_ALL_CARD_ORDER**; one card, one about, one `appUrl` |
 | **`andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs`** | Product copy and URLs (required when Andromeda checkout present; optional source in `p31-alignment.json`) |
@@ -44,7 +45,7 @@
 | `design-assets/README.md` + `cognitive-passport/p31-style.css` | Spinner SVGs, Apex Forge, Ko-fi engine, STL — see derivation `design-assets-to-canonical-tokens` | Reconcile hex after `npm run apply:p31-style` (see `design-assets/README.md` void note) | `npm run verify:alignment`; spot-check static HTML |
 | `soup.html` + assets | `bonding/public/soup/` | `npm run sync:soup-bonding` | Bonding build + deploy discipline |
 | `cars-contract/p31.carsWire.json` (+ `src/soup.ts`, `spikes/mock-ws-server/server.js`) | (types are in code; JSON is inspectable catalog) | Rename or add WS `type` strings in all three | `npm run verify:cars-wire` |
-| Hub `registry.mjs` + `hub-app-ids.mjs` | `hub-landing.json` | p31ca `hub:build` / postinstall | p31ca `prebuild` hub verify (`scripts/hub/verify.mjs`) |
+| Hub `registry.mjs` + `hub-app-ids.mjs` + home `p31-constants.json` (`research.papers` → `research[]` DOI list) | `hub-landing.json` | p31ca `hub:build` / postinstall | p31ca `prebuild` hub verify (`scripts/hub/verify.mjs`) + `diff-index-sources` |
 | `p31-constants.json` (`mesh` / `payment` URLs) | `p31-live-fleet.json` | Edit live-fleet to mirror operator-locked URLs | `npm run verify:ecosystem` |
 | `docs/doc-index.manifest.json` + allowlisted `.md` | `docs/doc-library/index.json` | `npm run build:doc-index` | `npm run verify:doc-index` (runs after `build:doc-index` in root `verify`); headless e2e `npm run test:doc-library:e2e` in `p31:all` unless `--skip-e2e` |
 | `docs/physics-learn/index.html` + `docs/physics-learn/physics-engine.js` | (hand-maintained static) | — | headless e2e `npm run test:physics-learn:e2e` in `p31:all` unless `--skip-e2e`; `P31_PHYSICS_LEARN_E2E=1` in `validate:full` for scorecard line |

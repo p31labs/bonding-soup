@@ -23,7 +23,7 @@ Version-controlled **operator design artefacts**: K₄ spinners, SVG “forge”
 | `spinners/` | `wye-sequence.svg`, `quantum-breath.svg`, `ghost-grid.svg` + README |
 | `forge/` | `apex-forge.html` — click-to-copy SVG payloads (Apex v2: Larmor, PFP, banner) |
 | `kofi/` | `kofi-engine.html` — canvas PNG export for storefront graphics |
-| `stl/` | `P31_K4_Topology.stl` + README |
+| `stl/` | `P31_K4_Topology.stl` + README — use **`p31-slicer.html`** (repo root) for in-browser Kiri:Moto |
 
 ## Alignment
 
@@ -32,3 +32,9 @@ Registered in `p31-alignment.json` as **`design-assets-canon`**. Changes here sh
 ## Ethical / Ko-fi
 
 Storefront product **names and claims** on generated cards are **placeholders** until operator review against `docs/ETHICAL-STYLE-MAP.md` and `docs/P31-CREATE-CONNECT-ETHICAL-MONETIZATION.md` (and hub `creator-economy.json` when applicable). Do not publish to Ko-fi without that review.
+
+## Sovereign Lab (research slice)
+
+Repo root **`p31-sovereign-lab.html`** — Three.js dome panes, optional Web Serial + voice, links to **`p31-slicer.html`** and hub Geodesic. Not medical instrumentation; see on-page note.
+
+**GeodesicRoom state preview:** `spikes/sovereign-geodesic-preview/` — `npm run demo:geodesic-preview` (repo root) polls **`GET /api/geodesic/:room/state`** via Vite proxy; see spike **README**.

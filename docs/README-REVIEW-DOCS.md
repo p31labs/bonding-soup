@@ -40,7 +40,7 @@ Read in this order:
 |------|---------------|---------------|
 | Entity | HCB fiscal sponsor pending | **P31 Labs, Inc.** incorporated Apr 3, 2026 (GA domestic nonprofit); EIN 42-1888158 assigned Apr 13 |
 | BONDING | Shipping March 10 | **Shipped** March 10 — 424 tests / 32 suites canonical; multiplayer relay, 3D molecule builder live |
-| Research | Papers I–III + defensive pub | **Papers I–IV** + **V–XX** on Zenodo (batch **2026-04-26**); DOIs in **`p31-constants.json`** → `research.papers`; log **`andromeda/docs/files/zenodo_results.json`**. Paper IV **10.5281/zenodo.19503542** (Apr 10). |
+| Research | Papers I–III + defensive pub | **22** Zenodo DOIs — series **I–XX** + **2** standalone; DOIs in **`p31-constants.json`** → `research.papers`; index **`docs/P31-ZENODO-PUBLICATION-REGISTRY.md`**. Paper IV **10.5281/zenodo.19503542** (Apr 10). |
 | Node Zero | Concept / early HW | **Active firmware sprint** — Waveshare ESP32-S3-Touch-LCD-3.5B, ESP-IDF 5.5.3, LVGL 8.4, AXS15231B QSPI driver |
 | Edge fleet | Workers deploying | **10-worker Cloudflare production fleet live** — unified telemetry, KV-backed status dashboard, shared spoon state |
 | WCDs | Batch 2 in progress | **WCD Batch 3 (26–32) all closed**, `tsc` clean |

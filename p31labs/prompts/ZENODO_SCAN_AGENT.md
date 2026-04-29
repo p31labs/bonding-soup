@@ -52,7 +52,7 @@ Each paper must satisfy four vertices simultaneously:
 Query each known DOI directly:
 
 ```
-https://zenodo.org/api/records/18627420  (Paper I)
+https://zenodo.org/api/records/19004485  (Paper I — current; prior version **18627420**)
 https://zenodo.org/api/records/19411363  (Paper II)
 https://zenodo.org/api/records/19503542  (Paper IV)
 ```
@@ -70,10 +70,10 @@ For each record, extract and verify: `doi`, `title`, `creators` (name, orcid, af
 
 **Files to audit:**
 
-1. **CogPass v3.x** — Section "P31 RESEARCH SERIES — COMPLETE AT 4 PAPERS"; verify Paper I–IV DOIs, dates, titles, links.
-2. **GOD Ground Truth** — Zenodo Publication Status table; all 4 papers; no orphans.
+1. **CogPass v3.x** — Research credentials must match **`p31-constants.json` → `research`** (**22** Zenodo DOIs: series **I–XX** + **2** standalone); verify DOIs, dates, titles, links.
+2. **GOD Ground Truth** — Zenodo Publication Status table; **22** publications in constants/registry; no orphans.
 3. **p31_forge.py** — Footer/constants; `10.5281/zenodo.XXXXXXX` format.
-4. **Traction Package** — Publications section; DOI count 4; no superseded DOIs.
+4. **Traction Package** — Publications section; DOI count **22**; no superseded DOIs.
 5. **README.md** — Zenodo badge(s).
 6. **CITATION.cff** — All papers; ORCID `0009-0002-2492-9079`.
 
@@ -83,7 +83,7 @@ For each record, extract and verify: `doi`, `title`, `creators` (name, orcid, af
 
 **Target URLs:**
 
-1. `https://phosphorus31.org/research` — four papers, live DOI links, titles match Zenodo.
+1. `https://phosphorus31.org/research` — full **22**-DOI list (or link to registry), live DOI links, titles match Zenodo.
 2. `https://p31ca.org` — footer / about; DOIs or link to publications.
 3. `https://github.com/p31labs` — README badges; CITATION.cff where applicable.
 
@@ -97,7 +97,7 @@ For each record, extract and verify: `doi`, `title`, `creators` (name, orcid, af
 
 ## CONSISTENCY MATRIX
 
-Generate a 4×4 matrix: Papers I–IV (rows) × Vertices Zenodo / Internal / Public / Repo (columns). All ✅ = complete; any ⚠️ = incomplete; any 🔴 = critical.
+Generate a coverage matrix: series **I–XX** + **2** standalone (rows or grouped) × Zenodo / Internal / Public / Repo (columns). All ✅ = complete; any ⚠️ = incomplete; any 🔴 = critical.
 
 ---
 
@@ -134,8 +134,8 @@ Deliver **JSON** (machine-parseable) + **Markdown** (human-readable). See `zenod
 ## EDGE CASES
 
 1. **Paper III DOI ambiguous?** → Often companion to II; confirm in metadata.  
-2. **Paper XII gated?** → Planned, not yet published.  
-3. **Papers V–XX in draft?** → Future series.  
+2. **Paper XII** → **Published** (**10.5281/zenodo.19782969**); “gated” language is obsolete.  
+3. **Papers V–XX** → On Zenodo (batch **2026-04-26**); verify against `research.papers`.  
 4. **Token in plaintext?** → Flag security issue.  
 5. **Link rot on phosphorus31.org?** → HEAD each DOI URL.  
 

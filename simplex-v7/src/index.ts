@@ -81,6 +81,36 @@ export default {
         return json(rows.results ?? []);
       }
 
+      if (method === 'GET' && url.pathname === '/api/accommodation-log') {
+        const daysRaw = url.searchParams.get('days');
+        const days = Math.min(90, Math.max(1, Number(daysRaw ?? 14) || 14));
+        const cutoff = Date.now() - days * 86_400_000;
+        const cutoffDate = new Date(cutoff).toISOString().slice(0, 10);
+        const rows = await env.DB.prepare(
+          'SELECT id, entry_date, entry_time, task, tool, accommodation, duration_min, limitation, alternative, outcome, source, is_auto, limitation_kind, source_ref, created_at FROM accommodation_log WHERE created_at >= ? ORDER BY created_at DESC LIMIT 2000'
+        )
+          .bind(cutoff)
+          .all();
+        return json({ days, cutoff_date: cutoffDate, rows: rows.results ?? [] });
+      }
+
+      if (method === 'POST' && url.pathname === '/api/accommodation-log') {
+        const body = (await request.json()) as {
+          task_line?: string;
+          tool?: string;
+          limitation_kind?: string;
+        };
+        const result = await TOOL_REGISTRY.log_manual_accommodation.handler(
+          {
+            task_line: body.task_line,
+            tool: body.tool ?? 'Other',
+            limitation_kind: body.limitation_kind ?? 'executive',
+          },
+          env
+        );
+        return json(result);
+      }
+
       if (method === 'GET' && url.pathname === '/api/spoons') {
         const ctx = await resolveSentinelContext(env);
         return json({

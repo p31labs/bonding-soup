@@ -1,0 +1,61 @@
+{
+  "schema": "p31.githubOrgMetadata/1.0.0",
+  "_comment": "Used by: npm run github:org:metadata. Requires gh auth with repo scope. Descriptions are plain text (GitHub About).",
+  "organization": "p31labs",
+  "repos": [
+    {
+      "name": "bonding-soup",
+      "description": "P31 home: C.A.R.S. sim, cognitive passport authoring, alignment, verify tooling. Pairs with p31labs/andromeda for the hub.",
+      "homepage": "https://github.com/p31labs/andromeda",
+      "topics": ["p31-labs", "typescript", "cognitive-accessibility", "family-mesh", "collaborative-sim"]
+    },
+    {
+      "name": "andromeda",
+      "description": "P31 Labs monorepo: Cloudflare hub (p31ca), Workers, shared packages. Hub path 04_SOFTWARE/p31ca. Live https://p31ca.org",
+      "homepage": "https://p31ca.org",
+      "topics": ["p31-labs", "cloudflare-workers", "monorepo", "typescript", "family-mesh", "pnpm"]
+    },
+    {
+      "name": "p31ca",
+      "description": "Technical hub for https://p31ca.org — see README for relation to p31labs/andromeda (04_SOFTWARE/p31ca).",
+      "homepage": "https://p31ca.org",
+      "topics": ["p31-labs", "cloudflare-pages", "astro", "typescript", "family-mesh"]
+    },
+    {
+      "name": "phosphorus31.org",
+      "description": "P31 Labs public programs / org site (parallel track to the technical hub at p31ca.org).",
+      "homepage": "https://phosphorus31.org",
+      "topics": ["p31-labs", "static-site", "nonprofit"]
+    },
+    {
+      "name": "node-zero",
+      "description": "Identity, bond, and vault protocol for P31 assistive technology.",
+      "topics": ["p31-labs", "typescript", "protocol", "identity"]
+    },
+    {
+      "name": "love-ledger",
+      "description": "LOVE — Ledger of Ontological Value and Entropy.",
+      "topics": ["p31-labs", "typescript", "ledger"]
+    },
+    {
+      "name": "game-engine",
+      "description": "Geodesic building game engine for P31 assistive technology.",
+      "topics": ["p31-labs", "typescript", "game-engine", "geodesic"]
+    },
+    {
+      "name": "family-link-os",
+      "description": "Same truth. Four languages. One mesh.",
+      "topics": ["p31-labs", "javascript", "family-mesh"]
+    },
+    {
+      "name": "cognitive-prosthetic",
+      "description": "P31 Cognitive Prosthetic — local-first, autonomous digital centaur for neurodivergent operatives.",
+      "topics": ["p31-labs", "typescript", "local-first", "accessibility"]
+    },
+    {
+      "name": "the-buffer",
+      "description": "The buffer — cognitive prosthetic for Node Zero (Python).",
+      "topics": ["p31-labs", "python", "cognitive-prosthetic"]
+    }
+  ]
+}

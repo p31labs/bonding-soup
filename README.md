@@ -4,6 +4,8 @@
 
 **Naming:** **`docs/CARS-NAMING.md`**. npm package name remains **`bonding-soup`**; live deploy path unchanged (`bonding.p31ca.org/soup`).
 
+**Relationship (GitHub):** This repo is **P31 home** — C.A.R.S., cognitive passport authoring, alignment (`p31-alignment.json`), verify scripts, doc library, and local command center. The **technical hub** (Astro **`p31ca`**, static `public/`, Workers) lives in the **[andromeda](https://github.com/p31labs/andromeda)** monorepo under **`04_SOFTWARE/p31ca`** (live site **https://p31ca.org**). The **programs / org site** track is **[phosphorus31.org](https://github.com/p31labs/phosphorus31.org)**. Canonical clone paths and org-wide tier map: **`docs/P31-GITHUB-ORG-REPOS.md`**, **`p31-github.json`** → `hubCanonical`.
+
 **Workspace context:** this directory also holds **Andromeda**, **phosphorus31.org**, spikes, and docs. For how those paths relate without merging repos, read **`P31-ROOT-MAP.md`**. For agents/IDE: **`AGENTS.md`**. **Personal command/repo cheat sheet:** **`docs/P31-PERSONAL-HOW-TO.md`** (interactive UI: **`p31-personal-howto.html`**, e.g. with **`npm run demo`**).
 
 **Engineering standard:** before merge or deploy, follow **`docs/P31-ENGINEERING-STANDARD.md`** (`npm run verify`, `npm run release:check` when the full tree is present). **Facts contract (machine invariants):** `npm run verify:facts` — see **`docs/DELIVERABLE-P31-FACTS.md`**. Andromeda monorepo bar: **`andromeda/docs/ENTERPRISE_QUALITY.md`**.

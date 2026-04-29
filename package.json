@@ -48,6 +48,9 @@
     "automation:autoclean": "node scripts/repo-autoclean.mjs",
     "automation:autoclean:apply": "node scripts/repo-autoclean.mjs --apply",
     "fix:gh": "node scripts/gh-setup-git.mjs",
+    "github:org:sync": "node scripts/github-org-automation.mjs sync",
+    "github:org:metadata": "node scripts/github-org-automation.mjs metadata",
+    "github:org:publish": "node scripts/github-org-automation.mjs all",
     "command-center": "node scripts/p31-local-command-center.mjs",
     "build": "tsc",
     "sync:soup-bonding": "node scripts/sync-soup-to-bonding.mjs",
@@ -199,5 +202,6 @@
     "dist/**/*",
     "src/**/*",
     "soup.html"
-  ]
+  ],
+  "license": "MIT"
 }

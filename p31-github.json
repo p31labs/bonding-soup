@@ -1,6 +1,14 @@
 {
-  "_comment": "Used by: npm run git:remotes. homeRepository sets home root origin for npm run pr. Override: P31_HOME_GITHUB=org/repo. If GitHub 404s while logged out, repo may be private — confirm slug or set-url if push fails.",
+  "_comment": "Used by: npm run git:remotes. homeRepository sets home root origin for npm run pr. Override: P31_HOME_GITHUB=org/repo. If GitHub 404s while logged out, repo may be private — confirm slug or set-url if push fails. hubCanonical documents the public-facing clone story for p31ca hub code (see docs/P31-GITHUB-ORG-REPOS.md).",
   "schema": "p31.github/1.0.0",
   "homeRepository": "p31labs/bonding-soup",
-  "andromedaRepository": "p31labs/andromeda"
+  "andromedaRepository": "p31labs/andromeda",
+  "orgDotGithubRepository": "p31labs/.github",
+  "hubCanonical": {
+    "primaryHubSourceRepository": "p31labs/andromeda",
+    "hubPackagePathInMonorepo": "04_SOFTWARE/p31ca",
+    "deployedHubSite": "https://p31ca.org",
+    "standaloneHubRepository": "p31labs/p31ca",
+    "standaloneHubRepositoryRole": "May exist as a mirror, deploy slice, or historical split. Contributors should treat **p31labs/andromeda** at **04_SOFTWARE/p31ca** as the canonical working tree unless the standalone repo README explicitly states it is the integration branch of record."
+  }
 }

@@ -166,7 +166,7 @@ First warming event (ping, check-in, alert) → **explosion** back to full parti
 
 ## 24. The Fixed Star (Remembrance)
 
-When the operator **consecrates** a mesh vertex in **simplex-worker** (`POST /api/remember/consecrate`), that person is **remembered**, not deleted and not merely offline. Starfield behavior (when wired to mesh state): one particle becomes a **fixed** position — no drift — using **`P31_REMEMBRANCE_WARM_WHITE`** / **`REMEMBRANCE_RGB`** from `design-assets/starfield/p31-starfield.js` (canon also in **`p31-constants.json`** `mesh.remembranceWarmWhite`). It does **not** dim with low spoons or safe mode. Optional anniversary pulses stay faint and brief. This touch is intentionally **not** logged as an accommodation unless the operator passes `log_accommodation` on consecration.
+When the operator **consecrates** a mesh vertex in **simplex-worker** (`POST /api/remember/consecrate`), that person is **remembered**, not deleted and not merely offline. **`GET /api/state`** merges a **public-safe** slice into `state`: `remembrance_fixed_stars` (normalized x,y,a from SHA-256 of vertex id — no names), `remembered_vertex_count`, and `bereavement_active`. **`resolveStarfieldConfig`** → **`mergeApiTouchHints`** turns that into warm-white **fixed** dots above the teal user-constellation layer (`p31-starfield.js` + **`REMEMBRANCE_RGB`**; canon **`p31-constants.json`** `mesh.remembranceWarmWhite`). Local command center (`:3131`) loads state via **`/api/simplex-state`** so the same slice appears without CORS. Teal **med** constellation pins stay separate. This touch is intentionally **not** logged as an accommodation unless the operator passes `log_accommodation` on consecration.
 
 ---
 

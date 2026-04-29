@@ -66,6 +66,21 @@ coverage/
 # Stray local Playwright tree (e2e lives under andromeda/04_SOFTWARE/p31ca)
 /playwright/
 
+# Discovery workspace — court / discovery materials and local venv (never commit)
+# Operator rule: do not `git add Discovery/` for court exhibits, statements, or handoff PDFs/DOCX.
+Discovery/assembled_exhibits/
+Discovery/.venv/
+Discovery/__pycache__/
+# Top-level PDFs (Discovery/**/*.pdf alone does NOT match Discovery/foo.pdf)
+Discovery/*.pdf
+Discovery/**/*.pdf
+Discovery/*.docx
+Discovery/**/*.docx
+Discovery/DISCOVERY_RESPONSE_HANDOFF.md
+Discovery/SUPPLEMENTAL_DISCOVERY_ASSEMBLY_PROMPT.md
+Discovery/monthly-statement*.pdf
+Discovery/Gmail*.pdf
+
 # Scratch / generated reports
 final_validation_report.md
 audit_runner.py

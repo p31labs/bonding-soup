@@ -11,17 +11,12 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { HUB_MIRROR_GIT_PATHSPECS } from "./lib/doc-library-hub-mirror.mjs";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const p31ca = path.join(root, "andromeda", "04_SOFTWARE", "p31ca");
 const andromeda = path.join(root, "andromeda");
-
-const MIRROR_PATHSPECS = [
-  "04_SOFTWARE/p31ca/public/doc-library",
-  "04_SOFTWARE/p31ca/public/p31-bonding.webmanifest",
-  "04_SOFTWARE/p31ca/public/p31-bonding-icons",
-  "04_SOFTWARE/p31ca/public/cognitive-passport",
-];
 
 function main() {
   if (process.env.P31_SKIP_DOC_LIB_MIRROR === "1") {
@@ -54,7 +49,7 @@ function main() {
 
   const out = execFileSync(
     "git",
-    ["-C", andromeda, "status", "--porcelain", "--", ...MIRROR_PATHSPECS],
+    ["-C", andromeda, "status", "--porcelain", "--", ...HUB_MIRROR_GIT_PATHSPECS],
     { cwd: root, encoding: "utf8" }
   );
   const lines = out

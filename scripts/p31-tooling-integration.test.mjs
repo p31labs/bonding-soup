@@ -1,0 +1,34 @@
+import { describe, it, expect } from "vitest";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { buildWorkspaceProbe, classifyVerifyStep, buildEffectiveBarReport } from "./p31-effective-bar.mjs";
+
+const root = path.join(fileURLToPath(new URL(".", import.meta.url)), "..");
+
+describe("p31-effective-bar", () => {
+  it("buildWorkspaceProbe returns booleans for this repo", () => {
+    const w = buildWorkspaceProbe(root);
+    expect(typeof w.hasAndromeda).toBe("boolean");
+    expect(typeof w.hasP31ca).toBe("boolean");
+    expect(typeof w.andromedaGit).toBe("boolean");
+  });
+
+  it("classifyVerifyStep marks map-pipeline skip without andromeda", () => {
+    const w = { ...buildWorkspaceProbe(root), hasAndromeda: false, hasP31ca: false };
+    expect(classifyVerifyStep("verify:map-pipeline", w).status).toBe("skip");
+  });
+
+  it("classifyVerifyStep marks runbooks as run", () => {
+    const w = buildWorkspaceProbe(root);
+    expect(classifyVerifyStep("verify:runbooks", w).status).toBe("run");
+  });
+
+  it("buildEffectiveBarReport includes verify:runbooks in order", () => {
+    const r = buildEffectiveBarReport(root, {});
+    const names = r.verifySteps.map((s) => s.script);
+    expect(names).toContain("verify:runbooks");
+    const iPoets = names.indexOf("verify:poets-room");
+    const iRun = names.indexOf("verify:runbooks");
+    expect(iRun).toBeGreaterThan(iPoets);
+  });
+});

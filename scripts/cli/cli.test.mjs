@@ -134,4 +134,15 @@ describe("cli entry", () => {
     const out = (r.stdout || "") + (r.stderr || "");
     expect(out).toMatch(/verify-ground-truth: OK|verify:ground-truth/i);
   });
+
+  it("effective-bar exits 0 and prints matrix", () => {
+    const r = spawnSync(process.execPath, [cliEntry, "effective-bar"], {
+      cwd: cliRoot,
+      encoding: "utf8",
+      env: { ...process.env, P31_CLI_MINIMAL: "1", CI: "true" },
+    });
+    expect(r.status).toBe(0);
+    const out = (r.stdout || "") + (r.stderr || "");
+    expect(out).toMatch(/P31 effective bar|verify:alignment/);
+  });
 });

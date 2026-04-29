@@ -12,4 +12,4 @@
 
 **Canonical spine:** [P31 deploy canon](../P31-DEPLOY-CANON.md) · [Engineering standard](../P31-ENGINEERING-STANDARD.md) · **`npm run connection`** (prints hub, ops, mesh URL, and doc paths).
 
-**After adding or renaming runbooks:** `npm run build:doc-index` then `npm run verify:doc-index`.
+**After adding or renaming runbooks:** `npm run verify:runbooks` (link targets in this README) · `npm run build:doc-index` then `npm run verify:doc-index` (search index).

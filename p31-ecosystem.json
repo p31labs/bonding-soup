@@ -1,8 +1,8 @@
 {
   "_comment": "Deploy targets + glass-box URLs. Templates: {{mesh.*}}, {{bonding.*}}, {{payment.*}} from p31-constants.json. Consolidated live sites + Workers: p31-live-fleet.json. After edits: npm run verify:ecosystem",
   "schema": "p31.ecosystem/1.0.0",
-  "updated": "2026-04-28",
-  "_deployNote": "Order matches docs/ECOSYSTEM-PRODUCTION-11.md §4: constants + pnpm, K₄ trio, geodesic, agent/orchestrator/love-ledger, Google bridge, satellite Workers, passkey, EPCP command-center, donate-api, wcd33, p31ca Pages last. unified-k4-cage/ omitted (same worker name as k4-cage). p31-pwa + sovereign-command-center are Cloudflare Pages (build + pages deploy). Each deployable uses steps[][] argv arrays (no shell — scripts/ecosystem-deploy.mjs). Holistic edge audit: npm run quantum:cloud",
+  "updated": "2026-04-29",
+  "_deployNote": "Order matches docs/ECOSYSTEM-PRODUCTION-11.md §4: constants + pnpm, K₄ trio, geodesic, agent/orchestrator/love-ledger, Google bridge, satellite Workers, passkey, EPCP command-center, donate-api, cf-edge-lab (home packages/), wcd33, p31ca Pages last. unified-k4-cage/ omitted (same worker name as k4-cage). p31-pwa + sovereign-command-center are Cloudflare Pages (build + pages deploy). Each deployable uses steps[][] argv arrays (no shell — scripts/ecosystem-deploy.mjs). Holistic edge audit: npm run quantum:cloud",
   "glassProbes": [
     {
       "id": "k4-personal-api-health",
@@ -41,6 +41,13 @@
       "url": "https://geodesic-room.trimtab-signal.workers.dev/",
       "group": "mesh",
       "note": "GeodesicRoom DO v0.2 — JSON { service, version, ok }; WS /api/geodesic/:id/ws; see docs/GEODESIC-GAME-ENGINE-INTEGRATION.md"
+    },
+    {
+      "id": "cf-edge-lab-api-edge",
+      "url": "{{mesh.edgeLabWorkerUrl}}/api/edge",
+      "group": "labs",
+      "expectJsonKey": "ok",
+      "note": "request.cf + cf-ray JSON; 404 until first deploy (npm run edge-lab:deploy). P31_GLASS_STRICT=1 fails row when down."
     },
     {
       "id": "agent-hub-health",
@@ -400,6 +407,12 @@
       "cwd": "andromeda/04_SOFTWARE/donate-api",
       "description": "Stripe Checkout Worker — secrets per donate-api/DEPLOY.md",
       "steps": [["npx", "wrangler", "deploy"]]
+    },
+    {
+      "id": "cf-edge-lab",
+      "cwd": "packages/cf-edge-lab",
+      "description": "Edge lab — Workers AI + request.cf JSON + WebSocket demo (npm run edge-lab:dev)",
+      "steps": [["npm", "run", "deploy"]]
     },
     {
       "id": "wcd33-archive",

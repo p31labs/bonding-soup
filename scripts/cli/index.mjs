@@ -57,6 +57,9 @@ function printHelp() {
       "  " + cyan("verify") + "        " + dim("npm run verify"),
       "  " + cyan("facts") + "         " + dim("npm run verify:facts"),
       "  " + cyan("budgets") + "       mesh + glass SLOs (no network)",
+      "  " + cyan("effective-bar") + "  which verify steps run/skip/degraded (partial clone matrix)",
+      "  " + cyan("mirror-fixer") + " doc-library hub mirror — dry-run; pass " + dim("--apply") + " to stage git add",
+      "  " + cyan("office-ready") + "  p31-office venv + doctor + zenodo script paths",
       "  " + cyan("ci") + "            " + dim("npm run p31:ci"),
       "  " + cyan("hub-diff") + "      p31ca " + dim("hub:diff") + " · needs " + dim("andromeda/"),
       "  " + cyan("command-center") + "  local operator UI (:3131)",
@@ -188,6 +191,21 @@ async function main() {
 
   if (cmd === "budgets") {
     const code = await runNodeScript("scripts/print-mesh-budgets.mjs", fwd);
+    process.exit(code);
+  }
+
+  if (cmd === "effective-bar") {
+    const code = await runNodeScript("scripts/p31-effective-bar.mjs", fwd);
+    process.exit(code);
+  }
+
+  if (cmd === "mirror-fixer") {
+    const code = await runNodeScript("scripts/p31-mirror-fixer.mjs", fwd);
+    process.exit(code);
+  }
+
+  if (cmd === "office-ready") {
+    const code = await runNodeScript("scripts/office-ready.mjs", fwd);
     process.exit(code);
   }
 

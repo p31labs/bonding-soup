@@ -146,6 +146,54 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
+      "label": "P31: effective bar (verify matrix for this checkout)",
+      "type": "shell",
+      "command": "npm run p31:effective-bar",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: mirror fixer (doc-library hub mirror dry-run)",
+      "type": "shell",
+      "command": "npm run p31:mirror-fixer",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: mirror fixer apply (git add mirror paths in andromeda)",
+      "type": "shell",
+      "command": "npm run p31:mirror-fixer:apply",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: office ready (venv + doctor + zenodo script)",
+      "type": "shell",
+      "command": "npm run office:ready",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify runbooks index",
+      "type": "shell",
+      "command": "npm run verify:runbooks",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: simplex verify all",
+      "type": "shell",
+      "command": "npm run simplex:verify-all",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
       "label": "P31: doc library e2e (Playwright, headless)",
       "type": "shell",
       "command": "npm run test:doc-library:e2e",
@@ -231,6 +279,22 @@
       "command": "npm run verify:simplex-bootstrap",
       "options": { "cwd": "${workspaceFolder}" },
       "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify cf-edge-lab (wrangler dry-run)",
+      "type": "shell",
+      "command": "npm run verify:edge-lab",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: cf-edge-lab dev (wrangler dev)",
+      "type": "shell",
+      "command": "npm run edge-lab:dev",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "none",
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {

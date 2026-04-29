@@ -1,6 +1,6 @@
 # Family sovereign pack — production handoff
 
-**Updated:** 2026-04-26  
+**Updated:** 2026-04-29  
 **Audience:** Household onboarding (print, PDF, or share link); operator leaves this after a setup night.  
 **Share in one tap:** [https://p31ca.org/family-pack](https://p31ca.org/family-pack) (301 → printable page; same content as [family-sovereign-pack.html](https://p31ca.org/family-sovereign-pack.html)).  
 **Canonical machine index:** [p31-super-centaur-pack.json](https://p31ca.org/p31-super-centaur-pack.json) (`p31.superCentaurStarterPack/1.0.0`).  
@@ -22,7 +22,7 @@
 ## 1. Tonight’s order (~25 minutes)
 
 1. Open **[p31ca.org](https://p31ca.org/)** and **[delta.html](https://p31ca.org/delta.html)** on the **host’s** phone; confirm both load.
-2. Save **household bookmarks**: hub, delta, [connect](https://p31ca.org/connect.html), [BONDING](https://bonding.p31ca.org), [geodesic](https://p31ca.org/geodesic.html) if you want a “curriculum” surface.
+2. Save **household bookmarks**: hub, delta, [connect](https://p31ca.org/connect.html), [BONDING](https://bonding.p31ca.org), [demo lobby](https://p31ca.org/demos), [Sovereign Lab](https://p31ca.org/lab), [browser slicer](https://p31ca.org/slicer), [geodesic](https://p31ca.org/geodesic.html) if you want a “curriculum” surface.
 3. **Per person** (youngest first if attention is tight): pick a **welcome path** (section 3) → **planetary onboard** through **Pact** → **[mesh-start](https://p31ca.org/mesh-start.html)** (short [`/start`](https://p31ca.org/start)).
 4. **Adults optional:** [Cognitive Passport](https://p31ca.org/passport) JSON for advocacy (not a medical record).
 5. **Say out loud:** personal agent memory lives in **k4-personal**; it does **not** read the **family cage** until someone **explicitly** bridges. See `docs/MESH-MAP-PERSONAL-START-PAGES.md`.
@@ -42,6 +42,9 @@
 | Cognitive Passport | https://p31ca.org/passport |
 | Creator economy (public contract) | https://p31ca.org/creator-economy.json |
 | BONDING (3D builder) | https://bonding.p31ca.org |
+| Demo lobby (fleet + lab tiles) | https://p31ca.org/demos |
+| Sovereign Lab (trim dome · optional WS) | https://p31ca.org/lab |
+| Browser slicer (Kiri + K₄ STL) | https://p31ca.org/slicer |
 | Geodesic coach | https://p31ca.org/geodesic.html |
 | Initial Build intake | https://p31ca.org/build |
 | Welcome packages (data) | https://p31ca.org/p31-welcome-packages.json |

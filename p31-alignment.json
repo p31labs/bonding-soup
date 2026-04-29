@@ -360,6 +360,14 @@
       "note": "Root `npm run verify` after `verify:simplex` + `verify:simplex-bootstrap`."
     },
     {
+      "id": "cf-edge-lab-worker-suite",
+      "from": ["packages/cf-edge-lab/wrangler.toml", "packages/cf-edge-lab/src/index.ts", "package.json", "p31-constants.json", "p31-live-fleet.json", "p31-ecosystem.json"],
+      "to": ["Cloudflare Workers AI + request.cf lab; optional fleet + ecosystem slot"],
+      "apply": "npm run edge-lab:install && npm run edge-lab:deploy; mesh.edgeLabWorkerUrl in p31-constants.json must match deployed workers.dev host",
+      "verify": "npm run verify:edge-lab",
+      "note": "Dev workbench links URLS.edgeLab; not in p31ca worker allowlist (home-root Worker)."
+    },
+    {
       "id": "p31-shipbox-snapshot",
       "from": ["p31-constants.json", "package.json", "scripts/p31-shipbox.mjs", "p31-facts.json", "p31-alignment.json", "soup.html"],
       "to": ["(stdout JSON or --check; no written artifact required)"],
@@ -589,6 +597,14 @@
       "note": "index.json is generated; UI/worker/vendor are hand-maintained. Schema p31.docLibrary/1.0.0. Hub: npm run sync:doc-library:p31ca → p31ca public/doc-library/ (ground-truth docLibraryHub, redirect /doc-library)"
     },
     {
+      "id": "runbooks-sme-index-to-verify-runbooks",
+      "from": ["docs/runbooks/README.md", "scripts/verify-runbooks-index.mjs"],
+      "to": [],
+      "apply": "When adding RUNBOOK-*.md files, update the README table links (docs/runbooks/README.md)",
+      "verify": "npm run verify:runbooks (after verify:poets-room in root verify)",
+      "note": "SME incident index; pairs with docs/runbooks/README.md maintenance line"
+    },
+    {
       "id": "doc-library-index-to-p31ca-public",
       "from": [
         "docs/doc-library/index.html",
@@ -728,7 +744,7 @@
     ]
   },
   "verifyPipeline": {
-    "description": "Root `package.json` `verify` = prelude + scripts in order. verify:p31ca-contracts chains build:fleet-entities → verify:fleet-entities → verify:ground-truth → verify:worker-spa-launch → education → … Update this file whenever `verify` changes.",
+    "description": "Root `package.json` `verify` = prelude + scripts in order (incl. verify:runbooks for docs/runbooks/README.md links). verify:p31ca-contracts chains build:fleet-entities → verify:fleet-entities → verify:ground-truth → verify:worker-spa-launch → education → … Update this file whenever `verify` changes.",
     "prelude": "verify:alignment",
     "preludeNote": "Fast guard (verify-alignment.mjs): JSON + required sources. Skipped in the `--verify` loop (prelude already satisfied).",
     "scripts": [
@@ -753,12 +769,14 @@
       "verify:fleet-portal",
       "verify:cars-wire",
       "verify:poets-room",
+      "verify:runbooks",
       "build:doc-index",
       "verify:doc-index",
       "verify:doc-library:p31ca-mirror",
       "verify:simplex",
       "verify:simplex-email",
       "verify:simplex-bootstrap",
+      "verify:edge-lab",
       "build",
       "soup:prep:check"
     ]

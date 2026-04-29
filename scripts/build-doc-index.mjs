@@ -347,15 +347,23 @@ async function main() {
   }
 
   const fp = fingerprintDocuments(documents);
-  let generatedAt = new Date().toISOString();
+  /** When fingerprint matches, skip write — daysSinceCommit/updatedAt vary with Date.now()/git but are excluded from fp, which otherwise churns the hub mirror every verify. */
   try {
     const prev = JSON.parse(await fsp.readFile(outJson, "utf8"));
-    if (prev && prev.fingerprint === fp && prev.generatedAt) {
-      generatedAt = prev.generatedAt;
+    if (prev && prev.fingerprint === fp) {
+      console.log(
+        "build-doc-index: skip write — fingerprint unchanged (" +
+          documents.length +
+          " documents) →",
+        path.relative(root, outJson),
+      );
+      return;
     }
   } catch {
     /* no previous index */
   }
+
+  const generatedAt = new Date().toISOString();
 
   const payload = {
     schema: "p31.docLibrary/1.0.0",

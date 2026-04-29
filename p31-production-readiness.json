@@ -193,6 +193,28 @@
       "nextSteps": ["Tighten Access policy docs and add replay-safe audit trail for privileged actions"]
     },
     {
+      "id": "cf-edge-lab",
+      "kind": "worker",
+      "label": "cf-edge-lab (edge introspection + Workers AI playground)",
+      "score": {
+        "liveReachable": 6,
+        "deployability": 9,
+        "verificationHooks": 8,
+        "testingDepth": 3,
+        "contractsSchemas": 5,
+        "observability": 8,
+        "securityPosture": 5,
+        "operationalClarity": 8,
+        "uxCompleteness": 8,
+        "ephemeralizationAlignment": 8
+      },
+      "proof": {
+        "canonicalSources": ["p31-live-fleet.json", "p31-ecosystem.json", "p31-constants.json"],
+        "verifyCommands": ["npm run verify:edge-lab"]
+      },
+      "nextSteps": ["Add optional rate limit or token on /api/vibe before wide exposure", "Add glass probe once Worker is always deployed"]
+    },
+    {
       "id": "p31-agent-hub",
       "kind": "worker",
       "label": "p31-agent-hub (Agent hub Worker)",

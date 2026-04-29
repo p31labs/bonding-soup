@@ -75,6 +75,7 @@ function main() {
     ["k4Hubs", "k4HubsWorkerUrl"],
     ["agentHub", "agentHubWorkerUrl"],
     ["orchestrator", "orchestratorWorkerUrl"],
+    ["edgeLab", "edgeLabWorkerUrl"],
   ];
   const devWorkbench = path.join(root, "andromeda/04_SOFTWARE/p31ca/public/dev-workbench.html");
   if (fs.existsSync(devWorkbench) && c.mesh) {

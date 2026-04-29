@@ -1,0 +1,124 @@
+# After **P31 CI** succeeds on a **pull_request**, build **p31ca** and **direct-upload** a **preview**
+# deployment (`wrangler pages deploy --branch=<head>`). Production URL is unchanged; preview URLs are
+# branch-scoped on Pages.
+#
+# Skips: fork PRs (different `head_repository`), **`dependabot/**` heads, default-branch heads,
+# missing **`CLOUDFLARE_API_TOKEN`**, missing Andromeda dist, or **`P31_DISABLE_PR_PREVIEW_DEPLOY`**.
+#
+# Requires: Pages project **`p31ca`** and token with **Pages:Edit** (same as main autodeploy).
+name: P31 Pages PR preview
+
+on:
+  workflow_run:
+    workflows: ["P31 CI"]
+    types:
+      - completed
+
+concurrency:
+  group: p31-pr-preview-${{ github.event.workflow_run.head_sha }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  preview:
+    name: P31 / Pages preview (PR)
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request'
+    steps:
+      - name: Gate (fork, branch, var, secret)
+        id: gate
+        run: |
+          BRANCH="${{ github.event.workflow_run.head_branch }}"
+          HEAD_REPO="${{ github.event.workflow_run.head_repository.full_name }}"
+          THIS_REPO="${{ github.repository }}"
+          if [ -z "$BRANCH" ]; then
+            echo "skip=no-branch" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          case "$BRANCH" in
+            main|master|dependabot/*) echo "skip=branch:$BRANCH" >> "$GITHUB_OUTPUT"; exit 0 ;;
+          esac
+          if [ -n "$HEAD_REPO" ] && [ "$HEAD_REPO" != "$THIS_REPO" ]; then
+            echo "skip=fork:$HEAD_REPO" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "${{ vars.P31_DISABLE_PR_PREVIEW_DEPLOY }}" = "1" ] || [ "${{ vars.P31_DISABLE_PR_PREVIEW_DEPLOY }}" = "true" ]; then
+            echo "skip=var" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
+            echo "skip=no-secret" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Preview branch label for wrangler (slug — avoids odd chars)
+          SLUG=$(echo "$BRANCH" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9._-]/-/g' | sed 's/--*/-/g' | sed 's/^-//;s/-$//' | cut -c1-100)
+          if [ -z "$SLUG" ]; then SLUG="pr-preview"; fi
+          echo "ok=1" >> "$GITHUB_OUTPUT"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+          echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.ok == '1'
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.ok == '1'
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Hub build (root verify already passed in P31 CI)
+        if: steps.gate.outputs.ok == '1'
+        env:
+          CI: "true"
+        run: node scripts/p31-ci.mjs --skip-root-verify
+
+      - name: Require hub dist
+        if: steps.gate.outputs.ok == '1'
+        run: |
+          if [ ! -f andromeda/04_SOFTWARE/p31ca/dist/index.html ]; then
+            echo "::notice::pr-preview: no hub dist — skip deploy"
+            exit 0
+          fi
+          echo "HAS_DIST=1" >> "$GITHUB_ENV"
+
+      - name: Deploy preview to Cloudflare Pages
+        if: steps.gate.outputs.ok == '1' && env.HAS_DIST == '1'
+        id: deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PREVIEW_SLUG: ${{ steps.gate.outputs.slug }}
+        working-directory: andromeda/04_SOFTWARE/p31ca
+        run: |
+          set -o pipefail
+          LOG=$(mktemp)
+          npx wrangler pages deploy dist --project-name p31ca --branch="$PREVIEW_SLUG" --commit-dirty=true 2>&1 | tee "$LOG"
+          URL=$(grep -oE 'https://[a-zA-Z0-9.-]+\.pages\.dev' "$LOG" | tail -1 || true)
+          if [ -n "$URL" ]; then
+            echo "url=$URL" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Comment PR with preview URL
+        if: steps.gate.outputs.ok == '1' && steps.deploy.outputs.url != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREVIEW_URL: ${{ steps.deploy.outputs.url }}
+          HEAD_BRANCH: ${{ steps.gate.outputs.branch }}
+          SLUG: ${{ steps.gate.outputs.slug }}
+          REPO_FULL: ${{ github.repository }}
+        run: |
+          BASE=$(gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
+          NUM=$(gh pr list --head "$REPO_FULL:$HEAD_BRANCH" --base "$BASE" --state open --json number -q '.[0].number')
+          if [ -z "$NUM" ] || [ "$NUM" = "null" ]; then
+            echo "pr-preview: no open PR for head $HEAD_BRANCH — skip comment"
+            exit 0
+          fi
+          BODY="$(printf '%s\n\n%s' "**Pages preview (PR):** ${PREVIEW_URL}" "_Branch slug: \`${SLUG}\` · Cloudflare Pages preview after P31 CI green._")"
+          gh pr comment "$NUM" --body "$BODY"

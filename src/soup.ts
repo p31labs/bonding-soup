@@ -149,6 +149,15 @@ export class SoupEngine {
   private networkRoster: NetworkRosterEntry[] = [];
   private localRunbookFromServer: LocalRunbookFromServer | null = null;
 
+  /**
+   * Optional UI hook (e.g. starfield `notifyWarmEdge`) when remote peers signal on the C.A.R.S. wire.
+   * Throttled; only family-room ghost traffic, cross-client pings, roster joins, and rising peer counts.
+   */
+  public onNetworkWarmEdge?: () => void;
+  private warmEdgeLastEmitMs = 0;
+  private lastWarmEdgePeerCount = -1;
+  private static readonly WARM_EDGE_THROTTLE_MS = 2000;
+
   constructor(
     config: PhysicsConfig = DEFAULT_SOUP_CONFIG,
     wsUrl: string = "",
@@ -172,6 +181,21 @@ export class SoupEngine {
 
     if (this.wsUrl) {
       this.initializeWebSocket();
+    }
+  }
+
+  private emitNetworkWarmEdge(): void {
+    const fn = this.onNetworkWarmEdge;
+    if (!fn) return;
+    const now = performance.now();
+    if (now - this.warmEdgeLastEmitMs < SoupEngine.WARM_EDGE_THROTTLE_MS) {
+      return;
+    }
+    this.warmEdgeLastEmitMs = now;
+    try {
+      fn();
+    } catch {
+      /* host page integration must not break the engine */
     }
   }
 
@@ -293,6 +317,7 @@ export class SoupEngine {
         this.isWsConnected = true;
         this.wsReconnectAttempts = 0;
         this.lastServerPeerCount = -1;
+        this.lastWarmEdgePeerCount = -1;
         this.networkRoster = [];
         this.localRunbookFromServer = null;
         this.wsLastHeartbeat = performance.now();
@@ -428,17 +453,32 @@ export class SoupEngine {
     peerCount?: number;
     roster?: unknown;
   }): void {
-    const p = message?.peerCount;
-    if (typeof p === "number" && Number.isFinite(p) && p >= 0) {
-      this.lastServerPeerCount = p;
+    let peerNorm = -1;
+    const pRaw = message?.peerCount;
+    if (typeof pRaw === "number" && Number.isFinite(pRaw) && pRaw >= 0) {
+      peerNorm = pRaw;
+      this.lastServerPeerCount = pRaw;
     } else {
       const c = message?.clientCount;
       if (typeof c === "number" && Number.isFinite(c) && c >= 0) {
-        this.lastServerPeerCount = Math.max(0, c - 1);
+        peerNorm = Math.max(0, c - 1);
+        this.lastServerPeerCount = peerNorm;
       }
     }
     if (message?.roster !== undefined) {
       this.networkRoster = SoupEngine.parseRosterArray(message.roster);
+    }
+
+    if (
+      peerNorm >= 0 &&
+      this.lastWarmEdgePeerCount >= 0 &&
+      peerNorm > this.lastWarmEdgePeerCount &&
+      this.networkClientId
+    ) {
+      this.emitNetworkWarmEdge();
+    }
+    if (peerNorm >= 0) {
+      this.lastWarmEdgePeerCount = peerNorm;
     }
   }
 
@@ -460,6 +500,8 @@ export class SoupEngine {
 
     const molecules: any[] = Array.isArray(data) ? data : data.molecules ?? [];
     const { width: wmax, height: hmax } = this.physics.getWorldSize();
+
+    let sawOtherClientMolecule = false;
 
     molecules.forEach((moleculeData: any) => {
       const { id, personality, element } = moleculeData;
@@ -505,7 +547,22 @@ export class SoupEngine {
         ghost.interpolationProgress = 0;
         ghost.isInterpolating = true;
       }
+
+      if (
+        this.isFamilyNetworkMode() &&
+        this.networkClientId &&
+        sid.includes("/")
+      ) {
+        const owner = sid.slice(0, sid.indexOf("/"));
+        if (owner && owner !== this.networkClientId) {
+          sawOtherClientMolecule = true;
+        }
+      }
     });
+
+    if (sawOtherClientMolecule) {
+      this.emitNetworkWarmEdge();
+    }
   }
 
   /**
@@ -545,32 +602,51 @@ export class SoupEngine {
     if (this.eventLog.length > 50) {
       this.eventLog = this.eventLog.slice(-50);
     }
+
+    if (
+      typeof senderId === "string" &&
+      senderId &&
+      senderId !== this.networkClientId
+    ) {
+      this.emitNetworkWarmEdge();
+    }
   }
 
   /**
    * Handle event log entries from other players
    */
   private handleEventLog(data: any): void {
-    if (Array.isArray(data)) {
-      data.forEach(event => {
-        this.eventLog.push({
-          id: event.id || `event_${Date.now()}`,
-          type: event.type,
-          actorId: event.actorId,
-          targetId: event.targetId,
-          message: event.message,
-          timestamp: event.timestamp || Date.now()
-        });
-      });
-    } else {
+    const pushOne = (event: {
+      id?: string;
+      type?: string;
+      actorId?: string;
+      targetId?: string | null;
+      message?: string;
+      timestamp?: number;
+    }) => {
+      const actorId =
+        typeof event.actorId === "string" ? event.actorId : "";
+      if (
+        actorId &&
+        this.networkClientId &&
+        actorId !== this.networkClientId
+      ) {
+        this.emitNetworkWarmEdge();
+      }
       this.eventLog.push({
-        id: data.id || `event_${Date.now()}`,
-        type: data.type,
-        actorId: data.actorId,
-        targetId: data.targetId,
-        message: data.message,
-        timestamp: data.timestamp || Date.now()
+        id: event.id || `event_${Date.now()}`,
+        type: event.type || "event",
+        actorId,
+        targetId: event.targetId ?? null,
+        message: event.message || "",
+        timestamp: event.timestamp || Date.now(),
       });
+    };
+
+    if (Array.isArray(data)) {
+      data.forEach((event) => pushOne(event));
+    } else {
+      pushOne(data);
     }
 
     // Keep event log limited
@@ -609,6 +685,10 @@ export class SoupEngine {
     this.localRunbookFromServer = SoupEngine.parseLocalRunbook(data?.localRunbook);
 
     this.dbg(`Initialized with ${this.ghostMolecules.size} ghost molecules`);
+
+    if (this.networkRoster.length > 0) {
+      this.emitNetworkWarmEdge();
+    }
   }
 
   private static parseLocalRunbook(raw: unknown): LocalRunbookFromServer | null {

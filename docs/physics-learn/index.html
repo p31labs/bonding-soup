@@ -584,5 +584,70 @@
       </div>
     </section>
   </main>
+  <script type="module">
+    import { physicsLearnRoomHz, PHYSICS_LEARN_TARGET_HZ } from "../../design-assets/starfield/p31-mesh-touches.js";
+
+    const rooms = Array.from(document.querySelectorAll(".codec-room[data-pl-room]"));
+    let audioCtx = null;
+    let osc = null;
+    let gain = null;
+    let audioArmed = false;
+
+    function ensureDrone() {
+      if (typeof AudioContext === "undefined") return false;
+      if (!audioCtx) audioCtx = new AudioContext();
+      if (!osc) {
+        osc = audioCtx.createOscillator();
+        gain = audioCtx.createGain();
+        gain.gain.value = 0.016;
+        osc.type = "sine";
+        osc.frequency.value = 110;
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+      }
+      try {
+        audioCtx.resume();
+      } catch {
+        /* ignore */
+      }
+      return true;
+    }
+
+    function setRoomHz(idx) {
+      if (!audioArmed || !osc || !audioCtx) return;
+      const hz =
+        idx >= rooms.length - 1 ? PHYSICS_LEARN_TARGET_HZ : physicsLearnRoomHz(idx, rooms.length);
+      try {
+        osc.frequency.setTargetAtTime(hz, audioCtx.currentTime, 0.12);
+      } catch {
+        /* ignore */
+      }
+    }
+
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.addEventListener(
+        "pointerdown",
+        () => {
+          if (ensureDrone()) audioArmed = true;
+        },
+        { once: true }
+      );
+      const io = new IntersectionObserver(
+        (entries) => {
+          let best = -1;
+          for (const e of entries) {
+            if (!e.isIntersecting) continue;
+            const id = e.target.getAttribute("data-pl-room");
+            const n = id ? parseInt(id, 10) : NaN;
+            if (Number.isFinite(n) && n - 1 > best) best = n - 1;
+          }
+          if (best >= 0) setRoomHz(best);
+        },
+        { threshold: [0.35], rootMargin: "-10% 0px -10% 0px" }
+      );
+      for (const r of rooms) io.observe(r);
+    }
+  </script>
 </body>
 </html>

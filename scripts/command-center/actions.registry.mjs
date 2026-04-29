@@ -179,6 +179,14 @@ export const ACTIONS = {
     cmd: "npm",
     args: ["run", "mesh:budgets"],
   },
+  "home-remember-probe-status": {
+    title:
+      "remember:probe status (SIMPLEX Worker — needs OPERATOR_SECRET; bereavement + remembered counts)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "remember:probe", "status"],
+    network: true,
+  },
   "home-build-fleet-portal-live": {
     title: "build:fleet-portal:live (ecosystem:glass then fleet portal — merges probe colors into ATC)",
     cwd: repoRoot,
@@ -520,6 +528,7 @@ export const SECTIONS_RAW = [
       "home-simplex-bootstrap-dry",
       "home-simplex-bootstrap-apply",
       "home-mesh-budgets",
+      "home-remember-probe-status",
       "home-build-fleet-portal",
       "home-build-fleet-portal-live",
       "home-build-fleet-entities",

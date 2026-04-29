@@ -23,6 +23,22 @@
   -webkit-font-smoothing: antialiased;
   padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0)
     env(safe-area-inset-left, 0);
+  position: relative;
+}
+
+.cc-starfield-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  display: block;
+}
+
+.cc-v2 > :not(.cc-starfield-canvas) {
+  position: relative;
+  z-index: 1;
 }
 
 .cc-v2 .cc-mono {
@@ -748,6 +764,19 @@ html[data-cc-alive-bypass="1"] body:not([data-cc-gate-armed="1"]) .cc-primer {
 }
 .cc-joy__list li::marker {
   color: var(--p31-teal, #4db8a8);
+}
+.cc-joy__slot {
+  margin: 0.65rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--p31-butter, #e8d4a8);
+  font-style: italic;
+}
+.cc-joy__draw-wrap {
+  margin: 0.5rem 0 0;
+}
+.cc-joy__draw {
+  font-size: 0.85rem;
 }
 .cc-joy__meta {
   margin: 0.65rem 0 0;

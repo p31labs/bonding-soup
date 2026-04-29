@@ -8,13 +8,20 @@ const __dir = dirname(fileURLToPath(import.meta.url));
 describe('schema.sql OQE', () => {
   const sql = readFileSync(join(__dir, '../src/db/schema.sql'), 'utf8');
 
-  it('documents 23 user tables in comment', () => {
-    expect(sql).toMatch(/23 user-defined tables/);
+  it('documents 30 user tables in comment', () => {
+    expect(sql).toMatch(/30 user-defined tables/);
   });
 
   it('contains expected core tables', () => {
     for (const name of [
       'accommodation_log',
+      'knowledge_edges',
+      'caught_thoughts',
+      'debrief_log',
+      'time_capsules',
+      'calibrator_proposals',
+      'remembered_vertices',
+      'bereavement_periods',
       'agent_runs',
       'automation_rules',
       'biometric_log',

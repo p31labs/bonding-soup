@@ -117,4 +117,18 @@ export interface Env {
   HA_TOKEN?: string;
   /** Base URL including scheme, no trailing slash (e.g. `http://homeassistant.local:8123`). */
   HA_BASE_URL?: string;
+  /** When set, operator skill routes require `Authorization: Bearer …` or `X-Operator-Token`. */
+  OPERATOR_SECRET?: string;
+  /** Optional cap on skill invocations per IP per day (default 80). Plain [var] or secret string digits. */
+  SKILL_DAILY_LIMIT_PER_IP?: string;
+  /** Phos companion: HMAC secret for `X-Phos-Signature` over raw POST body (preferred in prod). */
+  PHOS_HMAC_SECRET?: string;
+  /** Comma/space-separated allowed `child_id` values (mesh gate). Used with or without HMAC. */
+  PHOS_CHILD_IDS?: string;
+  /** Local hour (0–23) when Phos "wakes" (default 7). */
+  PHOS_WAKE_START?: string;
+  /** Local hour when Phos rests (default 20). */
+  PHOS_WAKE_END?: string;
+  /** Max LLM exchanges per garden session before quiet mode (default 10). */
+  PHOS_MAX_EXCHANGES?: string;
 }

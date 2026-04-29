@@ -51,6 +51,12 @@ const TARGETS = {
     href: path.join(root, "poets-room.html"),
     desc: "Poets room lobby",
   },
+  phos: {
+    kind: "http",
+    href: `http://${LOCAL.host}:${LOCAL.port.demo}/garden-phos-probe.html`,
+    desc: "Phos Worker probe (HMAC from npm run phos:sign); :8080 if free",
+  },
+  "garden-phos": { alias: "phos" },
   howto: {
     kind: "file",
     href: path.join(root, "p31-personal-howto.html"),

@@ -6,22 +6,46 @@ import {
 } from '../src/lib/context-fallback';
 
 /** Minimal Worker bindings for sentinel merge tests (Vitest-only). */
-function mockEnv(kv: Record<string, string | null>, lastSpoon: { balance_after: number; ts: number } | null): Env {
+function mockEnvForStateMerge(opts: {
+  kv?: Record<string, string | null>;
+  lastSpoon?: { balance_after: number; ts: number } | null;
+  remembranceCount?: number;
+  remembranceIds?: string[];
+}): Env {
+  const kv = opts.kv ?? {};
+  const remembranceCount = opts.remembranceCount ?? 0;
+  const remembranceIds = opts.remembranceIds ?? [];
   return {
     SIMPLEX_STATE: {
       get: (k: string) => Promise.resolve(kv[k] ?? null),
       put: async () => {},
+      delete: async () => {},
     },
     DB: {
-      prepare: (_sql: string) => ({
-        bind: (..._args: unknown[]) => ({
-          first: async () => lastSpoon as { balance_after: number; ts: number } | null,
+      prepare: (sql: string) => {
+        const s = sql.toLowerCase();
+        return {
+          bind: () => ({
+            first: async () => null,
+            run: async () => ({}),
+            all: async () => ({ results: [] }),
+          }),
+          first: async <T>() => {
+            if (s.includes('balance_after') && s.includes('spoons'))
+              return (opts.lastSpoon ?? null) as T | null;
+            if (s.includes('count(*)') && s.includes('remembered_vertices'))
+              return { n: remembranceCount } as T;
+            return null;
+          },
+          all: async () => {
+            if (s.includes('remembered_vertices') && s.includes(' id')) {
+              return { results: remembranceIds.map((id) => ({ id })) };
+            }
+            return { results: [] };
+          },
           run: async () => ({}),
-        }),
-        first: async <T>() => lastSpoon as T | null,
-        run: async () => ({}),
-        all: async () => ({ results: [] }),
-      }),
+        };
+      },
     },
     AGENT_QUEUE: {} as Env['AGENT_QUEUE'],
     ANTHROPIC_API_KEY: '',
@@ -86,20 +110,57 @@ describe('resolveSentinelContextFromLayers', () => {
 
 describe('mergeKvSystemStateWithSentinel', () => {
   it('preserves non-spoon KV keys and overlays resolved spoons when system_state lacks finite spoons', async () => {
-    const env = mockEnv({ system_state: JSON.stringify({ system_voltage: 'YELLOW', scene_tag: 'focus' }) }, null);
+    const env = mockEnvForStateMerge({
+      kv: { system_state: JSON.stringify({ system_voltage: 'YELLOW', scene_tag: 'focus' }) },
+      lastSpoon: null,
+    });
     const m = await mergeKvSystemStateWithSentinel(env);
     expect(m.system_voltage).toBe('YELLOW');
     expect(m.scene_tag).toBe('focus');
     expect(m.current_spoons).toBe(8);
     expect(m.daily_allocation).toBe(8);
     expect(m.sentinel_context_source).toBe('static_operator');
+    expect(m.remembered_vertex_count).toBe(0);
+    expect(Array.isArray(m.remembrance_fixed_stars)).toBe(true);
   });
 
   it('falls back catch path on invalid JSON and still exposes sentinel totals', async () => {
-    const env = mockEnv({ system_state: '{bad json' }, null);
+    const invalidJson = '{bad json';
+    const env = mockEnvForStateMerge({ kv: { system_state: invalidJson }, lastSpoon: null });
     const m = await mergeKvSystemStateWithSentinel(env);
     expect(m.current_spoons).toBe(8);
     expect(m.system_voltage).toBe('GREEN');
     expect(m.sentinel_context_source).toBe('static_operator');
+    expect(m.remembered_vertex_count).toBe(0);
+    expect(Array.isArray(m.remembrance_fixed_stars)).toBe(true);
+  });
+
+  it('merges remembrance public slice (counts + fixed stars, no names)', async () => {
+    const env = mockEnvForStateMerge({
+      kv: { system_state: null },
+      lastSpoon: null,
+      remembranceCount: 2,
+      remembranceIds: ['aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb'],
+    });
+    const m = await mergeKvSystemStateWithSentinel(env);
+    expect(m.remembered_vertex_count).toBe(2);
+    expect((m.remembrance_fixed_stars as unknown[]).length).toBe(2);
+    const s0 = (m.remembrance_fixed_stars as { x: number; y: number; a: number }[])[0];
+    expect(s0.x).toBeGreaterThan(0);
+    expect(s0.x).toBeLessThan(1);
+    expect(s0.y).toBeGreaterThan(0);
+    expect(s0.y).toBeLessThan(1);
+  });
+
+  it('reflects bereavement_active from KV until timestamp', async () => {
+    const until = Date.now() + 86_400_000;
+    const env = mockEnvForStateMerge({
+      kv: { system_state: null, mesh_bereavement_until: String(until) },
+      lastSpoon: null,
+      remembranceCount: 0,
+    });
+    const m = await mergeKvSystemStateWithSentinel(env);
+    expect(m.bereavement_active).toBe(true);
+    expect(m.bereavement_until_ms).toBe(until);
   });
 });

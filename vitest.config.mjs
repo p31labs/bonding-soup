@@ -5,6 +5,7 @@ export default defineConfig({
     include: [
       "scripts/command-center/**/*.test.mjs",
       "scripts/cli/**/*.test.mjs",
+      "scripts/lib/**/*.test.mjs",
       "scripts/p31-tooling-integration.test.mjs",
     ],
     environment: "node",

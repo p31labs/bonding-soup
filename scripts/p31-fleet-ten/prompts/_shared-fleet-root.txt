@@ -1,0 +1,12 @@
+SESSION CARRY — engineering facts shipped in this integration (do not contradict; extend only with operator-supplied deltas)
+
+Starfield + mesh touches
+- Canonical sources: `design-assets/starfield/p31-starfield.js` (v1.1.0) and `design-assets/starfield/p31-mesh-touches.js`; synced to `andromeda/04_SOFTWARE/p31ca/public/lib/` via `node scripts/sync-p31-starfield.mjs`; proof: `npm run verify:starfield`.
+- `resolveStarfieldConfig()` returns `{ config, hints }`; legacy callers use `resolveStarfieldConfigFlat()`.
+- SoupEngine exposes optional `onNetworkWarmEdge` (throttled) for **family-room** WebSocket traffic: merged ghost molecules with `clientId/moleculeId`, remote pings, eventLog from other actors, non-empty roster on `connectionInit`, and rising `peerCount` in heartbeats. `soup.html` and `andromeda/04_SOFTWARE/bonding/public/soup/index.html` forward to `notifyWarmEdge()` on the ambient canvas.
+- Synthesis → `starfieldBondingKeyFromProductElement()` maps products like H2O, CaO, LOV, H2, glucose token → `setBondingMolecule` overlay; LOV uses a triangular motif in `bondingMoleculeGeometry("lov")` (game letterplay, not a chemistry claim).
+- NFC / printed K₄: `setPhysicalK4Proximity(true)` triggers a throttled warm-edge style conn-radius pulse (skipped under `prefers-reduced-motion: reduce`).
+- Command center: `GET /api/mesh-pulse` + CLI `npm run p31 -- bookmark <url>` writes `~/.p31/mesh-touch-pulse.json` for bookmark chime polling.
+
+Verification spine (home root)
+- `npm run verify` includes `verify:starfield` and `verify:fleet-ten` (static fleet bundle checks).

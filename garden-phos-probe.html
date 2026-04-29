@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Phos probe — operator</title>
+  <style>
+    :root { color-scheme: dark; --bg: #0a0d14; --fg: #e2e8f0; --accent: #34d399; --muted: #64748b; }
+    body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--fg); margin: 0; padding: 1.25rem; max-width: 52rem; }
+    h1 { font-size: 1.1rem; font-weight: 600; color: var(--accent); }
+    p.note { color: var(--muted); font-size: 0.9rem; line-height: 1.45; }
+    label { display: block; margin-top: 0.75rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    input, textarea { width: 100%; box-sizing: border-box; margin-top: 0.25rem; padding: 0.5rem; border-radius: 6px; border: 1px solid #1e293b; background: #020617; color: var(--fg); font: inherit; }
+    textarea { min-height: 12rem; font-family: ui-monospace, monospace; font-size: 0.85rem; }
+    button { margin-top: 1rem; padding: 0.5rem 1rem; border-radius: 6px; border: none; background: var(--accent); color: #022c22; font-weight: 600; cursor: pointer; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    pre { margin-top: 1rem; padding: 1rem; background: #020617; border-radius: 8px; overflow: auto; font-size: 0.8rem; border: 1px solid #1e293b; }
+    .err { color: #f87171; }
+  </style>
+</head>
+<body>
+  <h1>Phos probe (operator)</h1>
+  <p class="note">
+    HMAC the <strong>exact</strong> JSON body with <code>PHOS_HMAC_SECRET</code>, paste the hex signature, then POST.
+    Run <code>npm run phos:sign --prefix simplex-v7</code> from the repo root (or <code>cd simplex-v7 &amp;&amp; npm run phos:sign</code>) after setting <code>PHOS_HMAC_SECRET</code>.
+    CORS allows <code>https://p31ca.org</code> and <code>http://127.0.0.1:*</code> / <code>http://localhost:*</code> so you can open this file via <code>npm run demo</code> and point at your Worker URL.
+    Set <code>PHOS_CHILD_IDS</code> to include the <code>child_id</code> in your JSON when using the allowlist.
+  </p>
+
+  <label for="base">Worker base (no trailing slash)</label>
+  <input id="base" type="url" value="https://api.phosphorus31.org" autocomplete="off" />
+
+  <label for="sig">X-Phos-Signature (hex)</label>
+  <input id="sig" type="text" placeholder="paste from phos:sign" autocomplete="off" />
+
+  <label for="body">JSON body</label>
+  <textarea id="body" spellcheck="false"></textarea>
+
+  <button type="button" id="go">POST /api/phos/respond</button>
+  <pre id="out">(response)</pre>
+
+  <script>
+    const defaultBody = {
+      child_id: 'dev-garden-child-1',
+      garden_state: { molecules_today: ['H2O'], current_action: 'building', sensory_profile: 'cloud_soft_some' },
+      input_type: 'text',
+      input: 'What does hydrogen like to do?',
+      exchange_count: 0,
+      local_hour: 14,
+      pre_reader: false
+    };
+    document.getElementById('body').value = JSON.stringify(defaultBody, null, 2);
+
+    document.getElementById('go').onclick = async () => {
+      const base = document.getElementById('base').value.replace(/\/$/, '');
+      const sig = document.getElementById('sig').value.trim();
+      const raw = document.getElementById('body').value;
+      const out = document.getElementById('out');
+      const btn = document.getElementById('go');
+      if (!sig) {
+        out.textContent = 'Set X-Phos-Signature (run npm run phos:sign --prefix simplex-v7).';
+        out.classList.add('err');
+        return;
+      }
+      btn.disabled = true;
+      out.classList.remove('err');
+      out.textContent = '…';
+      try {
+        const r = await fetch(base + '/api/phos/respond', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Phos-Signature': sig
+          },
+          body: raw
+        });
+        const text = await r.text();
+        let pretty = text;
+        try { pretty = JSON.stringify(JSON.parse(text), null, 2); } catch (_) {}
+        out.textContent = r.status + ' ' + r.statusText + '\n\n' + pretty;
+        if (!r.ok) out.classList.add('err');
+      } catch (e) {
+        out.textContent = String(e);
+        out.classList.add('err');
+      }
+      btn.disabled = false;
+    };
+  </script>
+</body>
+</html>

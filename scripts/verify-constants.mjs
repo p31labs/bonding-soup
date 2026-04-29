@@ -139,6 +139,29 @@ function main() {
         fail = 1;
       }
     }
+    const remembrance = c.mesh?.remembranceWarmWhite;
+    if (typeof remembrance === "string" && remembrance.startsWith("#")) {
+      const starfieldJs = path.join(root, "design-assets", "starfield", "p31-starfield.js");
+      if (fs.existsSync(starfieldJs)) {
+        const st = fs.readFileSync(starfieldJs, "utf8");
+        if (!st.includes(remembrance)) {
+          console.error(
+            "verify-constants: mesh.remembranceWarmWhite must appear literally in design-assets/starfield/p31-starfield.js (P31_REMEMBRANCE_WARM_WHITE)"
+          );
+          fail = 1;
+        }
+      }
+      const meshRem = path.join(root, "simplex-v7", "src", "lib", "mesh-remembrance.ts");
+      if (fs.existsSync(meshRem)) {
+        const mt = fs.readFileSync(meshRem, "utf8");
+        if (!mt.includes(remembrance)) {
+          console.error(
+            "verify-constants: mesh.remembranceWarmWhite must appear in simplex-v7/src/lib/mesh-remembrance.ts (REMEMBRANCE_WARM_WHITE)"
+          );
+          fail = 1;
+        }
+      }
+    }
     const mvp = c.documentation?.mvpInventory;
     if (mvp && !ts.includes(mvp)) {
       console.error(

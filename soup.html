@@ -17,6 +17,14 @@
     <link rel="stylesheet" href="cognitive-passport/p31-style.css">
     <link rel="stylesheet" href="cognitive-passport/p31-responsive-surface.css">
     <link rel="stylesheet" href="soup-quantum.css">
+    <script>
+      (function () {
+        document.documentElement.classList.toggle(
+          'soup-dev-panel',
+          /[?&]dev=1(?:&|$)/.test(location.search) || /[?&]debug(?:=1)?(?:&|$)/.test(location.search)
+        );
+      })();
+    </script>
     <script src="cognitive-passport/lib/p31-subject-prefs.js"></script>
     <script>
       (function () {
@@ -46,7 +54,7 @@
                 <li><span class="soup-psych-dot soup-psych-dot--warm" aria-hidden="true"></span> Warmth (coral · energy)</li>
                 <li><span class="soup-psych-dot soup-psych-dot--belong" aria-hidden="true"></span> Belonging (phosphor · we)</li>
             </ul>
-            <p class="soup-aaso"><em>As above, so below:</em> the same <code>demo</code> / <code>build:doc-index</code> bar shows up in the <a class="p31-mesh-tap" href="docs/doc-library/index.html">doc library</a>, <a class="p31-mesh-tap" href="docs/physics-learn/index.html">physics learn</a>, <a class="p31-mesh-tap" href="p31-slicer.html" title="Kiri:Moto — browser FDM/CAM slicer (embedded)">browser slicer</a>, <a class="p31-mesh-tap" href="p31-sovereign-lab.html" title="Sovereign Lab — dome panes, serial, voice, foundry links">sovereign lab</a>, <a class="p31-mesh-tap" href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (with <code>andromeda/</code>), <a class="p31-mesh-tap" href="fleet-portal.html">live fleet &amp; every URL</a> (<code>npm run build:fleet-portal</code>), <a class="p31-mesh-tap" href="p31-personal-howto.html">interactive how-to</a>, <a class="p31-mesh-tap" href="p31-device-setup.html">Chromebook &amp; phone setup</a>, <a class="p31-mesh-tap" href="poets-room.html">Poets room</a>, <a class="p31-mesh-tap" href="http://127.0.0.1:3131/">local command center</a> (<code>npm run command-center</code> — 3131), and <a class="p31-mesh-tap" href="docs/P31-DEPLOY-CANON.md">CONNECTION</a> (<code>npm run connection</code> — deploy · ecosystem · env · ops). <strong>Naming:</strong> <a class="p31-mesh-tap" href="docs/CARS-NAMING.md">C.A.R.S.</a>. <strong>When-scale</strong> (plan the work, work the plan): <a class="p31-mesh-tap" href="docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">when-scale plan</a>. Prose in the tree, comfort in the tab. <span class="aaso-love" title="love">&#9829;</span><span class="aaso-3" title="&lt;3" aria-label="less than three"> &lt;3</span></p>
+            <p class="soup-aaso"><em>As above, so below:</em> the same <code>demo</code> / <code>build:doc-index</code> bar shows up in the <a class="p31-mesh-tap" href="docs/doc-library/index.html">doc library</a>, <a class="p31-mesh-tap" href="docs/physics-learn/index.html">physics learn</a>, <a class="p31-mesh-tap" href="p31-slicer.html" title="Kiri:Moto — browser FDM/CAM slicer (embedded)">browser slicer</a>, <a class="p31-mesh-tap" href="p31-sovereign-lab.html" title="Sovereign Lab — dome panes, serial, voice, foundry links">sovereign lab</a>, <a class="p31-mesh-tap" href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (with <code>andromeda/</code>), <a class="p31-mesh-tap" href="fleet-portal.html">live fleet &amp; every URL</a> (<code>npm run build:fleet-portal</code>), <a class="p31-mesh-tap" href="p31-personal-howto.html">interactive how-to</a>, <a class="p31-mesh-tap" href="p31-device-setup.html">Chromebook &amp; phone setup</a>, <a class="p31-mesh-tap" href="poets-room.html">Poets room</a>, <a class="p31-mesh-tap" href="garden-phos-probe.html" title="Operator probe for Phos child companion API">Phos probe</a>, <a class="p31-mesh-tap" href="http://127.0.0.1:3131/">local command center</a> (<code>npm run command-center</code> — 3131), and <a class="p31-mesh-tap" href="docs/P31-DEPLOY-CANON.md">CONNECTION</a> (<code>npm run connection</code> — deploy · ecosystem · env · ops). <strong>Naming:</strong> <a class="p31-mesh-tap" href="docs/CARS-NAMING.md">C.A.R.S.</a>. <strong>When-scale</strong> (plan the work, work the plan): <a class="p31-mesh-tap" href="docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">when-scale plan</a>. Prose in the tree, comfort in the tab. <span class="aaso-love" title="love">&#9829;</span><span class="aaso-3" title="&lt;3" aria-label="less than three"> &lt;3</span></p>
         </header>
 
         <div class="soup-larmor" id="soup-larmor" hidden>
@@ -81,6 +89,7 @@
             </div>
         </div>
         <div id="canvas-wrap" class="soup-canvas-shell">
+        <canvas id="p31-soup-starfield" class="p31-soup-starfield-canvas" aria-hidden="true"></canvas>
         <div id="presence-hud" aria-live="polite">
             <div class="ph-inner">
                 <span class="ph-title" id="presence-title">Who’s here</span>
@@ -91,7 +100,7 @@
         </div>
         <div id="info" aria-label="Status and log">
             <h2 class="soup-sr-only">Status</h2>
-            <div class="stats">
+            <div class="stats soup-dev-telemetry">
                 <div class="stat">FPS: <span id="fps">--</span></div>
                 <div class="stat">Molecules: <span id="molecules">--</span></div>
                 <div class="stat">Ghost Molecules: <span id="ghost-molecules">--</span></div>
@@ -164,13 +173,13 @@
             </div>
 
             <!-- Performance Dashboard -->
-            <div class="adults-only soup-perf-block">
+            <div class="adults-only soup-perf-block soup-dev-telemetry">
                 <div class="soup-perf-hdr" aria-label="Frame time graph">Frame graph</div>
                 <canvas id="performance-canvas" width="400" height="150"></canvas>
             </div>
 
-            <div id="event-log" class="soup-event-stream"></div>
-            <div id="log"></div>
+            <div id="event-log" class="soup-event-stream soup-dev-telemetry"></div>
+            <div id="log" class="soup-dev-telemetry"></div>
         </div>
     </div>
 
@@ -347,6 +356,14 @@
             networkPlay
         );
 
+        soup.onNetworkWarmEdge = () => {
+            try {
+                window.__p31SoupStarfield?.notifyWarmEdge?.();
+            } catch (_) {
+                /* optional starfield */
+            }
+        };
+
         const canvasWrap = document.getElementById('canvas-wrap');
         soup.getZones().forEach((zone) => {
             const zel = document.createElement('div');
@@ -450,6 +467,11 @@
                 if (event.products.length > 0) {
                     log(`   New compound: ${event.products[0].element}`);
                 }
+                void import('./design-assets/starfield/p31-mesh-touches.js').then((MT) => {
+                    const el0 = event.products[0] && event.products[0].element;
+                    const k = MT.starfieldBondingKeyFromProductElement(el0);
+                    if (k) window.__p31SoupStarfield?.setBondingMolecule?.(k);
+                });
                 const el0 = event.products[0] && event.products[0].element;
                 if (el0 === 'LOV') {
                     log('💚 LOV — operator Easter egg (for S.J. / W.J.).');
@@ -743,7 +765,14 @@
                 const r = networkPlay
                     ? ` · room “${roomQ}”${nameQ ? ' · ' + nameQ : ''}`
                     : '';
-                statusTextEl.textContent = `Offline (${connectionStatus.reconnectAttempts} attempts)${r}`;
+                const att = connectionStatus.reconnectAttempts ?? 0;
+                if (att === 0) {
+                    statusTextEl.textContent =
+                        'Quiet bowl — start the WebSocket server (see header) or add ?room=… & ?ws=… to invite family.' +
+                        r;
+                } else {
+                    statusTextEl.textContent = `Reconnecting… (${att})${r}`;
+                }
             }
 
             const ph = document.getElementById('presence-hud');
@@ -1007,6 +1036,20 @@
 
         // Make soup available globally for debugging
         window.soup = soup;
+
+        void (async () => {
+            const el = document.getElementById('p31-soup-starfield');
+            if (!(el instanceof HTMLCanvasElement)) return;
+            try {
+                const mod = await import('./design-assets/starfield/p31-starfield.js');
+                const { config, hints } = await mod.resolveStarfieldConfig();
+                const api = mod.initStarfield(el, config, { surface: 'soup', touchRipple: true });
+                api.ingestTouchHints(hints);
+                window.__p31SoupStarfield = api;
+            } catch (e) {
+                /* Gray Rock — starfield optional offline */
+            }
+        })();
     </script>
 </body>
 </html>

@@ -11,6 +11,8 @@ compatibility_flags = ["nodejs_compat"]
 
 [vars]
 # Optional: harmless defaults for local wrangler dev; production uses secrets / KV-backed state.
+# Operator skill routes: max invocations per skill per IP per calendar day (KV). Override via dashboard if needed.
+SKILL_DAILY_LIMIT_PER_IP = "80"
 
 [[d1_databases]]
 binding = "DB"

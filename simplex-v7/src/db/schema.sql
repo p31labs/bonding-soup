@@ -1,6 +1,6 @@
 -- P31 AGENT CREW — D1 schema — SIMPLEX v7
 -- OQE: wrangler d1 execute <DB_NAME> --command="SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name"
--- Expect 23 user-defined tables below (core crew + SENTINEL physical layer + accommodation_log).
+-- Expect 30 user-defined tables below (core crew + SENTINEL + accommodation + operator skills + remembrance mesh).
 
 CREATE TABLE IF NOT EXISTS agent_runs (
   run_id      TEXT PRIMARY KEY,
@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS wcds (
 );
 
 INSERT OR IGNORE INTO wcds (id, scope, agent_lane, oqe, status, close_evidence, est_days, created_at, updated_at) VALUES
- ('WCD-SIMPLEX-01','D1 schema + seeds','Mechanic','23 user tables + automations seeded; sqlite_master','OPEN',NULL,0.5, strftime('%s','now')*1000,strftime('%s','now')*1000),
+ ('WCD-SIMPLEX-01','D1 schema + seeds','Mechanic','30 user tables + automations seeded; sqlite_master','OPEN',NULL,0.5, strftime('%s','now')*1000,strftime('%s','now')*1000),
  ('WCD-SIMPLEX-02','simplex-worker HTTP+HMAC','Mechanic','Routes+HMAC behave per matrix','OPEN',NULL,1,strftime('%s','now')*1000,strftime('%s','now')*1000),
  ('WCD-SIMPLEX-03','cron → runner','Mechanic','wrangler tail shows scheduled cohort','OPEN',NULL,0.5,strftime('%s','now')*1000,strftime('%s','now')*1000),
  ('WCD-SIMPLEX-04','Tomograph Email Worker','Mechanic','inbound hostile redacts + D1 logs','OPEN',NULL,0.5,strftime('%s','now')*1000,strftime('%s','now')*1000),
@@ -283,3 +283,78 @@ CREATE TABLE IF NOT EXISTS accommodation_log (
 );
 CREATE INDEX IF NOT EXISTS idx_accommodation_date ON accommodation_log(entry_date DESC, created_at DESC);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_accommodation_source_ref ON accommodation_log(source_ref) WHERE source_ref IS NOT NULL;
+
+-- ── OPERATOR SKILLS — Anthropic-backed routes + knowledge graph + time capsules ─
+
+CREATE TABLE IF NOT EXISTS knowledge_edges (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  from_entity TEXT NOT NULL,
+  to_entity TEXT NOT NULL,
+  relationship TEXT NOT NULL,
+  strength REAL NOT NULL DEFAULT 0.5,
+  first_seen INTEGER NOT NULL,
+  last_seen INTEGER NOT NULL,
+  source TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_ke_from ON knowledge_edges(from_entity);
+CREATE INDEX IF NOT EXISTS idx_ke_to ON knowledge_edges(to_entity);
+
+CREATE TABLE IF NOT EXISTS caught_thoughts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  thought TEXT NOT NULL,
+  domain TEXT,
+  genesis_hash TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_caught_created ON caught_thoughts(created_at DESC);
+
+CREATE TABLE IF NOT EXISTS debrief_log (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  raw_text TEXT NOT NULL,
+  output_json TEXT NOT NULL,
+  content_hash TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_debrief_created ON debrief_log(created_at DESC);
+
+CREATE TABLE IF NOT EXISTS time_capsules (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  fire_at INTEGER NOT NULL,
+  message TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  opened_at INTEGER
+);
+CREATE INDEX IF NOT EXISTS idx_capsule_fire ON time_capsules(fire_at) WHERE opened_at IS NULL;
+
+CREATE TABLE IF NOT EXISTS calibrator_proposals (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  proposals_json TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+
+-- ── REMEMBRANCE MESH — consecrated vertices (gone, not offline) + bereavement audit ─
+
+CREATE TABLE IF NOT EXISTS remembered_vertices (
+  id TEXT PRIMARY KEY,
+  display_name TEXT NOT NULL,
+  memorial_line TEXT,
+  date_born TEXT,
+  date_passed TEXT,
+  edges_summary TEXT,
+  last_warm_at INTEGER,
+  consecrated_at INTEGER NOT NULL,
+  genesis_hash TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_remembered_consecrated ON remembered_vertices(consecrated_at DESC);
+
+CREATE TABLE IF NOT EXISTS bereavement_periods (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  started_at INTEGER NOT NULL,
+  ends_at INTEGER NOT NULL,
+  note TEXT,
+  related_remembered_id TEXT,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_bereavement_ends ON bereavement_periods(ends_at DESC);

@@ -12,7 +12,7 @@
   /** @typedef {{ title: string, slow?: boolean, network?: boolean, hitl?: boolean, confirm?: string | null, protocol?: string }} ActionMeta */
   /** @typedef {{ id?: string, title: string, ids: string[], links?: { href: string, label: string }[] }} SectionSpec */
 
-  /** @type {{ VERSION?: string, ESSENTIAL_IDS: string[], ACTION_META: Record<string, ActionMeta>, SECTIONS: SectionSpec[] }} */
+  /** @type {{ VERSION?: string, ESSENTIAL_IDS: string[], ACTION_META: Record<string, ActionMeta>, SECTIONS: SectionSpec[], JOY_SPIN?: string[] }} */
   const boot = JSON.parse(bootEl.textContent);
 
   const { ACTION_META, SECTIONS } = boot;
@@ -179,6 +179,11 @@
       })
       .finally(() => {
         applyGateToButtons();
+        try {
+          if (typeof window.__p31StarfieldPulse === "function") window.__p31StarfieldPulse();
+        } catch {
+          /* ignore */
+        }
       });
   }
 
@@ -442,6 +447,20 @@
     }
   }
 
+  function bindJoyDraw() {
+    var btn = document.getElementById("cc-joy-draw");
+    var slot = document.getElementById("cc-joy-slot");
+    var spin = Array.isArray(boot.JOY_SPIN) ? boot.JOY_SPIN : [];
+    if (!btn || !slot || spin.length === 0) return;
+    var i = 0;
+    btn.hidden = false;
+    btn.addEventListener("click", function () {
+      slot.hidden = false;
+      slot.textContent = spin[i % spin.length];
+      i += 1;
+    });
+  }
+
   mountEssentials();
   mountSections();
   rewriteLocalhostLinks();
@@ -450,6 +469,7 @@
   bindFilter();
   applyGateToButtons();
   applyActionFilter();
+  bindJoyDraw();
   loadSimplexStrip();
 
   console.info("P31 control plane loaded", boot.VERSION || "?");

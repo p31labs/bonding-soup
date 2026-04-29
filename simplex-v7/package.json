@@ -11,7 +11,8 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "d1:schema": "echo 'Use: wrangler d1 execute <DB_NAME> --file=src/db/schema.sql (after create + binding)'",
-    "discover:sites": "node scripts/discover-sites.mjs"
+    "discover:sites": "node scripts/discover-sites.mjs",
+    "phos:sign": "node scripts/phos-sign.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.33.0"

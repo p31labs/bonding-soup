@@ -32,6 +32,11 @@ describe("assertBootShape", () => {
     expect(() => assertBootShape(minimalValid)).not.toThrow();
   });
 
+  it("allows extra JOY_SPIN array (operator joy)", () => {
+    const x = { ...minimalValid, JOY_SPIN: ["one", "two"] };
+    expect(() => assertBootShape(x)).not.toThrow();
+  });
+
   it("rejects missing ACTION_META", () => {
     expect(() => assertBootShape({ SECTIONS: [] })).toThrow(/ACTION_META/);
   });

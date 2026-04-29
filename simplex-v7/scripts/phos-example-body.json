@@ -1,0 +1,14 @@
+{
+  "child_id": "dev-garden-child-1",
+  "garden_state": {
+    "molecules_today": ["H2O"],
+    "current_action": "building",
+    "current_element": "carbon",
+    "sensory_profile": "cloud_soft_some"
+  },
+  "input_type": "text",
+  "input": "What is carbon good for?",
+  "exchange_count": 0,
+  "local_hour": 14,
+  "pre_reader": false
+}

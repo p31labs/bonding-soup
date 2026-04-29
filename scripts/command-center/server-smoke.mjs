@@ -85,6 +85,9 @@ async function main() {
     if (!mainPage.body.includes("cc-joy__list")) {
       throw new Error("command-center smoke: missing operator joy list");
     }
+    if (!mainPage.body.includes('id="cc-joy-draw"')) {
+      throw new Error("command-center smoke: missing joy draw button");
+    }
     if (!mainPage.body.includes('data-cc-version="2.0.0"')) {
       throw new Error("command-center smoke: missing data-cc-version");
     }

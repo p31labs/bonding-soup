@@ -89,6 +89,31 @@
       "role": "Normative Gray Rock → Alive layouts and component patterns; pairs with canon-to-style-css + emitDesignDoctrineBlock"
     },
     {
+      "id": "p31-starfield-module",
+      "path": "design-assets/starfield/p31-starfield.js",
+      "role": "Ambient mesh canvas (spoons → density/speed, voltage → coral, bursts, hearth breath); paired README + demo; sync → p31ca public/lib; npm run verify:starfield"
+    },
+    {
+      "id": "p31-starfield-mesh-touches-md",
+      "path": "docs/P31-STARFIELD-MESH-TOUCHES.md",
+      "role": "Twenty-three ambient mesh touches — birthdays, calcium/hearth, 863 cursor, favicon, audio, presence, empty-room — orthogonal to ship bar; hooks on starfield + sibling surfaces"
+    },
+    {
+      "id": "p31-starfield-overview-md",
+      "path": "docs/P31-STARFIELD.md",
+      "role": "Starfield overview and surface integration map (hub, soup, poets, command center, passport)"
+    },
+    {
+      "id": "p31-starfield-readme",
+      "path": "design-assets/starfield/README.md",
+      "role": "Starfield API (resolveStarfieldConfig hints, initStarfield options), sync command, mesh-touch pointers"
+    },
+    {
+      "id": "p31-fleet-ten-local-ollama",
+      "path": "scripts/p31-fleet-ten/models.json",
+      "role": "Ten Ollama personas (merged prompts + setup.sh/verify.sh/benchmark.sh); static gate npm run verify:fleet-ten"
+    },
+    {
       "id": "fleet-portal-html",
       "path": "fleet-portal.html",
       "role": "Generated index of all live URLs (npm run build:fleet-portal); polish → p31ca public/fleet-portal.html"
@@ -429,6 +454,46 @@
       "note": "Normative layout + Gray Rock doctrine: docs/P31-DESIGN-DOCTRINE.md; prefs bridge: p31ca/public/lib/p31-subject-prefs.js"
     },
     {
+      "id": "starfield-design-to-p31ca-public",
+      "from": [
+        "design-assets/starfield/p31-starfield.js",
+        "design-assets/starfield/p31-mesh-touches.js",
+        "design-assets/starfield/p31-starfield.css",
+        "design-assets/starfield/p31-larmor-fields.css",
+        "design-assets/starfield/demo.html"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-starfield.js",
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-mesh-touches.js",
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-starfield.css",
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-larmor-fields.css",
+        "andromeda/04_SOFTWARE/p31ca/public/lib/starfield-demo.html"
+      ],
+      "apply": "npm run sync:p31-starfield",
+      "verify": "npm run verify:starfield",
+      "note": "Behavioral map: design-assets/starfield/README.md; hub landing bundles design-assets/starfield/p31-starfield.js via landing-cockpit.ts; public/lib mirror for demos + verify:starfield parity"
+    },
+    {
+      "id": "simplex-remembrance-to-starfield-state",
+      "from": [
+        "simplex-v7/src/lib/mesh-remembrance.ts",
+        "simplex-v7/src/lib/context-fallback.ts",
+        "p31-constants.json"
+      ],
+      "to": ["design-assets/starfield/p31-mesh-touches.js", "design-assets/starfield/p31-starfield.js"],
+      "apply": "After changing remembrance merge or GET /api/state remembrance fields: npm run apply:constants if mesh.remembranceWarmWhite changed; npm run sync:p31-starfield to mirror p31ca public/lib.",
+      "verify": "npm run verify:simplex && npm run verify:starfield",
+      "note": "GET /api/state state.* adds bereavement_active, bereavement_until_ms, remembered_vertex_count, remembrance_fixed_stars (SHA slots, no names). Starfield mergeApiTouchHints + warm-white layer."
+    },
+    {
+      "id": "p31-fleet-ten-bundle",
+      "from": ["scripts/p31-fleet-ten/models.json", "scripts/p31-fleet-ten/setup.sh", "scripts/p31-fleet-ten/verify.sh", "scripts/p31-fleet-ten/benchmark.sh", "scripts/p31-fleet-ten/lib/ollama-create-all.mjs", "scripts/p31-fleet-ten/lib/merge-system-prompt.mjs", "scripts/p31-fleet-ten/lib/verify-smoke.mjs", "scripts/p31-fleet-ten/lib/benchmark.mjs", "scripts/verify-fleet-ten.mjs"],
+      "to": [],
+      "apply": "cd scripts/p31-fleet-ten && ./setup.sh --pull (requires ollama + base weights)",
+      "verify": "npm run verify:fleet-ten",
+      "note": "Prompts under scripts/p31-fleet-ten/prompts/; no generated model blobs in git"
+    },
+    {
       "id": "canon-to-p31ca-about-html-style",
       "from": ["andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json", "andromeda/04_SOFTWARE/p31ca/scripts/generate-about-pages.mjs"],
       "to": ["andromeda/04_SOFTWARE/p31ca/public/*-about.html"],
@@ -744,7 +809,7 @@
     ]
   },
   "verifyPipeline": {
-    "description": "Root `package.json` `verify` = prelude + scripts in order (incl. verify:runbooks for docs/runbooks/README.md links). verify:p31ca-contracts chains build:fleet-entities → verify:fleet-entities → verify:ground-truth → verify:worker-spa-launch → education → … Update this file whenever `verify` changes.",
+    "description": "Root `package.json` `verify` = prelude + scripts in order (incl. verify:runbooks for docs/runbooks/README.md links). verify:p31ca-contracts chains build:fleet-entities → verify:fleet-entities → verify:ground-truth → verify:worker-spa-launch → education → … verify:starfield syncs design-assets/starfield → p31ca public/lib; verify:fleet-ten checks scripts/p31-fleet-ten bundle. Update this file whenever `verify` changes.",
     "prelude": "verify:alignment",
     "preludeNote": "Fast guard (verify-alignment.mjs): JSON + required sources. Skipped in the `--verify` loop (prelude already satisfied).",
     "scripts": [
@@ -761,6 +826,8 @@
         "verify:production-readiness",
       "verify:map-pipeline",
       "verify:p31-style",
+      "verify:starfield",
+      "verify:fleet-ten",
       "verify:style-alignment",
       "verify:command-center",
       "verify:p31ca-contracts",

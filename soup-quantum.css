@@ -1217,3 +1217,40 @@ html.soup-app.soup-app--gray-rock .soup-psych-dot--belong {
     animation: none !important;
   }
 }
+
+/* ── Dev telemetry (FPS, perf graph, streams): ?dev=1 or ?debug — public face stays calm ── */
+html.soup-app:not(.soup-dev-panel) .soup-dev-telemetry {
+  display: none !important;
+}
+
+/* Hearth rings — subtle calm/warm/belong concentric hint behind playfield (not gameplay HUD) */
+html.soup-app #canvas-wrap.soup-canvas-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 38% 36% at 50% 52%, transparent 58%, rgba(77, 184, 168, 0.055) 59%, transparent 61%),
+    radial-gradient(ellipse 56% 54% at 50% 52%, transparent 58%, rgba(204, 98, 71, 0.045) 59%, transparent 61%),
+    radial-gradient(ellipse 78% 74% at 50% 52%, transparent 58%, rgba(59, 163, 114, 0.038) 59%, transparent 61%);
+  opacity: 0.9;
+}
+
+html.soup-app #canvas-wrap.soup-canvas-shell canvas.p31-soup-starfield-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+html.soup-app #canvas-wrap.soup-canvas-shell canvas#canvas {
+  position: relative;
+  z-index: 1;
+}
+
+html.soup-app #canvas-wrap #presence-hud {
+  z-index: 4;
+}

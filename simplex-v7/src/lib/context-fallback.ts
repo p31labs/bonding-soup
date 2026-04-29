@@ -4,6 +4,7 @@
  */
 
 import type { Env } from '../agents/types';
+import { buildRemembrancePublicState } from './mesh-remembrance';
 
 /** KV key `operator_context_override`: `{"current_spoons":N,"daily_allocation"?:N,"safe_mode"?:bool,"note"?:string}` */
 export type SentinelContextSource =
@@ -151,6 +152,7 @@ export async function resolveSentinelContext(env: Env): Promise<SentinelContextS
  */
 export async function mergeKvSystemStateWithSentinel(env: Env): Promise<Record<string, unknown>> {
   const sentinel = await resolveSentinelContext(env);
+  const remembrance = await buildRemembrancePublicState(env);
   const raw = await env.SIMPLEX_STATE.get('system_state');
   try {
     const base = raw
@@ -164,6 +166,10 @@ export async function mergeKvSystemStateWithSentinel(env: Env): Promise<Record<s
       sentinel_context_source: sentinel.source,
       ...(sentinel.stale_ms !== undefined ? { sentinel_stale_ms: sentinel.stale_ms } : {}),
       ...(sentinel.operator_note !== undefined ? { operator_note: sentinel.operator_note } : {}),
+      bereavement_active: remembrance.bereavement_active,
+      bereavement_until_ms: remembrance.bereavement_until_ms,
+      remembered_vertex_count: remembrance.remembered_vertex_count,
+      remembrance_fixed_stars: remembrance.remembrance_fixed_stars,
     };
   } catch {
     return {
@@ -173,6 +179,10 @@ export async function mergeKvSystemStateWithSentinel(env: Env): Promise<Record<s
       system_voltage: 'GREEN',
       safe_mode: sentinel.safe_mode,
       sentinel_context_source: sentinel.source,
+      bereavement_active: remembrance.bereavement_active,
+      bereavement_until_ms: remembrance.bereavement_until_ms,
+      remembered_vertex_count: remembrance.remembered_vertex_count,
+      remembrance_fixed_stars: remembrance.remembrance_fixed_stars,
     };
   }
 }

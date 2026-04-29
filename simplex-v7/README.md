@@ -15,7 +15,7 @@ Full sequence (CLI + dashboard cues): **`DEPLOY.md`**. Summary:
 
 1. `wrangler d1 create simplex`, `wrangler kv namespace create SIMPLEX_STATE`, `wrangler queues create simplex-agent-queue`.
 2. Paste **`database_id`** and KV **`id`** into `wrangler.toml` (worker name **`simplex-worker`**).
-3. **`wrangler secret put`** — see **`DEPLOY.md`** table (`ANTHROPIC_API_KEY`, `DEVICE_SECRET`, `HOSTILE_SENDERS`, `HA_TOKEN`, `HA_BASE_URL`).
+3. **`wrangler secret put`** — see **`DEPLOY.md`** table (`ANTHROPIC_API_KEY`, `DEVICE_SECRET`, `PHOS_HMAC_SECRET`, `HOSTILE_SENDERS`, `HA_TOKEN`, `HA_BASE_URL`).
 
 ## Apply schema (WCD-SIMPLEX-01)
 
@@ -27,7 +27,7 @@ wrangler d1 execute simplex --local --file=src/db/schema.sql
 
 Then **`npm run deploy`** or **`wrangler deploy`** — see **`DEPLOY.md`** §5–§7.
 
-**OQE:** `SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'` → **23** rows after apply (adds **`accommodation_log`**; physical layer: `device_states`, `biometric_log`, `home_events`, `automation_rules`, `mqtt_log`).
+**OQE:** `SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'` → **28** rows after apply (see header comment in `src/db/schema.sql`; includes **`accommodation_log`**, operator-skill tables, SENTINEL physical layer).
 
 ## Dev / typecheck / tests (WCD-SIMPLEX-06)
 
@@ -56,7 +56,7 @@ GET **`/api/spoons`** and **`GET /api/state`** `state` use the same layered reso
 
 | Method | Path |
 |--------|------|
-| GET | `/api/state` — merged `system_state` + sentinel spoon fields (never raw KV-only) |
+| GET | `/api/state` — merged `system_state` + sentinel spoons + **public remembrance** (`bereavement_active`, `bereavement_until_ms`, `remembered_vertex_count`, `remembrance_fixed_stars` — SHA slots, no names) |
 | GET | `/api/agents` |
 | GET | `/api/deadlines` |
 | GET | `/api/spoons` — envelope includes `sentinel_context_source`, `sentinel_stale_ms`, optional `operator_note` |
@@ -72,8 +72,23 @@ GET **`/api/spoons`** and **`GET /api/state`** `state` use the same layered reso
 | POST | `/api/home` — HA / bridge events → `home_events` |
 | POST | `/api/home/scene` — queue manual scene action |
 | POST | `/api/device/meshtastic` — mesh status push (HMAC when configured) |
+| POST | `/api/phos/respond` — **Phos** child garden companion (HMAC + optional `PHOS_CHILD_IDS`; see **`DEPLOY.md`**) |
+| POST | `/api/remember/consecrate` — consecrate a **remembered** vertex (gone, not offline); optional `start_bereavement_days` |
+| GET | `/api/remember/list` — list `remembered_vertices` |
+| GET | `/api/remember/status` — bereavement KV + counts |
+| GET | `/api/remember/context` — markdown block for Composer / humans |
+| GET | `/api/remember/vertex?id=` — one `remembered_vertices` row |
+| POST | `/api/remember/bereavement` — `{ "days": 30 }` or `{ "clear": true }` |
 
-CORS allowlist: `https://p31ca.org` (adjust for preview origins if needed).
+**Remembrance CLI:** `OPERATOR_SECRET=… npm run remember:probe status` · `context` · `vertex <uuid>` — or **`npm run p31 -- remember status`**.
+
+**Phos quick sign (curl):** from `simplex-v7/`, `PHOS_HMAC_SECRET=… npm run phos:sign` — prints `X-Phos-Signature` and a curl template. Example body: `scripts/phos-example-body.json`.
+
+**One-shot live POST:** repo root **`npm run phos:probe`** (needs `PHOS_HMAC_SECRET`, optional `PHOS_URL`). **`npm run p31 -- phos probe`** or **`p31 phos probe`**.
+
+**Operator UI probe:** **`garden-phos-probe.html`** — **`npm run p31 -- open phos`** or **`npm run demo`**; paste signature + edit JSON.
+
+CORS: `https://p31ca.org` plus `http://127.0.0.1:*` and `http://localhost:*` for local demos and Phos probe.
 
 ## Topology
 

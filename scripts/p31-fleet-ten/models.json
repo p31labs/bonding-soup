@@ -1,0 +1,62 @@
+[
+  {
+    "id": "p31-mechanic",
+    "from": "qwen2.5-coder:7b",
+    "roleFile": "p31-mechanic.role.txt",
+    "verifyPrompt": "Reply with exactly one line: the string OK_MECHANIC. No other tokens."
+  },
+  {
+    "id": "p31-firmware",
+    "from": "qwen2.5-coder:7b",
+    "roleFile": "p31-firmware.role.txt",
+    "verifyPrompt": "Reply with exactly one line: the string OK_FIRMWARE. No other tokens."
+  },
+  {
+    "id": "p31-counsel",
+    "from": "qwen3:8b",
+    "roleFile": "p31-counsel.role.txt",
+    "verifyPrompt": "Reply with exactly one line: the string OK_COUNSEL. No other tokens."
+  },
+  {
+    "id": "p31-narrator",
+    "from": "qwen3:8b",
+    "roleFile": "p31-narrator.role.txt",
+    "verifyPrompt": "Reply with exactly one line: the string OK_NARRATOR. No other tokens."
+  },
+  {
+    "id": "p31-triage",
+    "from": "qwen3:8b",
+    "roleFile": "p31-triage.role.txt",
+    "verifyPrompt": "Output strict JSON only: {\"ok\":true,\"model\":\"triage\"}"
+  },
+  {
+    "id": "p31-quick",
+    "from": "phi4-mini:latest",
+    "roleFile": "p31-quick.role.txt",
+    "verifyPrompt": "Reply with exactly one line: the string OK_QUICK. No other tokens."
+  },
+  {
+    "id": "p31-phos",
+    "from": "qwen3:8b",
+    "roleFile": "p31-phos.role.txt",
+    "verifyPrompt": "Reply with exactly one line: the string OK_PHOS. No other tokens."
+  },
+  {
+    "id": "p31-scribe",
+    "from": "qwen3:8b",
+    "roleFile": "p31-scribe.role.txt",
+    "verifyPrompt": "Reply with exactly one line: the string OK_SCRIBE. No other tokens."
+  },
+  {
+    "id": "p31-oracle",
+    "from": "qwen3:8b",
+    "roleFile": "p31-oracle.role.txt",
+    "verifyPrompt": "Reply with exactly one line: the string OK_ORACLE. No other tokens."
+  },
+  {
+    "id": "p31-debrief",
+    "from": "qwen3:8b",
+    "roleFile": "p31-debrief.role.txt",
+    "verifyPrompt": "Reply with exactly one line: the string OK_DEBRIEF. No other tokens."
+  }
+]

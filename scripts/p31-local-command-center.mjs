@@ -195,6 +195,8 @@ function buildBootPayload() {
     ESSENTIAL_IDS: [...ESSENTIAL_ACTION_IDS],
     ACTION_META: Object.fromEntries(Object.keys(ACTIONS).map((k) => [k, elicitMeta(k)])),
     SECTIONS: sections.map((s) => ({ id: s.id, title: s.title, ids: s.ids, links: s.links })),
+    /** Extra lines for in-browser “Another line” (same daily pool as `npm run fun`). */
+    JOY_SPIN: getOperatorJoyLines(repoRoot, 24, false, false),
   };
   assertBootShape(payload);
   return payload;
@@ -229,6 +231,8 @@ function buildPageHtml() {
   <link rel="stylesheet" href="/assets/p31-style.css" />
   <link rel="stylesheet" href="/assets/p31-responsive-surface.css" />
   <link rel="stylesheet" href="/assets/command-center.css" />
+  <link rel="stylesheet" href="/assets/p31-starfield.css" />
+  <link rel="stylesheet" href="/assets/p31-larmor-fields.css" />
   <script>
 (function () {
   var r = document.documentElement;
@@ -246,8 +250,10 @@ function buildPageHtml() {
   </script>
   <script type="application/json" id="cc-boot">${bootJson}</script>
   <script src="/assets/command-center.js" defer></script>
+  <script type="module" src="/assets/cc-starfield-boot.js"></script>
 </head>
 <body class="cc-v2" data-cc-gate-armed="0" data-cc-version="${CC_VERSION}"${cmdCenterLan ? ' data-cc-lan="1"' : ""}>
+  <canvas id="cc-starfield" class="cc-starfield-canvas" aria-hidden="true"></canvas>
   <a class="cc-skip-link" href="#cc-main">Skip to actions</a>
 
   <header class="cc-header">
@@ -305,7 +311,7 @@ function buildPageHtml() {
 
       <div class="cc-filter-row">
         <label class="cc-filter-label" for="cc-filter">Find an action</label>
-        <input type="search" id="cc-filter" class="cc-filter" placeholder="Search by title…" autocomplete="off" spellcheck="false" />
+        <input type="search" id="cc-filter" class="cc-filter p31-larmor-field" placeholder="Search by title…" autocomplete="off" spellcheck="false" />
         <p class="cc-filter-meta"><kbd>/</kbd> focus · <kbd>Esc</kbd> clear</p>
       </div>
 
@@ -323,6 +329,10 @@ function buildPageHtml() {
       <details class="cc-joy">
         <summary>Trim tab — moment of joy</summary>
         ${joyListBlock}
+        <p class="cc-joy__slot" id="cc-joy-slot" hidden></p>
+        <p class="cc-joy__draw-wrap">
+          <button type="button" class="cc-btn cc-btn--ghost cc-joy__draw" id="cc-joy-draw" hidden>Another line</button>
+        </p>
         <p class="cc-joy__meta">Pool rotates daily (UTC) · <code>npm run fun</code> · <code>npm run fun:shower</code> · <code>npm run doctor -- --fun</code> · <code>p31 fun --many 5 --roll</code></p>
       </details>
 
@@ -343,7 +353,7 @@ function buildPageHtml() {
           <span id="cc-k4-spin" class="cc-k4-spin-host" hidden data-spin="wye" aria-hidden="true">${k4SpinInline}</span>
           <span id="cc-term-status" class="cc-term-status cc-term-status--idle" aria-live="polite">idle</span>
         </div>
-        <pre id="out" class="cc-terminal__body" tabindex="0">— Ready.\n(No runs until you unlock the gate.)</pre>
+        <pre id="out" class="cc-terminal__body p31-larmor-field" tabindex="0">— Ready.\n(No runs until you unlock the gate.)</pre>
       </div>
       <p class="cc-aside-note">Sticky on wide viewports.</p>
     </aside>
@@ -445,6 +455,28 @@ const server = http.createServer((req, res) => {
     return;
   }
   const assetBase = req.url && req.url.split("?")[0];
+  if (req.method === "GET" && assetBase === "/api/mesh-pulse") {
+    const pulsePath = path.join(os.homedir(), ".p31", "mesh-touch-pulse.json");
+    if (!fs.existsSync(pulsePath)) {
+      res.writeHead(204, { "Cache-Control": "no-store" });
+      res.end();
+      return;
+    }
+    try {
+      const buf = fs.readFileSync(pulsePath, "utf8");
+      try {
+        fs.unlinkSync(pulsePath);
+      } catch {
+        /* ignore */
+      }
+      res.writeHead(200, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" });
+      res.end(buf);
+    } catch {
+      res.writeHead(500, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("pulse read error");
+    }
+    return;
+  }
   if (req.method === "GET" && assetBase === "/api/health") {
     res.writeHead(200, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" });
     res.end(
@@ -485,6 +517,26 @@ const server = http.createServer((req, res) => {
   }
   if (req.method === "GET" && assetBase === "/assets/command-center.js") {
     sendAsset(res, path.join(commandCenterDir, "command-center.js"), "application/javascript; charset=utf-8");
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/assets/p31-starfield.js") {
+    sendAsset(res, path.join(repoRoot, "design-assets", "starfield", "p31-starfield.js"), "application/javascript; charset=utf-8");
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/assets/p31-mesh-touches.js") {
+    sendAsset(res, path.join(repoRoot, "design-assets", "starfield", "p31-mesh-touches.js"), "application/javascript; charset=utf-8");
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/assets/p31-starfield.css") {
+    sendAsset(res, path.join(repoRoot, "design-assets", "starfield", "p31-starfield.css"), "text/css; charset=utf-8");
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/assets/p31-larmor-fields.css") {
+    sendAsset(res, path.join(repoRoot, "design-assets", "starfield", "p31-larmor-fields.css"), "text/css; charset=utf-8");
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/assets/cc-starfield-boot.js") {
+    sendAsset(res, path.join(commandCenterDir, "cc-starfield-boot.js"), "application/javascript; charset=utf-8");
     return;
   }
   if (req.method === "GET" && assetBase === "/apple-touch-icon.png") {

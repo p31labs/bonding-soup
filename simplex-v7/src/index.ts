@@ -7,6 +7,8 @@ import { TOOL_REGISTRY } from './agents/tools/index';
 import type { AgentId, Env } from './agents/types';
 import { verifyHmacSha256 } from './lib/hmac-worker';
 import { mergeKvSystemStateWithSentinel, resolveSentinelContext } from './lib/context-fallback';
+import { skillCorsHeaders } from './lib/http-json';
+import { handleOperatorSkillRequest } from './skills/router';
 
 const ALLOWED_AGENTS: AgentId[] = [
   'STEWARD',
@@ -42,21 +44,20 @@ export default {
     const url = new URL(request.url);
     const method = request.method;
 
-    const corsHeaders: Record<string, string> = {
-      'Access-Control-Allow-Origin': 'https://p31ca.org',
-      'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type,X-Device-Signature',
-    };
+    const corsHeaders = skillCorsHeaders(request);
 
     if (method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
     const json = (data: unknown, status = 200) =>
       new Response(JSON.stringify(data), {
         status,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        headers: { 'Content-Type': 'application/json', ...skillCorsHeaders(request) },
       });
 
     try {
+      const skillEarly = await handleOperatorSkillRequest(method, url.pathname, request, env);
+      if (skillEarly) return skillEarly;
+
       if (method === 'GET' && url.pathname === '/api/state') {
         const briefing = await env.SIMPLEX_STATE.get('daily_briefing');
         const health = await env.SIMPLEX_STATE.get('system_health');

@@ -78,6 +78,31 @@ function printHelp() {
       "  " + cyan("command-center") + "  local operator UI (:3131)",
       "  " + cyan("cc") + "            alias for " + cyan("command-center"),
       "  " + cyan("open") + "         local demos / passport / lab / slicer — " + dim("p31 open -h"),
+      "  " + cyan("bookmark") + "      save URL + pulse mesh chime (needs local command center :3131)",
+      "  " +
+        cyan("phos") +
+        "          Phos child companion — " +
+        cyan("phos sign") +
+        " · " +
+        cyan("phos probe") +
+        " (" +
+        dim("PHOS_HMAC_SECRET") +
+        " · " +
+        dim("PHOS_URL") +
+        ")",
+      "  " +
+        cyan("remember") +
+        "       remembrance mesh — " +
+        cyan("remember status") +
+        " · " +
+        cyan("remember context") +
+        " · " +
+        cyan("remember vertex") +
+        " (" +
+        dim("OPERATOR_SECRET") +
+        " · " +
+        dim("SIMPLEX_API_URL") +
+        ")",
       "  " + cyan("mesh") + "          " + dim("p31-mesh") + " CLI",
       "",
       dim("Flags:"),
@@ -240,6 +265,80 @@ async function main() {
   if (cmd === "open") {
     const code = await runOpen(fwd);
     process.exit(code);
+  }
+
+  if (cmd === "bookmark") {
+    const { runBookmark } = await import("./bookmark.mjs");
+    process.exit(runBookmark(fwd));
+  }
+
+  if (cmd === "phos") {
+    const sub = fwd[0];
+    const rest = fwd.slice(1);
+    if (!sub || sub === "-h" || sub === "--help") {
+      console.log(
+        [
+          bold("p31 phos") + " — sign JSON or probe live Worker",
+          "",
+          dim("Usage:"),
+          "  " + cyan("npm run p31 -- phos sign") + "  [" + dim("body.json path forwarded to simplex-v7") + "]",
+          "  " + cyan("npm run p31 -- phos probe") + " [" + dim("body.json") + "]",
+          "",
+          dim("Environment:"),
+          "  " + cyan("PHOS_HMAC_SECRET") + "  required",
+          "  " + cyan("PHOS_URL") + "        Worker base, default " + dim("https://api.phosphorus31.org"),
+          "",
+        ].join("\n")
+      );
+      process.exit(0);
+    }
+    if (sub === "sign") {
+      const code = await runNpmScript("phos:sign", rest);
+      process.exit(code);
+    }
+    if (sub === "probe") {
+      const code = await runNodeScript("scripts/phos-probe.mjs", rest);
+      process.exit(code);
+    }
+    console.error("p31 phos: unknown subcommand " + JSON.stringify(sub) + " (try phos --help)");
+    process.exit(1);
+  }
+
+  if (cmd === "remember") {
+    const sub = fwd[0];
+    const rest = fwd.slice(1);
+    if (!sub || sub === "-h" || sub === "--help") {
+      console.log(
+        [
+          bold("p31 remember") + " — mesh remembrance (operator bearer)",
+          "",
+          dim("Usage:"),
+          "  " + cyan("npm run p31 -- remember status"),
+          "  " + cyan("npm run p31 -- remember context"),
+          "  " + cyan("npm run p31 -- remember vertex") + " <uuid>",
+          "",
+          dim("Environment:"),
+          "  " + cyan("OPERATOR_SECRET") + "   required",
+          "  " + cyan("SIMPLEX_API_URL") + "  Worker base, default " + dim("https://api.phosphorus31.org"),
+          "",
+        ].join("\n")
+      );
+      process.exit(0);
+    }
+    if (sub === "status") {
+      const code = await runNodeScript("scripts/remember-probe.mjs", ["status", ...rest]);
+      process.exit(code);
+    }
+    if (sub === "context") {
+      const code = await runNodeScript("scripts/remember-probe.mjs", ["context", ...rest]);
+      process.exit(code);
+    }
+    if (sub === "vertex") {
+      const code = await runNodeScript("scripts/remember-probe.mjs", ["vertex", ...rest]);
+      process.exit(code);
+    }
+    console.error("p31 remember: unknown subcommand " + JSON.stringify(sub) + " (try remember --help)");
+    process.exit(1);
   }
 
   console.error("p31: unknown command " + JSON.stringify(cmd) + " (try --help)");

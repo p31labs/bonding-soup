@@ -104,3 +104,7 @@ p31labs/zenodo_scan_*.md
 # Logs
 *.log
 npm-debug.log*
+
+# Discovery — ignore untracked noise under the tree; keep only the office shim in git
+Discovery/*
+!Discovery/assemble_supplemental_exhibits.py

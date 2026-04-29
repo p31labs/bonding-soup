@@ -69,6 +69,8 @@ This file is the **single map of record** for what lives under **`/home/p31`**: 
 
 **CONNECTION (mission Connect, operator wiring):** **`npm run connection`** — ties deploy canon, ecosystem **`deployables`**, **`P31_*`** catalog, edge commands, live hub URLs (**`scripts/p31-connection.mjs`**); echoed briefly after **`npm run doctor`**.
 
+**Operator joy (optional):** **`npm run fun`** / **`fun:bowl`** / **`fun:shower`**, **`p31 fun`**, **`npm run doctor -- --fun`**, command-center **Trim tab** + **Another line**; **`scripts/lib/operator-joy.mjs`**. **`P31_SKIP_JOY=1`** silences joy tails on connection/setup/frictionless/office-ready.
+
 ## 5a. Python **`p31-office`** + **`p31-foundry`** (local ops + document spine)
 
 | Path | Role |

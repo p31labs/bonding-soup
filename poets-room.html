@@ -292,9 +292,25 @@
       width: 100%;
       height: 3rem;
     }
+    .layer-void,
+    .layer-deep {
+      position: relative;
+      z-index: 1;
+    }
+    #poets-starfield {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
   </style>
+  <link rel="stylesheet" href="design-assets/starfield/p31-starfield.css" />
+  <link rel="stylesheet" href="design-assets/starfield/p31-larmor-fields.css" />
 </head>
 <body>
+  <canvas id="poets-starfield" class="p31-starfield-canvas" aria-hidden="true"></canvas>
   <a class="skip" href="#shelf-anchor">Skip to the shelf and writing space</a>
   <div class="layer-void">
     <blockquote class="daily-quote" id="daily-quote">
@@ -384,7 +400,7 @@
     <div class="writing-block">
       <label for="private-draft">Words that never leave this browser</label>
       <button type="button" class="clear-draft" id="clear-draft" aria-label="Clear writing" title="Clear">×</button>
-      <textarea id="private-draft" spellcheck="false" autocomplete="off" rows="12"></textarea>
+      <textarea id="private-draft" class="p31-larmor-field" spellcheck="false" autocomplete="off" rows="12"></textarea>
     </div>
 
     <p class="leave-quiet"><a id="poets-leave" href="soup.html">When you need the rest of the house</a></p>
@@ -571,6 +587,24 @@
   wireClear();
   wirePhoto();
 })();
+  </script>
+  <script type="module">
+    import { initStarfield, resolveStarfieldConfig } from "./design-assets/starfield/p31-starfield.js";
+
+    const cv = document.getElementById("poets-starfield");
+    if (cv instanceof HTMLCanvasElement) {
+      const { config, hints } = await resolveStarfieldConfig();
+      const api = initStarfield(cv, config, { surface: "poets", poetsMode: true, touchRipple: false });
+      api.ingestTouchHints(hints);
+      function inferTone() {
+        const a = document.getElementById("quote-attribution")?.textContent || "";
+        if (/fuller/i.test(a)) return "fuller";
+        if (/S\.J\.|W\.J\.|Willow|Bash/i.test(a)) return "children";
+        return "operator";
+      }
+      setInterval(() => api.setPoetsTone(inferTone()), 12000);
+      api.setPoetsTone(inferTone());
+    }
   </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeQFactorPure } from '../src/lib/q-factor';
+import { computeQFactorPure, energyVertexScore } from '../src/lib/q-factor';
 
 describe('computeQFactorPure', () => {
   it('returns 1 when all vertices maxed', () => {
@@ -41,6 +41,12 @@ describe('computeQFactorPure', () => {
       creationsThisWeek: 0,
     });
     expect(q).toBeCloseTo(0.75, 2);
+  });
+
+  it('energyVertexScore uses reduced max (bereavement baseline)', () => {
+    expect(energyVertexScore(6, 6)).toBe(1);
+    expect(energyVertexScore(3, 6)).toBe(0.5);
+    expect(energyVertexScore(6, 12)).toBe(0.5);
   });
 
   const matrix: Array<[number, number]> = [

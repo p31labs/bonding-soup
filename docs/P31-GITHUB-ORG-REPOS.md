@@ -23,6 +23,8 @@ Copy files from **[`docs/github-org-bundle/`](github-org-bundle/)** into the org
 
 Override org/repo slug: **`P31_ORG_DOTGITHUB`** (for clone URLs in error text only today; the script reads **`orgDotGithubRepository`** from **`p31-github.json`**).
 
+**Note:** `repos-metadata.json` skips **`p31ca.org`** (archived repos reject API writes). Org profile lives in **`p31labs/.github`**, not a separate `p31labs/github` slug.
+
 ---
 
 ## Tier 1 — Showcase (high polish)

@@ -56,6 +56,44 @@
       "name": "the-buffer",
       "description": "The buffer — cognitive prosthetic for Node Zero (Python).",
       "topics": ["p31-labs", "python", "cognitive-prosthetic"]
+    },
+    {
+      "name": "p31ca.org",
+      "skip": true,
+      "_reason": "GitHub archived repo is read-only; set About manually if needed.",
+      "description": "Archived: legacy site repo. Use https://p31ca.org via p31labs/andromeda (04_SOFTWARE/p31ca) or p31labs/p31ca.",
+      "homepage": "https://p31ca.org",
+      "topics": ["p31-labs", "archive", "legacy"]
+    },
+    {
+      "name": "phenix-os-quantum",
+      "description": "Research lineage — quantum sovereign / geometry experiments (Phenix). Current P31 stack: p31ca.org + bonding-soup + andromeda.",
+      "homepage": "https://p31ca.org",
+      "topics": ["p31-labs", "research", "typescript", "legacy"]
+    },
+    {
+      "name": "sovereign-life-os",
+      "description": "Research lineage — Phenix-Navigator ecosystem shell. Not primary deploy; see p31labs/andromeda and p31ca.org.",
+      "homepage": "https://p31ca.org",
+      "topics": ["p31-labs", "research", "shell", "legacy"]
+    },
+    {
+      "name": "neuromaker-os",
+      "description": "Research lineage — Neuromaker / Phenix ecosystem. Active hub: p31ca.org; home: p31labs/bonding-soup.",
+      "homepage": "https://p31ca.org",
+      "topics": ["p31-labs", "research", "legacy"]
+    },
+    {
+      "name": "neuromaker-oss",
+      "description": "Research lineage — Neuromaker OSS track. For current stack see p31labs/bonding-soup and p31labs/andromeda.",
+      "homepage": "https://github.com/p31labs/bonding-soup",
+      "topics": ["p31-labs", "research", "apache-2", "legacy"]
+    },
+    {
+      "name": "cognitive-shield",
+      "description": "Experimental research — cognitive tooling. Related active work: p31labs/cognitive-prosthetic and p31labs/the-buffer.",
+      "homepage": "https://github.com/p31labs/cognitive-prosthetic",
+      "topics": ["p31-labs", "research", "typescript", "experimental"]
     }
   ]
 }

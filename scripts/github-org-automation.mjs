@@ -196,15 +196,20 @@ function metadataCommand({ dryRun }) {
       continue;
     }
 
-    const patch = { description: desc };
-    if (homepage) patch.homepage = homepage;
-    gh(["api", `repos/${full}`, "-X", "PATCH", "--input", "-"], JSON.stringify(patch));
+    try {
+      const patch = { description: desc };
+      if (homepage) patch.homepage = homepage;
+      gh(["api", `repos/${full}`, "-X", "PATCH", "--input", "-"], JSON.stringify(patch));
 
-    if (r.topics && r.topics.length) {
-      const body = JSON.stringify({ names: r.topics });
-      gh(["api", `repos/${full}/topics`, "-X", "PUT", "--input", "-"], body);
+      if (r.topics && r.topics.length) {
+        const body = JSON.stringify({ names: r.topics });
+        gh(["api", `repos/${full}/topics`, "-X", "PUT", "--input", "-"], body);
+      }
+      console.log("github-org-automation: updated", full);
+    } catch (e) {
+      const msg = e && e.message ? e.message : String(e);
+      console.warn("github-org-automation: skip", full, "-", msg);
     }
-    console.log("github-org-automation: updated", full);
   }
 }
 

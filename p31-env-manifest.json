@@ -337,6 +337,13 @@
       "risk": "none",
       "description": "Manual VFR voltage percent setpoint.",
       "refs": ["scripts/p31-vfr-resolve.mjs", "scripts/p31-vfr.mjs"]
+    },
+    {
+      "name": "P31_AUTOCLEAN_BASE",
+      "tier": "git",
+      "risk": "low",
+      "description": "Base ref for npm run automation:autoclean (default main).",
+      "refs": ["scripts/repo-autoclean.mjs"]
     }
   ]
 }

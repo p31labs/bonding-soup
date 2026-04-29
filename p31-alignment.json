@@ -104,6 +104,11 @@
       "role": "Starfield overview and surface integration map (hub, soup, poets, command center, passport)"
     },
     {
+      "id": "p31-automation-pipeline-md",
+      "path": "docs/P31-AUTOMATION-PIPELINE.md",
+      "role": "CI automerge + autodeploy hub + local autoclean; GitHub Actions names and opt-out vars; pairs with p31-ci + p31-pr-on-push"
+    },
+    {
       "id": "p31-starfield-readme",
       "path": "design-assets/starfield/README.md",
       "role": "Starfield API (resolveStarfieldConfig hints, initStarfield options), sync command, mesh-touch pointers"

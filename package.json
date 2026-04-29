@@ -45,6 +45,8 @@
     "git:autopr:on": "node scripts/git-autopr.mjs on",
     "git:autopr:off": "node scripts/git-autopr.mjs off",
     "git:autopr:status": "node scripts/git-autopr.mjs status",
+    "automation:autoclean": "node scripts/repo-autoclean.mjs",
+    "automation:autoclean:apply": "node scripts/repo-autoclean.mjs --apply",
     "fix:gh": "node scripts/gh-setup-git.mjs",
     "command-center": "node scripts/p31-local-command-center.mjs",
     "build": "tsc",

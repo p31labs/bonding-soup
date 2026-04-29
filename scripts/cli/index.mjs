@@ -103,6 +103,15 @@ function printHelp() {
         " · " +
         dim("SIMPLEX_API_URL") +
         ")",
+      "  " +
+        cyan("automation") +
+        "   repo hygiene — " +
+        cyan("automation autoclean") +
+        " · " +
+        cyan("automation autoclean apply") +
+        " (" +
+        dim("P31_AUTOCLEAN_BASE") +
+        ")",
       "  " + cyan("mesh") + "          " + dim("p31-mesh") + " CLI",
       "",
       dim("Flags:"),
@@ -338,6 +347,34 @@ async function main() {
       process.exit(code);
     }
     console.error("p31 remember: unknown subcommand " + JSON.stringify(sub) + " (try remember --help)");
+    process.exit(1);
+  }
+
+  if (cmd === "automation") {
+    const sub = fwd[0];
+    const rest = fwd.slice(1);
+    if (!sub || sub === "-h" || sub === "--help") {
+      console.log(
+        [
+          bold("p31 automation") + " — local repo hygiene (CI/CD: see docs/P31-AUTOMATION-PIPELINE.md)",
+          "",
+          dim("Usage:"),
+          "  " + cyan("npm run p31 -- automation autoclean") + "        dry-run merged branches",
+          "  " + cyan("npm run p31 -- automation autoclean apply") + "  delete merged locals",
+          "",
+          dim("Environment:"),
+          "  " + cyan("P31_AUTOCLEAN_BASE") + "  base ref (default main)",
+          "",
+        ].join("\n")
+      );
+      process.exit(0);
+    }
+    if (sub === "autoclean") {
+      const apply = rest[0] === "apply";
+      const code = await runNodeScript("scripts/repo-autoclean.mjs", apply ? ["--apply"] : []);
+      process.exit(code);
+    }
+    console.error("p31 automation: unknown subcommand " + JSON.stringify(sub) + " (try automation --help)");
     process.exit(1);
   }
 

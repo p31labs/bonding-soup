@@ -1,0 +1,75 @@
+# After **P31 CI** succeeds on a same-repo pull request, enable GitHub **auto-merge** (merge commit).
+# Requires: repo Settings → General → **Allow auto-merge**; branch protection still governs who can merge.
+# Opt out per PR: label **`no-automerge`**. Fork PRs are skipped (same as local `gh-pr-automerge` safety).
+#
+# Pairs with: **P31 PR on push** (opens PR from feature branches) + **`npm run git:autopr:on`** locally.
+name: P31 automerge after CI
+
+on:
+  workflow_run:
+    workflows: ["P31 CI"]
+    types:
+      - completed
+
+concurrency:
+  group: p31-automerge-${{ github.event.workflow_run.head_sha }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  enable-auto-merge:
+    name: P31 / enable PR auto-merge
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: >
+      github.event.workflow_run.conclusion == 'success'
+      && github.event.workflow_run.event == 'pull_request'
+    steps:
+      - name: Skip default branch / forks / opt-out label
+        id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          BRANCH="${{ github.event.workflow_run.head_branch }}"
+          HEAD_REPO="${{ github.event.workflow_run.head_repository.full_name }}"
+          THIS_REPO="${{ github.repository }}"
+          if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
+            echo "skip=default-branch" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ -n "$HEAD_REPO" ] && [ "$HEAD_REPO" != "$THIS_REPO" ]; then
+            echo "skip=fork:$HEAD_REPO" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "${{ vars.P31_DISABLE_AUTOMERGE }}" = "1" ] || [ "${{ vars.P31_DISABLE_AUTOMERGE }}" = "true" ]; then
+            echo "skip=disabled-by-var" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+
+      - name: Enable auto-merge on open PR
+        if: steps.gate.outputs.branch != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          BRANCH="${{ steps.gate.outputs.branch }}"
+          BASE=$(gh repo view --json defaultBranchRef -q .defaultBranchRef.name || echo main)
+          NUM=$(gh pr list -H "$BRANCH" -B "$BASE" --state open --json number -q '.[0].number')
+          if [ -z "$NUM" ] || [ "$NUM" = "null" ]; then
+            echo "p31-automerge: no open PR for head $BRANCH — ok"
+            exit 0
+          fi
+          if gh pr view "$NUM" --json labels -q '.labels[].name' | grep -qx 'no-automerge'; then
+            echo "p31-automerge: PR #$NUM has label no-automerge — skip"
+            exit 0
+          fi
+          echo "p31-automerge: enabling auto-merge on PR #$NUM (head $BRANCH)"
+          gh pr merge "$NUM" --auto --merge || {
+            echo "::warning::gh pr merge --auto failed (already enabled, method mismatch, or branch rules) — check PR #$NUM"
+            exit 0
+          }

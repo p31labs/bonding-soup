@@ -10,6 +10,7 @@ import { mergeKvSystemStateWithSentinel, resolveSentinelContext } from './lib/co
 import { skillCorsHeaders } from './lib/http-json';
 import { assertOperatorAuthorized } from './lib/operator-auth';
 import { ALL_BREAKERS, estopAll, getAllBreakerStates, setBreakerState } from './lib/breakers';
+import { SIMPLEX_CRON_EXPRESSIONS, SIMPLEX_QUEUE_NAME } from './runtime-meta';
 import { handleOperatorSkillRequest } from './skills/router';
 
 const ALLOWED_AGENTS: AgentId[] = [
@@ -62,10 +63,19 @@ export default {
 
       // Always-online health probe (bypasses breakers; no auth).
       if (method === 'GET' && url.pathname === '/api/health') {
+        const crons = [...SIMPLEX_CRON_EXPRESSIONS];
         return json({
           ok: true,
           service: 'simplex-v7',
           ts: Date.now(),
+          runtime: {
+            crons: {
+              count: crons.length,
+              expressions: crons,
+              mode: crons.length > 0 ? 'scheduled' : 'manual',
+            },
+            queue: { name: SIMPLEX_QUEUE_NAME, binding: 'AGENT_QUEUE' },
+          },
         });
       }
 

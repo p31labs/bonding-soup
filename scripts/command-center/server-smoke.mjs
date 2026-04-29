@@ -76,6 +76,9 @@ async function main() {
     if (!mainPage.body.includes('id="cc-simplex-strip"')) {
       throw new Error("command-center smoke: missing #cc-simplex-strip");
     }
+    if (!mainPage.body.includes('id="cc-hotkeys"')) {
+      throw new Error("command-center smoke: missing #cc-hotkeys");
+    }
     if (!mainPage.body.includes("operator control plane")) {
       throw new Error("command-center smoke: missing hero copy");
     }
@@ -88,7 +91,7 @@ async function main() {
     if (!mainPage.body.includes('id="cc-joy-draw"')) {
       throw new Error("command-center smoke: missing joy draw button");
     }
-    if (!mainPage.body.includes('data-cc-version="2.0.0"')) {
+    if (!mainPage.body.includes('data-cc-version="2.1.0"')) {
       throw new Error("command-center smoke: missing data-cc-version");
     }
     const js = await httpGet(`http://127.0.0.1:${port}/assets/command-center.js`);
@@ -105,7 +108,7 @@ async function main() {
     } catch {
       throw new Error("command-center smoke: /api/health not JSON");
     }
-    if (!hj.ok || hj.version !== "2.0.0") {
+    if (!hj.ok || hj.version !== "2.1.0") {
       throw new Error("command-center smoke: health payload shape");
     }
     const sx = await httpGet(`http://127.0.0.1:${port}/api/simplex-state`);

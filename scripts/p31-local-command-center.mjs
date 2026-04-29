@@ -30,7 +30,7 @@ import { getOperatorJoyLines, joyListHtml } from "./lib/operator-joy.mjs";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const commandCenterDir = path.join(__dirname, "command-center");
 
-const CC_VERSION = "2.0.0";
+const CC_VERSION = "2.1.0";
 const MAX_BUFFER = 32 * 1024 * 1024;
 
 const port = Math.min(65535, Math.max(1024, Number(process.env.P31_CMD_CENTER_PORT) || 3131));
@@ -300,7 +300,10 @@ function buildPageHtml() {
         title="SIMPLEX v7 via local proxy — set P31_SIMPLEX_ORIGIN to your Worker URL (no trailing slash)"
       >
         <span class="cc-simplex-strip__spin" aria-hidden="true"></span>
-        <span class="cc-simplex-strip__text cc-mono">SIMPLEX · loading…</span>
+        <div class="cc-simplex-strip__col">
+          <span class="cc-simplex-strip__text cc-mono">SIMPLEX · loading…</span>
+          <span class="cc-simplex-strip__sub cc-mono" id="cc-simplex-sub" aria-live="polite"></span>
+        </div>
       </div>
 
       <section class="cc-essentials" aria-labelledby="cc-ess-heading">
@@ -312,8 +315,20 @@ function buildPageHtml() {
       <div class="cc-filter-row">
         <label class="cc-filter-label" for="cc-filter">Find an action</label>
         <input type="search" id="cc-filter" class="cc-filter p31-larmor-field" placeholder="Search by title…" autocomplete="off" spellcheck="false" />
-        <p class="cc-filter-meta"><kbd>/</kbd> focus · <kbd>Esc</kbd> clear</p>
+        <p class="cc-filter-meta"><kbd>/</kbd> focus · <kbd>Esc</kbd> clear · <kbd>?</kbd> keyboard map · <kbd>g</kbd> <kbd>s</kbd> SIMPLEX strip</p>
       </div>
+
+      <details class="cc-hotkeys" id="cc-hotkeys">
+        <summary>Keyboard map (low-noise)</summary>
+        <div class="cc-hotkeys__body">
+          <ul class="cc-hotkeys__list">
+            <li><kbd>/</kbd> — focus search</li>
+            <li><kbd>Esc</kbd> — clear search (when focused)</li>
+            <li><kbd>?</kbd> — toggle this panel</li>
+            <li><kbd>g</kbd> then <kbd>s</kbd> — scroll to SIMPLEX strip</li>
+          </ul>
+        </div>
+      </details>
 
       <details class="cc-primer">
         <summary>Ecosystem primer (links)</summary>
@@ -436,6 +451,46 @@ async function proxySimplexState(res) {
   }
 }
 
+/** Proxies Worker `GET /api/health` for Command Center strip metadata (cron mode, etc.). */
+async function proxySimplexHealth(res) {
+  try {
+    if (!simplexOrigin) {
+      sendJson(res, 200, { ok: false, reason: "not_configured" });
+      return;
+    }
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 2500);
+    let upstream;
+    try {
+      upstream = await fetch(simplexOrigin + "/api/health", {
+        signal: ctrl.signal,
+        headers: { Accept: "application/json" },
+      });
+    } finally {
+      clearTimeout(t);
+    }
+    const text = await upstream.text();
+    if (!upstream.ok) {
+      sendJson(res, 200, { ok: false, reason: "upstream_http", status: upstream.status });
+      return;
+    }
+    let body;
+    try {
+      body = JSON.parse(text);
+    } catch {
+      sendJson(res, 200, { ok: false, reason: "upstream_bad_json" });
+      return;
+    }
+    sendJson(res, 200, { ok: true, health: body });
+  } catch (e) {
+    sendJson(res, 200, {
+      ok: false,
+      reason: "unreachable",
+      detail: String(e && e.message ? e.message : e),
+    });
+  }
+}
+
 function sendAsset(res, absPath, contentType) {
   fs.readFile(absPath, (err, buf) => {
     if (err) {
@@ -485,12 +540,28 @@ const server = http.createServer((req, res) => {
         name: "p31-local-command-center",
         version: CC_VERSION,
         actions: Object.keys(ACTIONS).length,
+        bells: {
+          simplex_strip_poll_s: 30,
+          starfield: true,
+          joy: true,
+        },
+        shortcuts: {
+          focus_search: "/",
+          toggle_hotkeys: "?",
+          jump_simplex: "g s",
+        },
       })
     );
     return;
   }
   if (req.method === "GET" && assetBase === "/api/simplex-state") {
     proxySimplexState(res).catch(() => {
+      sendJson(res, 200, { ok: false, reason: "unreachable" });
+    });
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/api/simplex-health") {
+    proxySimplexHealth(res).catch(() => {
       sendJson(res, 200, { ok: false, reason: "unreachable" });
     });
     return;

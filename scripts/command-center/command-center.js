@@ -172,6 +172,12 @@
       .then((j) => {
         out.textContent = (j.stderr || "") + (j.stdout || "") + (j.code ? "\n[exit " + j.code + "]" : "");
         setTermStatus(j.code ? "failed" : "ok", j.code ? "bad" : "ok");
+        if (!j.code && !prefersReducedMotion) {
+          document.body.classList.add("cc-run-celebrate");
+          window.setTimeout(function () {
+            document.body.classList.remove("cc-run-celebrate");
+          }, 900);
+        }
       })
       .catch((e) => {
         out.textContent = String(e);
@@ -357,7 +363,39 @@
   function bindFilter() {
     const filt = document.getElementById("cc-filter");
     if (filt) filt.addEventListener("input", applyActionFilter);
+    let gChord = false;
+    let gChordTimer = 0;
     document.addEventListener("keydown", (e) => {
+      const tag = e.target && e.target.tagName;
+      const inField = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
+
+      if (e.key === "?" && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        if (inField) return;
+        e.preventDefault();
+        const hk = document.getElementById("cc-hotkeys");
+        if (hk) {
+          hk.open = !hk.open;
+          hk.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+        return;
+      }
+
+      if (!inField && (e.key === "g" || e.key === "G")) {
+        gChord = true;
+        window.clearTimeout(gChordTimer);
+        gChordTimer = window.setTimeout(function () {
+          gChord = false;
+        }, 1100);
+        return;
+      }
+      if (!inField && gChord && (e.key === "s" || e.key === "S")) {
+        e.preventDefault();
+        gChord = false;
+        window.clearTimeout(gChordTimer);
+        document.getElementById("cc-simplex-strip")?.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
       if (e.key === "Escape" && filt && document.activeElement === filt) {
         filt.value = "";
         applyActionFilter();
@@ -378,16 +416,33 @@
     return Math.ceil((FERS_DEADLINE_MS - Date.now()) / 86400000);
   }
 
-  function renderSimplexStrip(payload) {
+  function formatAge(ms) {
+    if (ms < 1500) return "just now";
+    if (ms < 60_000) return Math.round(ms / 1000) + "s ago";
+    if (ms < 3_600_000) return Math.round(ms / 60_000) + "m ago";
+    return Math.round(ms / 3_600_000) + "h ago";
+  }
+
+  /**
+   * @param {unknown} payload simplex-state proxy payload
+   * @param {unknown} workerHealth proxy payload for Worker /api/health
+   */
+  function renderSimplexStrip(payload, workerHealth, fetchStartedAt) {
     const wrap = document.getElementById("cc-simplex-strip");
     if (!wrap) return;
     const text = wrap.querySelector(".cc-simplex-strip__text");
+    const sub = document.getElementById("cc-simplex-sub");
     const spin = wrap.querySelector(".cc-simplex-strip__spin");
+    const t0 = typeof fetchStartedAt === "number" && Number.isFinite(fetchStartedAt) ? fetchStartedAt : Date.now();
     wrap.removeAttribute("data-loading");
     if (spin) spin.hidden = true;
+    wrap.removeAttribute("data-cc-live");
+    wrap.removeAttribute("data-cc-cron");
 
     if (!payload || payload.ok !== true || !payload.state || typeof payload.state !== "object") {
       if (text) text.textContent = "SIMPLEX: offline (local-only mode)";
+      if (sub) sub.textContent = "";
+      wrap.title = "Set P31_SIMPLEX_ORIGIN to your Worker origin (no trailing slash).";
       return;
     }
 
@@ -432,18 +487,63 @@
         "d | SENTINEL: " +
         src;
     }
+
+    wrap.setAttribute("data-cc-live", "1");
+    let cronLabel = "";
+    let workerTs = 0;
+    if (workerHealth && typeof workerHealth === "object" && workerHealth.ok === true && workerHealth.health) {
+      const wh = /** @type {Record<string, unknown>} */ (workerHealth.health);
+      const rt = wh.runtime && typeof wh.runtime === "object" ? /** @type {Record<string, unknown>} */ (wh.runtime) : null;
+      const crons = rt && rt.crons && typeof rt.crons === "object" ? /** @type {Record<string, unknown>} */ (rt.crons) : null;
+      const mode = crons && typeof crons.mode === "string" ? crons.mode : "";
+      const cnt = crons && typeof crons.count === "number" ? crons.count : NaN;
+      if (mode === "manual" || cnt === 0) {
+        cronLabel = "CRON: manual";
+        wrap.setAttribute("data-cc-cron", "manual");
+      } else if (mode === "scheduled") {
+        cronLabel = "CRON: scheduled (" + (Number.isFinite(cnt) ? String(cnt) : "?") + ")";
+        wrap.setAttribute("data-cc-cron", "scheduled");
+      }
+      const tsRaw = wh.ts;
+      if (typeof tsRaw === "number" && Number.isFinite(tsRaw)) workerTs = tsRaw;
+    }
+
+    const bits = [];
+    bits.push("synced " + formatAge(Date.now() - t0));
+    if (workerTs > 0) bits.push("worker health " + formatAge(Date.now() - workerTs));
+    if (cronLabel) bits.push(cronLabel);
+    if (src === "static_operator") bits.push("spoons: static default (KV/D1 not authoritative yet)");
+    if (sub) sub.textContent = bits.join(" · ");
+
+    wrap.title =
+      "SIMPLEX live · " +
+      (cronLabel || "cron: unknown") +
+      " · Polls /api/state every 30s via local proxy. Keys: ? hotkeys, g s strip.";
   }
 
   async function loadSimplexStrip() {
     const wrap = document.getElementById("cc-simplex-strip");
     const text = wrap && wrap.querySelector(".cc-simplex-strip__text");
     if (!wrap || !text) return;
+    const t0 = Date.now();
+    wrap.setAttribute("data-loading", "1");
+    const spin = wrap.querySelector(".cc-simplex-strip__spin");
+    if (spin) spin.hidden = false;
     try {
-      const r = await fetch("/api/simplex-state", { cache: "no-store" });
-      const j = await r.json();
-      renderSimplexStrip(j);
+      const [stRes, whRes] = await Promise.all([
+        fetch("/api/simplex-state", { cache: "no-store" }),
+        fetch("/api/simplex-health", { cache: "no-store" }),
+      ]);
+      const j = await stRes.json();
+      let wh = { ok: false };
+      try {
+        wh = await whRes.json();
+      } catch {
+        wh = { ok: false };
+      }
+      renderSimplexStrip(j, wh, t0);
     } catch {
-      renderSimplexStrip({ ok: false });
+      renderSimplexStrip({ ok: false }, { ok: false }, t0);
     }
   }
 

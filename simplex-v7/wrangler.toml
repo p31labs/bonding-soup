@@ -31,8 +31,4 @@ queue = "simplex-agent-queue"
 enabled = true
 
 [triggers]
-crons = [
-  "*/5 * * * *",
-  "0 * * * *",
-  "5 0 * * *"
-]
+crons = []

@@ -6,7 +6,9 @@
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import process from "node:process";
 import { fileURLToPath } from "node:url";
+import { getOperatorJoyLine } from "./lib/operator-joy.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -52,6 +54,10 @@ function main() {
 
   if (exit) {
     console.error("\noffice:ready: fix issues above, then: npm run office -- discovery assemble --help");
+  } else if (process.stdout.isTTY && process.env.CI !== "true" && process.env.P31_SKIP_JOY !== "1") {
+    const j = getOperatorJoyLine(root, { roll: false, short: true });
+    if (process.env.NO_COLOR) console.log("\n◆ " + j + "\n");
+    else console.log(`\n\x1b[35m◆\x1b[0m ${j}\n`);
   }
   process.exit(exit);
 }

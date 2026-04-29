@@ -707,6 +707,7 @@ html[data-cc-alive-bypass="1"] body:not([data-cc-gate-armed="1"]) .cc-primer {
 }
 .cc-v2[data-cc-lan="1"] .cc-filter-row,
 .cc-v2[data-cc-lan="1"] .cc-primer,
+.cc-v2[data-cc-lan="1"] .cc-joy,
 .cc-v2[data-cc-lan="1"] #sections,
 .cc-v2[data-cc-lan="1"] .cc-missing,
 .cc-v2[data-cc-lan="1"] .cc-footer,
@@ -719,4 +720,38 @@ html[data-cc-alive-bypass="1"] body:not([data-cc-gate-armed="1"]) .cc-primer {
 }
 .cc-v2[data-cc-lan="1"] .cc-terminal__body {
   max-height: min(50vh, 22rem);
+}
+
+/* Operator joy — optional micro-delight (scripts/lib/operator-joy.mjs) */
+.cc-joy {
+  margin-top: 1.25rem;
+  border: 1px solid rgba(77, 184, 168, 0.28);
+  border-radius: 10px;
+  padding: 0.65rem 1rem 0.85rem;
+  background: rgba(77, 184, 168, 0.06);
+}
+.cc-joy summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--p31-teal, #4db8a8);
+  letter-spacing: 0.02em;
+}
+.cc-joy__list {
+  margin: 0.55rem 0 0;
+  padding-left: 1.2rem;
+  font-size: 0.92rem;
+  color: var(--p31-cloud, #e8eaf0);
+  line-height: 1.55;
+}
+.cc-joy__list li {
+  margin-bottom: 0.35rem;
+}
+.cc-joy__list li::marker {
+  color: var(--p31-teal, #4db8a8);
+}
+.cc-joy__meta {
+  margin: 0.65rem 0 0;
+  font-size: 0.78rem;
+  color: var(--p31-muted, rgba(232, 234, 240, 0.55));
+  font-family: var(--p31-font-mono, "JetBrains Mono", ui-monospace, monospace);
 }

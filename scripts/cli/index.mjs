@@ -52,7 +52,20 @@ function printHelp() {
         dim("CI=true") +
         ")",
       "  " + cyan("boot") + "          staged boot (banner + INIT/MESH/READY when TTY)",
-      "  " + cyan("doctor") + "        run " + dim("scripts/p31-doctor.mjs") + " (pass-through args)",
+      "  " + cyan("doctor") + "        run " + dim("scripts/p31-doctor.mjs") + " (pass-through args; try " + cyan("--fun") + " after green checks)",
+      "  " +
+        cyan("fun") +
+        "           operator joy — " +
+        dim("npm run fun") +
+        " · " +
+        cyan("--many N") +
+        " · " +
+        cyan("--bowl") +
+        " · " +
+        cyan("--roll") +
+        " · " +
+        dim("npm run fun:shower / fun:bowl") +
+        "",
       "  " + cyan("connect") + "       CONNECTION spine — " + dim("npm run connection"),
       "  " + cyan("verify") + "        " + dim("npm run verify"),
       "  " + cyan("facts") + "         " + dim("npm run verify:facts"),
@@ -161,6 +174,11 @@ async function main() {
 
   if (cmd === "doctor") {
     const code = await runNodeScript("scripts/p31-doctor.mjs", fwd);
+    process.exit(code);
+  }
+
+  if (cmd === "fun") {
+    const code = await runNodeScript("scripts/p31-fun.mjs", fwd);
     process.exit(code);
   }
 

@@ -40,6 +40,9 @@ signal-*.sources
 # Operator shift log if kept under repo root (canonical: ~/.p31/ per AGENTS)
 .p31/
 
+# Local document-foundry scratch (never commit)
+.p31-foundry/
+
 # IDE / agent caches
 .cursor/
 .codex/

@@ -25,6 +25,7 @@ import {
   hasP31caPackage,
   ESSENTIAL_ACTION_IDS,
 } from "./command-center/actions.registry.mjs";
+import { getOperatorJoyLines, joyListHtml } from "./lib/operator-joy.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const commandCenterDir = path.join(__dirname, "command-center");
@@ -205,6 +206,8 @@ function buildPageHtml() {
   const lan = getLanIPv4();
   const k4SpinInline = buildK4SpinnersInlineHtml();
   const bootJson = JSON.stringify(buildBootPayload()).replace(/</g, "\\u003c");
+  const joyLines = getOperatorJoyLines(repoRoot, 5, false, false);
+  const joyListBlock = joyListHtml(joyLines);
 
   const phoneHint =
     listenHost === "0.0.0.0" && lan ? ` · phone: http://${lan}:${port}/` : "";
@@ -315,6 +318,12 @@ function buildPageHtml() {
           · <a href="https://command-center.trimtab-signal.workers.dev/" target="_blank" rel="noopener">EPCP edge Worker</a></p>
           <p>Alignment registry: <code>p31-alignment.json</code>. Doc index + ship bar mirror <strong>fleet-portal.html</strong> and AGENTS §2.</p>
         </div>
+      </details>
+
+      <details class="cc-joy">
+        <summary>Trim tab — moment of joy</summary>
+        ${joyListBlock}
+        <p class="cc-joy__meta">Pool rotates daily (UTC) · <code>npm run fun</code> · <code>npm run fun:shower</code> · <code>npm run doctor -- --fun</code> · <code>p31 fun --many 5 --roll</code></p>
       </details>
 
       <div id="sections"></div>

@@ -4,16 +4,20 @@
  *   npm run doctor
  *   npm run doctor -- --verify     # chain npm run verify after checks
  *   npm run doctor -- --mesh       # strict mesh probe (needs network + prod URL)
+ *   npm run doctor -- --fun        # after all checks (and --verify if passed), print one calm joy line
  */
 import { execFileSync, execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { printConnectionBrief } from "./p31-connection.mjs";
+import { getOperatorJoyLine } from "./lib/operator-joy.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
-const args = new Set(process.argv.slice(2).filter((x) => x !== "--"));
+const argvRaw = process.argv.slice(2);
+const wantFun = argvRaw.includes("--fun");
+const args = new Set(argvRaw.filter((x) => x !== "--" && x !== "--fun"));
 
 function ok(msg) {
   console.log("\x1b[32m✓\x1b[0m", msg);
@@ -108,6 +112,15 @@ if (args.has("--verify")) {
   } catch {
     fail("npm run verify failed");
     process.exit(1);
+  }
+}
+
+if (wantFun && exit === 0) {
+  const line = getOperatorJoyLine(root, { roll: false, short: true });
+  if (process.env.NO_COLOR) {
+    console.log("\n◆ " + line + "\n");
+  } else {
+    console.log(`\n\x1b[35m◆\x1b[0m ${line}\n`);
   }
 }
 

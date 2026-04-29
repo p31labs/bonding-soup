@@ -79,6 +79,12 @@ async function main() {
     if (!mainPage.body.includes("operator control plane")) {
       throw new Error("command-center smoke: missing hero copy");
     }
+    if (!mainPage.body.includes('class="cc-joy"')) {
+      throw new Error("command-center smoke: missing operator joy panel");
+    }
+    if (!mainPage.body.includes("cc-joy__list")) {
+      throw new Error("command-center smoke: missing operator joy list");
+    }
     if (!mainPage.body.includes('data-cc-version="2.0.0"')) {
       throw new Error("command-center smoke: missing data-cc-version");
     }

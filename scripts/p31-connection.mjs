@@ -11,7 +11,9 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import process from "node:process";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { getOperatorJoyLine } from "./lib/operator-joy.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -86,6 +88,14 @@ export function printConnectionFull() {
     console.log("         k4-personal: " + s.meshPersonalWorkerUrl);
   }
   console.log("");
+  if (process.stdout.isTTY && process.env.CI !== "true" && process.env.P31_SKIP_JOY !== "1") {
+    const j = getOperatorJoyLine(root, { roll: false, short: true });
+    if (process.env.NO_COLOR) {
+      console.log("◆ " + j + "\n");
+    } else {
+      console.log("\x1b[35m◆\x1b[0m " + j + "\n");
+    }
+  }
 }
 
 function printJson() {

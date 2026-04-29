@@ -112,3 +112,4 @@ Style with attribute selectors in **`soup-quantum.css`**; extend in **that** fil
 - **`docs/PLAN-KIDS-VIBE-CODING.md`** — local-first, youth-adjacent work
 - **`docs/SIC-POVM-K4-ARCHITECTURE.md`**, **`docs/EGG-HUNT.md`**, **`docs/SOULSAFE-TETRA-SPEC.md`** — mesh / product context
 - C.A.R.S. implementation: **`soup-quantum.css`** (ethical / co-presence comment blocks)
+- **Operator joy (CLI + control plane):** **`scripts/lib/operator-joy.mjs`** — **`npm run fun`** (**`--many`**, **`--bowl`**, **`--roll`**), **`npm run fun:bowl`**, **`npm run fun:shower`**, **`p31 fun`**, **`npm run doctor -- --fun`**, command-center **five-line** joy panel, plus optional tails on **`connection`**, **`setup`**, **`frictionless`**, **`office:ready`** (TTY; **`P31_SKIP_JOY=1`** or **`CI`** skips). Calm, canon-aware, **no** streaks / FOMO / stranger comparison (§2–6).

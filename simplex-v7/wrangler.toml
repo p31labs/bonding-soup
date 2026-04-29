@@ -17,11 +17,11 @@ SKILL_DAILY_LIMIT_PER_IP = "80"
 [[d1_databases]]
 binding = "DB"
 database_name = "simplex"
-database_id = "REPLACE_WITH_D1_ID"
+database_id = "e4cddb71-0e89-4483-9dd2-a52f2309611b"
 
 [[kv_namespaces]]
 binding = "SIMPLEX_STATE"
-id = "REPLACE_WITH_KV_ID"
+id = "4710be61e1c0430eaa97d536cb19b483"
 
 [[queues.producers]]
 binding = "AGENT_QUEUE"
@@ -33,13 +33,6 @@ enabled = true
 [triggers]
 crons = [
   "*/5 * * * *",
-  "5 0 * * *",
-  "0 6 * * *",
-  "0 7 * * 1,3,5",
-  "0 8 * * 1",
-  "0 9 * * *",
-  "0 10 * * 1",
-  "0 */4 * * *",
-  "0 */6 * * *",
-  "0 20 * * *"
+  "0 * * * *",
+  "5 0 * * *"
 ]

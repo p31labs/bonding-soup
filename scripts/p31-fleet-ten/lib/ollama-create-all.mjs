@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /**
  * Invoked by setup.sh — optional pulls + `ollama create` for each fleet model.
+ * Emits PARAMETER lines from models.json before the SYSTEM block so per-persona
+ * temperature / top_p / top_k / num_ctx / repeat_penalty / stop tokens stay versioned.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -22,6 +24,28 @@ const fromMap = {
   "qwen3:8b": OLLAMA_QWEN3,
   "phi4-mini:latest": OLLAMA_PHI_QUICK,
 };
+
+const PARAM_KEYS = ["temperature", "top_p", "top_k", "num_ctx", "repeat_penalty"];
+
+function renderParameters(m) {
+  const lines = [];
+  const params = m.parameters || {};
+  for (const key of PARAM_KEYS) {
+    if (params[key] === undefined) continue;
+    if (typeof params[key] !== "number" || !Number.isFinite(params[key])) {
+      throw new Error(`Model ${m.id}: parameter ${key} must be a finite number`);
+    }
+    lines.push(`PARAMETER ${key} ${params[key]}`);
+  }
+  if (Array.isArray(m.stop)) {
+    for (const tok of m.stop) {
+      if (typeof tok !== "string" || !tok.length) continue;
+      const escaped = tok.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+      lines.push(`PARAMETER stop "${escaped}"`);
+    }
+  }
+  return lines.join("\n");
+}
 
 function runOllamaCreate(name, modelfileBody) {
   const tmp = path.join(
@@ -62,7 +86,11 @@ for (const m of models) {
   if (system.includes('"""')) {
     throw new Error(`System text for ${m.id} contains forbidden triple-double-quote sequence`);
   }
-  const modelfile = `FROM ${from}\nSYSTEM """\n${system}\n"""\n`;
+  const paramBlock = renderParameters(m);
+  const modelfile =
+    `FROM ${from}\n` +
+    (paramBlock ? `${paramBlock}\n` : "") +
+    `SYSTEM """\n${system}\n"""\n`;
   console.log(`\n━━ ollama create ${m.id} ━━`);
   runOllamaCreate(m.id, modelfile);
 }

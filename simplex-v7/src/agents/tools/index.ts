@@ -9,6 +9,7 @@ import { assessVoltagePure } from '../../lib/voltage';
 import { computeQFactorPure } from '../../lib/q-factor';
 import { fersDaysRemaining, fersUrgency } from '../../lib/fers-countdown';
 import { mergeKvSystemStateWithSentinel, resolveSentinelContext } from '../../lib/context-fallback';
+import { getBreakerState } from '../../lib/breakers';
 import {
   get_home_state as sentinel_get_home_state,
   set_home_scene as sentinel_set_home_scene,
@@ -265,6 +266,9 @@ const trigger_safe_mode: Tool = {
     required: ['reason'],
   },
   async handler(input, env) {
+    if ((await getBreakerState(env, 'safe_mode')) === 'off') {
+      return { ok: false, error: 'BREAKER_SAFE_MODE_OFF', safe_mode: false };
+    }
     const state = (await env.SIMPLEX_STATE.get('system_state')) ?? '{}';
     const parsed = JSON.parse(state) as Record<string, unknown>;
     parsed.safe_mode_active = true;

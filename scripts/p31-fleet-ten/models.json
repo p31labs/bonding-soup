@@ -3,60 +3,140 @@
     "id": "p31-mechanic",
     "from": "qwen2.5-coder:7b",
     "roleFile": "p31-mechanic.role.txt",
+    "parameters": {
+      "temperature": 0.3,
+      "top_p": 0.9,
+      "top_k": 40,
+      "num_ctx": 8192,
+      "repeat_penalty": 1.1
+    },
+    "stop": ["<|endoftext|>", "<|im_end|>"],
     "verifyPrompt": "Reply with exactly one line: the string OK_MECHANIC. No other tokens."
   },
   {
     "id": "p31-firmware",
     "from": "qwen2.5-coder:7b",
     "roleFile": "p31-firmware.role.txt",
+    "parameters": {
+      "temperature": 0.2,
+      "top_p": 0.85,
+      "top_k": 30,
+      "num_ctx": 8192,
+      "repeat_penalty": 1.15
+    },
+    "stop": ["<|endoftext|>", "<|im_end|>"],
     "verifyPrompt": "Reply with exactly one line: the string OK_FIRMWARE. No other tokens."
   },
   {
     "id": "p31-counsel",
     "from": "qwen3:8b",
     "roleFile": "p31-counsel.role.txt",
+    "parameters": {
+      "temperature": 0.4,
+      "top_p": 0.9,
+      "top_k": 50,
+      "num_ctx": 8192,
+      "repeat_penalty": 1.05
+    },
+    "stop": [],
     "verifyPrompt": "Reply with exactly one line: the string OK_COUNSEL. No other tokens."
   },
   {
     "id": "p31-narrator",
     "from": "qwen3:8b",
     "roleFile": "p31-narrator.role.txt",
+    "parameters": {
+      "temperature": 0.6,
+      "top_p": 0.95,
+      "top_k": 60,
+      "num_ctx": 8192,
+      "repeat_penalty": 1.0
+    },
+    "stop": [],
     "verifyPrompt": "Reply with exactly one line: the string OK_NARRATOR. No other tokens."
   },
   {
     "id": "p31-triage",
     "from": "qwen3:8b",
     "roleFile": "p31-triage.role.txt",
-    "verifyPrompt": "Output strict JSON only: {\"ok\":true,\"model\":\"triage\"}"
+    "parameters": {
+      "temperature": 0.2,
+      "top_p": 0.8,
+      "top_k": 20,
+      "num_ctx": 4096,
+      "repeat_penalty": 1.2
+    },
+    "stop": [],
+    "verifyPrompt": "Classify this benign greeting: 'hi, sending you the new soup recipe when you have a sec'. Output strict JSON only matching the triage contract."
   },
   {
     "id": "p31-quick",
     "from": "phi4-mini:latest",
     "roleFile": "p31-quick.role.txt",
+    "parameters": {
+      "temperature": 0.2,
+      "top_p": 0.8,
+      "top_k": 30,
+      "num_ctx": 2048,
+      "repeat_penalty": 1.1
+    },
+    "stop": [],
     "verifyPrompt": "Reply with exactly one line: the string OK_QUICK. No other tokens."
   },
   {
     "id": "p31-phos",
     "from": "qwen3:8b",
     "roleFile": "p31-phos.role.txt",
+    "parameters": {
+      "temperature": 0.5,
+      "top_p": 0.9,
+      "top_k": 50,
+      "num_ctx": 4096,
+      "repeat_penalty": 1.05
+    },
+    "stop": [],
     "verifyPrompt": "Reply with exactly one line: the string OK_PHOS. No other tokens."
   },
   {
     "id": "p31-scribe",
     "from": "qwen3:8b",
     "roleFile": "p31-scribe.role.txt",
+    "parameters": {
+      "temperature": 0.3,
+      "top_p": 0.9,
+      "top_k": 40,
+      "num_ctx": 8192,
+      "repeat_penalty": 1.05
+    },
+    "stop": [],
     "verifyPrompt": "Reply with exactly one line: the string OK_SCRIBE. No other tokens."
   },
   {
     "id": "p31-oracle",
     "from": "qwen3:8b",
     "roleFile": "p31-oracle.role.txt",
+    "parameters": {
+      "temperature": 0.5,
+      "top_p": 0.9,
+      "top_k": 50,
+      "num_ctx": 8192,
+      "repeat_penalty": 1.0
+    },
+    "stop": [],
     "verifyPrompt": "Reply with exactly one line: the string OK_ORACLE. No other tokens."
   },
   {
     "id": "p31-debrief",
     "from": "qwen3:8b",
     "roleFile": "p31-debrief.role.txt",
+    "parameters": {
+      "temperature": 0.4,
+      "top_p": 0.9,
+      "top_k": 50,
+      "num_ctx": 8192,
+      "repeat_penalty": 1.05
+    },
+    "stop": [],
     "verifyPrompt": "Reply with exactly one line: the string OK_DEBRIEF. No other tokens."
   }
 ]

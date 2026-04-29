@@ -471,6 +471,7 @@
   applyActionFilter();
   bindJoyDraw();
   loadSimplexStrip();
+  setInterval(loadSimplexStrip, 30_000);
 
   console.info("P31 control plane loaded", boot.VERSION || "?");
 })();

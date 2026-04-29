@@ -6,6 +6,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { syncAccommodationInterval, utcDayRangeMs } from '../lib/accommodation-sync';
 import { resolveSentinelContext } from '../lib/context-fallback';
+import { getBreakerState } from '../lib/breakers';
 import { AGENTS } from './registry';
 import { TOOL_REGISTRY } from './tools/index';
 import type {
@@ -26,6 +27,45 @@ export async function runAgentById(
   return runAgent(agentId, await buildContext('manual', env), env);
 }
 
+function breakerForAgent(agentId: AgentId): 'sentinel' | 'forge' | 'medic' | 'herald' | null {
+  if (agentId === 'SENTINEL') return 'sentinel';
+  if (agentId === 'FORGE') return 'forge';
+  if (agentId === 'MEDIC') return 'medic';
+  if (agentId === 'HERALD') return 'herald';
+  return null;
+}
+
+async function breakerAllowsAgent(env: Env, agentId: AgentId): Promise<boolean> {
+  const agents = await getBreakerState(env, 'agents');
+  if (agents === 'off') return false;
+  const b = breakerForAgent(agentId);
+  if (!b) return true;
+  return (await getBreakerState(env, b)) === 'on';
+}
+
+function breakerBlockedOutput(agentId: AgentId, context: AgentContext): AgentOutput {
+  return {
+    agent: agentId,
+    run_id: crypto.randomUUID(),
+    trigger: context.trigger,
+    summary: `BREAKER: ${agentId} blocked`,
+    items: [
+      {
+        type: 'info',
+        priority: 'P2',
+        title: `${agentId} blocked by breaker`,
+        content:
+          'Breaker is OFF. Dispatch is locked out/tagged out. Health is still online; re-enable via /api/admin/breaker or clear E-STOP via breaker toggles.',
+      },
+    ],
+    messages_sent: [],
+    voltage: 'YELLOW',
+    spoon_cost: 0,
+    duration_ms: 0,
+    timestamp: Date.now(),
+  };
+}
+
 export async function runAgent(
   agentId: AgentId,
   context: AgentContext,
@@ -34,6 +74,10 @@ export async function runAgent(
   const startMs = Date.now();
   const agent = AGENTS[agentId];
   if (!agent) throw new Error(`Unknown agent: ${agentId}`);
+
+  if (!(await breakerAllowsAgent(env, agentId))) {
+    return breakerBlockedOutput(agentId, context);
+  }
 
   if (agent.maxSpoonCost > 0 && context.operator_spoons < agent.maxSpoonCost) {
     return spoonGateOutput(agentId, context, agent.maxSpoonCost);
@@ -184,8 +228,13 @@ function extractQueueTarget(triggerData: unknown): AgentId | undefined {
 }
 
 export async function handleScheduled(event: ScheduledEvent, env: Env): Promise<void> {
+  // Breakers: health endpoints remain online, but scheduled dispatch obeys breakers.
+  if ((await getBreakerState(env, 'agents')) === 'off') return;
+
   if (event.cron === '*/5 * * * *') {
-    await runAgent('SENTINEL', await buildContext('cron', env), env);
+    if ((await getBreakerState(env, 'sentinel')) === 'on') {
+      await runAgent('SENTINEL', await buildContext('cron', env), env);
+    }
     return;
   }
   if (event.cron === '5 0 * * *') {
@@ -210,8 +259,10 @@ async function handleCron(cronTime: string, env: Env): Promise<void> {
   if (hour === 8 && dow === 1) await runAgent('ADVOCATE', await buildContext('cron', env), env);
   if (hour === 9) await runAgent('TREASURER', await buildContext('cron', env), env);
   if (hour === 10 && dow === 1) await runAgent('SCHOLAR', await buildContext('cron', env), env);
-  if (hour % 4 === 0) await runAgent('FORGE', await buildContext('cron', env), env);
-  if (hour % 6 === 0) await runAgent('MEDIC', await buildContext('cron', env), env);
+  if (hour % 4 === 0 && (await getBreakerState(env, 'forge')) === 'on')
+    await runAgent('FORGE', await buildContext('cron', env), env);
+  if (hour % 6 === 0 && (await getBreakerState(env, 'medic')) === 'on')
+    await runAgent('MEDIC', await buildContext('cron', env), env);
   if (hour === 20) await runAgent('ORACLE', await buildContext('cron', env), env);
 }
 

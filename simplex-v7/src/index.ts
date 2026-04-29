@@ -8,6 +8,8 @@ import type { AgentId, Env } from './agents/types';
 import { verifyHmacSha256 } from './lib/hmac-worker';
 import { mergeKvSystemStateWithSentinel, resolveSentinelContext } from './lib/context-fallback';
 import { skillCorsHeaders } from './lib/http-json';
+import { assertOperatorAuthorized } from './lib/operator-auth';
+import { ALL_BREAKERS, estopAll, getAllBreakerStates, setBreakerState } from './lib/breakers';
 import { handleOperatorSkillRequest } from './skills/router';
 
 const ALLOWED_AGENTS: AgentId[] = [
@@ -57,6 +59,41 @@ export default {
     try {
       const skillEarly = await handleOperatorSkillRequest(method, url.pathname, request, env);
       if (skillEarly) return skillEarly;
+
+      // Always-online health probe (bypasses breakers; no auth).
+      if (method === 'GET' && url.pathname === '/api/health') {
+        return json({
+          ok: true,
+          service: 'simplex-v7',
+          ts: Date.now(),
+        });
+      }
+
+      // Breakers (operator only). Used as lockout/tagout for dispatch.
+      if (url.pathname === '/api/admin/breakers' && method === 'GET') {
+        const denied = assertOperatorAuthorized(env, request);
+        if (denied) return denied;
+        return json({ ok: true, breakers: await getAllBreakerStates(env) });
+      }
+
+      if (url.pathname === '/api/admin/breaker' && method === 'POST') {
+        const denied = assertOperatorAuthorized(env, request);
+        if (denied) return denied;
+        const body = (await request.json()) as { target?: string; state?: string; reason?: string };
+        const target = String(body.target ?? '').trim() as (typeof ALL_BREAKERS)[number];
+        const state = body.state === 'off' ? 'off' : 'on';
+        if (!ALL_BREAKERS.includes(target)) return json({ ok: false, error: 'Unknown breaker target' }, 400);
+        await setBreakerState(env, target, state, { actor: 'operator', reason: body.reason });
+        return json({ ok: true, target, state });
+      }
+
+      if (url.pathname === '/api/admin/estop' && method === 'POST') {
+        const denied = assertOperatorAuthorized(env, request);
+        if (denied) return denied;
+        const body = (await request.json()) as { reason?: string };
+        await estopAll(env, { actor: 'operator', reason: body.reason ?? 'estop' });
+        return json({ ok: true, state: 'off', breakers: await getAllBreakerStates(env) });
+      }
 
       if (method === 'GET' && url.pathname === '/api/state') {
         const briefing = await env.SIMPLEX_STATE.get('daily_briefing');
@@ -256,12 +293,61 @@ export default {
       }
 
       if (method === 'POST' && url.pathname.startsWith('/api/agent/')) {
+        const denied = assertOperatorAuthorized(env, request);
+        if (denied) return denied;
         const seg = url.pathname.split('/').pop();
         if (!seg) return json({ error: 'Missing agent id' }, 400);
         const agentId = seg.toUpperCase() as AgentId;
         if (!ALLOWED_AGENTS.includes(agentId)) return json({ error: 'Unknown agent' }, 400);
         const output = await runAgentById(agentId, env);
         return json(output);
+      }
+
+      // Telemetry helpers for command-center / mobile (operator only).
+      if (method === 'GET' && url.pathname === '/api/telemetry/tomograph') {
+        const denied = assertOperatorAuthorized(env, request);
+        if (denied) return denied;
+        const limitRaw = Number(url.searchParams.get('limit') ?? 10);
+        const limit = Math.min(50, Math.max(1, Number.isFinite(limitRaw) ? limitRaw : 10));
+        const rows = await env.DB.prepare(
+          'SELECT id, sender, subject, voltage, action, created_at FROM tomograph_events ORDER BY created_at DESC LIMIT ?'
+        )
+          .bind(limit)
+          .all();
+        return json({ ok: true, limit, rows: rows.results ?? [] });
+      }
+
+      if (method === 'GET' && url.pathname === '/api/telemetry/spoons') {
+        const denied = assertOperatorAuthorized(env, request);
+        if (denied) return denied;
+        const hoursRaw = Number(url.searchParams.get('hours') ?? 24);
+        const hours = Math.min(168, Math.max(1, Number.isFinite(hoursRaw) ? hoursRaw : 24));
+        const cutoff = Date.now() - hours * 3_600_000;
+        const rows = await env.DB.prepare(
+          'SELECT activity, cost, balance_after, ts FROM spoons WHERE ts >= ? ORDER BY ts DESC LIMIT 1000'
+        )
+          .bind(cutoff)
+          .all();
+        return json({ ok: true, hours, rows: rows.results ?? [] });
+      }
+
+      if (method === 'GET' && url.pathname === '/api/telemetry/accommodation') {
+        const denied = assertOperatorAuthorized(env, request);
+        if (denied) return denied;
+        const daysRaw = Number(url.searchParams.get('days') ?? 1);
+        const days = Math.min(30, Math.max(1, Number.isFinite(daysRaw) ? daysRaw : 1));
+        const cutoff = Date.now() - days * 86_400_000;
+        const agg = await env.DB.prepare(
+          'SELECT COUNT(*) AS n FROM accommodation_log WHERE created_at >= ?'
+        )
+          .bind(cutoff)
+          .first();
+        const rows = await env.DB.prepare(
+          'SELECT entry_date, entry_time, task, tool, limitation_kind, outcome, created_at FROM accommodation_log WHERE created_at >= ? ORDER BY created_at DESC LIMIT 20'
+        )
+          .bind(cutoff)
+          .all();
+        return json({ ok: true, days, count: Number(agg?.n ?? 0), rows: rows.results ?? [] });
       }
 
       if (method === 'POST' && url.pathname === '/api/chaos') {

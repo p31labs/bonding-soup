@@ -376,6 +376,21 @@
       "role": "Controlled work package — v1.1.0 architecture, public API contract, deployment recipe, follow-up CWPs (simplex-lane wire / hub-card promotion / federation P2P / anchor pact / ws fan-out / family-cage wire)"
     },
     {
+      "id": "p31-cwp-k4-agent-hub-wire-simplex-lane",
+      "path": "docs/CWP-P31-K4-AGENT-HUB-WIRE-SIMPLEX-LANE.md",
+      "role": "CWP for Simplex-v7 cloud fallback — Ollama → simplex-cloud → echo dispatch chain; k4-dispatch endpoint + dispatcher.js + wrangler env vars + 13 new tests"
+    },
+    {
+      "id": "p31-simplex-k4-dispatch",
+      "path": "simplex-v7/src/skills/k4-dispatch.ts",
+      "role": "POST /api/k4/dispatch — thin Anthropic adapter for k4-agent-hub cloud fallback; maps agentId to system prompt, returns {ok, dispatcher, agentId, skillId, reply, offline}"
+    },
+    {
+      "id": "p31-k4-agent-hub-dispatcher-tests",
+      "path": "packages/k4-agent-hub/test/dispatcher.test.mjs",
+      "role": "Dispatcher unit tests — structuredEcho, tryOllama, trySimplexCloud, dispatch() priority chain; 13 tests"
+    },
+    {
       "id": "p31-k4-agent-hub-verify",
       "path": "scripts/verify-k4-agent-hub.mjs",
       "role": "K₄ agent hub parity gate — manifest + worker + static page + crypto + dispatcher + smoke + p31ca mirror invariants; npm run verify:k4-agent-hub"
@@ -1518,11 +1533,13 @@
         "andromeda/04_SOFTWARE/p31ca/public/agents.html",
         "scripts/k4-agent-hub-smoke.mjs",
         "scripts/sync-agents-to-p31ca.mjs",
-        "scripts/cli/agent-hub.mjs"
+        "scripts/cli/agent-hub.mjs",
+        "simplex-v7/src/skills/k4-dispatch.ts",
+        "packages/k4-agent-hub/test/dispatcher.test.mjs"
       ],
       "apply": "Edit p31-k4-agent-hub.json (the canon manifest), then mirror vertex ids / personal-dock pairings / skill registry into src/topology.js, declare DO bindings in wrangler.toml, and ensure agents.html references the four hub ids + family triadic cover + federation panel. The Worker validates the K₄ invariant at module load via validateTopology(). After agents.html edits, copy to andromeda/04_SOFTWARE/p31ca/public/agents.html (manual mirror until sync:agents lands).",
-      "verify": "npm run verify:k4-agent-hub (manifest + wrangler + topology.js + crypto + dispatcher + smoke + agents.html + p31ca mirror parity); npm run test:k4-agent-hub (K₄ invariant + skill registry + family triadic cover + Ed25519 sign/verify unit tests); npm run k4-agent-hub:smoke against a running hub (signed dock, signed call envelope, cross-edge, federation)",
-      "note": "v1.1.0: signed Ed25519 dock + per-call envelope, K₄,₄,₄ family triadic cover (will/sj/wj/christyn), federation peer registry, real Ollama dispatcher (env OLLAMA_BASE_URL) with structured-echo fallback. Personal-side counterpart: andromeda/04_SOFTWARE/k4-personal/src/personal-tetra.js (p31.personalTetra/1.0.0). Bipartite K₄,₄ cover: structure↔forge, connection↔counsel, rhythm↔scholar, creation↔scribe. Triadic K₄,₄,₄ cover: family vertex → personal dock → guardian agent."
+      "verify": "npm run verify:k4-agent-hub (manifest + wrangler + topology.js + crypto + dispatcher + smoke + agents.html + p31ca mirror parity); npm run test:k4-agent-hub (K₄ invariant + skill registry + family triadic cover + Ed25519 sign/verify + dispatcher priority chain); npm run k4-agent-hub:smoke against a running hub (signed dock, signed call envelope, cross-edge, federation)",
+      "note": "v1.2.0: Ollama → simplex-v7 cloud → echo dispatch chain (CWP-P31-K4-AGENT-HUB-WIRE-SIMPLEX-LANE); simplex-v7 exposes POST /api/k4/dispatch (k4-dispatch.ts); k4-agent-hub reads SIMPLEX_BASE_URL + SIMPLEX_OPERATOR_SECRET. v1.1.0: signed Ed25519 dock + per-call envelope, K₄,₄,₄ family triadic cover (will/sj/wj/christyn), federation peer registry, real Ollama dispatcher (env OLLAMA_BASE_URL) with structured-echo fallback. Bipartite K₄,₄ cover: structure↔forge, connection↔counsel, rhythm↔scholar, creation↔scribe."
     },
     {
       "id": "p31-contract-registry-from-alignment",

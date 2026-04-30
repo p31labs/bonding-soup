@@ -13,8 +13,10 @@ import { queryKnowledgeGraph, upsertKnowledgeEdges, type EdgeInput } from '../li
 import { runAnthropicJson } from '../lib/skill-runner';
 import { sha256HexUtf8 } from '../lib/sha256-hex';
 import * as P from './prompts';
+import { handleK4Dispatch } from './k4-dispatch';
 
 const SKILL_PATHS = new Set([
+  '/api/k4/dispatch',
   '/api/braindump',
   '/api/legal/preflight',
   '/api/medical/interaction',
@@ -111,6 +113,11 @@ export async function handleOperatorSkillRequest(
   try {
     const rememberResp = await handleRememberRoutes(method, pathname, request, env, jr);
     if (rememberResp) return rememberResp;
+
+    // ── K₄ agent-hub cloud fallback ────────────────────────────
+    if (method === 'POST' && pathname === '/api/k4/dispatch') {
+      return handleK4Dispatch(request, env);
+    }
 
     // ── GET routes ─────────────────────────────────────────────
     if (method === 'GET' && pathname === '/api/context/composer') {

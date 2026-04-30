@@ -164,6 +164,7 @@
     "k4-agent-hub:smoke": "node scripts/k4-agent-hub-smoke.mjs",
     "k4-agent-hub:smoke:offline": "node scripts/k4-agent-hub-smoke.mjs --skip-network",
     "k4-agent-hub:client:test": "npm test --prefix packages/k4-agent-hub-client",
+    "test:k4-dispatcher": "npm test --prefix packages/k4-agent-hub",
     "sync:agents": "node scripts/sync-agents-to-p31ca.mjs",
     "verify:agents-mirror": "node scripts/sync-agents-to-p31ca.mjs --check",
     "p31-mesh": "node packages/p31-mesh/src/cli.mjs",

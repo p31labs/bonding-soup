@@ -1,8 +1,8 @@
 # SPIKE — AppShell starfield persistence (p31ca consolidation gate)
 
 **Track:** 2.5 (operator-added between Track 0 ship and Track 2 GEODESIC).
-**Status:** queued. Not started.
-**Time-box:** 2–4 days.
+**Status:** **automation green** — 13 headless probes pass (5 architectural + 8 operational field-sim). See `andromeda/04_SOFTWARE/p31ca/docs/SPIKE-APPSHELL-RESULT.md`. Awaiting operator field test on real hardware.
+**Time-box:** 2–4 days. (Automation pass landed 2026-04-30.)
 **De-risks:** 4–6 weeks of p31ca.org structural overhaul (7-route consolidation, AppShell with persistent starfield, dome orbit controls).
 **Out of scope of GEODESIC:** GEODESIC ships in its own canvas; this spike is about the *shell* surrounding all routes.
 

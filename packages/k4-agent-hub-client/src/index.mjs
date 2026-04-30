@@ -241,6 +241,26 @@ export class K4AgentHubClient {
     });
     return res.json();
   }
+
+  /** POST /v1/federation/dispatch — signed peer→peer skill dispatch. */
+  async peerDispatch(peerBaseUrl, hubId, skillId, input = {}) {
+    const ts = Date.now();
+    const canonical = `p31.peerDispatch/1.0.0|${this.keyPair.clientId}|${hubId}|${skillId}|${ts}`;
+    const sig = await signMessage(this.keyPair.keyPair.privateKey, canonical);
+    const res = await fetch(`${peerBaseUrl.replace(/\/$/, "")}/v1/federation/dispatch`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        peerId: this.keyPair.clientId,
+        hubId,
+        skillId,
+        input,
+        ts,
+        sig,
+      }),
+    });
+    return res.json();
+  }
 }
 
 export { canonicalCallString, canonicalDockString } from "./envelope.mjs";

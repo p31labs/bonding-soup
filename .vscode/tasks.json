@@ -10,6 +10,22 @@
       "presentation": { "reveal": "always", "panel": "dedicated", "focus": true }
     },
     {
+      "label": "P31: open command center in browser (auto-start on :3131 if closed)",
+      "type": "shell",
+      "command": "npm run command-center:open",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared", "focus": false }
+    },
+    {
+      "label": "P31: open operator desk in browser (auto-start on :3131 if closed)",
+      "type": "shell",
+      "command": "npm run command-center:open-desk",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared", "focus": false }
+    },
+    {
       "label": "P31: geodesic preview (Vite :5174; Ctrl+C to stop)",
       "type": "shell",
       "command": "npm run demo:geodesic-preview",
@@ -181,6 +197,30 @@
       "label": "P31: verify runbooks index",
       "type": "shell",
       "command": "npm run verify:runbooks",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify DELTA language (lexicon JSON + glossary)",
+      "type": "shell",
+      "command": "npm run verify:delta-language",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify public voice (Tier B/C grep guardrails)",
+      "type": "shell",
+      "command": "npm run verify:public-voice",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify atmosphere ramp (ramps + routes vs canon)",
+      "type": "shell",
+      "command": "npm run verify:atmosphere-ramp",
       "options": { "cwd": "${workspaceFolder}" },
       "group": "test",
       "presentation": { "reveal": "always", "panel": "shared" }

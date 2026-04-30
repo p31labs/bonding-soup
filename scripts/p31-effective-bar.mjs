@@ -110,6 +110,13 @@ export function classifyVerifyStep(script, w) {
     case "soup:prep:check":
     case "verify:runbooks":
     case "verify:delta-language":
+    case "verify:public-voice":
+    case "verify:atmosphere-ramp":
+    case "verify:starfield":
+    case "verify:fleet-ten":
+    case "verify:ollama-mcp":
+    case "verify:ollama-tunnel-config":
+    case "verify:edge-lab":
       return { status: "run", reason: "always scheduled on home verify bar" };
 
     case "verify:passport":

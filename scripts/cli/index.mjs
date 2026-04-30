@@ -71,13 +71,15 @@ function printHelp() {
       "  " + cyan("facts") + "         " + dim("npm run verify:facts"),
       "  " + cyan("budgets") + "       mesh + glass SLOs (no network)",
       "  " + cyan("effective-bar") + "  which verify steps run/skip/degraded (partial clone matrix)",
+      "  " + cyan("voice") + "         Tier B/C public copy guardrails — " + dim("npm run verify:public-voice"),
+      "  " + cyan("delta-lang") + "    DELTA lexicon JSON + glossary (+ hub mirror when present) — " + dim("npm run verify:delta-language"),
       "  " + cyan("mirror-fixer") + " doc-library hub mirror — dry-run; pass " + dim("--apply") + " to stage git add",
       "  " + cyan("office-ready") + "  p31-office venv + doctor + zenodo script paths",
       "  " + cyan("ci") + "            " + dim("npm run p31:ci"),
       "  " + cyan("hub-diff") + "      p31ca " + dim("hub:diff") + " · needs " + dim("andromeda/"),
       "  " + cyan("command-center") + "  local operator UI (:3131)",
       "  " + cyan("cc") + "            alias for " + cyan("command-center"),
-      "  " + cyan("open") + "         local demos / passport / lab / slicer — " + dim("p31 open -h"),
+      "  " + cyan("open") + "         local demos / passport / lab / cc / desk — " + dim("p31 open -h"),
       "  " + cyan("bookmark") + "      save URL + pulse mesh chime (needs local command center :3131)",
       "  " +
         cyan("phos") +
@@ -111,6 +113,19 @@ function printHelp() {
         cyan("automation autoclean apply") +
         " (" +
         dim("P31_AUTOCLEAN_BASE") +
+        ")",
+      "  " +
+        cyan("github-org") +
+        "  GitHub org map — " +
+        cyan("check") +
+        " · " +
+        cyan("plan") +
+        " · " +
+        cyan("apply") +
+        " · " +
+        cyan("bootstrap") +
+        " · valve (" +
+        cyan("npm run github:org:valve") +
         ")",
       "  " + cyan("mesh") + "          " + dim("p31-mesh") + " CLI",
       "",
@@ -251,6 +266,16 @@ async function main() {
     process.exit(code);
   }
 
+  if (cmd === "voice") {
+    const code = await runNpmScript("verify:public-voice", fwd);
+    process.exit(code);
+  }
+
+  if (cmd === "delta-lang") {
+    const code = await runNpmScript("verify:delta-language", fwd);
+    process.exit(code);
+  }
+
   if (cmd === "mirror-fixer") {
     const code = await runNodeScript("scripts/p31-mirror-fixer.mjs", fwd);
     process.exit(code);
@@ -375,6 +400,48 @@ async function main() {
       process.exit(code);
     }
     console.error("p31 automation: unknown subcommand " + JSON.stringify(sub) + " (try automation --help)");
+    process.exit(1);
+  }
+
+  if (cmd === "github-org") {
+    const sub = fwd[0];
+    const rest = fwd.slice(1);
+    if (!sub || sub === "-h" || sub === "--help") {
+      console.log(
+        [
+          bold("p31 github-org") + " — align p31labs repos with bundle (strict check · dry-run · apply · valve)",
+          "",
+          dim("Usage:"),
+          "  " + cyan("npm run p31 -- github-org check") + "   strict " + dim("repos-metadata.json") + " + REPOS.md (CI parity)",
+          "  " + cyan("npm run p31 -- github-org plan") + "    check + clone .github + dry-run metadata/sync",
+          "  " + cyan("npm run p31 -- github-org apply") + "   publish — " + cyan("--yes") + " + valve apply or " + cyan("P31_GITHUB_ORG_VALVE_BYPASS=1"),
+          "  " + cyan("npm run p31 -- github-org bootstrap") + "  ensure " + dim(".p31-work/dotgithub-sync") + " clone",
+          "  " + cyan("npm run github:org:auto") + "       cron-shaped plan only (" + dim("~/.p31/github-org-valve.json") + ")",
+          "  " + cyan("npm run github:org:valve") + "      show | set closed|dry-run|apply",
+          "",
+          dim("See:") + " docs/github-org-bundle/README.md",
+          "",
+        ].join("\n")
+      );
+      process.exit(0);
+    }
+    if (sub === "check") {
+      const code = await runNodeScript("scripts/github-org-run.mjs", ["check"]);
+      process.exit(code);
+    }
+    if (sub === "plan") {
+      const code = await runNodeScript("scripts/github-org-run.mjs", ["plan"]);
+      process.exit(code);
+    }
+    if (sub === "apply") {
+      const code = await runNodeScript("scripts/github-org-run.mjs", ["apply", ...rest]);
+      process.exit(code);
+    }
+    if (sub === "bootstrap") {
+      const code = await runNodeScript("scripts/github-org-bootstrap.mjs", rest);
+      process.exit(code);
+    }
+    console.error("p31 github-org: unknown subcommand " + JSON.stringify(sub) + " (try github-org --help)");
     process.exit(1);
   }
 

@@ -32,7 +32,7 @@
 
 ## 3. Topology metaphor (Wye → Delta)
 
-Use **`docs/SIC-POVM-K4-ARCHITECTURE.md`** and **`docs/EGG-HUNT.md`** for the K₄ / decentralization *story* aligned with code. There is **no** requirement that a file live at a particular Astro/Starlight path—**search the repo** for Wye/Delta/GEODESIC copy when you add marketing pages.
+Use **`docs/SIC-POVM-K4-ARCHITECTURE.md`**, **`docs/SIC-POVM-MATHEMATICAL-APPENDIX.md`** (rigorous SIC/POVM), and **`docs/EGG-HUNT.md`** for the K₄ / decentralization *story* aligned with code. There is **no** requirement that a file live at a particular Astro/Starlight path—**search the repo** for Wye/Delta/GEODESIC copy when you add marketing pages.
 
 ---
 
@@ -77,5 +77,6 @@ Use **`docs/SIC-POVM-K4-ARCHITECTURE.md`** and **`docs/EGG-HUNT.md`** for the K�
 | `docs/P31-CREATE-CONNECT-ETHICAL-MONETIZATION.md` | **Create / connect** + **ephemeralization** + **ethical monetization** (alignment + creator economy + ethical UI) |
 | `docs/PLAN-KIDS-VIBE-CODING.md` | **Household** kid/teen local-first vibe path |
 | `docs/SIC-POVM-K4-ARCHITECTURE.md` | Four-vector (physical / net / compliance / UX) without essay length |
+| `docs/SIC-POVM-MATHEMATICAL-APPENDIX.md` | POVM / SIC axioms; qubit \(1/3\) overlaps; Bloch tetrahedron; metaphor vs CI contract |
 | `P31-ROOT-MAP.md` | Where to work |
 | `docs/P31-ENGINEERING-STANDARD.md` | Definition of done |

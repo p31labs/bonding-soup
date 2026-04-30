@@ -47,4 +47,19 @@ if (!fs.existsSync(prefsPass) || fs.readFileSync(prefsHub, "utf8") !== fs.readFi
   process.exit(1);
 }
 
-console.log("verify-p31-style: passport mirror OK (CSS + subject-prefs)");
+const ribHub = path.join(p31ca, "public", "lib", "p31-return-ribbon.js");
+const ribPass = path.join(root, "cognitive-passport", "lib", "p31-return-ribbon.js");
+if (!fs.existsSync(ribHub) || !fs.existsSync(ribPass)) {
+  console.error(
+    "verify-p31-style: missing p31-return-ribbon.js in hub or passport — run npm run apply:p31-style",
+  );
+  process.exit(1);
+}
+if (fs.readFileSync(ribHub, "utf8") !== fs.readFileSync(ribPass, "utf8")) {
+  console.error(
+    "verify-p31-style: cognitive-passport/lib/p31-return-ribbon.js !== p31ca/public/lib — run npm run apply:p31-style",
+  );
+  process.exit(1);
+}
+
+console.log("verify-p31-style: passport mirror OK (CSS + subject-prefs + return-ribbon)");

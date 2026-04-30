@@ -117,19 +117,44 @@ export const ACTIONS = {
     args: ["scripts/command-center/ollama-fleet-status.mjs"],
     network: true,
   },
-  "ollama-fleet-smoke": {
-    title: "Smoke test (fleet ten)",
+  "ollama-setup": {
+    title: "Ollama fleet setup (create / refresh all 10 personas)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "ollama:setup"],
+    slow: true,
+    confirm:
+      "Runs scripts/p31-fleet-ten/setup.sh (ollama create for each persona). Requires ollama on PATH and enough disk for base weights. Continue?",
+  },
+  "ollama-verify": {
+    title: "Ollama fleet smoke (verify.sh — OK markers + triage JSON)",
     cwd: repoRoot,
     cmd: "npm",
     args: ["run", "ollama:verify"],
     slow: true,
   },
-  "ollama-fleet-benchmark": {
-    title: "Benchmark (fleet ten)",
+  "ollama-bench": {
+    title: "Ollama fleet benchmark (benchmark.sh)",
     cwd: repoRoot,
     cmd: "npm",
     args: ["run", "ollama:bench"],
     slow: true,
+  },
+  "ollama-tunnel-start": {
+    title: "Ollama Cloudflare tunnel (trycloudflare → ~/.p31/ollama-tunnel.json)",
+    cwd: repoRoot,
+    cmd: "bash",
+    args: ["scripts/ollama-tunnel.sh"],
+    background: true,
+    network: true,
+    confirm:
+      "Starts cloudflared with a public HTTPS URL to local :11434. Ephemeral URL — do not use for counsel/triage/phos (Cursor cloud sees model-picker traffic). Continue?",
+  },
+  "ollama-mcp-verify": {
+    title: "verify:ollama-mcp (static + MCP tools/list handshake)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "verify:ollama-mcp"],
   },
   "ollama-gpu-monitor": {
     title: "GPU monitor (rocm-smi)",
@@ -323,6 +348,24 @@ export const ACTIONS = {
     cmd: "npm",
     args: ["run", "verify:runbooks"],
   },
+  "home-verify-delta-language": {
+    title: "verify:delta-language (DELTA lexicon JSON + glossary; hub mirror when p31ca present)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "verify:delta-language"],
+  },
+  "home-verify-public-voice": {
+    title: "verify:public-voice (PUBLIC-VOICE.md anchors + Tier B/C grep guardrails)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "verify:public-voice"],
+  },
+  "home-verify-atmosphere-ramp": {
+    title: "verify:atmosphere-ramp (ramps + routes vs p31-universal-canon)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "verify:atmosphere-ramp"],
+  },
   "home-simplex-bootstrap-dry": {
     title:
       "simplex:bootstrap:dry (print Cloudflare bootstrap steps — D1/KV/queue/schema; no API calls)",
@@ -427,6 +470,71 @@ export const ACTIONS = {
     cmd: "npm",
     args: ["run", "verify:doc-library:p31ca-mirror"],
   },
+  "home-github-org-check": {
+    title: "github:org:check (strict — same as CI: repos-metadata + REPOS.md cross-check)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "github:org:check"],
+  },
+  "home-github-org-plan": {
+    title: "github:org:plan (check + bootstrap .github clone + dry-run metadata + sync)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "github:org:plan"],
+    network: true,
+  },
+  "home-github-org-metadata": {
+    title: "github:org:metadata (gh API — About + topics; needs gh auth)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "github:org:metadata"],
+    network: true,
+    confirm: "Writes GitHub metadata for all repos in repos-metadata.json (non-skip). Continue?",
+  },
+  "home-github-org-sync-push": {
+    title: "github:org:sync --push (REPOS.md + profile map → default clone or P31_GITHUB_ORG_REPO)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "github:org:sync", "--", "--push"],
+    network: true,
+    confirm: "Commits and pushes to the org .github clone (set P31_GITHUB_ORG_REPO or use .p31-work/dotgithub-sync). Continue?",
+  },
+  "home-github-org-apply": {
+    title: "github:org:apply --yes (bootstrap + metadata API + sync push — full org alignment)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "github:org:apply", "--", "--yes"],
+    network: true,
+    confirm:
+      "Requires valve mode apply (~/.p31/github-org-valve.json or P31_GITHUB_ORG_VALVE_MODE=apply) or bypass P31_GITHUB_ORG_VALVE_BYPASS=1. Patches GitHub About/topics and pushes p31labs/.github. gh auth. Continue?",
+  },
+  "home-github-org-valve-closed": {
+    title: "github-org valve → closed (blocks apply + auto)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "github:org:valve", "--", "set", "closed"],
+  },
+  "home-github-org-valve-dry": {
+    title: "github-org valve → dry-run (auto runs plan only)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "github:org:valve", "--", "set", "dry-run"],
+  },
+  "home-github-org-valve-open": {
+    title: "github-org valve → apply (allows github:org:apply — still needs --yes)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "github:org:valve", "--", "set", "apply"],
+    confirm: "Opens the apply valve on this machine. Mis-keys still need Apply + gh. Continue?",
+  },
+  "home-github-org-auto": {
+    title: "github:org:auto (cron-shaped — respects valve; runs plan, never apply)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "github:org:auto"],
+    network: true,
+    slow: true,
+  },
   "home-test-doc-library-e2e": {
     title: "test:doc-library:e2e (Playwright — static server + headless search; install chromium once: npx playwright install chromium)",
     cwd: repoRoot,
@@ -516,6 +624,12 @@ export const ACTIONS = {
     args: ["run", "verify:mesh"],
     network: true,
   },
+  "home-verify-ecosystem": {
+    title: "verify:ecosystem (p31-ecosystem.json + p31-live-fleet anchors)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "verify:ecosystem"],
+  },
   "home-ecosystem-glass": {
     title: "ecosystem:glass (probes → table + /tmp/p31_glass_report.json)",
     cwd: repoRoot,
@@ -528,6 +642,18 @@ export const ACTIONS = {
     cwd: repoRoot,
     cmd: "npm",
     args: ["run", "ecosystem:plan"],
+  },
+  "home-ecosystem-deploy-dry": {
+    title: "ecosystem:deploy:dry (ordered argv dry-run — no P31_ECOSYSTEM_DEPLOY)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "ecosystem:deploy:dry"],
+  },
+  "home-list-p31-env": {
+    title: "list:p31-env (P31_* catalog — secrets names only)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "list:p31-env"],
   },
 
   // —— Operator shift (local HITL)
@@ -697,7 +823,15 @@ export const SECTIONS_RAW = [
   {
     id: "ollama",
     title: "Ollama fleet",
-    ids: ["ollama-fleet-status", "ollama-fleet-smoke", "ollama-fleet-benchmark", "ollama-gpu-monitor"],
+    ids: [
+      "ollama-fleet-status",
+      "ollama-setup",
+      "ollama-verify",
+      "ollama-bench",
+      "ollama-tunnel-start",
+      "ollama-mcp-verify",
+      "ollama-gpu-monitor",
+    ],
   },
   {
     id: "simplex",
@@ -721,6 +855,31 @@ export const SECTIONS_RAW = [
       "simplex-telemetry-spoons",
       "simplex-telemetry-tomograph",
       "simplex-telemetry-accommodation",
+    ],
+  },
+  {
+    id: "github-org",
+    title: "GitHub org (map + metadata)",
+    ids: [
+      "home-github-org-check",
+      "home-github-org-plan",
+      "home-github-org-valve-closed",
+      "home-github-org-valve-dry",
+      "home-github-org-valve-open",
+      "home-github-org-auto",
+      "home-github-org-metadata",
+      "home-github-org-sync-push",
+      "home-github-org-apply",
+    ],
+    links: [
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/docs/P31-GITHUB-ORG-REPOS.md",
+        label: "Org map runbook",
+      },
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/docs/github-org-bundle/README.md",
+        label: "Bundle + PAT (CI)",
+      },
     ],
   },
   {
@@ -772,6 +931,7 @@ export const SECTIONS_RAW = [
       "home-verify-monetary",
       "home-verify-map",
       "home-verify-mesh",
+      "home-verify-ecosystem",
       "home-build-doc-index",
       "home-verify-doc-index",
       "home-docs-prep-hub",
@@ -779,11 +939,16 @@ export const SECTIONS_RAW = [
       "home-mirror-fixer",
       "home-mirror-fixer-apply",
       "home-verify-runbooks",
+      "home-verify-delta-language",
+      "home-verify-public-voice",
+      "home-verify-atmosphere-ramp",
       "home-test-doc-library-e2e",
       "home-test-physics-learn-e2e",
       "home-test-k4market-smoke",
       "home-ecosystem-glass",
       "home-ecosystem-plan",
+      "home-ecosystem-deploy-dry",
+      "home-list-p31-env",
     ],
   },
   {

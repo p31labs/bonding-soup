@@ -36,3 +36,11 @@ if (fs.existsSync(prefsSrc)) {
   fs.copyFileSync(prefsSrc, prefsDest);
   console.log("apply-p31-style: mirrored cognitive-passport/lib/p31-subject-prefs.js");
 }
+
+const ribbonHome = path.join(root, "cognitive-passport", "lib", "p31-return-ribbon.js");
+const ribbonPub = path.join(p31ca, "public", "lib", "p31-return-ribbon.js");
+if (fs.existsSync(ribbonHome)) {
+  fs.mkdirSync(path.dirname(ribbonPub), { recursive: true });
+  fs.copyFileSync(ribbonHome, ribbonPub);
+  console.log("apply-p31-style: mirrored p31-return-ribbon.js → p31ca public/lib");
+}

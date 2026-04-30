@@ -8,6 +8,8 @@
  *
  *   npm run command-center
  *
+ * Read-first **operator desk** (no gate, no runs): `GET /desk` — same JSON APIs as the UI strips.
+ *
  * @module
  */
 import http from "node:http";
@@ -26,14 +28,70 @@ import {
   ESSENTIAL_ACTION_IDS,
 } from "./command-center/actions.registry.mjs";
 import { getOperatorJoyLines, joyListHtml } from "./lib/operator-joy.mjs";
+import { getConnectionSummary } from "./p31-connection.mjs";
+import { getGithubOrgStatus } from "./lib/github-org-status.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const commandCenterDir = path.join(__dirname, "command-center");
 
 const CC_VERSION = "2.1.0";
 const MAX_BUFFER = 32 * 1024 * 1024;
+const GLASS_REPORT_MAX_BYTES = 65536;
+/** Hardening: `X-Content-Type-Options: nosniff` on common response shapes (local loopback, defense in depth). */
+const CC_HDR = {
+  json: {
+    "Content-Type": "application/json; charset=utf-8",
+    "Cache-Control": "no-store",
+    "X-Content-Type-Options": "nosniff",
+  },
+  html: {
+    "Content-Type": "text/html; charset=utf-8",
+    "Cache-Control": "no-store",
+    "X-Content-Type-Options": "nosniff",
+  },
+  jsonAction: { "Content-Type": "application/json; charset=utf-8", "X-Content-Type-Options": "nosniff" },
+  text: { "Content-Type": "text/plain; charset=utf-8", "X-Content-Type-Options": "nosniff" },
+  jsonManifest: {
+    "Content-Type": "application/manifest+json; charset=utf-8",
+    "Cache-Control": "no-store",
+    "X-Content-Type-Options": "nosniff",
+  },
+  noContent: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" },
+};
 
-const port = Math.min(65535, Math.max(1024, Number(process.env.P31_CMD_CENTER_PORT) || 3131));
+/**
+ * Same default as `scripts/ecosystem-glass.mjs` — only that filename, only under /tmp, os.tmpdir(), or ~/.p31/.
+ * @returns {string | null}
+ */
+function resolveGlassReportPath() {
+  const def = "/tmp/p31_glass_report.json";
+  const p = path.resolve(String(process.env.P31_GLASS_REPORT || def).trim());
+  if (path.basename(p) !== "p31_glass_report.json") return null;
+  const dir = path.resolve(path.dirname(p));
+  const bases = [path.resolve("/tmp"), path.resolve(os.tmpdir()), path.resolve(path.join(os.homedir(), ".p31"))];
+  if (!bases.some((b) => dir === b)) return null;
+  return p;
+}
+/** Canonical loopback port — matches AGENTS.md / startup docs (bookmark + SSH LocalForward). */
+const DEFAULT_CMD_CENTER_PORT = 3131;
+
+function clampPort(n) {
+  return Math.min(65535, Math.max(0, n));
+}
+
+const portEnv = process.env.P31_CMD_CENTER_PORT;
+const requestedPortRaw =
+  portEnv === undefined || String(portEnv).trim() === "" ? NaN : Number(String(portEnv).trim());
+/**
+ * Unset or invalid → DEFAULT_CMD_CENTER_PORT (predictable URL).
+ * Explicit `P31_CMD_CENTER_PORT=0` → OS auto-pick (CI/sandbox/port clashes).
+ */
+const requestedPort =
+  requestedPortRaw === 0
+    ? 0
+    : Number.isFinite(requestedPortRaw) && requestedPortRaw > 0
+      ? clampPort(requestedPortRaw)
+      : DEFAULT_CMD_CENTER_PORT;
 const listenHost =
   process.env.P31_CMD_CENTER_HOST === "0.0.0.0" || process.env.P31_CMD_CENTER_LAN === "1"
     ? "0.0.0.0"
@@ -151,7 +209,11 @@ function runAction(id) {
     const child = execFile(
       spec.cmd,
       spec.args,
-      { cwd: spec.cwd, maxBuffer: MAX_BUFFER, env: { ...process.env, FORCE_COLOR: "0" } },
+      {
+        cwd: spec.cwd,
+        maxBuffer: MAX_BUFFER,
+        env: { ...process.env, FORCE_COLOR: "0", ...(spec.env && typeof spec.env === "object" ? spec.env : {}) },
+      },
       (err, stdout, stderr) => {
         const code = err && typeof err.code === "number" ? err.code : err ? 1 : 0;
         resolve({ code, stdout: (stdout || "") + "", stderr: (stderr || "") + "" });
@@ -195,6 +257,8 @@ function buildBootPayload() {
     ESSENTIAL_IDS: [...ESSENTIAL_ACTION_IDS],
     ACTION_META: Object.fromEntries(Object.keys(ACTIONS).map((k) => [k, elicitMeta(k)])),
     SECTIONS: sections.map((s) => ({ id: s.id, title: s.title, ids: s.ids, links: s.links })),
+    /** Same object as `npm run connection -- --json` — deployables, glass groups, env catalog size. */
+    CONNECTION: getConnectionSummary(),
     /** Extra lines for in-browser “Another line” (same daily pool as `npm run fun`). */
     JOY_SPIN: getOperatorJoyLines(repoRoot, 24, false, false),
   };
@@ -202,7 +266,10 @@ function buildBootPayload() {
   return payload;
 }
 
-function buildPageHtml() {
+/**
+ * @param {number} portForUi
+ */
+function buildPageHtml(portForUi) {
   const ha = hasAndromedaTree();
   const hp = hasP31caPackage();
   const lan = getLanIPv4();
@@ -212,7 +279,7 @@ function buildPageHtml() {
   const joyListBlock = joyListHtml(joyLines);
 
   const phoneHint =
-    listenHost === "0.0.0.0" && lan ? ` · phone: http://${lan}:${port}/` : "";
+    listenHost === "0.0.0.0" && lan ? ` · phone: http://${lan}:${portForUi}/` : "";
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -233,6 +300,7 @@ function buildPageHtml() {
   <link rel="stylesheet" href="/assets/command-center.css" />
   <link rel="stylesheet" href="/assets/p31-starfield.css" />
   <link rel="stylesheet" href="/assets/p31-larmor-fields.css" />
+  <script src="/assets/p31-subject-prefs.js"></script>
   <script>
 (function () {
   var r = document.documentElement;
@@ -263,11 +331,17 @@ function buildPageHtml() {
         <div>
           <p class="cc-brand__kicker">P31 labs · local control plane</p>
           <h1 class="cc-brand__title">Operator control plane</h1>
+          <p class="p31-host-mind">Host mind: <strong>Operator</strong> — instrument glass on the same night sky (static star plate).</p>
           <p class="cc-brand__sub">Whitelist only · <code>execFile</code> · no shell · <kbd>Ctrl+C</kbd> stops this Node process</p>
         </div>
       </div>
-      <div class="cc-header__badge" title="Bind address">
-        <span class="cc-mono">${badgeHost}:${port}${phoneHint}</span>
+      <div class="cc-header__tools">
+        <div class="cc-header__badge" title="Bind address">
+          <span class="cc-mono">${badgeHost}:${portForUi}${phoneHint}</span>
+        </div>
+        <nav class="cc-header__nav" aria-label="Operator views">
+          <a class="cc-header__link" href="/desk">Operator desk</a>
+        </nav>
       </div>
     </div>
   </header>
@@ -275,102 +349,177 @@ function buildPageHtml() {
   <main id="cc-main" class="cc-layout">
     <div class="cc-layout__primary">
 
-      <section class="cc-safety" aria-labelledby="cc-safety-heading">
-        <h2 id="cc-safety-heading" class="cc-safety__title">Automation gate</h2>
-        <p class="cc-safety__lead">Defaults <strong>locked</strong>. Nothing runs until you consciously enable this browser tab.</p>
-        <div class="cc-safety__row">
-          <div class="cc-safety__state" id="cc-gate-indicator" aria-live="polite" data-state="locked">
-            <span class="cc-safety__dot" aria-hidden="true"></span>
-            <span id="cc-gate-label"><strong>Locked</strong> — actions disabled</span>
+      <div class="cc-slot cc-slot--primary-top" id="cc-slot-primary-top">
+        <section class="cc-safety" aria-labelledby="cc-safety-heading">
+          <h2 id="cc-safety-heading" class="cc-safety__title">Automation gate</h2>
+          <p class="cc-safety__lead">Defaults <strong>locked</strong>. Nothing runs until you consciously enable this browser tab.</p>
+          <div class="cc-safety__row">
+            <div class="cc-safety__state" id="cc-gate-indicator" aria-live="polite" data-state="locked">
+              <span class="cc-safety__dot" aria-hidden="true"></span>
+              <span id="cc-gate-label"><strong>Locked</strong> — actions disabled</span>
+            </div>
+            <div class="cc-safety__buttons">
+              <button type="button" class="cc-btn cc-btn--safe" id="cc-gate-unlock">Unlock for this session</button>
+              <button type="button" class="cc-btn cc-btn--danger" id="cc-gate-lock" disabled>Emergency lock (e‑stop)</button>
+            </div>
           </div>
-          <div class="cc-safety__buttons">
-            <button type="button" class="cc-btn cc-btn--safe" id="cc-gate-unlock">Unlock for this session</button>
-            <button type="button" class="cc-btn cc-btn--danger" id="cc-gate-lock" disabled>Emergency lock (e‑stop)</button>
-          </div>
-        </div>
-        <p class="cc-safety__hint">LAN bind (<code>P31_CMD_CENTER_LAN=1</code>) exposes the same whitelist to your network — trusted Wi‑Fi only.</p>
-      </section>
+          <p class="cc-safety__hint">LAN bind (<code>P31_CMD_CENTER_LAN=1</code>) exposes the same whitelist to your network — trusted Wi‑Fi only.</p>
+        </section>
 
-      <div
-        id="cc-simplex-strip"
-        class="cc-simplex-strip"
-        data-loading="1"
-        role="status"
-        aria-live="polite"
-        title="SIMPLEX v7 via local proxy — set P31_SIMPLEX_ORIGIN to your Worker URL (no trailing slash)"
-      >
-        <span class="cc-simplex-strip__spin" aria-hidden="true"></span>
-        <div class="cc-simplex-strip__col">
-          <span class="cc-simplex-strip__text cc-mono">SIMPLEX · loading…</span>
-          <span class="cc-simplex-strip__sub cc-mono" id="cc-simplex-sub" aria-live="polite"></span>
+        <div
+          id="cc-simplex-strip"
+          class="cc-simplex-strip"
+          data-loading="1"
+          role="status"
+          aria-live="polite"
+          aria-label="SIMPLEX v7 status"
+          title="SIMPLEX v7 via local proxy — set P31_SIMPLEX_ORIGIN to your Worker URL (no trailing slash)"
+        >
+          <span class="cc-simplex-strip__spin" aria-hidden="true"></span>
+          <div class="cc-simplex-strip__col">
+            <span class="cc-simplex-strip__text cc-mono">SIMPLEX · loading…</span>
+            <span class="cc-simplex-strip__sub cc-mono" id="cc-simplex-sub" aria-live="polite"></span>
+          </div>
         </div>
+
+        <div
+          id="cc-ecosystem-strip"
+          class="cc-ecosystem-strip"
+          data-loading="1"
+          role="status"
+          aria-live="polite"
+          aria-label="CONNECTION and ecosystem registry summary"
+          title="p31-ecosystem.json + p31-env-manifest — same JSON as npm run connection -- --json"
+        >
+          <span class="cc-ecosystem-strip__spin" aria-hidden="true"></span>
+          <div class="cc-ecosystem-strip__col">
+            <span class="cc-ecosystem-strip__text cc-mono">CONNECTION · loading…</span>
+            <span class="cc-ecosystem-strip__sub cc-mono" id="cc-ecosystem-sub" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <section class="cc-essentials" aria-labelledby="cc-ess-heading">
+          <h2 id="cc-ess-heading" class="cc-section-heading">Essentials</h2>
+          <p class="cc-essentials__hint">Highest-signal shortcuts — Doctor, Ship bar (<code>verify</code>), CONNECTION.</p>
+          <div id="cc-essential-buttons" class="cc-essentials__grid"></div>
+        </section>
       </div>
 
-      <section class="cc-essentials" aria-labelledby="cc-ess-heading">
-        <h2 id="cc-ess-heading" class="cc-section-heading">Essentials</h2>
-        <p class="cc-essentials__hint">Highest-signal shortcuts — Doctor, Ship bar (<code>verify</code>), CONNECTION.</p>
-        <div id="cc-essential-buttons" class="cc-essentials__grid"></div>
-      </section>
+      <div class="cc-slot cc-slot--primary-mid" id="cc-slot-primary-mid">
+        <div class="cc-filter-row">
+          <label class="cc-filter-label" for="cc-filter">Find an action</label>
+          <input type="search" id="cc-filter" class="cc-filter p31-larmor-field" placeholder="Search by title…" autocomplete="off" spellcheck="false" />
+          <p class="cc-filter-meta"><kbd>/</kbd> focus · <kbd>Esc</kbd> clear · <kbd>?</kbd> map · <kbd>g</kbd><kbd>s</kbd> SIMPLEX · <kbd>g</kbd><kbd>e</kbd> CONNECTION · <kbd>g</kbd><kbd>l</kbd> Layout</p>
+        </div>
 
-      <div class="cc-filter-row">
-        <label class="cc-filter-label" for="cc-filter">Find an action</label>
-        <input type="search" id="cc-filter" class="cc-filter p31-larmor-field" placeholder="Search by title…" autocomplete="off" spellcheck="false" />
-        <p class="cc-filter-meta"><kbd>/</kbd> focus · <kbd>Esc</kbd> clear · <kbd>?</kbd> keyboard map · <kbd>g</kbd> <kbd>s</kbd> SIMPLEX strip</p>
+        <details class="cc-hotkeys" id="cc-hotkeys">
+          <summary>Keyboard map (low-noise)</summary>
+          <div class="cc-hotkeys__body">
+            <ul class="cc-hotkeys__list">
+              <li><kbd>/</kbd> — focus search</li>
+              <li><kbd>Esc</kbd> — clear search (when focused)</li>
+              <li><kbd>?</kbd> — toggle this panel</li>
+              <li><kbd>g</kbd> then <kbd>s</kbd> — scroll to SIMPLEX strip</li>
+              <li><kbd>g</kbd> then <kbd>e</kbd> — scroll to CONNECTION / ecosystem strip</li>
+              <li><kbd>g</kbd> then <kbd>l</kbd> — open Layout tab + scroll to right panel</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="cc-primer" id="cc-primer">
+          <summary>Ecosystem primer (links)</summary>
+          <div class="cc-primer__body">
+            <p><a href="https://github.com/p31labs/bonding-soup/blob/main/docs/P31-DEPLOY-CANON.md" target="_blank" rel="noopener">Deploy canon</a>
+            · <a href="https://p31ca.org/connect.html" target="_blank" rel="noopener">Create · Connect</a>
+            · <a href="https://p31ca.org/ops/" target="_blank" rel="noopener">p31ca /ops</a>
+            · <a href="https://command-center.trimtab-signal.workers.dev/" target="_blank" rel="noopener">EPCP edge Worker</a></p>
+            <p><strong>CONNECTION strip</strong> (under SIMPLEX) mirrors <code>npm run connection -- --json</code> via <code>GET /api/connection-summary</code> — deploy spine, glass probe groups, env catalog size.</p>
+            <p>Alignment registry: <code>p31-alignment.json</code>. Doc index + ship bar mirror <strong>fleet-portal.html</strong> and AGENTS §2.</p>
+          </div>
+        </details>
+
+        <details class="cc-joy" id="cc-joy">
+          <summary>Trim tab — moment of joy</summary>
+          ${joyListBlock}
+          <p class="cc-joy__slot" id="cc-joy-slot" hidden></p>
+          <p class="cc-joy__draw-wrap">
+            <button type="button" class="cc-btn cc-btn--ghost cc-joy__draw" id="cc-joy-draw" hidden>Another line</button>
+          </p>
+          <p class="cc-joy__meta">Pool rotates daily (UTC) · <code>npm run fun</code> · <code>npm run fun:shower</code> · <code>npm run doctor -- --fun</code> · <code>p31 fun --many 5 --roll</code></p>
+        </details>
       </div>
 
-      <details class="cc-hotkeys" id="cc-hotkeys">
-        <summary>Keyboard map (low-noise)</summary>
-        <div class="cc-hotkeys__body">
-          <ul class="cc-hotkeys__list">
-            <li><kbd>/</kbd> — focus search</li>
-            <li><kbd>Esc</kbd> — clear search (when focused)</li>
-            <li><kbd>?</kbd> — toggle this panel</li>
-            <li><kbd>g</kbd> then <kbd>s</kbd> — scroll to SIMPLEX strip</li>
-          </ul>
-        </div>
-      </details>
+      <div class="cc-slot cc-slot--primary-bottom" id="cc-slot-primary-bottom">
+        <div id="sections"></div>
 
-      <details class="cc-primer">
-        <summary>Ecosystem primer (links)</summary>
-        <div class="cc-primer__body">
-          <p><a href="https://github.com/p31labs/bonding-soup/blob/main/docs/P31-DEPLOY-CANON.md" target="_blank" rel="noopener">Deploy canon</a>
-          · <a href="https://p31ca.org/connect.html" target="_blank" rel="noopener">Create · Connect</a>
-          · <a href="https://p31ca.org/ops/" target="_blank" rel="noopener">p31ca /ops</a>
-          · <a href="https://command-center.trimtab-signal.workers.dev/" target="_blank" rel="noopener">EPCP edge Worker</a></p>
-          <p>Alignment registry: <code>p31-alignment.json</code>. Doc index + ship bar mirror <strong>fleet-portal.html</strong> and AGENTS §2.</p>
-        </div>
-      </details>
-
-      <details class="cc-joy">
-        <summary>Trim tab — moment of joy</summary>
-        ${joyListBlock}
-        <p class="cc-joy__slot" id="cc-joy-slot" hidden></p>
-        <p class="cc-joy__draw-wrap">
-          <button type="button" class="cc-btn cc-btn--ghost cc-joy__draw" id="cc-joy-draw" hidden>Another line</button>
-        </p>
-        <p class="cc-joy__meta">Pool rotates daily (UTC) · <code>npm run fun</code> · <code>npm run fun:shower</code> · <code>npm run doctor -- --fun</code> · <code>p31 fun --many 5 --roll</code></p>
-      </details>
-
-      <div id="sections"></div>
-
-      ${!ha ? '<p class="cc-missing"><code>andromeda/</code> not present — monorepo actions hidden.</p>' : ""}
-      ${!hp ? '<p class="cc-missing"><code>p31ca</code> package not found — hub ci/diff hidden.</p>' : ""}
+        ${!ha ? '<p class="cc-missing"><code>andromeda/</code> not present — monorepo actions hidden.</p>' : ""}
+        ${!hp ? '<p class="cc-missing"><code>p31ca</code> package not found — hub ci/diff hidden.</p>' : ""}
+      </div>
     </div>
 
-    <aside class="cc-layout__aside" aria-label="Process output">
-      <div class="cc-terminal">
-        <div class="cc-terminal__head">
-          <h2 class="cc-terminal__title">stdout / stderr</h2>
-          <div class="cc-terminal__actions">
-            <button type="button" class="cc-btn cc-btn--ghost" id="cc-out-copy">Copy</button>
-            <button type="button" class="cc-btn cc-btn--ghost" id="cc-out-clear">Clear</button>
-          </div>
-          <span id="cc-k4-spin" class="cc-k4-spin-host" hidden data-spin="wye" aria-hidden="true">${k4SpinInline}</span>
-          <span id="cc-term-status" class="cc-term-status cc-term-status--idle" aria-live="polite">idle</span>
+    <aside class="cc-layout__aside" aria-label="Operator tools">
+      <div class="cc-aside" id="cc-aside">
+        <div class="cc-aside__tabs" role="tablist" aria-label="Right panel">
+          <button type="button" class="cc-aside-tab" id="cc-tab-terminal" role="tab" aria-selected="true" aria-controls="cc-pane-terminal" data-cc-pane="terminal">Terminal</button>
+          <button type="button" class="cc-aside-tab" id="cc-tab-history" role="tab" aria-selected="false" aria-controls="cc-pane-history" data-cc-pane="history">History</button>
+          <button type="button" class="cc-aside-tab" id="cc-tab-simplex" role="tab" aria-selected="false" aria-controls="cc-pane-simplex" data-cc-pane="simplex">SIMPLEX</button>
+          <button type="button" class="cc-aside-tab" id="cc-tab-layout" role="tab" aria-selected="false" aria-controls="cc-pane-layout" data-cc-pane="layout">Layout</button>
         </div>
-        <pre id="out" class="cc-terminal__body p31-larmor-field" tabindex="0">— Ready.\n(No runs until you unlock the gate.)</pre>
+
+        <section class="cc-aside-pane cc-aside-pane--terminal" id="cc-pane-terminal" role="tabpanel" aria-labelledby="cc-tab-terminal" data-cc-pane="terminal">
+          <div class="cc-terminal">
+            <div class="cc-terminal__head">
+              <h2 class="cc-terminal__title">stdout / stderr</h2>
+              <div class="cc-terminal__actions">
+                <button type="button" class="cc-btn cc-btn--ghost" id="cc-out-copy">Copy</button>
+                <button type="button" class="cc-btn cc-btn--ghost" id="cc-out-clear">Clear</button>
+              </div>
+              <span id="cc-k4-spin" class="cc-k4-spin-host" hidden data-spin="wye" aria-hidden="true">${k4SpinInline}</span>
+              <span id="cc-term-status" class="cc-term-status cc-term-status--idle" aria-live="polite">idle</span>
+            </div>
+            <pre id="out" class="cc-terminal__body p31-larmor-field" tabindex="0">— Ready.\n(No runs until you unlock the gate.)</pre>
+          </div>
+          <p class="cc-aside-note">Sticky on wide viewports.</p>
+        </section>
+
+        <section class="cc-aside-pane" id="cc-pane-history" role="tabpanel" aria-labelledby="cc-tab-history" data-cc-pane="history" hidden>
+          <div class="cc-pane-head">
+            <h2 class="cc-pane-title">Action history</h2>
+            <div class="cc-pane-actions">
+              <button type="button" class="cc-btn cc-btn--ghost" id="cc-history-clear">Clear</button>
+            </div>
+          </div>
+          <div class="cc-pane-body" id="cc-history-body" aria-live="polite"></div>
+        </section>
+
+        <section class="cc-aside-pane" id="cc-pane-simplex" role="tabpanel" aria-labelledby="cc-tab-simplex" data-cc-pane="simplex" hidden>
+          <div class="cc-pane-head">
+            <h2 class="cc-pane-title">SIMPLEX</h2>
+            <div class="cc-pane-actions">
+              <button type="button" class="cc-btn cc-btn--ghost" id="cc-simplex-refresh">Refresh</button>
+            </div>
+          </div>
+          <div class="cc-pane-body">
+            <div class="cc-kv" id="cc-simplex-mini">
+              <div class="cc-kv__row"><span class="cc-kv__k">Health</span><span class="cc-kv__v" id="cc-simplex-mini-health">—</span></div>
+              <div class="cc-kv__row"><span class="cc-kv__k">Cron</span><span class="cc-kv__v" id="cc-simplex-mini-cron">—</span></div>
+              <div class="cc-kv__row"><span class="cc-kv__k">Live</span><span class="cc-kv__v" id="cc-simplex-mini-live">—</span></div>
+              <div class="cc-kv__row"><span class="cc-kv__k">Updated</span><span class="cc-kv__v" id="cc-simplex-mini-updated">—</span></div>
+            </div>
+            <p class="cc-pane-note">Uses local proxy endpoints (<code>/api/simplex-health</code>, <code>/api/simplex-state</code>).</p>
+          </div>
+        </section>
+
+        <section class="cc-aside-pane" id="cc-pane-layout" role="tabpanel" aria-labelledby="cc-tab-layout" data-cc-pane="layout" hidden>
+          <div class="cc-pane-head">
+            <h2 class="cc-pane-title">Layout debugger</h2>
+          </div>
+          <div class="cc-pane-body">
+            <pre class="cc-debug p31-larmor-field" id="cc-layout-debug" tabindex="0">—</pre>
+            <p class="cc-pane-note">Shows detected device profile + slotting decisions.</p>
+          </div>
+        </section>
       </div>
-      <p class="cc-aside-note">Sticky on wide viewports.</p>
     </aside>
   </main>
 
@@ -389,17 +538,110 @@ function buildPageHtml() {
       </div>
     </div>
   </div>
+  <script src="/assets/p31-return-ribbon.js" defer></script>
 </body>
 </html>`;
 }
 
-const html = buildPageHtml();
+/**
+ * Read-first operator surface: same JSON endpoints as the control plane, no gate, no POST /api/run.
+ * @param {number} portForUi
+ */
+function buildOperatorDeskHtml(portForUi) {
+  const lan = getLanIPv4();
+  const phoneHint =
+    listenHost === "0.0.0.0" && lan ? ` · phone: http://${lan}:${portForUi}/desk` : "";
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0c0f" />
+  <meta name="description" content="P31 operator desk — CONNECTION, glass, SIMPLEX readout. Actions stay on the control plane." />
+  <title>P31 — operator desk</title>
+  ${hasBondingAppleTouch() ? '<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />' : ""}
+  ${fs.existsSync(bondingIcon192) ? '<link rel="icon" type="image/png" sizes="192x192" href="/p31-bonding-icon-192.png" />' : ""}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:ital,wght@0,400;0,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/p31-style.css" />
+  <link rel="stylesheet" href="/assets/operator-desk.css" />
+  <script type="module" src="/assets/od-starfield-boot.js"></script>
+  <script src="/assets/operator-desk.js" defer></script>
+</head>
+<body class="od-root" data-operator-desk="1" data-od-version="${CC_VERSION}">
+  <canvas id="od-star-plate" class="od-star-plate" width="4" height="4" aria-hidden="true"></canvas>
+  <a class="od-skip" href="#od-main">Skip to readouts</a>
+  <header class="od-header">
+    <div class="od-header__inner">
+      <div>
+        <p class="od-kicker">P31 labs · read-first plane</p>
+        <h1 class="od-title">Operator desk</h1>
+        <p class="p31-host-mind">Host mind: <strong>Operator</strong> — read-only; same static star plate as the control room.</p>
+        <p class="od-lead">Live CONNECTION counts, glass snapshot, and SIMPLEX proxy lines. Whitelisted runs and the automation gate live on the <a class="od-inline" href="/">control plane</a>.</p>
+      </div>
+      <div class="od-header__tools">
+        <span class="od-mono" title="Bind address">${badgeHost}:${portForUi}${phoneHint}</span>
+        <nav class="od-nav" aria-label="Switch view">
+          <a class="od-inline" href="/">Control plane (actions)</a>
+          <a
+            class="od-inline"
+            href="https://p31ca.org/ops/"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Hub operator UI (new tab)">p31ca /ops</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <main id="od-main" class="od-main" role="main" aria-busy="false" aria-describedby="od-refresh-hint">
+    <p id="od-error" class="od-foot od-foot--alert" hidden role="alert"></p>
+    <div class="od-toolbar">
+      <button type="button" class="od-btn" id="od-refresh" title="Refresh readouts (shortcut: R)" aria-keyshortcuts="R">Refresh</button>
+      <p class="od-foot" id="od-refresh-hint" role="note">Updated <span id="od-stamp">—</span> · every <span id="od-poll-interval">30</span>s while this tab is visible · <kbd class="od-kbd">r</kbd> to refresh</p>
+    </div>
+    <section class="od-card" aria-labelledby="od-h-health">
+      <h2 id="od-h-health">Control plane</h2>
+      <dl class="od-dl" id="od-dl-health"></dl>
+    </section>
+    <section class="od-card" aria-labelledby="od-h-conn">
+      <h2 id="od-h-conn">CONNECTION</h2>
+      <dl class="od-dl" id="od-dl-connection"></dl>
+    </section>
+    <section class="od-card" aria-labelledby="od-h-glass">
+      <h2 id="od-h-glass">Glass snapshot</h2>
+      <dl class="od-dl" id="od-dl-glass"></dl>
+    </section>
+    <section class="od-card" aria-labelledby="od-h-sx">
+      <h2 id="od-h-sx">SIMPLEX (proxy)</h2>
+      <dl class="od-dl" id="od-dl-simplex"></dl>
+    </section>
+    <section class="od-card" aria-labelledby="od-h-org">
+      <h2 id="od-h-org">GitHub org · social ops</h2>
+      <p class="od-foot">Valve + event tail from <code class="od-mono">~/.p31</code> — automation gate for runs stays on the <a class="od-inline" href="/">control plane</a>.</p>
+      <dl class="od-dl" id="od-dl-github-org"></dl>
+    </section>
+    <section class="od-card" aria-labelledby="od-h-dep">
+      <h2 id="od-h-dep">Deploy spine (preview)</h2>
+      <ul class="od-list" id="od-deploy-list"></ul>
+    </section>
+  </main>
+  <script src="/assets/p31-return-ribbon.js" defer></script>
+</body>
+</html>`;
+}
+
 const manifestBody = buildManifestJson();
 const p31StylePath = path.join(repoRoot, "cognitive-passport", "p31-style.css");
 const p31ResponsiveSurfacePath = path.join(repoRoot, "cognitive-passport", "p31-responsive-surface.css");
+const p31SubjectPrefsPath = path.join(repoRoot, "cognitive-passport", "lib", "p31-subject-prefs.js");
+const p31ReturnRibbonPath = path.join(repoRoot, "cognitive-passport", "lib", "p31-return-ribbon.js");
+const p31StaticStarPlatePath = path.join(repoRoot, "design-assets", "starfield", "p31-starfield-static-plate.js");
+const p31AtmosphereDir = path.join(repoRoot, "design-assets", "atmosphere");
+let boundPort = requestedPort || DEFAULT_CMD_CENTER_PORT;
 
 function sendJson(res, status, obj) {
-  res.writeHead(status, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" });
+  res.writeHead(status, CC_HDR.json);
   res.end(JSON.stringify(obj));
 }
 
@@ -491,29 +733,56 @@ async function proxySimplexHealth(res) {
   }
 }
 
-function sendAsset(res, absPath, contentType) {
+function sendAsset(res, req, absPath, contentType) {
   fs.readFile(absPath, (err, buf) => {
     if (err) {
-      res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+      res.writeHead(404, CC_HDR.text);
       res.end("not found: " + path.basename(absPath));
       return;
     }
-    res.writeHead(200, { "Content-Type": contentType, "Cache-Control": "no-store" });
+    let etag = "";
+    try {
+      const st = fs.statSync(absPath);
+      etag = 'W/"' + st.mtimeMs + "-" + st.size + '"';
+    } catch {
+      etag = 'W/"' + buf.length + '"';
+    }
+    const inm = String((req && req.headers && req.headers["if-none-match"]) || "").trim();
+    if (inm && etag && inm === etag) {
+      res.writeHead(304, {
+        ETag: etag,
+        "Cache-Control": "private, max-age=0, must-revalidate",
+        "X-Content-Type-Options": "nosniff",
+      });
+      res.end();
+      return;
+    }
+    res.writeHead(200, {
+      "Content-Type": contentType,
+      "Cache-Control": "private, max-age=0, must-revalidate",
+      ETag: etag,
+      "X-Content-Type-Options": "nosniff",
+    });
     res.end(buf);
   });
 }
 
 const server = http.createServer((req, res) => {
   if (req.method === "GET" && (req.url === "/" || req.url === "/index.html")) {
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
-    res.end(html);
+    res.writeHead(200, CC_HDR.html);
+    res.end(buildPageHtml(boundPort));
     return;
   }
   const assetBase = req.url && req.url.split("?")[0];
+  if (req.method === "GET" && (assetBase === "/desk" || assetBase === "/operator-desk")) {
+    res.writeHead(200, CC_HDR.html);
+    res.end(buildOperatorDeskHtml(boundPort));
+    return;
+  }
   if (req.method === "GET" && assetBase === "/api/mesh-pulse") {
     const pulsePath = path.join(os.homedir(), ".p31", "mesh-touch-pulse.json");
     if (!fs.existsSync(pulsePath)) {
-      res.writeHead(204, { "Cache-Control": "no-store" });
+      res.writeHead(204, CC_HDR.noContent);
       res.end();
       return;
     }
@@ -524,16 +793,16 @@ const server = http.createServer((req, res) => {
       } catch {
         /* ignore */
       }
-      res.writeHead(200, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" });
+      res.writeHead(200, CC_HDR.json);
       res.end(buf);
     } catch {
-      res.writeHead(500, { "Content-Type": "text/plain; charset=utf-8" });
+      res.writeHead(500, CC_HDR.text);
       res.end("pulse read error");
     }
     return;
   }
   if (req.method === "GET" && assetBase === "/api/health") {
-    res.writeHead(200, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" });
+    res.writeHead(200, CC_HDR.json);
     res.end(
       JSON.stringify({
         ok: true,
@@ -542,6 +811,7 @@ const server = http.createServer((req, res) => {
         actions: Object.keys(ACTIONS).length,
         bells: {
           simplex_strip_poll_s: 30,
+          ecosystem_strip_poll_s: 120,
           starfield: true,
           joy: true,
         },
@@ -549,9 +819,71 @@ const server = http.createServer((req, res) => {
           focus_search: "/",
           toggle_hotkeys: "?",
           jump_simplex: "g s",
+          jump_ecosystem: "g e",
+          jump_layout: "g l",
         },
       })
     );
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/api/connection-summary") {
+    res.writeHead(200, CC_HDR.json);
+    res.end(JSON.stringify(getConnectionSummary()));
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/api/github-org-status") {
+    try {
+      res.writeHead(200, CC_HDR.json);
+      res.end(JSON.stringify(getGithubOrgStatus()));
+    } catch {
+      res.writeHead(200, CC_HDR.json);
+      res.end(JSON.stringify({ ok: false, reason: "github_org_status_error" }));
+    }
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/api/glass-snapshot") {
+    const reportPath = resolveGlassReportPath();
+    if (!reportPath || !fs.existsSync(reportPath)) {
+      res.writeHead(200, CC_HDR.json);
+      res.end(JSON.stringify({ ok: false, reason: "missing_file" }));
+      return;
+    }
+    try {
+      const st = fs.statSync(reportPath);
+      if (!st.isFile() || st.size > GLASS_REPORT_MAX_BYTES) {
+        res.writeHead(200, CC_HDR.json);
+        res.end(JSON.stringify({ ok: false, reason: "too_large_or_not_file" }));
+        return;
+      }
+      const raw = fs.readFileSync(reportPath, "utf8");
+      const doc = JSON.parse(raw);
+      const summary = doc && typeof doc === "object" && doc.summary && typeof doc.summary === "object" ? doc.summary : null;
+      const ts = typeof doc.timestamp === "string" ? doc.timestamp : null;
+      const schema = typeof doc.schema === "string" ? doc.schema : null;
+      if (!summary) {
+        res.writeHead(200, CC_HDR.json);
+        res.end(JSON.stringify({ ok: false, reason: "bad_shape" }));
+        return;
+      }
+      res.writeHead(200, CC_HDR.json);
+      res.end(
+        JSON.stringify({
+          ok: true,
+          schema,
+          timestamp: ts,
+          summary: {
+            up: Number(summary.up) || 0,
+            auth: Number(summary.auth) || 0,
+            warn: Number(summary.warn) || 0,
+            down: Number(summary.down) || 0,
+            skipped: Number(summary.skipped) || 0,
+          },
+        })
+      );
+    } catch {
+      res.writeHead(200, CC_HDR.json);
+      res.end(JSON.stringify({ ok: false, reason: "read_error" }));
+    }
     return;
   }
   if (req.method === "GET" && assetBase === "/api/simplex-state") {
@@ -566,79 +898,156 @@ const server = http.createServer((req, res) => {
     });
     return;
   }
+  if (
+    req.method === "GET" &&
+    assetBase &&
+    assetBase.startsWith("/assets/atmosphere/") &&
+    !assetBase.includes("..")
+  ) {
+    const rel = assetBase.slice("/assets/atmosphere/".length).replace(/^\/+/, "");
+    if (!rel) {
+      res.writeHead(404, CC_HDR.text);
+      res.end("not found");
+      return;
+    }
+    const abs = path.join(p31AtmosphereDir, rel);
+    const rootResolved = path.resolve(p31AtmosphereDir) + path.sep;
+    const absResolved = path.resolve(abs);
+    if (!absResolved.startsWith(rootResolved)) {
+      res.writeHead(403, CC_HDR.text);
+      res.end("forbidden");
+      return;
+    }
+    if (!fs.existsSync(abs) || !fs.statSync(abs).isFile()) {
+      res.writeHead(404, CC_HDR.text);
+      res.end("not found — run npm run sync:atmosphere");
+      return;
+    }
+    const ct = rel.endsWith(".json")
+      ? "application/json; charset=utf-8"
+      : "application/javascript; charset=utf-8";
+    sendAsset(res, req, abs, ct);
+    return;
+  }
   if (req.method === "GET" && assetBase === "/assets/p31-responsive-surface.css") {
-    sendAsset(res, p31ResponsiveSurfacePath, "text/css; charset=utf-8");
+    sendAsset(res, req, p31ResponsiveSurfacePath, "text/css; charset=utf-8");
     return;
   }
   if (req.method === "GET" && assetBase === "/assets/p31-style.css") {
     fs.readFile(p31StylePath, (err, buf) => {
       if (err) {
-        res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+        res.writeHead(404, CC_HDR.text);
         res.end("missing cognitive-passport/p31-style.css — run npm run apply:p31-style");
         return;
       }
-      res.writeHead(200, { "Content-Type": "text/css; charset=utf-8", "Cache-Control": "no-store" });
+      let etag = "";
+      try {
+        const st = fs.statSync(p31StylePath);
+        etag = 'W/"' + st.mtimeMs + "-" + st.size + '"';
+      } catch {
+        etag = 'W/"' + buf.length + '"';
+      }
+      const inm = String((req && req.headers && req.headers["if-none-match"]) || "").trim();
+      if (inm && etag && inm === etag) {
+        res.writeHead(304, {
+          ETag: etag,
+          "Cache-Control": "private, max-age=0, must-revalidate",
+          "X-Content-Type-Options": "nosniff",
+        });
+        res.end();
+        return;
+      }
+      res.writeHead(200, {
+        "Content-Type": "text/css; charset=utf-8",
+        "Cache-Control": "private, max-age=0, must-revalidate",
+        ETag: etag,
+        "X-Content-Type-Options": "nosniff",
+      });
       res.end(buf);
     });
     return;
   }
+  if (req.method === "GET" && assetBase === "/assets/p31-subject-prefs.js") {
+    sendAsset(res, req, p31SubjectPrefsPath, "application/javascript; charset=utf-8");
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/assets/p31-return-ribbon.js") {
+    sendAsset(res, req, p31ReturnRibbonPath, "application/javascript; charset=utf-8");
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/assets/p31-starfield-static-plate.js") {
+    sendAsset(res, req, p31StaticStarPlatePath, "application/javascript; charset=utf-8");
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/assets/od-starfield-boot.js") {
+    sendAsset(res, req, path.join(commandCenterDir, "od-starfield-boot.js"), "application/javascript; charset=utf-8");
+    return;
+  }
   if (req.method === "GET" && assetBase === "/assets/command-center.css") {
-    sendAsset(res, path.join(commandCenterDir, "command-center.css"), "text/css; charset=utf-8");
+    sendAsset(res, req, path.join(commandCenterDir, "command-center.css"), "text/css; charset=utf-8");
     return;
   }
   if (req.method === "GET" && assetBase === "/assets/command-center.js") {
-    sendAsset(res, path.join(commandCenterDir, "command-center.js"), "application/javascript; charset=utf-8");
+    sendAsset(res, req, path.join(commandCenterDir, "command-center.js"), "application/javascript; charset=utf-8");
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/assets/operator-desk.css") {
+    sendAsset(res, req, path.join(commandCenterDir, "operator-desk.css"), "text/css; charset=utf-8");
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/assets/operator-desk.js") {
+    sendAsset(res, req, path.join(commandCenterDir, "operator-desk.js"), "application/javascript; charset=utf-8");
     return;
   }
   if (req.method === "GET" && assetBase === "/assets/p31-starfield.js") {
-    sendAsset(res, path.join(repoRoot, "design-assets", "starfield", "p31-starfield.js"), "application/javascript; charset=utf-8");
+    sendAsset(res, req, path.join(repoRoot, "design-assets", "starfield", "p31-starfield.js"), "application/javascript; charset=utf-8");
     return;
   }
   if (req.method === "GET" && assetBase === "/assets/p31-mesh-touches.js") {
-    sendAsset(res, path.join(repoRoot, "design-assets", "starfield", "p31-mesh-touches.js"), "application/javascript; charset=utf-8");
+    sendAsset(res, req, path.join(repoRoot, "design-assets", "starfield", "p31-mesh-touches.js"), "application/javascript; charset=utf-8");
     return;
   }
   if (req.method === "GET" && assetBase === "/assets/p31-starfield.css") {
-    sendAsset(res, path.join(repoRoot, "design-assets", "starfield", "p31-starfield.css"), "text/css; charset=utf-8");
+    sendAsset(res, req, path.join(repoRoot, "design-assets", "starfield", "p31-starfield.css"), "text/css; charset=utf-8");
     return;
   }
   if (req.method === "GET" && assetBase === "/assets/p31-larmor-fields.css") {
-    sendAsset(res, path.join(repoRoot, "design-assets", "starfield", "p31-larmor-fields.css"), "text/css; charset=utf-8");
+    sendAsset(res, req, path.join(repoRoot, "design-assets", "starfield", "p31-larmor-fields.css"), "text/css; charset=utf-8");
     return;
   }
   if (req.method === "GET" && assetBase === "/assets/cc-starfield-boot.js") {
-    sendAsset(res, path.join(commandCenterDir, "cc-starfield-boot.js"), "application/javascript; charset=utf-8");
+    sendAsset(res, req, path.join(commandCenterDir, "cc-starfield-boot.js"), "application/javascript; charset=utf-8");
     return;
   }
   if (req.method === "GET" && assetBase === "/apple-touch-icon.png") {
     if (!hasBondingAppleTouch()) {
-      res.writeHead(404);
+      res.writeHead(404, CC_HDR.text);
       res.end("missing apple-touch icon");
       return;
     }
-    sendAsset(res, bondingAppleTouchPng, "image/png");
+    sendAsset(res, req, bondingAppleTouchPng, "image/png");
     return;
   }
   if (req.method === "GET" && assetBase === "/p31-bonding-icon-192.png") {
     if (!fs.existsSync(bondingIcon192)) {
-      res.writeHead(404);
+      res.writeHead(404, CC_HDR.text);
       res.end("not found");
       return;
     }
-    sendAsset(res, bondingIcon192, "image/png");
+    sendAsset(res, req, bondingIcon192, "image/png");
     return;
   }
   if (req.method === "GET" && assetBase === "/p31-bonding-icon-512.png") {
     if (!fs.existsSync(bondingIcon512)) {
-      res.writeHead(404);
+      res.writeHead(404, CC_HDR.text);
       res.end("not found");
       return;
     }
-    sendAsset(res, bondingIcon512, "image/png");
+    sendAsset(res, req, bondingIcon512, "image/png");
     return;
   }
   if (req.method === "GET" && assetBase === "/manifest.webmanifest") {
-    res.writeHead(200, { "Content-Type": "application/manifest+json; charset=utf-8", "Cache-Control": "no-store" });
+    res.writeHead(200, CC_HDR.jsonManifest);
     res.end(manifestBody);
     return;
   }
@@ -653,53 +1062,65 @@ const server = http.createServer((req, res) => {
         const j = JSON.parse(body);
         const id = j && j.action;
         if (!id || !ACTIONS[id]) {
-          res.writeHead(400, { "Content-Type": "application/json" });
+          res.writeHead(400, CC_HDR.jsonAction);
           res.end(JSON.stringify({ code: 1, stderr: "bad action\n", stdout: "" }));
           return;
         }
         if (id.startsWith("andromeda-") && !hasAndromedaTree()) {
-          res.writeHead(200, { "Content-Type": "application/json" });
+          res.writeHead(200, CC_HDR.jsonAction);
           res.end(JSON.stringify({ code: 1, stderr: "andromeda/ not in this tree\n", stdout: "" }));
           return;
         }
         if ((id === "p31ca-hub-ci" || id === "p31ca-hub-diff") && !hasP31caPackage()) {
-          res.writeHead(200, { "Content-Type": "application/json" });
+          res.writeHead(200, CC_HDR.jsonAction);
           res.end(JSON.stringify({ code: 1, stderr: "p31ca package not found\n", stdout: "" }));
           return;
         }
         const { code, stdout, stderr } = await runAction(id);
-        res.writeHead(200, { "Content-Type": "application/json" });
+        res.writeHead(200, CC_HDR.jsonAction);
         res.end(JSON.stringify({ code, stdout, stderr }));
       } catch (e) {
-        res.writeHead(500, { "Content-Type": "application/json" });
+        res.writeHead(500, CC_HDR.jsonAction);
         res.end(JSON.stringify({ code: 1, stdout: "", stderr: String(e) + "\n" }));
       }
     });
     return;
   }
-  res.writeHead(404);
+  res.writeHead(404, CC_HDR.text);
   res.end("not found");
 });
 
 server.on("error", (err) => {
   if (err && err.code === "EADDRINUSE") {
-    console.error("P31 command center: port " + port + " in use — try P31_CMD_CENTER_PORT=4000 npm run command-center");
+    console.error(
+      "P31 command center: port " +
+        (requestedPort || boundPort) +
+        " in use — free 3131 or run P31_CMD_CENTER_PORT=0 npm run command-center (auto port)"
+    );
   } else {
     console.error(err);
   }
   process.exit(1);
 });
 
-server.listen(port, listenHost, () => {
-  const urlLoop = "http://127.0.0.1:" + port + "/";
+server.listen(requestedPort === 0 ? 0 : requestedPort, listenHost, () => {
+  const addr = server.address();
+  const actualPort =
+    addr && typeof addr === "object" && typeof addr.port === "number"
+      ? addr.port
+      : requestedPort || DEFAULT_CMD_CENTER_PORT;
+  boundPort = actualPort;
+  const urlLoop = "http://127.0.0.1:" + actualPort + "/";
+  const urlDesk = "http://127.0.0.1:" + actualPort + "/desk";
   console.log("P31 command center v" + CC_VERSION + ": " + urlLoop + "  (Ctrl+C to stop)");
+  console.log("P31 operator desk: " + urlDesk);
   if (!hasBondingAppleTouch()) {
     console.warn("P31 command center: apple-touch missing — npm run generate:bonding-pwa-icons");
   }
   if (listenHost === "0.0.0.0") {
     console.warn("P31 command center: LAN bind — anyone on your network can hit whitelisted actions. Trusted Wi‑Fi only.");
     const lan = getLanIPv4();
-    if (lan) console.log("P31 command center phone URL: http://" + lan + ":" + port + "/");
+    if (lan) console.log("P31 command center phone URL: http://" + lan + ":" + actualPort + "/");
   }
   if (process.env.P31_CMD_CENTER_NO_OPEN === "1") return;
   try {

@@ -64,4 +64,18 @@ describe("assertBootShape", () => {
       })
     ).toThrow(/links\[0\]/);
   });
+
+  it("rejects CONNECTION.glassByGroup with non-numeric values", () => {
+    expect(() =>
+      assertBootShape({
+        ...minimalValid,
+        CONNECTION: {
+          deployablesCount: 1,
+          glassProbesCount: 2,
+          p31EnvCatalogEntries: 3,
+          glassByGroup: { mesh: "x" },
+        },
+      })
+    ).toThrow(/glassByGroup/);
+  });
 });

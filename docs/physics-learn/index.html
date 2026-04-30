@@ -12,6 +12,7 @@
   <title>P31 — Physics Learn · why the shapes</title>
   <link rel="stylesheet" href="../../cognitive-passport/p31-style.css" />
   <link rel="stylesheet" href="../../cognitive-passport/p31-responsive-surface.css" />
+  <link rel="stylesheet" href="../../design-assets/starfield/p31-starfield.css" />
   <script src="../../cognitive-passport/lib/p31-subject-prefs.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -377,7 +378,9 @@
   </p>
   <span class="p31-egg-larmor-ms" aria-hidden="true"></span>
   <a class="codec-skip" href="#room-triangle">Skip to first room</a>
-  <div class="codec-bg" aria-hidden="true"></div>
+  <div class="codec-bg" aria-hidden="true">
+    <canvas id="pl-starfield" class="p31-starfield-canvas" style="position:absolute;inset:0;width:100%;height:100%;opacity:0.42"></canvas>
+  </div>
   <nav class="codec-rail" aria-label="Rooms">
     <a href="#room-triangle">1 · Triangle</a>
     <a href="#room-tetra">2 · Tetrahedron</a>
@@ -393,6 +396,10 @@
   <main class="codec-main">
     <p class="codec-ribbon codec-ribbon--top" id="codec-hero-ribbon">
       <span data-p31-physics-learn-badge>Physics Learn</span> · eight rooms · one question: why a tetrahedron?
+    </p>
+    <p class="p31-host-mind" style="margin:0 0 0.75rem;max-width:40rem">Host mind: <strong>Physicist / Moon</strong> — same K₄ & Larmor as everywhere else, here through measure and proof.</p>
+    <p class="p31-translate-bridge">
+      <a href="../../poets-room.html" data-p31-translate-poet>Read the same night as <strong>poetry</strong> in the Poets Room →</a>
     </p>
 
     <section class="codec-room" id="room-triangle" data-pl-room="1">
@@ -586,6 +593,12 @@
   </main>
   <script type="module">
     import { physicsLearnRoomHz, PHYSICS_LEARN_TARGET_HZ } from "../../design-assets/starfield/p31-mesh-touches.js";
+    import { bootAtmosphereStarfieldCanvas } from "../../design-assets/atmosphere/p31-atmosphere-hints-boot.js";
+
+    void (async () => {
+      const cv = document.getElementById("pl-starfield");
+      if (cv instanceof HTMLCanvasElement) await bootAtmosphereStarfieldCanvas("physics-learn", cv);
+    })();
 
     const rooms = Array.from(document.querySelectorAll(".codec-room[data-pl-room]"));
     let audioCtx = null;
@@ -649,5 +662,6 @@
       for (const r of rooms) io.observe(r);
     }
   </script>
+  <script src="../../cognitive-passport/lib/p31-return-ribbon.js" data-local-soup="../../soup.html" defer></script>
 </body>
 </html>

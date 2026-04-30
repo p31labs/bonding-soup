@@ -17,7 +17,7 @@
  *   --content, -c     Run hub:about:generate + hub:about:enrich before p31ca build (mutates public/*-about.html)
  *   --security, -s    After p31ca `verify`, run p31ca `security:check` (B+C+E; Phase A skipped — verify already ran)
  *   --no-security     In CI, skip the security suite (p31ca must exist; rare escape hatch)
- *   --skip-soup-tsc   Skip root `npm run build` (tsc only for bonding-soup)
+ *   --skip-soup-tsc   Skip root `npm run build` (tsc only for bonding-soup); root verify subset adds **`verify:delta-language`** + **`verify:public-voice`** + **`verify:atmosphere-ramp`** after **`verify:fleet-portal`**
  *   --skip-install    Do not run npm install / npm ci in p31ca
  *   --install, -i     (local) Force `npm install` in p31ca even if node_modules exists
  *   --skip-root-verify   Skip `npm run verify` (split CI: a prior job already passed it)
@@ -98,6 +98,9 @@ function main() {
       run("quantum egg hunt (manifest + Larmor)", "npm run verify:egg-hunt", root);
       run("planetary onboard (threshold HTML anchors)", "npm run verify:onboarding", root);
       run("fleet portal (ATC + glass strip anchors)", "npm run verify:fleet-portal", root);
+      run("DELTA lexicon JSON (+ hub mirror when present)", "npm run verify:delta-language", root);
+      run("PUBLIC voice Tier B/C guardrails", "npm run verify:public-voice", root);
+      run("Atmosphere ramp + routes vs canon", "npm run verify:atmosphere-ramp", root);
     }
   } else {
     console.log(

@@ -1,6 +1,6 @@
 {
   "schema": "p31.quantumEggHunt/1.0.0",
-  "narrative": "SIC-POVM metaphor: each entry is a rank-1 effect in a 4-vertex (K₄) product story. Coherence enforces the canonical 31P Larmor Hz from p31-constants.json against the dome + hub UI.",
+  "narrative": "SIC-POVM metaphor: each entry is a rank-1 effect in a 4-vertex (K₄) product story. Rigorous POVM/SIC/qubit definitions: docs/SIC-POVM-MATHEMATICAL-APPENDIX.md. Coherence enforces the canonical 31P Larmor Hz from p31-constants.json against the dome + hub UI.",
   "coherence": {
     "larmor": {
       "fromConstants": "physics.larmorHz",

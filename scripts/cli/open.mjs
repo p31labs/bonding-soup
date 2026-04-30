@@ -73,6 +73,13 @@ const TARGETS = {
     desc: "command center; starts :3131 if free",
   },
   "command-center": { alias: "cc" },
+  desk: {
+    kind: "http",
+    href: `http://${LOCAL.host}:${LOCAL.port.cc}/desk`,
+    desc: "operator desk (read-first); starts :3131 if free",
+  },
+  "operator-desk": { alias: "desk" },
+  "cc-desk": { alias: "desk" },
   lab: {
     kind: "http",
     href: `http://${LOCAL.host}:${LOCAL.port.demo}/p31-sovereign-lab.html`,
@@ -219,7 +226,13 @@ function isSoupTarget(name) {
 
 function isCcTarget(name) {
   const k = (name || "").toLowerCase();
-  return k === "cc" || k === "command-center";
+  return (
+    k === "cc" ||
+    k === "command-center" ||
+    k === "desk" ||
+    k === "operator-desk" ||
+    k === "cc-desk"
+  );
 }
 
 function runBuildDocIndexInherit() {

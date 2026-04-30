@@ -90,6 +90,8 @@ Cheat sheet (commands only): **`docs/P31-PERSONAL-HOW-TO.md`**.
 | `bash validate-p31-full.sh` | Extended **validate:full** scorecard (mesh + quantum egg + more) |
 | `npm run deploy:p31ca` | **p31ca** `predeploy` (verify) → `wrangler pages deploy` |
 | `npm run doctor` | Node, remotes, `gh`, Andromeda presence — when something’s weird |
+| `npm run p31:voice` or `p31 voice` | Tier **B/C** public copy guardrails (`verify:public-voice`) — run after hub lobby / static HTML copy edits |
+| `npm run p31:delta-lang` or `p31 delta-lang` | DELTA lexicon + glossary (+ hub JSON mirror when `p31ca` exists) |
 | `npm run command-center` | Local **3131** UI — **`P31_CMD_CENTER_LAN=1`** for Chromebook LAN / iPhone (see top of file) |
 
 **npm run startup** echoes the **first ~54 lines** here (Chromebook + iPhone paths included).

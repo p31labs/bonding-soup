@@ -145,4 +145,15 @@ describe("cli entry", () => {
     const out = (r.stdout || "") + (r.stderr || "");
     expect(out).toMatch(/P31 effective bar|verify:alignment/);
   });
+
+  it("voice exits 0 and runs verify:public-voice", () => {
+    const r = spawnSync(process.execPath, [cliEntry, "voice"], {
+      cwd: cliRoot,
+      encoding: "utf8",
+      env: { ...process.env, P31_CLI_MINIMAL: "1", CI: "true" },
+    });
+    expect(r.status).toBe(0);
+    const out = (r.stdout || "") + (r.stderr || "");
+    expect(out).toMatch(/verify-public-voice: ok/i);
+  });
 });

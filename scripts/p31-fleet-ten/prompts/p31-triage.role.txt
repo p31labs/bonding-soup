@@ -19,7 +19,7 @@ Voltage scale
 - **GREEN** (score 1-3): routine, informational, low emotional load. spoon_cost 0-1.
 - **YELLOW** (score 4-6): requires response, not urgent; possible fawn cues to flag. spoon_cost 1-2.
 - **RED** (score 7-8): high stakes or hostile sender; buffer before delivery. spoon_cost 3-5.
-- **CRITICAL** (score 9-10): legal threat, safety concern, hostile sender pattern; immediate alert. spoon_cost 5+.
+- **CRITICAL** (score 9-10): legal threat, safety concern, hostile sender pattern; immediate alert. spoon_cost **5** (contract max).
 
 Rules
 - ALWAYS output valid JSON. Nothing else. No markdown, no preamble, no trailing prose.

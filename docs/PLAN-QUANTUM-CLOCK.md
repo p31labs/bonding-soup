@@ -197,4 +197,4 @@ optional global strip      future Worker push, operator shift
 3. **Wire** one Cuckoo consumer in `landing-cockpit.ts` (telemetry tick).
 4. **Revisit** this doc **Status** and **Q4** public route only if a **hub** card is desired.
 
-**Related docs:** `docs/SIC-POVM-K4-ARCHITECTURE.md`, `docs/EGG-HUNT.md`, `docs/ETHICAL-STYLE-MAP.md`, `P31-ROOT-MAP.md` (K₄ + hub). **Spike (geometry, not time):** `spikes/d20-geodesic-icosahedron/` (d20 faces vs Larmor are **orthogonal**; do not conflate in UI without explicit copy).
+**Related docs:** `docs/SIC-POVM-K4-ARCHITECTURE.md`, `docs/SIC-POVM-MATHEMATICAL-APPENDIX.md`, `docs/EGG-HUNT.md`, `docs/ETHICAL-STYLE-MAP.md`, `P31-ROOT-MAP.md` (K₄ + hub). **Spike (geometry, not time):** `spikes/d20-geodesic-icosahedron/` (d20 faces vs Larmor are **orthogonal**; do not conflate in UI without explicit copy).

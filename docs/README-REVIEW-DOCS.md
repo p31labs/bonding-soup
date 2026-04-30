@@ -25,7 +25,7 @@ Read in this order:
 - **`P31-ROOT-MAP.md`** — top-level directory guide for the multi-root workspace.
 - **`docs/doc-library/`** (`index.html` + generated `index.json` + `doc-search-worker.js` + `vendor/`) — full-text search over home markdown; **`docs/PLAN-DOCUMENT-LIBRARY.md`**; built with **`npm run build:doc-index`**, verified on **`npm run verify`**; headless proof **`npm run test:doc-library:e2e`**; same e2e runs in **`p31:all`** unless **`--skip-e2e`**.
 - **`AGENTS.md`** — agent rules, tag-out system, WCD discipline.
-- **`SIC-POVM-K4-ARCHITECTURE.md`**, **`AGENTIC-VIBE-INFRASTRUCTURE.md`**, **`PLAN-KIDS-VIBE-CODING.md`**, **`EGG-HUNT.md`** — compact architecture / vibe+agentic / youth / egg-hunt+Larmor (machine: `egg-hunt-manifest.json` + `verify:egg-hunt`).
+- **`SIC-POVM-K4-ARCHITECTURE.md`**, **`SIC-POVM-MATHEMATICAL-APPENDIX.md`** (QI definitions, d = 2 Bloch tetrahedron), **`AGENTIC-VIBE-INFRASTRUCTURE.md`**, **`PLAN-KIDS-VIBE-CODING.md`**, **`EGG-HUNT.md`** — compact architecture / vibe+agentic / youth / egg-hunt+Larmor (machine: `egg-hunt-manifest.json` + `verify:egg-hunt`).
 - **`andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json`** — canonical machine-readable registry.
 - **`docs/GEODESIC-CAMPAIGN.md`** — p31ca `geodesic.html`: progressive 5-track coach, tool unlocks, K4 live Durable Object room; `routes.geodesic` in ground-truth.
 - **`docs/CANONICAL-NUMBERING.md`** — **normative** version namespaces (GT, CogPass edition, WCD, papers, etc.).

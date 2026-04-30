@@ -67,6 +67,8 @@
 
 For a **qubit**, a SIC-POVM has **four** outcomes; pairwise overlaps are **1/3**. In this repo, use that as **metaphor only**: *balanced coupling between the four sections above*—not a numerical constant in your crypto or haptics.
 
+**Rigorous treatment (definitions, Bloch-sphere tetrahedron, IC vs metaphor contract):** [SIC-POVM-MATHEMATICAL-APPENDIX.md](SIC-POVM-MATHEMATICAL-APPENDIX.md).
+
 ---
 
 ## Repo touchpoints (implementations to read)
@@ -75,6 +77,7 @@ For a **qubit**, a SIC-POVM has **four** outcomes; pairwise overlaps are **1/3**
 |------|--------|
 | Larmor + constants | `p31-constants.json` → `apply:constants` / `verify:constants` |
 | Egg + metaphor | `docs/EGG-HUNT.md`, `docs/egg-hunt-manifest.json` |
+| SIC math (rigorous appendix) | `docs/SIC-POVM-MATHEMATICAL-APPENDIX.md` |
 | SOULSAFE four-effect fusion | `docs/SOULSAFE-TETRA-SPEC.md`, `andromeda/04_SOFTWARE/k4-personal` |
 | Hub / edge products | `andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json`, `AGENTS.md` |
 

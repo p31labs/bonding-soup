@@ -2,6 +2,11 @@
 andromeda/
 phosphorus31.org/
 
+# OS / browser drops at repo root (multi-root home; never commit)
+/Desktop/
+/Downloads/
+/Screenshot*.png
+
 # Dependencies & artifacts
 node_modules/
 **/node_modules/

@@ -22,7 +22,7 @@ function httpGet(url) {
         res.on("data", (c) => {
           body += c;
         });
-        res.on("end", () => resolve({ status: res.statusCode || 0, body }));
+        res.on("end", () => resolve({ status: res.statusCode || 0, body, headers: res.headers || {} }));
       })
       .on("error", reject);
   });
@@ -76,6 +76,9 @@ async function main() {
     if (!mainPage.body.includes('id="cc-simplex-strip"')) {
       throw new Error("command-center smoke: missing #cc-simplex-strip");
     }
+    if (!mainPage.body.includes('id="cc-ecosystem-strip"')) {
+      throw new Error("command-center smoke: missing #cc-ecosystem-strip");
+    }
     if (!mainPage.body.includes('id="cc-hotkeys"')) {
       throw new Error("command-center smoke: missing #cc-hotkeys");
     }
@@ -111,6 +114,39 @@ async function main() {
     if (!hj.ok || hj.version !== "2.1.0") {
       throw new Error("command-center smoke: health payload shape");
     }
+    const nos = String(health.headers["x-content-type-options"] || "").toLowerCase();
+    if (nos !== "nosniff") {
+      throw new Error("command-center smoke: /api/health X-Content-Type-Options: nosniff");
+    }
+    const cs = await httpGet(`http://127.0.0.1:${port}/api/connection-summary`);
+    if (cs.status !== 200) {
+      throw new Error("command-center smoke: /api/connection-summary " + cs.status);
+    }
+    let csj;
+    try {
+      csj = JSON.parse(cs.body);
+    } catch {
+      throw new Error("command-center smoke: connection-summary not JSON");
+    }
+    if (csj.schema !== "p31.connectionSummary/1.0.1" || csj.name !== "CONNECTION") {
+      throw new Error("command-center smoke: connection summary shape");
+    }
+    if (typeof csj.glassByGroup !== "object" || csj.glassByGroup === null || Array.isArray(csj.glassByGroup)) {
+      throw new Error("command-center smoke: glassByGroup");
+    }
+    const gs = await httpGet(`http://127.0.0.1:${port}/api/glass-snapshot`);
+    if (gs.status !== 200) {
+      throw new Error("command-center smoke: /api/glass-snapshot " + gs.status);
+    }
+    let gsj;
+    try {
+      gsj = JSON.parse(gs.body);
+    } catch {
+      throw new Error("command-center smoke: glass-snapshot not JSON");
+    }
+    if (typeof gsj.ok !== "boolean") {
+      throw new Error("command-center smoke: glass-snapshot shape");
+    }
     const sx = await httpGet(`http://127.0.0.1:${port}/api/simplex-state`);
     if (sx.status !== 200) {
       throw new Error("command-center smoke: /api/simplex-state " + sx.status);
@@ -123,6 +159,24 @@ async function main() {
     }
     if (typeof sxj.ok !== "boolean") {
       throw new Error("command-center smoke: simplex-state missing ok");
+    }
+    const desk = await httpGet(`http://127.0.0.1:${port}/desk`);
+    if (desk.status !== 200) {
+      throw new Error("command-center smoke: /desk " + desk.status);
+    }
+    if (!desk.body.includes('data-operator-desk="1"')) {
+      throw new Error("command-center smoke: operator desk marker");
+    }
+    if (!desk.body.includes("/assets/operator-desk.js")) {
+      throw new Error("command-center smoke: operator desk script ref");
+    }
+    const odCss = await httpGet(`http://127.0.0.1:${port}/assets/operator-desk.css`);
+    if (odCss.status !== 200) {
+      throw new Error("command-center smoke: operator-desk.css " + odCss.status);
+    }
+    const odJs = await httpGet(`http://127.0.0.1:${port}/assets/operator-desk.js`);
+    if (odJs.status !== 200) {
+      throw new Error("command-center smoke: operator-desk.js " + odJs.status);
     }
     const css = await httpGet(`http://127.0.0.1:${port}/assets/command-center.css`);
     if (css.status !== 200) {

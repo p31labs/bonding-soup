@@ -2,6 +2,8 @@
 
 `npm run demo` runs **Python** `http.server` with the **repository root** as the document root (so `soup.html`, `docs/`, `cognitive-passport/`, etc. resolve correctly). Implementation: **`scripts/demo-server.mjs`**.
 
+**Node-only (no Python):** `npm run server` — same repo root and **`P31_DEMO_PORT`** default **8080**; implementation **`scripts/p31-static-server.mjs`**.
+
 ## 1. Where the repo must live
 
 There is no magic path. Clone or copy the home repo wherever you want, for example:

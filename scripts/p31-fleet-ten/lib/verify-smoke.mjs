@@ -55,8 +55,8 @@ function validateTriageJson(obj) {
     return `score must be number 1-10 (got ${JSON.stringify(score)})`;
   }
   const spoon = obj.spoon_cost;
-  if (typeof spoon !== "number" || spoon < 0 || spoon > 10) {
-    return `spoon_cost must be number 0-10 (got ${JSON.stringify(spoon)})`;
+  if (typeof spoon !== "number" || spoon < 0 || spoon > 5 || !Number.isInteger(spoon)) {
+    return `spoon_cost must be integer 0-5 (got ${JSON.stringify(spoon)})`;
   }
   const action = obj.action;
   if (!["none", "respond", "buffer", "alert", "route_to_counsel"].includes(action)) {
@@ -64,6 +64,14 @@ function validateTriageJson(obj) {
   }
   if (typeof obj.summary !== "string" || !obj.summary.length) return "summary must be non-empty string";
   if (typeof obj.rationale !== "string" || !obj.rationale.length) return "rationale must be non-empty string";
+  if (!Array.isArray(obj.reasons)) return "reasons must be an array";
+  for (const r of obj.reasons) {
+    if (typeof r !== "string") return "reasons entries must be strings";
+  }
+  if (typeof obj.escalate !== "boolean") return "escalate must be boolean";
+  if (typeof obj.suggested_next !== "string" || !obj.suggested_next.length) {
+    return "suggested_next must be non-empty string";
+  }
   return null;
 }
 

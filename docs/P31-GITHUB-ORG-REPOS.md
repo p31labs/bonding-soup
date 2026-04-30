@@ -14,7 +14,11 @@ Copy files from **[`docs/github-org-bundle/`](github-org-bundle/)** into the org
 
 ### Automation (`gh` + local clone)
 
-1. One-time: `git clone https://github.com/p31labs/.github.git` (or your org’s profile-repo slug from **`p31-github.json`** → `orgDotGithubRepository`) into e.g. `~/p31-dotgithub`.
+**Fast path (bonding-soup root):** `npm run github:org:plan` (strict verify + clone **`p31labs/.github`** into **`.p31-work/dotgithub-sync`** if missing + dry-run metadata/sync). **Apply live:** `npm run github:org:apply -- --yes` (or **`P31_GITHUB_ORG_APPLY=1`**) — requires `gh auth login` (**repo** scope). CLI: **`npm run p31 -- github-org plan`** · **`apply --yes`**.
+
+**Manual path:**
+
+1. One-time clone (optional — **`npm run github:org:bootstrap`** does this): `git clone https://github.com/p31labs/.github.git` (slug from **`p31-github.json`** → `orgDotGithubRepository`) into e.g. **`.p31-work/dotgithub-sync`** or `~/p31-dotgithub`.
 2. **Dry run:** `npm run github:org:sync -- --repo-dir ~/p31-dotgithub --dry-run`
 3. **Commit + push map:** `npm run github:org:sync -- --repo-dir ~/p31-dotgithub --push`  
    Or set **`P31_GITHUB_ORG_REPO`** to that path and use **`P31_GITHUB_ORG_PUSH=1`**.
@@ -24,6 +28,12 @@ Copy files from **[`docs/github-org-bundle/`](github-org-bundle/)** into the org
 Override org/repo slug: **`P31_ORG_DOTGITHUB`** (for clone URLs in error text only today; the script reads **`orgDotGithubRepository`** from **`p31-github.json`**).
 
 **Note:** `repos-metadata.json` skips **`p31ca.org`** (archived repos reject API writes). Org profile lives in **`p31labs/.github`**, not a separate `p31labs/github` slug.
+
+### Next level (CI, validation, Actions)
+
+- **Ship bar:** **`npm run verify:github-org`** (also chained in root **`npm run verify`**) — validates **`repos-metadata.json`** (schema, duplicate names, description ≤350, GitHub topic rules). Set **`P31_GITHUB_ORG_STRICT_REPOS_MD=1`** locally to require every listed repo to appear in **`REPOS.md`**.
+- **Workflow:** **`.github/workflows/p31-github-org.yml`** — on PR/push (paths above) + weekly schedule: strict verify. **workflow_dispatch** can apply metadata and/or sync **`.github`** using repo secret **`P31_ORG_METADATA_TOKEN`** (see **[`github-org-bundle/README.md`](github-org-bundle/README.md)**).
+- **Command center:** buttons under **GitHub org (map + metadata)** (verify, metadata, sync+push when default clone exists).
 
 ---
 

@@ -327,14 +327,14 @@
     {
       "id": "p31-forge",
       "cwd": "andromeda/04_SOFTWARE/p31-forge",
-      "description": "p31-forge Worker",
-      "steps": [["npx", "wrangler", "deploy"]]
+      "description": "p31-forge Worker — npm install required for docx bundle",
+      "steps": [["npm", "install"], ["npx", "wrangler", "deploy"]]
     },
     {
       "id": "p31-hearing-ops",
       "cwd": "andromeda/04_SOFTWARE/p31-hearing-ops",
-      "description": "p31-hearing-ops — Vite → Cloudflare Pages (ops.p31ca.org project)",
-      "steps": [["npm", "run", "deploy"]]
+      "description": "p31-hearing-ops — Vite → Cloudflare Pages (ops.p31ca.org project); npm install for sharp/fonts prebuild",
+      "steps": [["npm", "install"], ["npm", "run", "deploy"]]
     },
     {
       "id": "p31-state",

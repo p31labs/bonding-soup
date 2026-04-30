@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
     <title>C.A.R.S.</title>
-    <meta name="description" content="C.A.R.S. — Collaborative Affective Realtime Sim: social molecules, co-presence, family rooms, P31 colors. bonding.p31ca.org/soup" />
+    <meta name="description" content="C.A.R.S. — shared molecule room for families. Your atoms, calm colors, no strangers. Live: bonding.p31ca.org/soup — in-app docs name ghost molecules from other players." />
     <meta property="og:title" content="C.A.R.S. · Collaborative Affective Realtime Sim" />
     <meta property="og:description" content="C.A.R.S. · Social molecules — clear colors, soft motion, together in one sim." />
     <meta name="theme-color" content="#0f1115" />
@@ -48,6 +48,7 @@
     <div id="container">
         <header class="soup-app-header soup-app-header--psych" aria-label="C.A.R.S. · Collaborative Affective Realtime Sim">
             <h1 class="soup-app-header__title"><abbr title="Collaborative Affective Realtime Sim">C.A.R.S.</abbr></h1>
+            <p class="p31-host-mind">Host mind: <strong>Builder · Parent</strong> — the hearth zoom; same night sky, warm altitude.</p>
             <p class="soup-app-header__welcome" id="soup-welcome">Same bowl, same room—<strong>your people first</strong>. Calm defaults, clear feedback, no stranger scoreboard.</p>
             <ul class="soup-psych-pillars" aria-label="What this interface optimizes for">
                 <li><span class="soup-psych-dot soup-psych-dot--calm" aria-hidden="true"></span> Calm (teal · safety)</li>
@@ -1041,9 +1042,24 @@
             const el = document.getElementById('p31-soup-starfield');
             if (!(el instanceof HTMLCanvasElement)) return;
             try {
+                const atm = await import('./design-assets/atmosphere/p31-atmosphere-client.js');
+                const resolved = await atm.resolveAtmosphere('soup');
+                atm.applyRampCssHints(document.documentElement, resolved);
+                const mode = atm.starfieldMountMode(resolved);
+                if (mode === 'none') {
+                    el.style.display = 'none';
+                    return;
+                }
+                if (mode === 'static') {
+                    const plate = await import('./design-assets/starfield/p31-starfield-static-plate.js');
+                    const preset = resolved ? atm.staticPlatePreset(resolved) : 'soup';
+                    plate.initStaticStarPlate(el, { preset });
+                    return;
+                }
                 const mod = await import('./design-assets/starfield/p31-starfield.js');
                 const { config, hints } = await mod.resolveStarfieldConfig();
-                const api = mod.initStarfield(el, config, { surface: 'soup', touchRipple: true });
+                const cfg = atm.mergeResolvedIntoStarfieldConfig(config, resolved);
+                const api = mod.initStarfield(el, cfg, { surface: 'soup', touchRipple: true });
                 api.ingestTouchHints(hints);
                 window.__p31SoupStarfield = api;
             } catch (e) {
@@ -1051,5 +1067,6 @@
             }
         })();
     </script>
+    <script src="cognitive-passport/lib/p31-return-ribbon.js" data-local-soup="soup.html" defer></script>
 </body>
 </html>

@@ -31,6 +31,7 @@ cp("p31-starfield.js", path.join("lib", "p31-starfield.js"));
 cp("p31-mesh-touches.js", path.join("lib", "p31-mesh-touches.js"));
 cp("p31-starfield.css", path.join("lib", "p31-starfield.css"));
 cp("p31-larmor-fields.css", path.join("lib", "p31-larmor-fields.css"));
+cp("p31-starfield-static-plate.js", path.join("lib", "p31-starfield-static-plate.js"));
 /** Demo sits next to module/css so `./p31-starfield.js` resolves on the hub. */
 cp("demo.html", path.join("lib", "starfield-demo.html"));
 

@@ -28,15 +28,31 @@ describe("p31-effective-bar", () => {
     expect(classifyVerifyStep("verify:delta-language", w).status).toBe("run");
   });
 
+  it("classifyVerifyStep marks public-voice as run", () => {
+    const w = buildWorkspaceProbe(root);
+    expect(classifyVerifyStep("verify:public-voice", w).status).toBe("run");
+  });
+
+  it("classifyVerifyStep marks atmosphere-ramp as run", () => {
+    const w = buildWorkspaceProbe(root);
+    expect(classifyVerifyStep("verify:atmosphere-ramp", w).status).toBe("run");
+  });
+
   it("buildEffectiveBarReport includes verify:runbooks in order", () => {
     const r = buildEffectiveBarReport(root, {});
     const names = r.verifySteps.map((s) => s.script);
     expect(names).toContain("verify:runbooks");
     expect(names).toContain("verify:delta-language");
+    expect(names).toContain("verify:public-voice");
+    expect(names).toContain("verify:atmosphere-ramp");
     const iPoets = names.indexOf("verify:poets-room");
     const iRun = names.indexOf("verify:runbooks");
     const iDelta = names.indexOf("verify:delta-language");
+    const iVoice = names.indexOf("verify:public-voice");
+    const iAtmo = names.indexOf("verify:atmosphere-ramp");
     expect(iRun).toBeGreaterThan(iPoets);
     expect(iDelta).toBeGreaterThan(iRun);
+    expect(iVoice).toBeGreaterThan(iDelta);
+    expect(iAtmo).toBeGreaterThan(iVoice);
   });
 });

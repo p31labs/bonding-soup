@@ -105,4 +105,44 @@ export function assertBootShape(b) {
       }
     }
   }
+
+  if (o.CONNECTION != null) {
+    if (typeof o.CONNECTION !== "object" || Array.isArray(o.CONNECTION)) {
+      throw new Error("boot: CONNECTION must be a non-array object if present");
+    }
+    const c = /** @type {Record<string, unknown>} */ (o.CONNECTION);
+    const needNum = ["deployablesCount", "glassProbesCount", "p31EnvCatalogEntries"];
+    for (const k of needNum) {
+      const v = c[k];
+      if (typeof v !== "number" || !Number.isFinite(v)) {
+        throw new Error(`boot: CONNECTION.${k} must be a finite number`);
+      }
+    }
+    if (c.glassByGroup != null) {
+      if (typeof c.glassByGroup !== "object" || Array.isArray(c.glassByGroup)) {
+        throw new Error("boot: CONNECTION.glassByGroup must be an object");
+      }
+      for (const [gk, gv] of Object.entries(c.glassByGroup)) {
+        if (typeof gk !== "string" || !gk.trim()) {
+          throw new Error("boot: CONNECTION.glassByGroup keys must be non-empty strings");
+        }
+        if (typeof gv !== "number" || !Number.isFinite(gv)) {
+          throw new Error(`boot: CONNECTION.glassByGroup[${gk}] must be a finite number`);
+        }
+      }
+    }
+    if (c.deployablePreview != null) {
+      if (!Array.isArray(c.deployablePreview)) {
+        throw new Error("boot: CONNECTION.deployablePreview must be an array if present");
+      }
+      if (c.deployablePreview.length > 24) {
+        throw new Error("boot: CONNECTION.deployablePreview too long (max 24)");
+      }
+      for (let i = 0; i < c.deployablePreview.length; i++) {
+        if (typeof c.deployablePreview[i] !== "string") {
+          throw new Error(`boot: CONNECTION.deployablePreview[${i}] must be a string`);
+        }
+      }
+    }
+  }
 }

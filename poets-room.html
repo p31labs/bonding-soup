@@ -306,6 +306,7 @@
       pointer-events: none;
     }
   </style>
+  <link rel="stylesheet" href="cognitive-passport/p31-style.css" />
   <link rel="stylesheet" href="design-assets/starfield/p31-starfield.css" />
   <link rel="stylesheet" href="design-assets/starfield/p31-larmor-fields.css" />
 </head>
@@ -313,6 +314,7 @@
   <canvas id="poets-starfield" class="p31-starfield-canvas" aria-hidden="true"></canvas>
   <a class="skip" href="#shelf-anchor">Skip to the shelf and writing space</a>
   <div class="layer-void">
+    <p class="p31-host-mind" style="position:relative;z-index:2;text-align:center;max-width:32rem;margin:0 auto 0.75rem;color:var(--p31-muted, rgba(232,230,227,0.5))">Host mind: <strong>Poet / Sun</strong> — the quiet band of the same night sky.</p>
     <blockquote class="daily-quote" id="daily-quote">
       <p id="quote-text"></p>
       <footer id="quote-attribution"></footer>
@@ -321,6 +323,9 @@
   </div>
 
   <div class="layer-deep" id="shelf-anchor">
+    <p class="p31-translate-bridge">
+      <a href="docs/physics-learn/index.html">Read this same sky as <strong>physics</strong> (measure &amp; proof) →</a>
+    </p>
     <p class="shelf-title">The shelf</p>
     <nav class="poets-tool-strip" aria-label="C.A.R.S. lab and mesh">
       <a href="soup.html">C.A.R.S.</a>
@@ -590,21 +595,35 @@
   </script>
   <script type="module">
     import { initStarfield, resolveStarfieldConfig } from "./design-assets/starfield/p31-starfield.js";
+    import * as atm from "./design-assets/atmosphere/p31-atmosphere-client.js";
 
     const cv = document.getElementById("poets-starfield");
     if (cv instanceof HTMLCanvasElement) {
-      const { config, hints } = await resolveStarfieldConfig();
-      const api = initStarfield(cv, config, { surface: "poets", poetsMode: true, touchRipple: false });
-      api.ingestTouchHints(hints);
-      function inferTone() {
-        const a = document.getElementById("quote-attribution")?.textContent || "";
-        if (/fuller/i.test(a)) return "fuller";
-        if (/S\.J\.|W\.J\.|Willow|Bash/i.test(a)) return "children";
-        return "operator";
+      const resolved = await atm.resolveAtmosphere("poets");
+      atm.applyRampCssHints(document.documentElement, resolved);
+      const mode = atm.starfieldMountMode(resolved);
+      if (mode === "none") {
+        cv.style.display = "none";
+      } else if (mode === "static") {
+        const plate = await import("./design-assets/starfield/p31-starfield-static-plate.js");
+        const preset = resolved ? atm.staticPlatePreset(resolved) : "hub";
+        plate.initStaticStarPlate(cv, { preset });
+      } else {
+        const { config, hints } = await resolveStarfieldConfig();
+        const cfg = atm.mergeResolvedIntoStarfieldConfig(config, resolved);
+        const api = initStarfield(cv, cfg, { surface: "poets", poetsMode: true, touchRipple: false });
+        api.ingestTouchHints(hints);
+        function inferTone() {
+          const a = document.getElementById("quote-attribution")?.textContent || "";
+          if (/fuller/i.test(a)) return "fuller";
+          if (/S\.J\.|W\.J\.|Willow|Bash/i.test(a)) return "children";
+          return "operator";
+        }
+        setInterval(() => api.setPoetsTone(inferTone()), 12000);
+        api.setPoetsTone(inferTone());
       }
-      setInterval(() => api.setPoetsTone(inferTone()), 12000);
-      api.setPoetsTone(inferTone());
     }
   </script>
+  <script src="cognitive-passport/lib/p31-return-ribbon.js" data-local-soup="soup.html" defer></script>
 </body>
 </html>

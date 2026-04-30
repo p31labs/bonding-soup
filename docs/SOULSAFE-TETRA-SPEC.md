@@ -2,7 +2,7 @@
 
 **Status:** v0.1 shipped in `k4-personal` (fusion path + audit).  
 **Schema:** `p31.soulsafeTetra/0.1.0`  
-**Canon:** SOULSAFE = high-reliability human–AI symbiosis (Zenodo XIX, Cognitive Passport); SIC-POVM metaphor = four rank-1 “effects” (specialists) fused into one coherent response.  
+**Canon:** SOULSAFE = high-reliability human–AI symbiosis (Zenodo XIX, Cognitive Passport); SIC-POVM metaphor = four rank-1 “effects” (specialists) fused into one coherent response. **Rigorous QI definitions (POVM, SIC, qubit overlaps):** **`docs/SIC-POVM-MATHEMATICAL-APPENDIX.md`**.  
 **See also (partitioned identity research):** `docs/CRYPTO-CONSCIOUSNESS-RESEARCH-HANDOFF.md`, **`docs/COGNITIVE-PASSPORT-AUDIENCE-MATRIX.md`** (export consent model).
 
 ## 1. Goals
@@ -103,6 +103,6 @@ Manifest: **`GET /agent/:userId/manifest`** → **`soulsafeTetra.retention`** ex
 
 - `docs/PERSONAL-TETRA-UNIFIED-WORKER.md` — single-worker personal tetra shell.
 - `docs/MESH-MAP-PERSONAL-START-PAGES.md` — isolation vs cage.
-- `docs/egg-hunt-manifest.json` — SIC-POVM / K₄ metaphor.
+- `docs/egg-hunt-manifest.json` — SIC-POVM / K₄ metaphor (narrative points at **`docs/SIC-POVM-MATHEMATICAL-APPENDIX.md`**).
 
 *Updated: 2026-04-26.*

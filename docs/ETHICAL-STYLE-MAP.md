@@ -60,6 +60,10 @@ Use **token variables** (`--p31-*`), not ad hoc hex, except a single documented 
 - **Anti-FOMO:** avoid “don’t miss,” “only today,” “epic,” “prove you’re a real fan,” “beat everyone.”
 - **Kids / household:** use initials **S.J.**, **W.J.** in public UI for children; not full names (see **`CLAUDE.md`** / **`.cursorrules`**).
 
+### 5a. Public-facing identity (**`docs/PUBLIC-VOICE.md`**)
+
+UI ethics here are necessary but not sufficient for **Tier A** surfaces (org site, grants, founder story). Read **`docs/PUBLIC-VOICE.md`**: **identity-first** framing (incongruence vs AI-smell), **honest AI-as-prosthetic disclosure**, avoid-list, hardware-store / local run-in tests, and **human-only** final pass for face copy. **Tier B/C** copy is additionally gated by **`npm run verify:public-voice`** (doc anchors + grep guardrails in **`docs/p31-public-voice-guardrails.json`**). **Tier A** narrative quality and pair check are still **not** automatable.
+
 ---
 
 ## 6. Rewards and feedback (ethical)
@@ -110,6 +114,6 @@ Style with attribute selectors in **`soup-quantum.css`**; extend in **that** fil
 - **`docs/ECOSYSTEM-PRODUCTION-11.md`** — fleet / glass ladder alignment
 - **`docs/AGENTIC-VIBE-INFRASTRUCTURE.md`** — agentic workflow + verify culture
 - **`docs/PLAN-KIDS-VIBE-CODING.md`** — local-first, youth-adjacent work
-- **`docs/SIC-POVM-K4-ARCHITECTURE.md`**, **`docs/EGG-HUNT.md`**, **`docs/SOULSAFE-TETRA-SPEC.md`** — mesh / product context
+- **`docs/SIC-POVM-K4-ARCHITECTURE.md`**, **`docs/SIC-POVM-MATHEMATICAL-APPENDIX.md`**, **`docs/EGG-HUNT.md`**, **`docs/SOULSAFE-TETRA-SPEC.md`** — mesh / product context
 - C.A.R.S. implementation: **`soup-quantum.css`** (ethical / co-presence comment blocks)
 - **Operator joy (CLI + control plane):** **`scripts/lib/operator-joy.mjs`** — **`npm run fun`** (**`--many`**, **`--bowl`**, **`--roll`**), **`npm run fun:bowl`**, **`npm run fun:shower`**, **`p31 fun`**, **`npm run doctor -- --fun`**, command-center **five-line** joy panel, plus optional tails on **`connection`**, **`setup`**, **`frictionless`**, **`office:ready`** (TTY; **`P31_SKIP_JOY=1`** or **`CI`** skips). Calm, canon-aware, **no** streaks / FOMO / stranger comparison (§2–6).

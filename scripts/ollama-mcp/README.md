@@ -27,6 +27,10 @@ Append this block to `~/.cursor/mcp.json` (create the file if missing):
 
 Restart Cursor. Tools `p31_mechanic`, `p31_firmware`, `p31_counsel`, `p31_narrator`, `p31_triage`, `p31_quick`, `p31_phos`, `p31_scribe`, `p31_oracle`, `p31_debrief` will appear in the agent tool list.
 
+## Operator desk + CONNECTION spine (browser, not MCP)
+
+The local command center (`npm run command-center`, default **:3131**) serves a read-first **operator desk** at **`/desk`** — same JSON as `GET /api/connection-summary`, `/api/health`, `/api/glass-snapshot`, SIMPLEX proxies. Use it for a calm status pane; keep **whitelisted runs** on **`/`** (automation gate). From a terminal: **`p31 open desk`** or **`npm run command-center:open-desk`**. This is separate from the Ollama MCP tools above (desk does not call Ollama).
+
 ## Tool contract
 
 Each tool accepts:

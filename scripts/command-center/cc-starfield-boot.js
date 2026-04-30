@@ -1,25 +1,30 @@
 /**
- * Command-center ambient starfield + pulse hook for completed actions.
+ * Command center — static star plate (same night sky, breaker-panel / precision mode).
+ * @see docs/P31-UNIVERSAL-UI-VISION.md + design-assets/atmosphere/p31-atmosphere-client.js
  */
 (async () => {
   const canvas = document.getElementById("cc-starfield");
   if (!(canvas instanceof HTMLCanvasElement)) return;
   try {
-    const mod = await import("/assets/p31-starfield.js");
-    /** Same-origin proxy → Worker `GET /api/state` (incl. public remembrance slice) when `P31_SIMPLEX_ORIGIN` is set; else Gray Rock defaults. */
-    const stateUrl =
-      typeof location !== "undefined" && location.origin
-        ? `${location.origin}/api/simplex-state`
-        : undefined;
-    const { config, hints } = await mod.resolveStarfieldConfig(stateUrl);
-    const api = mod.initStarfield(canvas, config, {
-      surface: "command-center",
-      touchRipple: true,
-      pulsePollUrl: `${location.origin}/api/mesh-pulse`,
-    });
-    api.ingestTouchHints(hints);
-    window.__p31StarfieldPulse = () => api.pulseCommit();
+    const atm = await import("/assets/atmosphere/p31-atmosphere-client.js");
+    const resolved = await atm.resolveAtmosphere("command-center");
+    if (atm.starfieldMountMode(resolved) === "none") {
+      canvas.style.opacity = "0";
+      window.__p31StarfieldPulse = function () {};
+      return;
+    }
+    const mod = await import("/assets/p31-starfield-static-plate.js");
+    const preset = resolved ? atm.staticPlatePreset(resolved) : "commandCenter";
+    mod.initStaticStarPlate(canvas, { preset });
   } catch {
-    /* Gray Rock */
+    try {
+      const mod = await import("/assets/p31-starfield-static-plate.js");
+      mod.initStaticStarPlate(canvas, { preset: "commandCenter" });
+    } catch {
+      /* Gray Rock */
+    }
   }
+  window.__p31StarfieldPulse = function () {
+    /* static plate: no-op pulse (commit feedback stays in UI) */
+  };
 })();

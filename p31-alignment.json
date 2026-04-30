@@ -59,6 +59,86 @@
       "role": "p31.envManifest/1.0.0 — catalog of P31_* env vars (names + semantics only); npm run verify:p31-env; npm run list:p31-env"
     },
     {
+      "id": "p31-contract-registry",
+      "path": "contracts/p31-contract-registry.json",
+      "role": "p31.contractRegistry/1.0.0 — JSON contract index derived from alignment sources; npm run build:contract-registry; verify:contract-registry; hub /contract-builder.html"
+    },
+    {
+      "id": "p31-chain-anchor",
+      "path": "p31-chain-anchor.json",
+      "role": "p31.chainAnchor/0.1.0 — EVM transparency anchor registry addresses + default manifest URLs; pairs with packages/p31-sovereign-chain; npm run verify:sovereign-chain"
+    },
+    {
+      "id": "p31-sovereign-layers",
+      "path": "p31-sovereign-layers.json",
+      "role": "p31.sovereignLayers/0.1.0 — full decentralized stack index (L1–L12); npm run verify:sovereign-layers; human map docs/P31-SOVEREIGN-LAYERS.md"
+    },
+    {
+      "id": "p31-launch-readiness-config",
+      "path": "p31-launch-readiness-config.json",
+      "role": "p31.launchReadinessConfig/0.1.0 — ten-lane market launch audit config; npm run verify:launch-readiness-config; runner npm run launch:audit / launch:gate / launch:rehearsal"
+    },
+    {
+      "id": "p31-launch-checklist",
+      "path": "p31-launch-checklist.json",
+      "role": "p31.launchChecklist/0.1.0 — human-gate sign-off rows for launch; flip via npm run launch:check"
+    },
+    {
+      "id": "p31-reports-index",
+      "path": "docs/reports/index.json",
+      "role": "p31.reportsIndex/0.1.0 — committed metadata for operator reports (full bodies live in ~/.p31/reports/); rebuild via npm run reports:index; verify:reports-index"
+    },
+    {
+      "id": "p31-glass-box",
+      "path": "glass-box.html",
+      "role": "p31.glassBox/0.1.0 — public live transparency terminal; mirrors to andromeda/04_SOFTWARE/p31ca/public/glass-box.html via npm run build:glass-box; gate verify:glass-box (no secrets, structure check). Live at https://p31ca.org/glass-box · short /glass · /transparency. Reads docs/verify-pulse.json (real heartbeat) + docs/reports/promoted/index.json (published reports)."
+    },
+    {
+      "id": "p31-glass-box-widget",
+      "path": "glass-box-widget.html",
+      "role": "Iframe-friendly compact widget rendering verify-pulse + latest public reports. Same verify gate as glass-box (no secrets). Embed via <iframe src=\"/glass-box-widget.html\" width=\"540\" height=\"360\">."
+    },
+    {
+      "id": "p31-demos-index",
+      "path": "demos/index.html",
+      "role": "p31.demosIndex/0.1.0 — gallery + share-kit for the four mind-bending visualizations. Mirrors to p31ca/public/demos/index.html via npm run build:demos; verify:demos. Live at https://p31ca.org/demos-public · short /visuals."
+    },
+    {
+      "id": "p31-k4-mesh-demo",
+      "path": "demos/k4-mesh.html",
+      "role": "p31.k4MeshDemo/0.1.0 — Three.js K₄ tetrahedron family-mesh visualizer. CC-BY 4.0."
+    },
+    {
+      "id": "p31-alignment-graph-demo",
+      "path": "demos/alignment-graph.html",
+      "role": "p31.alignmentGraphDemo/0.1.0 — force-directed render of p31-alignment.json (sources × derivations). Reads ./p31-alignment.json relative; build:demos copies the registry alongside."
+    },
+    {
+      "id": "p31-larmor-pulse-demo",
+      "path": "demos/larmor-pulse.html",
+      "role": "p31.larmorPulseDemo/0.1.0 — visual circulation of the 863 Hz Larmor canon flowing into 40+ surfaces, pulsing at the constant itself (100× downsampled)."
+    },
+    {
+      "id": "p31-demos-social-captions",
+      "path": "demos/SOCIAL-CAPTIONS.md",
+      "role": "Share-kit (Bluesky / X / LinkedIn / Mastodon) for the four demos. Anti-FOMO voice; CC-BY 4.0; mirror via build:demos."
+    },
+    {
+      "id": "p31-deep-dive-doc",
+      "path": "docs/P31-DEEP-DIVE.md",
+      "role": "Curator's walk through the codebase highlighting the mind-bending primitives (K₄, ephemeralization, Larmor canon, sovereign layers, glass box, SMART suite, reports). Anchor doc for journalists, grants, future operators."
+    },
+    {
+      "id": "p31-verify-pulse",
+      "path": "docs/verify-pulse.json",
+      "role": "p31.verifyPulse/0.1.0 — committed heartbeat of last 20 successful root verify runs (ts, git head, durationMs, stepCount). Operator records via npm run pulse or npm run verify:pulse. verify:verify-pulse gates shape; mirrored to p31ca/public/verify-pulse.json."
+    },
+    {
+      "id": "p31-reports-promoted-index",
+      "path": "docs/reports/promoted/index.json",
+      "role": "p31.reportsPromoted/0.1.0 — generated index of published reports (markdowns the operator opted in via npm run reports:promote). Build via npm run build:reports-promoted; verify:reports-promoted gates shape + every entry's .md exists."
+    },
+    {
       "id": "p31-subscriptions",
       "path": "p31-subscriptions.json",
       "role": "p31.subscriptions/1.0.0 — canonical AI subscription stack (Opus + Gemini + Composer 2) + API budget; verify:subscriptions"
@@ -66,7 +146,12 @@
     {
       "id": "p31-production-readiness",
       "path": "p31-production-readiness.json",
-      "role": "p31.productionReadiness/1.0.0 — canonical PRS scoring matrix for all hub cards + key live Workers; verify:production-readiness"
+      "role": "p31.productionReadiness/1.0.0 — PRS scoring for hub cards + Workers; verify:production-readiness + verify:launch-lane-sync; launchGovernance enforces governed Workers + pages floor"
+    },
+    {
+      "id": "p31-launch-lane",
+      "path": "p31-launch-lane.json",
+      "role": "p31.launchLane/0.1.0 derived index for governed Workers + p31ca; npm run generate:launch-lane after PRS or fleet URL edits"
     },
     {
       "id": "cwp-p31-prod-equilibrium-wrapup-2026-04-28",
@@ -84,9 +169,69 @@
       "role": "Final handoff: mission system manifest, prep, assemble, definition of done; links P31-CREATE-CONNECT, fleet-portal, verify bar"
     },
     {
+      "id": "p31-market-launch-package-md",
+      "path": "docs/P31-MARKET-LAUNCH-PACKAGE.md",
+      "role": "Market launch + GTM spine — positioning, phased checklist, readiness lanes; indexes MVP inventory, PUBLIC-VOICE, ecosystem, ENTERPRISE-LAUNCH-PREP; §17 automation envelope (launch:auto, post-deploy:verify, p31-live-drift)"
+    },
+    {
+      "id": "p31-launch-auto-script",
+      "path": "scripts/p31-launch-auto.mjs",
+      "role": "Atomic pre-deploy auto-pilot — release:public + strict ecosystem-glass + launch readiness rehearsal in one command (npm run launch:auto)"
+    },
+    {
+      "id": "p31-post-deploy-verify-script",
+      "path": "scripts/p31-post-deploy-verify.mjs",
+      "role": "Post-deploy verify — wait for propagation then launch-smoke-net + strict ecosystem-glass + freshness probes; auto-runs in p31-autodeploy-hub.yml"
+    },
+    {
+      "id": "p31-live-drift-workflow",
+      "path": ".github/workflows/p31-live-drift.yml",
+      "role": "Daily scheduled read-only drift workflow — verify:ecosystem + launch-smoke-net + ecosystem-glass strict; uploads /tmp/p31_glass_report.json on red. Disable: P31_DISABLE_LIVE_DRIFT repo Variable"
+    },
+    {
+      "id": "p31-social-engine-verify-script",
+      "path": "scripts/verify-social-engine.mjs",
+      "role": "Verifier for the deployed p31-social-worker (andromeda/04_SOFTWARE/cloudflare-worker/social-drop-automation/worker.js) — voice guardrails, per-platform char limits (Twitter 280 etc.), numerical drift vs p31-constants.json bonding.testBaseline, allowlist parity. P31_SOCIAL_STRICT=1 escalates warns. Skip lanes via P31_SOCIAL_SKIP_*. Chained in root verify after verify:discord-bot."
+    },
+    {
+      "id": "p31-social-engine-cli-script",
+      "path": "scripts/social-engine-cli.mjs",
+      "role": "Read-only operator CLI — npm run social:health / status / waves / preflight; tries social.p31ca.org then workers.dev fallback. P31_SOCIAL_HOST override, P31_SOCIAL_FORCE_WORKERS_DEV=1 skip. Never triggers waves or broadcast."
+    },
+    {
+      "id": "p31-simulate-social-engine-script",
+      "path": "scripts/simulate-social-engine.mjs",
+      "role": "Render every WAVE_CONTENT entry from the social worker + 7-day schedule preview without touching any platform. Per-platform char checks (Twitter 280, Bluesky 300, Mastodon 500, LinkedIn 3000, Discord 4000, Ko-fi 1500), voice guardrail scan, manifest schema p31.socialEngineSimulation/1.0.0. Writes ~/.p31/simulations/social-<utc>/{manifest.json,preview.md}. P31_SIM_OUT shared output. npm run sim:social."
+    },
+    {
+      "id": "p31-simulate-launch-auto-script",
+      "path": "scripts/simulate-launch-auto.mjs",
+      "role": "Read-only preview of npm run launch:auto — prints chain of 7 steps with current preflight signals (git dirty/branch, last readiness/glass freshness, andromeda presence). Schema p31.launchAutoSimulation/1.0.0. Exits 1 if blockers, 0 otherwise (operational signal, not test failure). npm run sim:launch."
+    },
+    {
+      "id": "p31-simulate-all-script",
+      "path": "scripts/p31-simulate-all.mjs",
+      "role": "Omnibus simulator — chains social-engine + launch-auto + doc-library hub + delta-language hub + reports steady-week into ~/.p31/simulations/all-<utc>/manifest.json (schema p31.simulationsAll/1.0.0). --skip-reports / --skip-doc / --skip-delta / --json flags. Failures = lane exit non-zero. npm run sim:all."
+    },
+    {
+      "id": "p31-sync-all-script",
+      "path": "scripts/p31-sync-all.mjs",
+      "role": "Idempotent omnibus sync — apply:constants, build:contract-registry, sync:chain-anchor, build:fleet-portal, sync:live-fleet, build:doc-index, sync:doc-library, sync:delta-language, sync:atmosphere(+hub-routes), sync:passport, sync:discord-bot-swarm, sync:p31-starfield. Respects per-lane skip flags + --no-build. Writes manifest schema p31.syncAll/1.0.0 + git-dirty delta. P31_SYNC_ALL_DRY=1 echo-only. npm run sync:all."
+    },
+    {
+      "id": "p31-verify-simulations-script",
+      "path": "scripts/verify-simulations.mjs",
+      "role": "Static gate for the simulation/sync omnibus surface — required scripts present, npm wirings exist (sim:social/launch/all, sync:all, verify:simulations, test:simulations), simulate-social-engine produces zero char-limit failures, simulate-launch-auto returns valid p31.launchAutoSimulation manifest. Chained in root verify after verify:social-engine. npm run verify:simulations."
+    },
+    {
       "id": "p31-design-doctrine-md",
       "path": "docs/P31-DESIGN-DOCTRINE.md",
       "role": "Normative Gray Rock → Alive layouts and component patterns; pairs with canon-to-style-css + emitDesignDoctrineBlock"
+    },
+    {
+      "id": "p31-quantum-material-u-md",
+      "path": "docs/P31-QUANTUM-MATERIAL-U.md",
+      "role": "P31 Quantum Material U — additive Material 3 grammar (tonal scale, elevation, state layers, shape, motion budgets, .p31-q-* components) refracted through K\u2084 anchors; pairs canon.quantum block + emitQuantumMaterialUBlock; verifier verify:quantum-material-u"
     },
     {
       "id": "p31-universal-ui-vision-md",
@@ -114,9 +259,141 @@
       "role": "p31.publicVoiceGuardrails/1.0.0 — watched paths + regex guardrails for verify:public-voice (pairs docs/PUBLIC-VOICE.md)"
     },
     {
+      "id": "probe-public-sanitization-script",
+      "path": "scripts/probe-public-sanitization.mjs",
+      "role": "Read-only market-readiness scanner: walks public HTML/Astro/MD for avoid-list voice, AI clichés, leaked private strings (operator full names, known credential shapes), stale review markers, and rough-edge URLs; emits Tier A/B/C structured report; --strict exits non-zero on any Tier-A finding. Wired into root verify as verify:public-sanitization."
+    },
+    {
+      "id": "p31-market-readiness-sweep-md",
+      "path": "docs/MARKET-READINESS-SWEEP.md",
+      "role": "Operator-readable summary of the 2026-04-30 public-release sanitization sweep: probe scope, tiered findings, applied edits, accepted residuals; pairs probe-public-sanitization with the human-decided narrative changes."
+    },
+    {
       "id": "p31-phos-play-session-bridge-md",
       "path": "docs/P31-PHOS-PLAY-SESSION-BRIDGE.md",
       "role": "Normative garden_state.play_session (Pollination Courier) + Phos prompt/handler pairing; verify:phos-play-session-bridge"
+    },
+    {
+      "id": "p31ca-verify-delta-hiring-script",
+      "path": "andromeda/04_SOFTWARE/p31ca/scripts/verify-delta-hiring.mjs",
+      "optional": true,
+      "role": "Hub production gate for mirrored Vite SPA at public/delta-hiring/; npm run verify:delta-hiring (p31ca prebuild + home verify-p31ca-contracts)"
+    },
+    {
+      "id": "p31-quantum-deck-package",
+      "path": "packages/quantum-deck/package.json",
+      "role": "@p31/quantum-deck — standard deck, Web Crypto shuffle, saved-game schema stub; verify:quantum-deck"
+    },
+    {
+      "id": "p31-quantum-deck-save-schema",
+      "path": "packages/quantum-deck/schema/quantum-deck-save.schema.json",
+      "role": "p31.quantumDeckSave/0.1.0 JSON Schema envelope (opaque state until rules engine ships)"
+    },
+    {
+      "id": "p31-k4-agent-hub-manifest",
+      "path": "p31-k4-agent-hub.json",
+      "role": "p31.k4AgentHub/1.0.0 — K₄ agent worker tetrahedron canon (4 vertices, 6 edges, dock protocol, skill registry); source for packages/k4-agent-hub/, agents.html, verify:k4-agent-hub"
+    },
+    {
+      "id": "p31-k4-agent-hub-spec",
+      "path": "docs/P31-K4-AGENT-HUBS.md",
+      "role": "Operator-readable spec for the K₄ agent hub tetrahedron and the K₄,₄ bipartite cover with the personal tetra"
+    },
+    {
+      "id": "p31-k4-agent-hub-package",
+      "path": "packages/k4-agent-hub/package.json",
+      "role": "@p31/k4-agent-hub — Cloudflare Worker hosting four agent hub Durable Objects (FORGE/COUNSEL/SCHOLAR/SCRIBE); verify:k4-agent-hub + test:k4-agent-hub"
+    },
+    {
+      "id": "p31-k4-agent-hub-wrangler",
+      "path": "packages/k4-agent-hub/wrangler.toml",
+      "role": "Wrangler config — declares 4 DO classes (ForgeHub/CounselHub/ScholarHub/ScribeHub), KV K4_AGENT_HUB, session TTL"
+    },
+    {
+      "id": "p31-k4-agent-hub-topology-js",
+      "path": "packages/k4-agent-hub/src/topology.js",
+      "role": "Runtime view of the K₄ agent hub topology (mirrors p31-k4-agent-hub.json); validateTopology() asserts the K₄ invariant at module load"
+    },
+    {
+      "id": "p31-k4-agent-hub-static",
+      "path": "agents.html",
+      "role": "Public face of the K₄ agent hub tetrahedron — Quantum Material U cards + Three.js K₄,₄,₄ triadic visualization + signed-dock curl + federation panel; mirrors to p31ca/public/agents.html"
+    },
+    {
+      "id": "p31-k4-agent-hub-static-mirror",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/agents.html",
+      "optional": true,
+      "role": "p31ca hub mirror of agents.html — verified by verify:k4-agent-hub when present (skips on partial clone where andromeda/ is excluded)"
+    },
+    {
+      "id": "p31-k4-agent-hub-crypto",
+      "path": "packages/k4-agent-hub/src/crypto.js",
+      "role": "Ed25519 sign/verify + canonical envelope helpers for signed dock and signed call envelopes (v1.1.0)"
+    },
+    {
+      "id": "p31-k4-agent-hub-dispatcher",
+      "path": "packages/k4-agent-hub/src/dispatcher.js",
+      "role": "Skill dispatcher — local Ollama HTTP route via OLLAMA_BASE_URL; structured-echo fallback (v1.1.0)"
+    },
+    {
+      "id": "p31-k4-agent-hub-smoke",
+      "path": "scripts/k4-agent-hub-smoke.mjs",
+      "role": "Smoke runner — exercises manifest + signed dock + call + cross-edge + metrics + topology + federation against a running hub; npm run k4-agent-hub:smoke"
+    },
+    {
+      "id": "p31-k4-agent-hub-client-package",
+      "path": "packages/k4-agent-hub-client/package.json",
+      "role": "@p31/k4-agent-hub-client — operator-side client (Ed25519 keypair, signed dock + per-call envelope, dock/call/cross/topology/federation methods); pairs with packages/k4-agent-hub/"
+    },
+    {
+      "id": "p31-k4-agent-hub-client-index",
+      "path": "packages/k4-agent-hub-client/src/index.mjs",
+      "role": "K4AgentHubClient class — connect(), dock(), call(), cross(), topology(), federation(), registerAsPeer()"
+    },
+    {
+      "id": "p31-k4-agent-hub-client-envelope",
+      "path": "packages/k4-agent-hub-client/src/envelope.mjs",
+      "role": "Canonical envelope helpers (canonicalDockString, canonicalCallString, stableStringify, b64u) — must stay byte-identical with packages/k4-agent-hub/src/crypto.js"
+    },
+    {
+      "id": "p31-k4-agent-hub-client-keypair",
+      "path": "packages/k4-agent-hub-client/src/keypair.mjs",
+      "role": "Ed25519 keypair load/save — defaults to ~/.p31/agent-hub-key.json (0600, gitignored via .p31/); ensureKeyPair() generates on first run"
+    },
+    {
+      "id": "p31-sync-agents-script",
+      "path": "scripts/sync-agents-to-p31ca.mjs",
+      "role": "Mirror agents.html home → p31ca/public/agents.html with verify-after-write; npm run sync:agents (--check for CI parity)"
+    },
+    {
+      "id": "p31-cli-agent-hub",
+      "path": "scripts/cli/agent-hub.mjs",
+      "role": "p31 CLI subcommand — keypair / manifest / topology / federation / dock / call / cross; default base from P31_K4_AGENT_HUB_BASE"
+    },
+    {
+      "id": "p31-cwp-k4-agent-hub",
+      "path": "docs/CWP-K4-AGENT-HUB.md",
+      "role": "Controlled work package — v1.1.0 architecture, public API contract, deployment recipe, follow-up CWPs (simplex-lane wire / hub-card promotion / federation P2P / anchor pact / ws fan-out / family-cage wire)"
+    },
+    {
+      "id": "p31-k4-agent-hub-verify",
+      "path": "scripts/verify-k4-agent-hub.mjs",
+      "role": "K₄ agent hub parity gate — manifest + worker + static page + crypto + dispatcher + smoke + p31ca mirror invariants; npm run verify:k4-agent-hub"
+    },
+    {
+      "id": "sync-atmosphere-hub-routes-script",
+      "path": "scripts/sync-atmosphere-hub-routes.mjs",
+      "role": "Merge hub-app-ids into docs/p31-atmosphere-routes.json — runs at verify:atmosphere-ramp prelude; npm run sync:atmosphere-hub-routes"
+    },
+    {
+      "id": "plan-quantum-card-suite-md",
+      "path": "docs/PLAN-QUANTUM-CARD-SUITE.md",
+      "role": "Hub card suite WBS + ecosystem equilibrium rollout; pairs verify:quantum-deck + grandfather boot"
+    },
+    {
+      "id": "p31-static-product-shell-snippet",
+      "path": "design-assets/templates/p31-static-product-shell-snippet.html",
+      "role": "Scaffold for new p31ca public/*.html — p31-style + grandfather quantum boot + ribbon"
     },
     {
       "id": "p31-atmosphere-ramp-json",
@@ -506,6 +783,22 @@
       "note": "Grep guardrails + required doc anchors do not judge Tier A narrative quality; pair check remains mandatory for face/fundraising"
     },
     {
+      "id": "public-sanitization-sweep",
+      "from": [
+        "probe-public-sanitization-script",
+        "p31-public-voice-guardrails-json",
+        "p31-market-readiness-sweep-md"
+      ],
+      "to": [
+        "(home + p31ca + phosphorus31 public HTML)",
+        "(docs/*.md operator-shareable canon)",
+        "(scripts/*.mjs build chrome)"
+      ],
+      "apply": "Run npm run probe:public-sanitization for the human-readable Tier A/B/C report; npm run verify:public-sanitization (--strict) exits non-zero on any Tier-A finding and is part of root verify",
+      "verify": "npm run verify:public-sanitization",
+      "note": "Complements verify:public-voice (which gates the 10 watched files). Sweeps a wider 127-file surface for credential leaks, operator-name leaks, AI clichés, and stale review markers. Tier-A leaks are release blockers."
+    },
+    {
       "id": "phos-play-session-garden-handoff",
       "from": [
         "p31-phos-play-session-bridge-md"
@@ -544,14 +837,18 @@
         "p31-production-readiness.json",
         "p31-live-fleet.json",
         "p31-ecosystem.json",
-        "andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs"
+        "andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs",
+        "scripts/verify-production-readiness.mjs",
+        "scripts/apply-prs-launch-governance.mjs",
+        "scripts/verify-launch-lane-sync.mjs",
+        "scripts/lib/build-p31-launch-lane.mjs"
       ],
       "to": [
-        "(verify only)"
+        "p31-launch-lane.json — derived via npm run generate:launch-lane"
       ],
-      "apply": "Update p31-production-readiness.json when shipping or hardening a product. Every hub card id and every liveFleet.workersVerified id must have a row; scores must stay 0–10 per dimension.",
-      "verify": "npm run verify:production-readiness",
-      "note": "Locks a single production-readiness rubric to canonical sources (hub card ids + live fleet). Prevents drift and forces remaining steps to stay explicit."
+      "apply": "Update p31-production-readiness.json when shipping or hardening a product. Every hub card id and every liveFleet.workersVerified id must have a row; scores must stay 0–10 per dimension. Governance: all worker rows + governed pages ids (launchGovernance) must meet minGovernedScore and per-dimension floor. Re-run scripts/apply-prs-launch-governance.mjs when changing thresholds; npm run generate:launch-lane after PRS or fleet churn for machine-readable lane index.",
+      "verify": "npm run verify:production-readiness && npm run verify:launch-lane-sync",
+      "note": "Catalog hub cards stay outside governed gate until promoted individually."
     },
     {
       "id": "simplex-v7-worker-suite",
@@ -645,9 +942,23 @@
         "andromeda/04_SOFTWARE/p31ca/public/fleet-agents.html",
         "andromeda/04_SOFTWARE/p31ca/public/agent/*/index.html"
       ],
-      "apply": "Author p31-live-fleet.json at P31 home root; polish copies → p31ca/public/p31-live-fleet.json; then from p31ca npm run build:fleet-entities — or rely on hub prebuild. Supplemental Cortex/Discord roster: SUPPLEMENT_ENTITIES in build-fleet-entities.mjs.",
-      "verify": "npm run verify:p31ca-contracts (includes build:fleet-entities + verify:fleet-entities + verify:ground-truth + verify:worker-spa-launch before education/economy) or from p31ca npm run verify:fleet-entities alone",
+      "apply": "Single write: home p31-live-fleet.json. Heal hub: npm run sync:live-fleet:p31ca (or npm run polish). Commit Andromeda paths listed in scripts/lib/live-fleet-hub-mirror-pathspecs.mjs. Supplemental Cortex/Discord roster: SUPPLEMENT_ENTITIES in build-fleet-entities.mjs.",
+      "verify": "npm run verify:live-fleet:p31ca-mirror (home vs hub mirror + entities) then verify:p31ca-contracts; hub prebuild verify-live-fleet-mesh locks mesh block to public/p31-mesh-constants.json",
       "note": "Names: Fleet map = live-fleet-demo + raw p31.liveFleet bundle; Fleet portal = build-fleet-portal URL index; Fleet agents room = /fleet-agents.html + entities JSON + per-slug /agent/<slug>/ — no synonym mixing."
+    },
+    {
+      "id": "live-fleet-p31ca-public-mirror",
+      "from": [
+        "p31-live-fleet.json"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/p31-live-fleet.json",
+        "andromeda/04_SOFTWARE/p31ca/public/p31-fleet-entities.json",
+        "andromeda/04_SOFTWARE/p31ca/public/agent/"
+      ],
+      "apply": "npm run sync:live-fleet:p31ca after any edit to home p31-live-fleet.json; commit in andromeda before push. Bypass only for local triage: P31_SKIP_LIVE_FLEET_MIRROR=1.",
+      "verify": "npm run verify:live-fleet:p31ca-mirror",
+      "note": "Prevents hub:ci verify-live-fleet-mesh failures (mesh URL drift vs apply:constants). Canonical file is always P31 home root p31-live-fleet.json."
     },
     {
       "id": "constants-to-ground-truth-numbering",
@@ -664,7 +975,8 @@
     {
       "id": "canon-to-style-css",
       "from": [
-        "andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json"
+        "andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json",
+        "docs/P31-QUANTUM-MATERIAL-U.md"
       ],
       "to": [
         "cognitive-passport/p31-style.css",
@@ -672,8 +984,8 @@
         "andromeda/04_SOFTWARE/design-tokens/DESIGN-TOKENS-REFERENCE.md"
       ],
       "apply": "npm run apply:p31-style",
-      "verify": "npm run verify:p31-style",
-      "note": "Passport and p31ca public CSS must be identical after apply; design-tokens/generate-reference.mjs emits DESIGN-TOKENS-REFERENCE.md (also npm run generate:design-token-docs)"
+      "verify": "npm run verify:p31-style && npm run verify:quantum-material-u",
+      "note": "Passport and p31ca public CSS must be identical after apply; design-tokens/generate-reference.mjs emits DESIGN-TOKENS-REFERENCE.md (also npm run generate:design-token-docs). canon.quantum block (v1.2.0+) drives emitQuantumMaterialUBlock — additive Material U layer (.p31-q-*) verified by verify:quantum-material-u; see docs/P31-QUANTUM-MATERIAL-U.md."
     },
     {
       "id": "design-doctrine-to-style-css",
@@ -1138,6 +1450,23 @@
       "note": "Forge/Ko-fi load Tailwind/Google Fonts from CDN"
     },
     {
+      "id": "hub-atmosphere-registry-equilibrium",
+      "from": [
+        "andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs",
+        "scripts/sync-atmosphere-hub-routes.mjs",
+        "docs/p31-atmosphere-routes.json",
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-quantum-grandfather-boot.mjs",
+        "andromeda/04_SOFTWARE/p31ca/src/layouts/BaseLayout.astro"
+      ],
+      "to": [
+        "design-assets/atmosphere/p31-atmosphere-routes.json",
+        "andromeda/04_SOFTWARE/p31ca/public/lib/atmosphere/p31-atmosphere-routes.json"
+      ],
+      "apply": "Add hub card id → run verify:atmosphere-ramp (auto sync) or npm run sync:atmosphere-hub-routes + npm run sync:atmosphere. Wire static pages via surfaceId lookup + optional bootAtmosphere*; grandfather boot on S1 static + BaseLayout.",
+      "verify": "npm run verify:atmosphere-ramp && npm run verify:quantum-clock",
+      "note": "andromeda paths optional in CI partial clone — full checkout required for sync. derivation lists canonical paths."
+    },
+    {
       "id": "production-state-2026-04-28",
       "from": [
         "docs/PRODUCTION-STATE-2026-04-28.md"
@@ -1146,6 +1475,67 @@
       "apply": "Human-authored production snapshot. Update on next tagged release.",
       "verify": "git tag -l production-2026-04-28 (bonding-soup); same tag name on andromeda for paired hub commits",
       "note": "Numbers and gate outputs recorded in-doc; reproducibility via checkout + npm run verify / p31:all"
+    },
+    {
+      "id": "quantum-deck-core-to-hub-suite",
+      "from": [
+        "packages/quantum-deck/package.json",
+        "packages/quantum-deck/src/deck.mjs",
+        "packages/quantum-deck/schema/quantum-deck-save.schema.json",
+        "docs/PLAN-QUANTUM-CARD-SUITE.md"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/quantum-deck.html",
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-quantum-deck-core.mjs",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json",
+        "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs",
+        "andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs",
+        "andromeda/04_SOFTWARE/p31ca/public/_redirects"
+      ],
+      "apply": "Bundle or import @p31/quantum-deck in hub static suite; extend schema when Klondike/rules persistence lands; add hub registry id + hub-app-ids per P31-HUB-CARD-ECOSYSTEM.md",
+      "verify": "npm run verify:quantum-deck; future: Playwright smoke + verify:public-app-shell",
+      "note": "Optional target path is future; CI uses optional andromeda paths elsewhere. RNG disclosure field mirrors magic-crystal posture. Avoid product name tetra-hub (reserved for mesh aggregator Worker)."
+    },
+    {
+      "id": "k4-agent-hub-canon-to-worker-and-static",
+      "from": [
+        "p31-k4-agent-hub.json",
+        "docs/P31-K4-AGENT-HUBS.md"
+      ],
+      "to": [
+        "packages/k4-agent-hub/src/topology.js",
+        "packages/k4-agent-hub/src/index.js",
+        "packages/k4-agent-hub/src/hub-base.js",
+        "packages/k4-agent-hub/src/hubs.js",
+        "packages/k4-agent-hub/src/dock-protocol.js",
+        "packages/k4-agent-hub/src/crypto.js",
+        "packages/k4-agent-hub/src/dispatcher.js",
+        "packages/k4-agent-hub/wrangler.toml",
+        "packages/k4-agent-hub-client/src/index.mjs",
+        "packages/k4-agent-hub-client/src/envelope.mjs",
+        "packages/k4-agent-hub-client/src/keypair.mjs",
+        "agents.html",
+        "andromeda/04_SOFTWARE/p31ca/public/agents.html",
+        "scripts/k4-agent-hub-smoke.mjs",
+        "scripts/sync-agents-to-p31ca.mjs",
+        "scripts/cli/agent-hub.mjs"
+      ],
+      "apply": "Edit p31-k4-agent-hub.json (the canon manifest), then mirror vertex ids / personal-dock pairings / skill registry into src/topology.js, declare DO bindings in wrangler.toml, and ensure agents.html references the four hub ids + family triadic cover + federation panel. The Worker validates the K₄ invariant at module load via validateTopology(). After agents.html edits, copy to andromeda/04_SOFTWARE/p31ca/public/agents.html (manual mirror until sync:agents lands).",
+      "verify": "npm run verify:k4-agent-hub (manifest + wrangler + topology.js + crypto + dispatcher + smoke + agents.html + p31ca mirror parity); npm run test:k4-agent-hub (K₄ invariant + skill registry + family triadic cover + Ed25519 sign/verify unit tests); npm run k4-agent-hub:smoke against a running hub (signed dock, signed call envelope, cross-edge, federation)",
+      "note": "v1.1.0: signed Ed25519 dock + per-call envelope, K₄,₄,₄ family triadic cover (will/sj/wj/christyn), federation peer registry, real Ollama dispatcher (env OLLAMA_BASE_URL) with structured-echo fallback. Personal-side counterpart: andromeda/04_SOFTWARE/k4-personal/src/personal-tetra.js (p31.personalTetra/1.0.0). Bipartite K₄,₄ cover: structure↔forge, connection↔counsel, rhythm↔scholar, creation↔scribe. Triadic K₄,₄,₄ cover: family vertex → personal dock → guardian agent."
+    },
+    {
+      "id": "p31-contract-registry-from-alignment",
+      "from": [
+        "p31-alignment.json"
+      ],
+      "to": [
+        "contracts/p31-contract-registry.json",
+        "andromeda/04_SOFTWARE/p31ca/public/p31-contract-registry.json"
+      ],
+      "apply": "npm run build:contract-registry",
+      "verify": "npm run verify:contract-registry",
+      "note": "Hub mirror is written only when andromeda/04_SOFTWARE/p31ca/public exists. Static UI: contract-builder.html; short /contracts."
     }
   ],
   "optionalVerifyCommands": {
@@ -1166,10 +1556,21 @@
     ]
   },
   "verifyPipeline": {
-    "description": "Root `package.json` `verify` = prelude + scripts in order (incl. verify:runbooks for docs/runbooks/README.md links; verify:delta-language for DELTA lexicon JSON + hub mirror; verify:public-voice for docs/PUBLIC-VOICE.md anchors + Tier B/C grep guardrails from docs/p31-public-voice-guardrails.json; verify:phos-play-session-bridge for quantum-family Phos handoff anchors (skips if p31ca missing); verify:atmosphere-ramp for docs/p31-atmosphere-ramp.json + docs/p31-atmosphere-routes.json vs universal canon). verify:p31ca-contracts chains build:fleet-entities → verify:fleet-entities → verify:ground-truth → verify:worker-spa-launch → education → … verify:starfield syncs design-assets/starfield → p31ca public/lib; verify:fleet-ten checks scripts/p31-fleet-ten bundle; verify:fleet-llm-bridge aligns models.json ↔ continue-p31 ↔ .cursor/rules; verify:ollama-mcp + verify:ollama-tunnel-config gate Cursor Ollama bridges; verify:github-org validates docs/github-org-bundle/repos-metadata.json. Tier A face copy remains human pair check — verify:public-voice does not replace that. Update this file whenever `verify` changes.",
+    "description": "Root `package.json` `verify` = prelude + build:contract-registry + verify:contract-registry + scripts in order (incl. verify:live-fleet:p31ca-mirror after verify:ecosystem — home p31-live-fleet.json must match hub public mirror + fleet-entities + agent stubs when andromeda is a git work tree; verify:runbooks for docs/runbooks/README.md links; verify:delta-language for DELTA lexicon JSON + hub mirror; verify:public-voice for docs/PUBLIC-VOICE.md anchors + Tier B/C grep guardrails from docs/p31-public-voice-guardrails.json; verify:phos-play-session-bridge for quantum-family Phos handoff anchors (skips if p31ca missing); verify:atmosphere-ramp for docs/p31-atmosphere-ramp.json + docs/p31-atmosphere-routes.json vs universal canon; verify:quantum-deck for @p31/quantum-deck deck+shuffle tests + save schema envelope; verify:k4-agent-hub for the K₄ agent worker tetrahedron canon (manifest + wrangler + topology.js + crypto + dispatcher + smoke + agents.html + p31ca mirror parity, K₄ invariant |E|=n(n-1)/2, family triadic cover, federation block); verify:agents-mirror checks the agents.html mirror is up-to-date (skips when p31ca/public absent); verify:discord-bot for andromeda/04_SOFTWARE/discord/p31-bot when present — vitest + QA inspect/simulate/sync-check + generated manifest + root p31-discord-bot-swarm.json synced from manifest; verify:ecosystem cross-checks swarm vs manifest when bot tree present). verify:p31ca-contracts chains build:fleet-entities → verify:fleet-entities → verify:ground-truth → verify:worker-spa-launch → education → … verify:starfield syncs design-assets/starfield → p31ca public/lib; verify:fleet-ten checks scripts/p31-fleet-ten bundle; verify:fleet-llm-bridge aligns models.json ↔ continue-p31 ↔ .cursor/rules; verify:ollama-mcp + verify:ollama-tunnel-config gate Cursor Ollama bridges; verify:github-org validates docs/github-org-bundle/repos-metadata.json. Tier A face copy remains human pair check — verify:public-voice does not replace that. Update this file whenever `verify` changes.",
     "prelude": "verify:alignment",
     "preludeNote": "Fast guard (verify-alignment.mjs): JSON + required sources. Skipped in the `--verify` loop (prelude already satisfied).",
     "scripts": [
+      "build:contract-registry",
+      "verify:contract-registry",
+      "verify:sovereign-chain",
+      "verify:sovereign-layers",
+      "verify:launch-readiness-config",
+      "verify:reports-index",
+      "verify:reports-automation",
+      "verify:verify-pulse",
+      "verify:reports-promoted",
+      "verify:glass-box",
+      "verify:demos",
       "verify:facts",
       "verify:subscriptions",
       "verify:p31-env",
@@ -1180,9 +1581,12 @@
       "verify:constants",
       "verify:mesh-canon",
       "verify:ecosystem",
+      "verify:live-fleet:p31ca-mirror",
       "verify:production-readiness",
+      "verify:launch-lane-sync",
       "verify:map-pipeline",
       "verify:p31-style",
+      "verify:quantum-material-u",
       "verify:starfield",
       "verify:fleet-ten",
       "verify:fleet-llm-bridge",
@@ -1196,10 +1600,15 @@
       "verify:fleet-portal",
       "verify:cars-wire",
       "verify:geodesic-wire-fixtures",
+      "verify:quantum-deck",
+      "verify:k4-agent-hub",
+      "verify:agents-mirror",
+      "verify:discord-bot",
       "verify:poets-room",
       "verify:runbooks",
       "verify:delta-language",
       "verify:public-voice",
+      "verify:public-sanitization",
       "verify:phos-play-session-bridge",
       "verify:atmosphere-ramp",
       "build:doc-index",

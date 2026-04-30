@@ -100,9 +100,13 @@ export function classifyVerifyStep(script, w) {
     case "verify:mesh-canon":
     case "verify:ecosystem":
     case "verify:production-readiness":
+    case "verify:launch-lane-sync":
     case "verify:command-center":
     case "verify:cars-wire":
     case "verify:geodesic-wire-fixtures":
+    case "verify:quantum-deck":
+    case "verify:k4-agent-hub":
+    case "verify:agents-mirror":
     case "verify:poets-room":
     case "build:doc-index":
     case "verify:doc-index":
@@ -114,6 +118,7 @@ export function classifyVerifyStep(script, w) {
     case "verify:runbooks":
     case "verify:delta-language":
     case "verify:public-voice":
+    case "verify:public-sanitization":
     case "verify:atmosphere-ramp":
     case "verify:starfield":
     case "verify:fleet-ten":
@@ -152,6 +157,12 @@ export function classifyVerifyStep(script, w) {
       if (!w.hasP31ca)
         return { status: "skip", reason: "no p31ca tree (verify-p31-style / style-alignment skip)" };
       return { status: "run", reason: "" };
+
+    case "verify:quantum-material-u":
+      return {
+        status: "run",
+        reason: "always scheduled on home verify bar (skips internally if cognitive-passport CSS absent)",
+      };
 
     case "verify:p31ca-contracts":
       if (!w.hasP31ca) return { status: "skip", reason: "no p31ca (partial clone)" };

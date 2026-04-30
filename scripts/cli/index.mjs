@@ -73,6 +73,14 @@ function printHelp() {
       "  " + cyan("effective-bar") + "  which verify steps run/skip/degraded (partial clone matrix)",
       "  " + cyan("voice") + "         Tier B/C public copy guardrails — " + dim("npm run verify:public-voice"),
       "  " + cyan("delta-lang") + "    DELTA lexicon JSON + glossary (+ hub mirror when present) — " + dim("npm run verify:delta-language"),
+      "  " +
+        cyan("contracts") +
+        "     contract registry — " +
+        dim("npm run build:contract-registry") +
+        " · " +
+        cyan("--verify") +
+        " · " +
+        cyan("--print"),
       "  " + cyan("mirror-fixer") + " doc-library hub mirror — dry-run; pass " + dim("--apply") + " to stage git add",
       "  " + cyan("office-ready") + "  p31-office venv + doctor + zenodo script paths",
       "  " + cyan("ci") + "            " + dim("npm run p31:ci"),
@@ -128,6 +136,7 @@ function printHelp() {
         cyan("npm run github:org:valve") +
         ")",
       "  " + cyan("mesh") + "          " + dim("p31-mesh") + " CLI",
+      "  " + cyan("agent-hub") + "     K₄ agent hubs — " + dim("keypair / dock / call / cross / topology / federation"),
       "",
       dim("Flags:"),
       "  " + cyan("-h, --help") + "     help " + dim("(only as first argument; subcommands keep their own -h)"),
@@ -246,6 +255,11 @@ async function main() {
     process.exit(code);
   }
 
+  if (cmd === "agent-hub") {
+    const code = await runNodeScript("scripts/cli/agent-hub.mjs", fwd);
+    process.exit(code);
+  }
+
   if (cmd === "verify") {
     const code = await runNpmScript("verify", fwd);
     process.exit(code);
@@ -273,6 +287,20 @@ async function main() {
 
   if (cmd === "delta-lang") {
     const code = await runNpmScript("verify:delta-language", fwd);
+    process.exit(code);
+  }
+
+  if (cmd === "contracts") {
+    const args = fwd.filter((a) => a !== "--");
+    if (args.includes("--verify")) {
+      const code = await runNpmScript("verify:contract-registry", args.filter((a) => a !== "--verify"));
+      process.exit(code);
+    }
+    if (args.includes("--print")) {
+      const code = await runNodeScript("scripts/build-contract-registry.mjs", args);
+      process.exit(code);
+    }
+    const code = await runNpmScript("build:contract-registry", args);
     process.exit(code);
   }
 

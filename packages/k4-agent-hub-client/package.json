@@ -8,7 +8,8 @@
   "exports": {
     ".": "./src/index.mjs",
     "./keypair": "./src/keypair.mjs",
-    "./envelope": "./src/envelope.mjs"
+    "./envelope": "./src/envelope.mjs",
+    "./anchor-pact": "./src/anchor-pact.mjs"
   },
   "scripts": {
     "test": "node --test --test-reporter=spec test/*.test.mjs"

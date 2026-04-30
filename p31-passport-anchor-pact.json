@@ -1,0 +1,7 @@
+{
+  "schema": "p31.anchorPactFingerprint/1.0.0",
+  "clientId": null,
+  "publicKeyB64u": null,
+  "createdAt": null,
+  "note": "public-key fingerprint — populate by running: p31 agent-hub anchor create. Full signed pact lives at ~/.p31/anchor-pact.json (gitignored). Passkey hardware binding is CWP-P31-K4-AGENT-HUB-ANCHOR-PACT-V2."
+}

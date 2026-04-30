@@ -15,6 +15,7 @@
  */
 import process from "node:process";
 import { K4AgentHubClient, ensureKeyPair } from "../../packages/k4-agent-hub-client/src/index.mjs";
+import { ensureAnchorPact, loadAnchorPact, pactFingerprint, verifyAnchorPact } from "../../packages/k4-agent-hub-client/src/anchor-pact.mjs";
 
 const argv = process.argv.slice(2);
 const sub = argv[0];
@@ -32,6 +33,11 @@ function help() {
 
 Usage:
   p31 agent-hub keypair
+  p31 agent-hub anchor create                    # create + sign ~/.p31/anchor-pact.json
+  p31 agent-hub anchor show                      # display local anchor pact (public fields)
+  p31 agent-hub anchor verify                    # verify local pact signature offline
+  p31 agent-hub anchor register [--base URL]     # POST /v1/anchor/register
+  p31 agent-hub anchor status   [--base URL]     # GET  /v1/anchor/status
   p31 agent-hub manifest   [--base URL]
   p31 agent-hub topology   [--base URL]
   p31 agent-hub federation [--base URL]
@@ -40,7 +46,8 @@ Usage:
   p31 agent-hub cross <from> <to> [--ask "..."] [--base URL]
 
 Default base: ${baseUrl}
-Keypair file: ~/.p31/agent-hub-key.json (generated on first call)
+Keypair file:     ~/.p31/agent-hub-key.json (generated on first call)
+Anchor pact file: ~/.p31/anchor-pact.json  (created by anchor create)
 `);
 }
 
@@ -55,6 +62,64 @@ async function main() {
       createdAt: new Date(k.createdAt).toISOString(),
     }, null, 2));
     return 0;
+  }
+
+  if (sub === "anchor") {
+    const anchorSub = rest[0];
+    const key = await ensureKeyPair();
+
+    if (!anchorSub || anchorSub === "create") {
+      const { pact, created } = await ensureAnchorPact(key);
+      if (created) {
+        console.log("anchor-pact created →", "~/.p31/anchor-pact.json");
+      } else {
+        console.log("anchor-pact already exists (clientId matches keypair)");
+      }
+      console.log(JSON.stringify(pactFingerprint(pact), null, 2));
+      return 0;
+    }
+
+    if (anchorSub === "show") {
+      const pact = await loadAnchorPact();
+      if (!pact) { console.error("no anchor pact found — run: p31 agent-hub anchor create"); return 1; }
+      console.log(JSON.stringify(pactFingerprint(pact), null, 2));
+      return 0;
+    }
+
+    if (anchorSub === "verify") {
+      const pact = await loadAnchorPact();
+      if (!pact) { console.error("no anchor pact found — run: p31 agent-hub anchor create"); return 1; }
+      const valid = await verifyAnchorPact(pact);
+      if (valid) {
+        console.log("anchor-pact signature: VALID ✓");
+        console.log(" clientId:", pact.clientId);
+        console.log(" publicKeyB64u:", pact.publicKeyB64u);
+        return 0;
+      } else {
+        console.error("anchor-pact signature: INVALID ✗");
+        return 1;
+      }
+    }
+
+    if (anchorSub === "register") {
+      const pact = await loadAnchorPact();
+      if (!pact) { console.error("no anchor pact found — run: p31 agent-hub anchor create"); return 1; }
+      const c = new K4AgentHubClient({ baseUrl, keyPair: key });
+      const r = await c.anchorRegister(pact);
+      console.log(JSON.stringify(r, null, 2));
+      return r.ok ? 0 : 1;
+    }
+
+    if (anchorSub === "status") {
+      const c = new K4AgentHubClient({ baseUrl, keyPair: key });
+      const r = await c.anchorStatus();
+      console.log(JSON.stringify(r, null, 2));
+      return r.ok ? 0 : 1;
+    }
+
+    console.error(`unknown anchor subcommand: ${anchorSub}`);
+    help();
+    return 2;
   }
 
   // Routes that don't need a keypair

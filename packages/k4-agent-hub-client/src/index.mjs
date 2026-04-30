@@ -186,6 +186,38 @@ export class K4AgentHubClient {
     return res.json();
   }
 
+  /**
+   * POST /v1/anchor/register — register the operator's anchor pact with the hub.
+   * Requires a pre-built pact (create with createAnchorPact from anchor-pact.mjs).
+   */
+  async anchorRegister(pact) {
+    const res = await fetch(`${this.baseUrl}/v1/anchor/register`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        clientId:       pact.clientId,
+        publicKeyB64u:  pact.publicKeyB64u,
+        personalTetra:  pact.personalTetra,
+        createdAt:      pact.createdAt,
+        sig:            pact.sig,
+        schema:         pact.schema,
+      }),
+    });
+    return res.json();
+  }
+
+  /** GET /v1/anchor/status — list all registered anchor fingerprints on this hub. */
+  async anchorStatus() {
+    const res = await fetch(`${this.baseUrl}/v1/anchor/status`);
+    return res.json();
+  }
+
+  /** GET /v1/anchor/{clientId} — fetch a specific registered anchor record. */
+  async anchor(clientId) {
+    const res = await fetch(`${this.baseUrl}/v1/anchor/${encodeURIComponent(clientId)}`);
+    return res.json();
+  }
+
   /** POST /v1/federation/peer — sign and register self as a peer at another hub. */
   async registerAsPeer(targetHubBaseUrl, manifestUrl) {
     const ts = Date.now();
@@ -213,3 +245,4 @@ export class K4AgentHubClient {
 
 export { canonicalCallString, canonicalDockString } from "./envelope.mjs";
 export { ensureKeyPair, generateKeyPair, importKeyPair, loadKeyPairFromDisk, saveKeyPairToDisk, defaultKeyPath } from "./keypair.mjs";
+export { canonicalAnchorString, createAnchorPact, ensureAnchorPact, loadAnchorPact, pactFingerprint, saveAnchorPact } from "./anchor-pact.mjs";

@@ -1,0 +1,95 @@
+# Validates GitHub org bundle (repos-metadata.json). Optional manual apply to live GitHub + .github repo.
+# Secrets (repo Settings → Secrets): P31_ORG_METADATA_TOKEN — classic or fine-grained PAT with permission
+# to update repo metadata (and push p31labs/.github if you enable sync_dotgithub).
+name: P31 GitHub org bundle
+
+on:
+  pull_request:
+    paths:
+      - "docs/github-org-bundle/**"
+      - "scripts/github-org-automation.mjs"
+      - "scripts/github-org-bootstrap.mjs"
+      - "scripts/github-org-run.mjs"
+      - "scripts/verify-github-org-metadata.mjs"
+      - ".github/workflows/p31-github-org.yml"
+  push:
+    branches: [main, master]
+    paths:
+      - "docs/github-org-bundle/**"
+      - "scripts/github-org-automation.mjs"
+      - "scripts/github-org-bootstrap.mjs"
+      - "scripts/github-org-run.mjs"
+      - "scripts/verify-github-org-metadata.mjs"
+      - ".github/workflows/p31-github-org.yml"
+  workflow_dispatch:
+    inputs:
+      apply_metadata:
+        description: "PATCH descriptions/topics on org repos (needs P31_ORG_METADATA_TOKEN)"
+        type: boolean
+        default: false
+      sync_dotgithub:
+        description: "After metadata, sync REPOS.md + profile map into p31labs/.github and push"
+        type: boolean
+        default: false
+  schedule:
+    # Monday 12:17 UTC — verify only (no secrets required)
+    - cron: "17 12 * * 1"
+
+concurrency:
+  group: p31-github-org-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: P31 / github-org bundle
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Strict REPOS.md cross-check
+        run: node scripts/verify-github-org-metadata.mjs
+        env:
+          P31_GITHUB_ORG_STRICT_REPOS_MD: "1"
+
+  apply:
+    name: P31 / github-org apply
+    needs: verify
+    if: >-
+      github.event_name == 'workflow_dispatch' && secrets.P31_ORG_METADATA_TOKEN &&
+      (inputs.apply_metadata == 'true' || inputs.sync_dotgithub == 'true')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Apply metadata (gh)
+        if: inputs.apply_metadata == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.P31_ORG_METADATA_TOKEN }}
+        run: npm run github:org:metadata
+
+      - name: Sync org profile repo
+        if: inputs.sync_dotgithub == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.P31_ORG_METADATA_TOKEN }}
+          GITHUB_ACTIONS: "true"
+        run: |
+          set -e
+          DEST="$RUNNER_TEMP/p31-dotgithub"
+          rm -rf "$DEST"
+          git clone --depth 1 "https://x-access-token:${GH_TOKEN}@github.com/p31labs/.github.git" "$DEST"
+          node scripts/github-org-automation.mjs sync --repo-dir "$DEST" --push

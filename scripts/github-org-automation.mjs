@@ -4,19 +4,24 @@
  * and apply repo descriptions/topics from docs/github-org-bundle/repos-metadata.json via gh.
  *
  * Usage:
- *   node scripts/github-org-automation.mjs sync --repo-dir /path/to/dotgithub [--push] [--dry-run]
+ *   node scripts/github-org-automation.mjs verify
+ *   node scripts/github-org-automation.mjs sync [--repo-dir DIR] [--push] [--dry-run]
  *   node scripts/github-org-automation.mjs metadata [--dry-run]
- *   node scripts/github-org-automation.mjs all --repo-dir /path/to/dotgithub [--push] [--dry-run]
+ *   node scripts/github-org-automation.mjs all [--repo-dir DIR] [--push] [--dry-run]
  *
  * Env:
  *   P31_GITHUB_ORG_REPO  — default directory for sync (same as --repo-dir)
  *   P31_ORG_DOTGITHUB    — override org/repo slug for clone hint (default from p31-github.json orgDotGithubRepository)
  *   P31_GITHUB_ORG_PUSH  — if "1", sync commits and pushes (same as --push)
+ *   P31_SKIP_GITHUB_ORG_VERIFY — set to "1" to skip bundle JSON validation
+ *   Default --repo-dir: .p31-work/dotgithub-sync under repo root if it exists and P31_GITHUB_ORG_REPO unset
  */
 import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { assertFromDisk } from "./verify-github-org-metadata.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -29,6 +34,19 @@ const METADATA_SRC = path.join(BUNDLE, "repos-metadata.json");
 const MARK_START = "<!-- P31_ORG_MAP_AUTO_START -->";
 const MARK_END = "<!-- P31_ORG_MAP_AUTO_END -->";
 
+function bundleVerify() {
+  if (process.env.P31_SKIP_GITHUB_ORG_VERIFY === "1") return;
+  assertFromDisk(root);
+}
+
+function defaultOrgRepoDir() {
+  const env = process.env.P31_GITHUB_ORG_REPO;
+  if (env) return env;
+  const d = path.join(root, ".p31-work", "dotgithub-sync");
+  if (fs.existsSync(path.join(d, ".git"))) return d;
+  return "";
+}
+
 function getGitIdentityForCommit() {
   const name =
     process.env.P31_GIT_USER_NAME ||
@@ -37,6 +55,9 @@ function getGitIdentityForCommit() {
     process.env.P31_GIT_USER_EMAIL ||
     spawnSync("git", ["-C", root, "config", "user.email"], { encoding: "utf8" }).stdout.trim();
   if (!name || !email) {
+    if (process.env.GITHUB_ACTIONS === "true") {
+      return { name: "github-actions[bot]", email: "github-actions[bot]@users.noreply.github.com" };
+    }
     console.error(
       "github-org-automation: set git user for commits: P31_GIT_USER_NAME + P31_GIT_USER_EMAIL, or git config user.name/user.email in bonding-soup"
     );
@@ -109,6 +130,7 @@ function copyReposMd(destRoot) {
 }
 
 function syncCommand({ repoDir, dryRun, push }) {
+  bundleVerify();
   if (!fs.existsSync(REPOS_MD_SRC)) {
     console.error("github-org-automation: missing", REPOS_MD_SRC);
     process.exit(1);
@@ -117,8 +139,8 @@ function syncCommand({ repoDir, dryRun, push }) {
     const cfg = readGithubConfig();
     console.error(
       "github-org-automation: sync needs a clone of the org profile repo.\n" +
-        `  Example: git clone https://github.com/${cfg.orgDotGithubRepository}.git ~/p31-dotgithub\n` +
-        "  Then: npm run github:org:sync -- --repo-dir ~/p31-dotgithub --push\n" +
+        `  Example: git clone https://github.com/${cfg.orgDotGithubRepository}.git .p31-work/dotgithub-sync\n` +
+        "  Then: npm run github:org:sync -- --push\n" +
         "  Or set P31_GITHUB_ORG_REPO"
     );
     process.exit(1);
@@ -176,6 +198,7 @@ function syncCommand({ repoDir, dryRun, push }) {
 }
 
 function metadataCommand({ dryRun }) {
+  bundleVerify();
   if (!fs.existsSync(METADATA_SRC)) {
     console.error("github-org-automation: missing", METADATA_SRC);
     process.exit(1);
@@ -224,6 +247,7 @@ function parseArgs(argv) {
     }
   }
   if (process.env.P31_GITHUB_ORG_PUSH === "1") out.push = true;
+  if (!out.repoDir) out.repoDir = defaultOrgRepoDir();
   return out;
 }
 
@@ -231,6 +255,16 @@ function main() {
   const cmd = process.argv[2];
   const opts = parseArgs(process.argv);
 
+  if (cmd === "verify") {
+    try {
+      assertFromDisk(root);
+      console.log("github-org-automation: bundle OK (repos-metadata.json + rules)");
+    } catch (e) {
+      console.error(e && e.message ? e.message : e);
+      process.exit(1);
+    }
+    return;
+  }
   if (cmd === "sync") {
     syncCommand(opts);
     return;
@@ -248,11 +282,13 @@ function main() {
   }
 
   console.log(`Usage:
-  node scripts/github-org-automation.mjs sync --repo-dir /path/to/dotgithub [--push] [--dry-run]
+  node scripts/github-org-automation.mjs verify
+  node scripts/github-org-automation.mjs sync [--repo-dir DIR] [--push] [--dry-run]
   node scripts/github-org-automation.mjs metadata [--dry-run]
-  node scripts/github-org-automation.mjs all --repo-dir /path/to/dotgithub [--push] [--dry-run]
+  node scripts/github-org-automation.mjs all [--repo-dir DIR] [--push] [--dry-run]
 
-Env: P31_GITHUB_ORG_REPO, P31_GITHUB_ORG_PUSH=1, P31_ORG_DOTGITHUB (org/repo for hints)
+Env: P31_GITHUB_ORG_REPO (default: .p31-work/dotgithub-sync if present), P31_GITHUB_ORG_PUSH=1,
+     P31_ORG_DOTGITHUB, P31_SKIP_GITHUB_ORG_VERIFY=1, P31_GITHUB_ORG_STRICT_REPOS_MD=1 (verify script)
 `);
   process.exit(cmd ? 1 : 0);
 }

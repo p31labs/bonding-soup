@@ -33,6 +33,19 @@ wcd33-global-archive/node_modules/
 signal-*.gpg
 signal-*.sources
 
+# Command center integration temp (scripts/command-center/integration-local.sh)
+.cc-int.*/
+.cc-*.log
+cc-integration-test.log
+cc-run-out.txt
+cc-exit.txt
+cc-integration-run.out
+int-out.txt
+
+# Local agent / runtime caches (repo root noise)
+.ollama/
+.openclaw/
+
 # Local / secrets
 .env
 .env.*

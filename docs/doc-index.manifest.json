@@ -15,6 +15,6 @@
       { "path": "andromeda/04_SOFTWARE/design-tokens", "label": "design-tokens (optional)" }
     ]
   },
-  "excludePathSubstrings": ["/node_modules/", "/.git/"],
+  "excludePathSubstrings": ["/node_modules/", "/.git/", "/_archive/"],
   "excludeNamePatterns": [".archived", ".DS_Store"]
 }

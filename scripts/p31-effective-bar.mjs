@@ -62,6 +62,7 @@ export function buildWorkspaceProbe(rootDir) {
   const passportDest = path.join(p31ca, "public", "passport-generator.html");
   const venvPy = path.join(rootDir, "Discovery", ".venv", "bin", "python");
   const zenodoScript = path.join(rootDir, "p31labs", "scripts", "zenodo_scan_local.py");
+  const continueFleetConfig = path.join(rootDir, "andromeda/04_SOFTWARE/continue-p31/config.yaml");
 
   return {
     hasAndromeda,
@@ -77,6 +78,7 @@ export function buildWorkspaceProbe(rootDir) {
       path.join(p31ca, "public", "planetary-onboard.html"),
     ),
     hasHubFleetPortal: fs.existsSync(path.join(p31ca, "public", "fleet-portal.html")),
+    hasContinueFleetConfig: fs.existsSync(continueFleetConfig),
     hasOfficeVenv: fs.existsSync(venvPy),
     hasZenodoScript: fs.existsSync(zenodoScript),
   };
@@ -100,6 +102,7 @@ export function classifyVerifyStep(script, w) {
     case "verify:production-readiness":
     case "verify:command-center":
     case "verify:cars-wire":
+    case "verify:geodesic-wire-fixtures":
     case "verify:poets-room":
     case "build:doc-index":
     case "verify:doc-index":
@@ -184,6 +187,12 @@ export function classifyVerifyStep(script, w) {
       if (!w.andromedaGit)
         return { status: "skip", reason: "andromeda/ not a git work tree (cannot enforce mirror commit)" };
       return { status: "run", reason: "sync + git drift check" };
+
+    case "verify:fleet-llm-bridge":
+      if (!w.hasContinueFleetConfig) {
+        return { status: "skip", reason: "no andromeda/.../continue-p31/config.yaml (partial clone)" };
+      }
+      return { status: "run", reason: "fleet ids ≡ Continue; rule cites each persona" };
 
     case "verify:github-org":
       return { status: "run", reason: "repos-metadata.json + GitHub topic/description rules" };

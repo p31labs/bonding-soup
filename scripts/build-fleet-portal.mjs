@@ -7,6 +7,9 @@
  *   npm run ecosystem:glass && npm run build:fleet-portal
  *   npm run build:fleet-portal:live
  *
+ * After write: when `andromeda/.../p31ca/public` exists, copies `fleet-portal.html` to the hub
+ * (keeps verify:fleet-portal byte parity). Opt out: P31_FLEET_PORTAL_NO_AUTO_MIRROR=1.
+ *
  * Surface canon: .p31-doc-* (shared with device-setup, personal-howto). Same hero,
  * cards, tables, footer everywhere; the only fleet-specific chrome is the radar SVG
  * (kept as `.fp-radar-*` because no other surface needs it).
@@ -724,3 +727,11 @@ ${sections.join("\n")}
 
 fs.writeFileSync(outPath, html, "utf8");
 console.log("build-fleet-portal: wrote", path.relative(root, outPath), `(${html.length} bytes)`);
+
+const hubPublic = path.join(root, "andromeda", "04_SOFTWARE", "p31ca", "public");
+const hubFleet = path.join(hubPublic, "fleet-portal.html");
+if (process.env.P31_FLEET_PORTAL_NO_AUTO_MIRROR !== "1" && fs.existsSync(hubPublic)) {
+  fs.mkdirSync(hubPublic, { recursive: true });
+  fs.copyFileSync(outPath, hubFleet);
+  console.log("build-fleet-portal: auto-mirror →", path.relative(root, hubFleet));
+}

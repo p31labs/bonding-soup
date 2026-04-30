@@ -1,0 +1,49 @@
+# Mandatory periodic bar: internal Ollama fleet ↔ Continue ↔ constants/ecosystem alignment.
+# See docs/P31-FLEET-GROUND-TRUTH-LLM-SYNC.md
+name: P31 fleet + ground-truth cadence
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "scripts/p31-fleet-ten/**"
+      - "andromeda/04_SOFTWARE/continue-p31/**"
+      - ".cursor/rules/p31-ollama-fleet.mdc"
+      - "simplex-v7/src/agents/registry.ts"
+      - "scripts/verify-fleet-llm-bridge.mjs"
+      - "docs/P31-FLEET-GROUND-TRUTH-LLM-SYNC.md"
+      - ".github/workflows/p31-fleet-ground-truth.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  fleet-ground-truth-bar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node from .nvmrc
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install ollama-mcp deps (dynamic tools/list when SDK present)
+        run: npm ci
+        working-directory: scripts/ollama-mcp
+
+      - name: Fleet static + Continue bridge + MCP + alignment + constants + ecosystem
+        run: |
+          npm run verify:fleet-ten
+          npm run verify:fleet-llm-bridge
+          npm run verify:ollama-mcp
+          npm run verify:alignment
+          npm run verify:constants
+          npm run verify:ecosystem

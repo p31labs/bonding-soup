@@ -62,6 +62,17 @@ A **single spine** for:
 - **Port 8080 busy:** `P31_DEMO_PORT=8090 npm run demo` (or any free high port).  
 - **Crostini time / DNS** — if `git` or `npm` is flaky, check **Chrome OS and Linux** help; time skew breaks TLS.
 
+### 5a. Ollama (local fleet) on Crostini
+
+The **Spin-class** Chromebook runs Ollama inside **Linux (`penguin`)**, not on Chrome OS itself.
+
+| Expectation | Why |
+|-------------|-----|
+| **AC power** for pulls and first model downloads | Large weights + thermal headroom; same discipline as `npm run verify`. |
+| **CPU inference by default** | Many units **do not** expose a GPU Ollama can use from Crostini — logs may show no NVIDIA/AMD GPU; that is normal. Sub‑1B–3B models are usable; larger models get slow or impractical. Premium tiers (e.g. Snapdragon X / Core Ultra with documented NPU/Ollama paths) can improve this; do not assume without checking `ollama ps` / docs for **your** SKU. |
+| **Canonical P31 fleet** | Ten personas from repo: **`npm run ollama:setup`**, smoke **`npm run ollama:verify`** (needs `ollama serve` + weights), MCP **`npm run verify:ollama-mcp`**. Full operator layout (tmux window + lanes): **`docs/P31-OPERATOR-SETUP-GUIDE.md`** § Local sovereign AI. |
+| **Phone stays thin** | Long-running **`ollama serve`** and agent sessions belong on the **Chromebook** (or another host), with the phone as viewport via Mosh/tmux per operator guide — not as the inference server. |
+
 ---
 
 ## 6. Mobile phone (same operator, not a second source of truth)
@@ -101,8 +112,9 @@ A **single spine** for:
 - `docs/P31-CHROMEBOOK-COMMAND-READINESS.md` — **command center only** on Chrome OS (PWA, LAN).  
 - `docs/P31-IPHONE-COMMAND-READINESS.md` — **command center only** from iPhone (LAN, Home Screen).  
 - `docs/MOBILE-OPS-PHASE2.md` — iPhone + command center (wider mobile-ops).  
-- `docs/ECOSYSTEM-PRODUCTION-11.md` — full-fleet context.
+- `docs/ECOSYSTEM-PRODUCTION-11.md` — full-fleet context.  
+- `docs/P31-PHONE-DATACENTER-SURVEY-ALIGNMENT.md` — maps external “phone + edge + mesh” surveys to **this repo’s** canonical paths (no third-party pricing/OS truth in-tree).
 
 ---
 
-**Version:** 1.0.0 — 2026-04-28
+**Version:** 1.0.1 — 2026-04-30 (§5a Ollama on Crostini)

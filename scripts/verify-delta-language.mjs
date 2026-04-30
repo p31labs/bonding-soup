@@ -7,6 +7,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { buildDeltaLanguageHubStrings } from "./lib/build-delta-language-hub.mjs";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 
@@ -68,17 +70,21 @@ function main() {
   const hubJson = path.join(root, "andromeda", "04_SOFTWARE", "p31ca", "public", "p31-delta-language.json");
   const hubHtml = path.join(root, "andromeda", "04_SOFTWARE", "p31ca", "public", "delta-language.html");
 
-  if (fs.existsSync(path.dirname(hubJson)) && fs.existsSync(hubJson)) {
-    const canon = fs.readFileSync(jsonPath, "utf8").replace(/\r\n/g, "\n").trimEnd();
-    const hubTxt = fs.readFileSync(hubJson, "utf8").replace(/\r\n/g, "\n").trimEnd();
-    if (canon !== hubTxt) {
-      die("hub p31-delta-language.json differs from docs — run: npm run sync:delta-language");
+  const hubJsonExists = fs.existsSync(hubJson);
+  const hubHtmlExists = fs.existsSync(hubHtml);
+  if (hubJsonExists || hubHtmlExists) {
+    const { json: expJson, html: expHtml } = buildDeltaLanguageHubStrings(root);
+    if (hubJsonExists) {
+      const hubTxt = fs.readFileSync(hubJson, "utf8").replace(/\r\n/g, "\n").trimEnd();
+      if (expJson.trimEnd() !== hubTxt) {
+        die("hub p31-delta-language.json differs from docs — run: npm run sync:delta-language");
+      }
     }
-  }
-  if (fs.existsSync(hubHtml)) {
-    const hh = fs.readFileSync(hubHtml, "utf8");
-    if (!hh.includes('content="/p31-delta-language.json"')) {
-      die('hub delta-language.html must use meta content="/p31-delta-language.json" — run: npm run sync:delta-language');
+    if (hubHtmlExists) {
+      const hh = fs.readFileSync(hubHtml, "utf8").replace(/\r\n/g, "\n");
+      if (hh !== expHtml) {
+        die("hub delta-language.html differs from sync output — run: npm run sync:delta-language");
+      }
     }
   }
 

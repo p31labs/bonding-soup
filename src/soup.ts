@@ -158,6 +158,40 @@ export class SoupEngine {
   private lastWarmEdgePeerCount = -1;
   private static readonly WARM_EDGE_THROTTLE_MS = 2000;
 
+  /**
+   * Global 4-4-6 breath clock — Calm-Zone rhythm hoisted to the whole simulation
+   * (`docs/soup-world-design.md` §3.1; `docs/affective-chemistry-spec.md` §5).
+   * - Cycle: 4s inhale, 4s hold, 6s exhale → 14s total.
+   * - Amplitude is exposed as `--soup-breath` (0..1) on `<html>` and as a `data-soup-breath`
+   *   phase attribute (`inhale | hold | exhale`); soundtrack master gain is gently scaled.
+   * - Honest non-extractive feedback: tiny modulation (~15% gain swing, ≤30% canvas glow swing),
+   *   no clinical claims, off under `prefers-reduced-motion` (handled by CSS).
+   */
+  private breathClockMs = 0;
+  private static readonly BREATH_INHALE_MS = 4000;
+  private static readonly BREATH_HOLD_MS = 4000;
+  private static readonly BREATH_EXHALE_MS = 6000;
+  private static readonly BREATH_CYCLE_MS =
+    SoupEngine.BREATH_INHALE_MS +
+    SoupEngine.BREATH_HOLD_MS +
+    SoupEngine.BREATH_EXHALE_MS;
+  /** Throttle DOM/audio writes; the engine still ticks every frame for purity. */
+  private static readonly BREATH_EMIT_MIN_MS = 50;
+  private breathLastEmitMs = -1;
+  private breathLastPhase = "";
+
+  // Coherence tick — slow signal of room-level stability. Refreshes ~ once
+  // per second; never per-frame. Surfaces a 3-state attribute on <html>:
+  //   ""        → ordinary room (default)
+  //   "warming" → PSI rising and ≥1 saved Posner; light teal lift
+  //   "coherent"→ PSI > 0.5 AND ≥2 saved Posners; gentle warm Posner glow
+  // Honest reward (`docs/ETHICAL-STYLE-MAP.md` §6 — bounded, calm, dismissible).
+  private static readonly COHERENCE_EMIT_MIN_MS = 1000;
+  private static readonly COHERENCE_PSI_WARM = 0.25;
+  private static readonly COHERENCE_PSI_FULL = 0.5;
+  private coherenceLastEmitMs = -1;
+  private coherenceLastState = "";
+
   constructor(
     config: PhysicsConfig = DEFAULT_SOUP_CONFIG,
     wsUrl: string = "",
@@ -963,9 +997,19 @@ export class SoupEngine {
     // Update ghost molecule interpolations
     this.updateGhostMolecules(deltaTime);
 
-    // Check for reactions
+    // Check for reactions — supply Arrhenius/Le Chatelier context so reaction
+    // rates respond to the local zone temperature and the Fuel-flood feedback
+    // loop (`docs/affective-chemistry-spec.md` §5–6).
     const allBonds = this.physics.getBonds();
-    const reactionCandidates = this.reactions.findPotentialReactions(allAtoms, allBonds);
+    const fuelFraction = this.computeFuelFraction();
+    const reactionCandidates = this.reactions.findPotentialReactions(
+      allAtoms,
+      allBonds,
+      {
+        temperatureAt: (x, y) => this.zoneTemperatureAt(x, y),
+        fuelFraction,
+      }
+    );
 
     if (reactionCandidates.length > 0) {
       // Execute the most probable reaction
@@ -996,10 +1040,536 @@ export class SoupEngine {
 
     this.cleanExpiredPings(currentTime);
 
+    // Advance the global 4-4-6 breath clock and emit to UI + audio
+    this.tickBreath(deltaTime);
+    this.tickCoherence();
+
     // Send our own molecule state at 2Hz (if connected)
     this.sendMoleculeStatesIfDue(currentTime);
 
     this.lastUpdate = currentTime;
+  }
+
+  /**
+   * Advance the breath clock and (throttled) emit:
+   *  - `--soup-breath` 0..1 amplitude on `<html>`
+   *  - `data-soup-breath` phase attribute on `<html>`
+   *  - master-gain modulation on the soundtrack engine (audio-rate ramp)
+   * Pure: no DOM/audio writes when running off-DOM (tests, headless).
+   */
+  private tickBreath(deltaTimeMs: number): void {
+    if (!Number.isFinite(deltaTimeMs) || deltaTimeMs <= 0) {
+      return;
+    }
+    this.breathClockMs =
+      (this.breathClockMs + deltaTimeMs) % SoupEngine.BREATH_CYCLE_MS;
+    const state = this.computeBreathState(this.breathClockMs);
+
+    // Audio: tiny gain swing tied to phase (always safe to call; engine no-ops if no AudioContext).
+    try {
+      this.audio.setBreathAmplitude(state.amplitude);
+    } catch {
+      /* audio is best-effort */
+    }
+
+    if (typeof document === "undefined") {
+      return;
+    }
+    const now = performance.now();
+    if (
+      this.breathLastEmitMs >= 0 &&
+      now - this.breathLastEmitMs < SoupEngine.BREATH_EMIT_MIN_MS &&
+      state.phase === this.breathLastPhase
+    ) {
+      return;
+    }
+    this.breathLastEmitMs = now;
+    try {
+      const root = document.documentElement;
+      root.style.setProperty("--soup-breath", state.amplitude.toFixed(4));
+      if (state.phase !== this.breathLastPhase) {
+        root.setAttribute("data-soup-breath", state.phase);
+        this.breathLastPhase = state.phase;
+      }
+    } catch {
+      /* ignore — host page integration must not break the engine */
+    }
+  }
+
+  /**
+   * Coherence tick — surface a 3-state `data-soup-coherent` attribute and
+   * `--soup-psi` CSS variable on `<html>`. Cheap (~ once / second), null-safe
+   * when not running in a browser. Anti-extractive: never escalates beyond
+   * "coherent"; never adds badges, streaks, or notifications.
+   */
+  private tickCoherence(): void {
+    if (typeof document === "undefined") return;
+    const now = performance.now();
+    if (
+      this.coherenceLastEmitMs >= 0 &&
+      now - this.coherenceLastEmitMs < SoupEngine.COHERENCE_EMIT_MIN_MS
+    ) {
+      return;
+    }
+    this.coherenceLastEmitMs = now;
+
+    const psi = this.getPosnerStabilityIndex();
+    let state = "";
+    if (
+      psi.psi >= SoupEngine.COHERENCE_PSI_FULL &&
+      psi.savedPosners >= 2
+    ) {
+      state = "coherent";
+    } else if (
+      psi.psi >= SoupEngine.COHERENCE_PSI_WARM &&
+      psi.savedPosners >= 1
+    ) {
+      state = "warming";
+    }
+
+    try {
+      const root = document.documentElement;
+      root.style.setProperty("--soup-psi", psi.psi.toFixed(4));
+      if (state !== this.coherenceLastState) {
+        if (state) {
+          root.setAttribute("data-soup-coherent", state);
+        } else {
+          root.removeAttribute("data-soup-coherent");
+        }
+        this.coherenceLastState = state;
+      }
+    } catch {
+      /* host page integration must not break the engine */
+    }
+  }
+
+  /**
+   * Compute the breath envelope at a given clock position (ms within `BREATH_CYCLE_MS`).
+   * Inhale + exhale use a smoothstep curve so the perceived rhythm feels diaphragmatic,
+   * not triangular. Hold sustains at 1.0.
+   */
+  private computeBreathState(
+    clockMs: number
+  ): { phase: "inhale" | "hold" | "exhale"; amplitude: number; cycleMs: number } {
+    const t = ((clockMs % SoupEngine.BREATH_CYCLE_MS) + SoupEngine.BREATH_CYCLE_MS) %
+      SoupEngine.BREATH_CYCLE_MS;
+    if (t < SoupEngine.BREATH_INHALE_MS) {
+      const u = t / SoupEngine.BREATH_INHALE_MS;
+      return {
+        phase: "inhale",
+        amplitude: SoupEngine.smoothstep01(u),
+        cycleMs: SoupEngine.BREATH_CYCLE_MS,
+      };
+    }
+    if (t < SoupEngine.BREATH_INHALE_MS + SoupEngine.BREATH_HOLD_MS) {
+      return {
+        phase: "hold",
+        amplitude: 1,
+        cycleMs: SoupEngine.BREATH_CYCLE_MS,
+      };
+    }
+    const exhaleStart =
+      SoupEngine.BREATH_INHALE_MS + SoupEngine.BREATH_HOLD_MS;
+    const u = (t - exhaleStart) / SoupEngine.BREATH_EXHALE_MS;
+    return {
+      phase: "exhale",
+      amplitude: 1 - SoupEngine.smoothstep01(u),
+      cycleMs: SoupEngine.BREATH_CYCLE_MS,
+    };
+  }
+
+  private static smoothstep01(u: number): number {
+    const x = Math.max(0, Math.min(1, u));
+    return x * x * (3 - 2 * x);
+  }
+
+  /**
+   * Public read of the current breath state (UI / tests / starfield can subscribe).
+   */
+  public getBreathState(): {
+    phase: "inhale" | "hold" | "exhale";
+    amplitude: number;
+    cycleMs: number;
+    clockMs: number;
+  } {
+    const s = this.computeBreathState(this.breathClockMs);
+    return { ...s, clockMs: this.breathClockMs };
+  }
+
+  /**
+   * Read saved-molecule metadata for a live molecule, or `null` when the
+   * molecule has never been saved (or persistence is unavailable). Pure read.
+   *
+   * Surfaces `name`, `emotionalContext`, `zone`, `generation`, `significance`
+   * and a derived `isPosner` flag. Powers the "Saved" row in Exhibit A so the
+   * room can say "I remember this one" rather than treating every interaction
+   * as fresh extraction.
+   */
+  public getSavedMoleculeMeta(moleculeId: string): {
+    name: string;
+    emotionalContext: string;
+    zone: string;
+    generation: number;
+    creationTime: number;
+    significance: number;
+    isPosner: boolean;
+  } | null {
+    if (!moleculeId || typeof moleculeId !== "string") return null;
+    const saved = this.persistence.loadMolecule(moleculeId);
+    if (!saved) return null;
+    const archive = this.persistence.getGlobalArchive();
+    const isPosner = archive.posnerMolecules.some((m) => m.id === saved.id);
+    return {
+      name: saved.name,
+      emotionalContext: saved.emotionalContext,
+      zone: saved.zone,
+      generation: saved.generation || 0,
+      creationTime: saved.creationTime,
+      significance: saved.significance,
+      isPosner,
+    };
+  }
+
+  /**
+   * Read the heritage chain of a molecule — its lineage of parents through
+   * reactions. Returns an empty array when no heritage is recorded (free atom,
+   * unsynthesized, or never saved). Bounded by `maxHops` so the room cannot
+   * unbound-scroll a family tree (anti-extractive).
+   *
+   * Powers the "Lineage" section in Exhibit A: shows literal **connect** —
+   * how this molecule came to exist via prior molecules + reaction types.
+   */
+  public getMoleculeHeritage(
+    moleculeId: string,
+    maxHops: number = 8
+  ): Array<{
+    parentId: string;
+    parentName: string | null;
+    reactionType: string;
+    timestamp: number;
+    emotionalContext: string;
+  }> {
+    if (!moleculeId || typeof moleculeId !== "string") return [];
+    const archive = this.persistence.getGlobalArchive();
+    const chain = archive.heritageChains.get(moleculeId);
+    if (!chain || chain.length === 0) return [];
+    const cap = Math.max(1, Math.min(64, maxHops));
+    return chain.slice(-cap).map((rec) => {
+      const parent = this.persistence.loadMolecule(rec.parentId);
+      return {
+        parentId: rec.parentId,
+        parentName: parent ? parent.name : null,
+        reactionType: rec.reactionType,
+        timestamp: rec.timestamp,
+        emotionalContext: rec.emotionalContext,
+      };
+    });
+  }
+
+  /**
+   * Save the current geometry of a live molecule (operator action). Returns
+   * the saved id, or `null` if the molecule no longer exists. Composition,
+   * personality, and zone are read from the engine; emotional context is
+   * caller-supplied and defaults to a neutral phrase.
+   *
+   * Side effect: the persistence layer may file this under
+   * `globalArchive.posnerMolecules` (if the geometry meets the AX₄ / 39-atom
+   * Posner test) or `communityHighlights` (if `significance > 0.8`).
+   */
+  public saveLiveMolecule(
+    moleculeId: string,
+    opts: { emotionalContext?: string; significance?: number } = {}
+  ): string | null {
+    const mol = this.molecules.get(moleculeId);
+    if (!mol) return null;
+    const cx = mol.atoms.reduce((s, a) => s + a.x, 0) / mol.atoms.length;
+    const cy = mol.atoms.reduce((s, a) => s + a.y, 0) / mol.atoms.length;
+    const zone = this.getCurrentZone(cx, cy);
+    const bonds = this.physics.getBonds().filter((b) => {
+      const ids = new Set(mol.atoms.map((a) => a.id));
+      return ids.has(b.atom1.id) && ids.has(b.atom2.id);
+    });
+    return this.persistence.saveMolecule({
+      id: mol.id,
+      atoms: mol.atoms,
+      bonds,
+      personality: mol.personality,
+      zone: zone ? zone.name : "open",
+      emotionalContext:
+        opts.emotionalContext ||
+        "Operator marked this geometry — I want to come back to it.",
+      significance:
+        typeof opts.significance === "number"
+          ? Math.max(0, Math.min(1, opts.significance))
+          : mol.atoms.length === 4
+          ? 0.7
+          : 0.5,
+    });
+  }
+
+  /**
+   * Cognitive Escrow residue (`docs/CONCEPT-COGNITIVE-ESCROW.md`).
+   *
+   * On return, the room offers back the geometry the user left behind — a single
+   * calm line, no dashboard. Read-only over `PersistenceLayer.getGlobalArchive()`.
+   *
+   * Returns `null` when there is no archived residue (first visit or cleared
+   * archive). Otherwise:
+   *   - `posners`: count of saved Posner-eligible structures
+   *   - `highlights`: count of saved highlights (capped at 20 in archive)
+   *   - `totalSyntheses`: lifetime synthesis counter
+   *   - `lastUpdate`: ms timestamp of last archive write
+   *   - `ageMs`: how long since last update (for "X days ago")
+   *   - `heritageDepth`: deepest parent→child chain in heritage map
+   *
+   * Anti-extractive: this is **memory return**, not engagement bait. The HTML
+   * surface that consumes it MUST: (a) be one bounded line, (b) have a single
+   * dismiss control, (c) not auto-refresh, (d) not link to a streak.
+   */
+  public getEscrowResidue(nowMs: number = Date.now()): {
+    posners: number;
+    highlights: number;
+    totalSyntheses: number;
+    lastUpdate: number;
+    ageMs: number;
+    heritageDepth: number;
+  } | null {
+    const archive = this.persistence.getGlobalArchive();
+    const posners = archive.posnerMolecules.length;
+    const highlights = archive.communityHighlights.length;
+    const totalSyntheses = archive.totalSyntheses || 0;
+    if (
+      posners === 0 &&
+      highlights === 0 &&
+      totalSyntheses === 0 &&
+      archive.heritageChains.size === 0
+    ) {
+      return null;
+    }
+    let heritageDepth = 0;
+    for (const chain of archive.heritageChains.values()) {
+      if (chain.length > heritageDepth) heritageDepth = chain.length;
+    }
+    return {
+      posners,
+      highlights,
+      totalSyntheses,
+      lastUpdate: archive.lastUpdate,
+      ageMs: Math.max(0, nowMs - archive.lastUpdate),
+      heritageDepth,
+    };
+  }
+
+  /**
+   * Zone temperatures (dimensionless; baseline = 1.0 → matches legacy
+   * reaction probability). Calmer zones increase the effective activation
+   * barrier; the Lab is warmer; the Deep is coolest. Numbers from
+   * `docs/soup-world-design.md` §3 (Calm Zone +20% Eₐ, Deep 0.6× speed).
+   */
+  private static readonly ZONE_TEMPERATURES: Record<string, number> = {
+    calm: 0.7,
+    deep: 0.6,
+    lab: 1.2,
+    kitchen: 1.0,
+  };
+  private static readonly ROOM_BASELINE_T = 1.0;
+
+  private zoneTemperatureAt(x: number, y: number): number {
+    const zone = this.getCurrentZone(x, y);
+    if (!zone) return SoupEngine.ROOM_BASELINE_T;
+    const t = SoupEngine.ZONE_TEMPERATURES[zone.name];
+    return typeof t === "number" ? t : SoupEngine.ROOM_BASELINE_T;
+  }
+
+  /**
+   * Public read of the local zone temperature at a world-space coordinate.
+   * Used by the dev panel; agents and tests can read directly.
+   */
+  public getZoneTemperatureAt(x: number, y: number): number {
+    return this.zoneTemperatureAt(x, y);
+  }
+
+  /**
+   * Fraction of live molecules carrying the Fuel archetype — drives the
+   * Le Chatelier compensatory bias. Cheap O(n) over the molecule map.
+   */
+  private computeFuelFraction(): number {
+    const total = this.molecules.size;
+    if (total === 0) return 0;
+    let fuel = 0;
+    for (const m of this.molecules.values()) {
+      if (m.personality === "fuel") fuel++;
+    }
+    return fuel / total;
+  }
+
+  /**
+   * Public read of the Le Chatelier driver — Fuel-archetype fraction (0..1).
+   */
+  public getFuelFraction(): number {
+    return this.computeFuelFraction();
+  }
+
+  /**
+   * Molecule fade lifecycle (`docs/soup-world-design.md` §6.4).
+   *
+   * Behaviour:
+   *  - **Fresh** for `FADE_HALF_LIFE_MS` (30 days) → alpha 1.0
+   *  - **Fading** over `FADE_DURATION_MS` (7 days) → alpha 1.0 → 0.3 linearly
+   *  - **Ghost** thereafter → alpha pinned at 0.3 (stays visible as memory)
+   *
+   * No deletion: faded molecules are emotional archaeology, tappable for the
+   * Exhibit-A card. The decay curve is intentional and bounded — anti-extractive
+   * (`docs/ETHICAL-STYLE-MAP.md` §6: rewards decay or dismiss; never variable-ratio).
+   */
+  public static readonly FADE_HALF_LIFE_MS = 30 * 24 * 60 * 60 * 1000;
+  public static readonly FADE_DURATION_MS = 7 * 24 * 60 * 60 * 1000;
+  public static readonly FADE_GHOST_ALPHA = 0.3;
+
+  public static computeMoleculeFadeAlpha(
+    creationTime: number,
+    nowMs: number = Date.now()
+  ): number {
+    if (!Number.isFinite(creationTime)) return 1;
+    const age = Math.max(0, nowMs - creationTime);
+    if (age <= SoupEngine.FADE_HALF_LIFE_MS) return 1;
+    const fadeAge = age - SoupEngine.FADE_HALF_LIFE_MS;
+    if (fadeAge >= SoupEngine.FADE_DURATION_MS) {
+      return SoupEngine.FADE_GHOST_ALPHA;
+    }
+    const u = fadeAge / SoupEngine.FADE_DURATION_MS;
+    return 1 - u * (1 - SoupEngine.FADE_GHOST_ALPHA);
+  }
+
+  /**
+   * Convenience: alpha for a specific live molecule by id, or 1 if unknown.
+   */
+  public getMoleculeFadeAlpha(moleculeId: string, nowMs?: number): number {
+    const mol = this.molecules.get(moleculeId);
+    if (!mol) return 1;
+    return SoupEngine.computeMoleculeFadeAlpha(mol.creationTime, nowMs);
+  }
+
+  /**
+   * Hit-test the molecule under a world-space coordinate. Returns the molecule
+   * whose nearest atom is within `paddingPx` (atom radius + padding), or null.
+   * Used by `soup.html` canvas click → Exhibit A card.
+   */
+  public getMoleculeAt(
+    worldX: number,
+    worldY: number,
+    paddingPx: number = 6
+  ): Molecule | null {
+    if (!Number.isFinite(worldX) || !Number.isFinite(worldY)) return null;
+    let bestMol: Molecule | null = null;
+    let bestDist = Infinity;
+    for (const mol of this.molecules.values()) {
+      for (const atom of mol.atoms) {
+        const dx = atom.x - worldX;
+        const dy = atom.y - worldY;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        const reach = atom.radius + paddingPx;
+        if (d <= reach && d < bestDist) {
+          bestDist = d;
+          bestMol = mol;
+        }
+      }
+    }
+    return bestMol;
+  }
+
+  /**
+   * Operator probe: backdate every live molecule's `creationTime` by N days so
+   * the fade lifecycle is testable without waiting calendar days. No-op when
+   * `daysBack <= 0`. Logs nothing (engine purity).
+   */
+  public applyFadeProbe(daysBack: number): number {
+    if (!Number.isFinite(daysBack) || daysBack <= 0) return 0;
+    const offset = daysBack * 24 * 60 * 60 * 1000;
+    let touched = 0;
+    for (const mol of this.molecules.values()) {
+      mol.creationTime -= offset;
+      touched++;
+    }
+    return touched;
+  }
+
+  /**
+   * Find event-log entries that reference a given molecule (by atom id or
+   * molecule id). Powers Exhibit A — the inline card surfaced when a faded
+   * molecule is tapped (`docs/soup-world-design.md` §4 spatial chat).
+   */
+  public findEventsForMolecule(moleculeId: string): Array<{
+    id: string;
+    type: string;
+    actorId: string;
+    targetId: string | null;
+    message: string;
+    timestamp: number;
+  }> {
+    const mol = this.molecules.get(moleculeId);
+    if (!mol) return [];
+    const atomIds = new Set(mol.atoms.map((a) => a.id));
+    return this.eventLog.filter(
+      (e) =>
+        e.targetId === moleculeId ||
+        (e.targetId != null && atomIds.has(e.targetId))
+    );
+  }
+
+  /**
+   * Posner Stability Index (PSI) — the **only** room-level stat the soup needs.
+   * Replaces engagement metrics with a defensible structural read of the bowl.
+   *
+   * Definition (`docs/affective-chemistry-spec.md` §7, `docs/soup-world-design.md`):
+   *   PSI = clamp01(`tetraWeight` × tetrahedralFraction + `posnerWeight` × min(1, savedPosners))
+   *   where:
+   *     - tetrahedralFraction = (live molecules with exactly 4 atoms — the AX₄
+   *       VSEPR archetype, lowest potential energy in the system) / (live molecule count)
+   *     - savedPosners = persisted Ca₉(PO₄)₆-eligible structures
+   *       (`PersistenceLayer.isPosnerMolecule` in `persistence.ts`)
+   *     - tetraWeight = 0.6, posnerWeight = 0.4
+   *
+   * The two terms are deliberate: PSI rewards both **the room's current geometry**
+   * and **the room's history of integration**. Returns 0..1 plus raw inputs so the
+   * UI can show the reasoning, not just the score (Cognitive Escrow §1: holding
+   * geometrically, not narratively).
+   */
+  public getPosnerStabilityIndex(): {
+    psi: number;
+    tetrahedralFraction: number;
+    tetrahedralCount: number;
+    moleculeCount: number;
+    savedPosners: number;
+  } {
+    const moleculeCount = this.molecules.size;
+    let tetrahedralCount = 0;
+    for (const mol of this.molecules.values()) {
+      if (mol.atoms.length === 4) {
+        tetrahedralCount++;
+      }
+    }
+    const tetrahedralFraction =
+      moleculeCount > 0 ? tetrahedralCount / moleculeCount : 0;
+    const archive = this.persistence.getGlobalArchive();
+    const savedPosners = archive.posnerMolecules.length;
+    const tetraWeight = 0.6;
+    const posnerWeight = 0.4;
+    const psi = Math.max(
+      0,
+      Math.min(
+        1,
+        tetraWeight * tetrahedralFraction +
+          posnerWeight * Math.min(1, savedPosners)
+      )
+    );
+    return {
+      psi,
+      tetrahedralFraction,
+      tetrahedralCount,
+      moleculeCount,
+      savedPosners,
+    };
   }
 
   /**
@@ -1355,6 +1925,15 @@ export class SoupEngine {
    */
   getSavedMolecules(): SavedMolecule[] {
     return this.persistence.getSavedMolecules();
+  }
+
+  /**
+   * Read-only pass-through to the persistence global archive (Posners,
+   * highlights, heritage, last-update). Used by the memory panel to tag
+   * canonical structures without re-deriving thresholds.
+   */
+  getGlobalArchive() {
+    return this.persistence.getGlobalArchive();
   }
 
   /**
@@ -1753,6 +2332,31 @@ export class SoupEngine {
         emoji,
         timestamp: Date.now()
       });
+
+      // Self-echo into incomingPings so the *sender* also sees the bubble fly
+      // (the mock server only forwards to other clients in the room, by design,
+      // so without this echo the operator would see nothing happen on click).
+      // Honest UX: action → visible response. Bounded by the same 10s lifetime.
+      const selfEchoPing = {
+        id: `ping_local_${Date.now()}_${Math.random()}`,
+        targetId,
+        emoji,
+        position: { x: centerX, y: centerY },
+        createdAt: Date.now(),
+        expiresAt: Date.now() + 10000,
+      };
+      this.incomingPings.push(selfEchoPing);
+      this.eventLog.push({
+        id: `event_${Date.now()}`,
+        type: "ping",
+        actorId: "you",
+        targetId,
+        message: `you pinged ${targetId} with ${emoji}`,
+        timestamp: Date.now(),
+      });
+      if (this.eventLog.length > 50) {
+        this.eventLog = this.eventLog.slice(-50);
+      }
     } catch (error) {
       this.dbgw('Failed to send ping:', error);
     }

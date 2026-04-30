@@ -2,6 +2,8 @@
 /**
  * Structural checks on generated fleet-portal.html (ATC radar + Gray Rock + glass strip).
  * Hub mirror should match after polish — verified when andromeda/p31ca is present.
+ * When hub file exists, root vs hub must match byte-for-byte (LF-normalized) unless
+ * P31_FLEET_PORTAL_SKIP_MIRROR_BYTES=1 (e.g. intentional build:fleet-portal:live-only hub).
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -28,6 +30,10 @@ function die(msg) {
   process.exit(1);
 }
 
+function normNl(s) {
+  return s.replace(/\r\n/g, "\n");
+}
+
 function verifyFile(rel) {
   const p = path.join(root, ...rel.split("/"));
   if (!fs.existsSync(p)) {
@@ -42,6 +48,7 @@ function verifyFile(rel) {
 }
 
 function main() {
+  const rootFp = path.join(root, "fleet-portal.html");
   verifyFile("fleet-portal.html");
   const hub = path.join(root, "andromeda", "04_SOFTWARE", "p31ca", "public", "fleet-portal.html");
   if (fs.existsSync(hub)) {
@@ -49,6 +56,15 @@ function main() {
     for (const frag of MUST) {
       if (!body.includes(frag)) {
         die(`andromeda/04_SOFTWARE/p31ca/public/fleet-portal.html: missing ${JSON.stringify(frag)} — run npm run build:fleet-portal and copy to hub public`);
+      }
+    }
+    if (process.env.P31_FLEET_PORTAL_SKIP_MIRROR_BYTES !== "1") {
+      const a = normNl(fs.readFileSync(rootFp, "utf8"));
+      const b = normNl(body);
+      if (a !== b) {
+        die(
+          "fleet-portal.html root vs p31ca/public byte mismatch — run build:fleet-portal from repo root and mirror to hub (or P31_FLEET_PORTAL_SKIP_MIRROR_BYTES=1 if intentional glass/live-only drift)"
+        );
       }
     }
   }

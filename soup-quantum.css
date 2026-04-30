@@ -1095,6 +1095,32 @@ html.soup-app[data-soup-live="1"] #canvas-wrap.soup-canvas-shell {
   animation: soup-bowl-breathe 5.5s var(--p31-ease-standard) infinite;
 }
 
+/* —— 4-4-6 breath bind (SoupEngine.tickBreath → `--soup-breath` 0..1 on <html>) ——
+ * When the engine is driving the global clock, a calmer, slower pulse takes over
+ * (14s per cycle vs. the legacy 5.5s loop). Stays under Gray Rock and respects
+ * `prefers-reduced-motion` via the same blocks below. The variable is the only
+ * source — no CSS keyframe needed; the JS smoothstep does the easing.
+ */
+html.soup-app[data-soup-breath] #canvas-wrap.soup-canvas-shell {
+  animation: none;
+  box-shadow:
+    var(--p31-shadow-lg),
+    0 0 calc(36px + 22px * var(--soup-breath, 0))
+      rgba(77, 184, 168, calc(0.06 + 0.08 * var(--soup-breath, 0)));
+  transition: box-shadow 0.18s var(--p31-ease-standard);
+}
+
+/* Gentle phase tint on the welcome banner — cool on inhale/hold, warm on exhale. */
+html.soup-app[data-soup-breath="inhale"] .soup-app-header__welcome strong,
+html.soup-app[data-soup-breath="hold"] .soup-app-header__welcome strong {
+  color: var(--p31-cyan);
+  transition: color 1.6s var(--p31-ease-standard);
+}
+html.soup-app[data-soup-breath="exhale"] .soup-app-header__welcome strong {
+  color: var(--p31-coral);
+  transition: color 2.4s var(--p31-ease-standard);
+}
+
 html.soup-app .stat.soup-stat--moment {
   animation: soup-stat-moment 1.2s var(--p31-ease-standard);
 }
@@ -1150,6 +1176,17 @@ html.soup-app.kids-mode .soup-app-header__welcome {
     animation: none !important;
   }
 
+  html.soup-app[data-soup-breath] #canvas-wrap.soup-canvas-shell {
+    animation: none !important;
+    box-shadow: var(--p31-shadow-lg);
+    transition: none !important;
+  }
+
+  html.soup-app[data-soup-breath] .soup-app-header__welcome strong {
+    color: var(--p31-cloud);
+    transition: none !important;
+  }
+
   html.soup-app .stat.soup-stat--moment {
     animation: none !important;
     border-color: rgba(77, 184, 168, 0.55);
@@ -1165,6 +1202,637 @@ html.soup-app.kids-mode .soup-app-header__welcome {
   html.soup-app * {
     scroll-behavior: auto !important;
   }
+}
+
+/* —— Calm landing strip — names the 4-4-6 breath without dev clutter ——
+ * Mirrors the engine's `data-soup-breath` phase on `<html>` into a plain-language
+ * label. Bounded, informational; honest disclosure of the rhythm so the user
+ * knows what they're entraining to (Cognitive Escrow §1: holds geometrically).
+ * Stays neutral under Gray Rock; chroma layered only after first interaction.
+ */
+html.soup-app .soup-calm-strip {
+  display: flex;
+  align-items: baseline;
+  gap: var(--p31-space-3);
+  flex-wrap: wrap;
+  margin: 0 0 var(--p31-space-3);
+  padding: var(--p31-space-2) var(--p31-space-4);
+  border-left: 3px solid var(--p31-border-subtle);
+  background: var(--p31-surface);
+  border-radius: var(--p31-radius-md);
+  color: var(--p31-cloud);
+}
+html.soup-app .soup-calm-strip__phase {
+  font-family: var(--p31-font-mono);
+  font-size: var(--p31-text-md);
+  color: var(--p31-cloud);
+  letter-spacing: var(--p31-tracking-caps);
+  min-width: 7.5rem;
+}
+html.soup-app .soup-calm-strip__sub {
+  color: var(--p31-muted);
+  font-size: var(--p31-text-sm);
+}
+html.soup-app:not(.soup-app--gray-rock) .soup-calm-strip {
+  border-left-color: var(--p31-cyan);
+}
+html.soup-app:not(.soup-app--gray-rock) .soup-calm-strip__phase {
+  color: var(--p31-cyan);
+  transition: color 1.6s var(--p31-ease-standard);
+}
+html.soup-app[data-soup-breath="exhale"]:not(.soup-app--gray-rock) .soup-calm-strip__phase {
+  color: var(--p31-coral);
+  transition: color 2.4s var(--p31-ease-standard);
+}
+
+/* Cognitive Escrow welcome strip — memory return, not engagement bait.
+ * Spec: docs/CONCEPT-COGNITIVE-ESCROW.md. One line, one dismiss, no streak,
+ * no link to a feed. The room is showing what it kept for the user — geometry
+ * the user left behind — not asking for action. */
+html.soup-app .soup-escrow-strip {
+  display: flex;
+  align-items: center;
+  gap: var(--p31-space-2);
+  margin: 0 0 var(--p31-space-3);
+  padding: var(--p31-space-2) var(--p31-space-4);
+  border-left: 3px solid var(--p31-gold, var(--p31-coral));
+  background: var(--p31-surface);
+  border-radius: var(--p31-radius-md);
+  color: var(--p31-cloud);
+  font-size: var(--p31-text-sm);
+}
+html.soup-app .soup-escrow-strip[hidden] { display: none; }
+html.soup-app .soup-escrow-strip__icon {
+  color: var(--p31-gold, var(--p31-coral));
+  font-family: var(--p31-font-mono);
+  font-size: var(--p31-text-md);
+}
+html.soup-app .soup-escrow-strip__text {
+  flex: 1 1 auto;
+  color: var(--p31-cloud);
+}
+html.soup-app .soup-escrow-strip__close {
+  border: 0;
+  background: transparent;
+  color: var(--p31-muted);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--p31-radius-md);
+  min-width: 1.75rem;
+  min-height: 1.75rem;
+}
+html.soup-app .soup-escrow-strip__close:hover,
+html.soup-app .soup-escrow-strip__close:focus-visible {
+  color: var(--p31-cyan);
+  background: rgba(77, 184, 168, 0.08);
+  outline: none;
+}
+/* Gray Rock: residue strip becomes neutral and unobtrusive (no chroma signal). */
+html.soup-app.soup-app--gray-rock .soup-escrow-strip {
+  border-left-color: var(--p31-border-subtle) !important;
+}
+html.soup-app.soup-app--gray-rock .soup-escrow-strip__icon {
+  color: var(--p31-muted) !important;
+}
+
+/* First-visit hint — single line, dismisses on first canvas click.
+ * Softer than the calm/escrow strips: no border, just italic muted text.
+ * Auto-hides under reduced-motion (no fade animation). */
+html.soup-app .soup-firstvisit-hint {
+  margin: 0 0 var(--p31-space-3);
+  padding: 0 var(--p31-space-4);
+  color: var(--p31-muted);
+  font-size: var(--p31-text-sm);
+  font-style: italic;
+  opacity: 0;
+  animation: soup-firstvisit-fadein 0.6s var(--p31-ease-standard) forwards;
+}
+html.soup-app .soup-firstvisit-hint[hidden] { display: none; }
+@keyframes soup-firstvisit-fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.soup-app .soup-firstvisit-hint {
+    animation: none !important;
+    opacity: 1;
+  }
+}
+
+/* Honest progressive disclosure: family setup as <details>, not a default-open hero.
+ * No dark patterns; the summary is a plain control with the same touch target sizes. */
+html.soup-app .soup-details {
+  margin: 0 0 var(--p31-space-3);
+  border: 1px solid var(--p31-border-subtle);
+  border-radius: var(--p31-radius-md);
+  background: var(--p31-surface);
+}
+html.soup-app .soup-details > summary.soup-details__summary {
+  cursor: pointer;
+  list-style: none;
+  padding: var(--p31-space-2) var(--p31-space-4);
+  color: var(--p31-cloud);
+  font-weight: 600;
+  font-size: var(--p31-text-sm);
+  letter-spacing: var(--p31-tracking-normal);
+  border-radius: var(--p31-radius-md);
+  min-height: max(2.75rem, var(--p31-touch-min, 2.75rem));
+  display: flex;
+  align-items: center;
+  gap: var(--p31-space-2);
+}
+html.soup-app .soup-details > summary.soup-details__summary::-webkit-details-marker { display: none; }
+html.soup-app .soup-details > summary.soup-details__summary::before {
+  content: "▸";
+  color: var(--p31-muted);
+  font-size: var(--p31-text-xs);
+  transition: transform 0.18s var(--p31-ease-standard);
+  display: inline-block;
+  width: 0.9em;
+}
+html.soup-app .soup-details[open] > summary.soup-details__summary::before {
+  transform: rotate(90deg);
+}
+html.soup-app .soup-details > summary.soup-details__summary:hover,
+html.soup-app .soup-details > summary.soup-details__summary:focus-visible {
+  color: var(--p31-cyan);
+  outline: none;
+}
+html.soup-app .soup-details__body {
+  padding: var(--p31-space-2) var(--p31-space-4) var(--p31-space-3);
+}
+
+/* —— Exhibit A — tap a (faded) molecule for its event-log card ——
+ * Calm, dismissible, anchored bottom-right with mobile-safe padding. The card is
+ * *informational*, never a paywall; matches ETHICAL-STYLE-MAP §6 (rewards decay,
+ * never variable-ratio) and Cognitive Escrow §1 (geometric memory, returns intact).
+ */
+.soup-exhibit-card {
+  position: fixed;
+  right: max(var(--p31-space-4), env(safe-area-inset-right, 0px));
+  bottom: max(var(--p31-space-4), env(safe-area-inset-bottom, 0px));
+  z-index: 120;
+  width: min(22rem, calc(100vw - var(--p31-space-4) * 2));
+  max-height: min(70vh, 32rem);
+  overflow-y: auto;
+  padding: var(--p31-space-4) var(--p31-space-4) var(--p31-space-3);
+  border: 1px solid rgba(77, 184, 168, 0.45);
+  border-radius: var(--p31-radius-lg);
+  background: linear-gradient(180deg, var(--p31-surface2) 0%, var(--p31-surface) 100%);
+  box-shadow: var(--p31-shadow-lg), var(--p31-shadow-glowTeal);
+  color: var(--p31-cloud);
+  font-size: var(--p31-text-sm);
+  line-height: var(--p31-leading-snug);
+}
+
+.soup-exhibit-card[hidden] { display: none; }
+
+.soup-exhibit-card__close {
+  position: absolute;
+  top: var(--p31-space-2);
+  right: var(--p31-space-2);
+  border: 0;
+  background: transparent;
+  color: var(--p31-muted);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--p31-radius-md);
+}
+.soup-exhibit-card__close:hover,
+.soup-exhibit-card__close:focus-visible {
+  color: var(--p31-cyan);
+  background: rgba(77, 184, 168, 0.08);
+  outline: none;
+}
+
+.soup-exhibit-card__title {
+  margin: 0 0 var(--p31-space-1);
+  font-size: var(--p31-text-md);
+  font-weight: 700;
+  color: var(--p31-cloud);
+  letter-spacing: var(--p31-tracking-caps);
+  text-transform: uppercase;
+}
+
+.soup-exhibit-card__subtitle {
+  margin: 0 0 var(--p31-space-3);
+  color: var(--p31-cyan);
+  font-family: var(--p31-font-mono);
+  font-size: var(--p31-text-sm);
+}
+
+.soup-exhibit-card__meta {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--p31-space-1) var(--p31-space-3);
+  margin: 0 0 var(--p31-space-3);
+}
+.soup-exhibit-card__meta dt {
+  color: var(--p31-muted);
+  font-size: var(--p31-text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--p31-tracking-caps);
+  align-self: center;
+}
+.soup-exhibit-card__meta dd {
+  margin: 0;
+  color: var(--p31-cloud);
+}
+
+.soup-exhibit-card__events {
+  border-top: 1px solid var(--p31-border-subtle);
+  padding-top: var(--p31-space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--p31-space-1);
+  margin-bottom: var(--p31-space-2);
+}
+.soup-exhibit-card__event {
+  font-size: var(--p31-text-xs);
+  color: var(--p31-cloud);
+}
+.soup-exhibit-card__event time {
+  color: var(--p31-muted);
+  font-family: var(--p31-font-mono);
+}
+.soup-exhibit-card__empty {
+  margin: 0;
+  color: var(--p31-muted);
+  font-style: italic;
+  font-size: var(--p31-text-xs);
+}
+
+/* —— Memory panel — saved-molecule library, calm + token-aligned ——
+ * Canon: ETHICAL-STYLE-MAP §3 (color), §6 (no engagement metrics), §10 (no
+ * gamification stars). Significance is *not* surfaced as a star count;
+ * canonical archive tags ("Posner", "Highlight") replace it.
+ * Mobile: card collapses into the safe-area bottom sheet on ≤480px.
+ */
+.soup-memory-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(34rem, calc(100vw - var(--p31-space-4) * 2));
+  max-height: min(70vh, 32rem);
+  overflow-y: auto;
+  z-index: 2000;
+  padding: var(--p31-space-4);
+  border: 1px solid var(--p31-cyan);
+  border-radius: var(--p31-radius-lg);
+  background: linear-gradient(180deg, var(--p31-surface2) 0%, var(--p31-surface) 100%);
+  box-shadow: var(--p31-shadow-lg), var(--p31-shadow-glowTeal);
+  color: var(--p31-cloud);
+  font-family: var(--p31-font-sans);
+  font-size: var(--p31-text-sm);
+}
+.soup-memory-panel[hidden] { display: none; }
+
+.soup-memory-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--p31-space-3);
+}
+.soup-memory-panel__title {
+  margin: 0;
+  color: var(--p31-cyan);
+  font-size: var(--p31-text-md);
+  letter-spacing: var(--p31-tracking-caps);
+  text-transform: uppercase;
+}
+.soup-memory-panel__close {
+  background: transparent;
+  border: 0;
+  color: var(--p31-muted);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--p31-radius-md);
+  min-width: max(2rem, var(--p31-touch-min, 2rem));
+  min-height: max(2rem, var(--p31-touch-min, 2rem));
+}
+.soup-memory-panel__close:hover,
+.soup-memory-panel__close:focus-visible {
+  color: var(--p31-cyan);
+  background: rgba(77, 184, 168, 0.08);
+  outline: none;
+}
+
+.soup-memory-panel__stats {
+  margin-bottom: var(--p31-space-3);
+  font-size: var(--p31-text-xs);
+  color: var(--p31-cloud);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--p31-space-1);
+}
+
+.soup-memory-panel__zone-row {
+  margin-bottom: var(--p31-space-3);
+  font-size: var(--p31-text-xs);
+  color: var(--p31-muted);
+  display: flex;
+  align-items: center;
+  gap: var(--p31-space-2);
+}
+.soup-memory-panel__zone-select {
+  background: var(--p31-surface);
+  color: var(--p31-cloud);
+  border: 1px solid var(--p31-border-subtle);
+  border-radius: var(--p31-radius-md);
+  padding: 0.3rem 0.6rem;
+  font-family: var(--p31-font-mono);
+  font-size: var(--p31-text-xs);
+  min-height: max(2rem, var(--p31-touch-min, 2rem));
+}
+
+.soup-memory-panel__list {
+  max-height: 18rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--p31-space-2);
+}
+.soup-memory-panel__empty {
+  text-align: center;
+  color: var(--p31-muted);
+  padding: var(--p31-space-4);
+  font-style: italic;
+}
+
+.soup-memory-panel__item {
+  border: 1px solid var(--p31-border-subtle);
+  border-radius: var(--p31-radius-md);
+  padding: var(--p31-space-2);
+  background: var(--p31-surface);
+}
+.soup-memory-panel__name {
+  font-weight: 600;
+  color: var(--p31-cyan);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--p31-space-1);
+}
+.soup-memory-panel__tag {
+  color: var(--p31-gold, var(--p31-coral));
+  font-size: var(--p31-text-xs);
+  font-weight: 600;
+  letter-spacing: var(--p31-tracking-caps);
+  text-transform: uppercase;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid currentColor;
+  border-radius: var(--p31-radius-sm);
+}
+.soup-memory-panel__meta {
+  font-size: var(--p31-text-xs);
+  color: var(--p31-cloud);
+  margin: var(--p31-space-1) 0;
+  line-height: var(--p31-leading-snug);
+}
+.soup-memory-panel__counts {
+  font-size: var(--p31-text-xs);
+  color: var(--p31-muted);
+  font-family: var(--p31-font-mono);
+}
+.soup-memory-panel__heritage {
+  font-size: var(--p31-text-xs);
+  color: var(--p31-cyan);
+  margin-top: var(--p31-space-1);
+}
+.soup-memory-panel__heritage code {
+  background: rgba(77, 184, 168, 0.08);
+  padding: 0.1rem 0.3rem;
+  border-radius: var(--p31-radius-sm);
+}
+
+.soup-memory-panel__return-btn {
+  margin-top: var(--p31-space-1);
+  padding: 0.4rem 0.8rem;
+  background: rgba(77, 184, 168, 0.08);
+  border: 1px solid var(--p31-cyan);
+  border-radius: var(--p31-radius-md);
+  color: var(--p31-cyan);
+  cursor: pointer;
+  font-size: var(--p31-text-xs);
+  min-height: max(2rem, var(--p31-touch-min, 2rem));
+  transition: background 0.18s var(--p31-ease-standard);
+}
+.soup-memory-panel__return-btn:hover,
+.soup-memory-panel__return-btn:focus-visible {
+  background: rgba(77, 184, 168, 0.16);
+  outline: none;
+}
+
+.soup-memory-panel__footer {
+  margin: var(--p31-space-3) 0 0;
+  padding-top: var(--p31-space-2);
+  border-top: 1px solid var(--p31-border-subtle);
+  color: var(--p31-muted);
+  font-size: var(--p31-text-xs);
+  text-align: right;
+  font-style: italic;
+}
+
+/* Gray Rock: memory panel becomes neutral; cyan signal flattens. */
+html.soup-app.soup-app--gray-rock .soup-memory-panel {
+  border-color: var(--p31-border-subtle);
+  box-shadow: var(--p31-shadow-md);
+}
+html.soup-app.soup-app--gray-rock .soup-memory-panel__title,
+html.soup-app.soup-app--gray-rock .soup-memory-panel__name,
+html.soup-app.soup-app--gray-rock .soup-memory-panel__return-btn,
+html.soup-app.soup-app--gray-rock .soup-memory-panel__heritage {
+  color: var(--p31-cloud) !important;
+}
+html.soup-app.soup-app--gray-rock .soup-memory-panel__return-btn {
+  border-color: var(--p31-border-subtle);
+  background: transparent;
+}
+
+/* Mobile bottom-sheet style on small screens. */
+@media (max-width: 480px) {
+  .soup-memory-panel {
+    top: auto;
+    bottom: max(var(--p31-space-3), env(safe-area-inset-bottom, 0px));
+    left: max(var(--p31-space-3), env(safe-area-inset-left, 0px));
+    right: max(var(--p31-space-3), env(safe-area-inset-right, 0px));
+    transform: none;
+    width: auto;
+    max-height: 75vh;
+  }
+}
+
+/* Lineage — bounded family tree of parent molecules through reactions.
+ * The "connect" axis: each entry is a literal causal link, not a feed.
+ * Capped at 6 entries by the engine; no "see more" / no infinite scroll. */
+.soup-exhibit-card__lineage {
+  border-top: 1px solid var(--p31-border-subtle);
+  padding-top: var(--p31-space-2);
+  margin-bottom: var(--p31-space-2);
+}
+.soup-exhibit-card__lineage[hidden] { display: none; }
+.soup-exhibit-card__lineage-title {
+  margin: 0 0 var(--p31-space-1);
+  color: var(--p31-muted);
+  font-size: var(--p31-text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--p31-tracking-caps);
+}
+.soup-exhibit-card__lineage-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--p31-space-1);
+}
+.soup-exhibit-card__lineage-item {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: var(--p31-text-xs);
+  color: var(--p31-cloud);
+  line-height: var(--p31-leading-snug);
+}
+.soup-exhibit-card__lineage-item::before {
+  content: "↳";
+  position: absolute;
+  left: 0;
+  color: var(--p31-cyan);
+  font-family: var(--p31-font-mono);
+}
+.soup-exhibit-card__lineage-ctx {
+  color: var(--p31-muted);
+  font-style: italic;
+}
+
+/* Saved-structure row + save action — "I remember this one" / "Save this one".
+ * Bridges create ↔ connect: from a tapped molecule directly to durable memory.
+ * Calm CTA, no urgency, no countdown, no streak. */
+.soup-exhibit-card__saved-row[hidden] { display: none; }
+.soup-exhibit-card__save {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--p31-space-2);
+  margin: 0 0 var(--p31-space-2);
+}
+.soup-exhibit-card__save[hidden] { display: none; }
+.soup-exhibit-card__save-btn {
+  border: 1px solid var(--p31-cyan);
+  background: rgba(77, 184, 168, 0.08);
+  color: var(--p31-cyan);
+  font-size: var(--p31-text-sm);
+  padding: 0.4rem 0.8rem;
+  min-height: max(2rem, var(--p31-touch-min, 2rem));
+  border-radius: var(--p31-radius-md);
+  cursor: pointer;
+  transition: background 0.18s var(--p31-ease-standard), color 0.18s var(--p31-ease-standard);
+}
+.soup-exhibit-card__save-btn:hover,
+.soup-exhibit-card__save-btn:focus-visible {
+  background: rgba(77, 184, 168, 0.16);
+  outline: none;
+}
+.soup-exhibit-card__save-btn:disabled {
+  background: transparent;
+  color: var(--p31-muted);
+  border-color: var(--p31-border-subtle);
+  cursor: default;
+}
+.soup-exhibit-card__save-hint {
+  flex: 1 1 50%;
+  color: var(--p31-muted);
+  font-size: var(--p31-text-xs);
+  font-style: italic;
+}
+
+/* Mobile: keep Exhibit A within iPhone-13 width with safe-area padding,
+ * and let the meta dt/dd column collapse to single column for readability. */
+@media (max-width: 480px) {
+  .soup-exhibit-card {
+    width: calc(100vw - max(var(--p31-space-3), env(safe-area-inset-left, 0px)) - max(var(--p31-space-3), env(safe-area-inset-right, 0px)));
+    right: max(var(--p31-space-3), env(safe-area-inset-right, 0px));
+    bottom: max(var(--p31-space-3), env(safe-area-inset-bottom, 0px));
+    max-height: 60vh;
+  }
+  .soup-exhibit-card__meta {
+    grid-template-columns: 1fr;
+  }
+  .soup-exhibit-card__meta dt {
+    margin-top: var(--p31-space-1);
+  }
+}
+
+/* Spatial chat ping palette — five calm emojis, sent over WS to the room.
+ * Only shown when multiplayer is live. Bounded "sent ✨" acknowledgement
+ * fades in 2s; no streak counters, no notification cascades. */
+.soup-exhibit-card__ping {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--p31-space-1);
+  padding-top: var(--p31-space-2);
+  border-top: 1px solid var(--p31-border-subtle);
+  margin-bottom: var(--p31-space-2);
+}
+.soup-exhibit-card__ping[hidden] { display: none; }
+.soup-exhibit-card__ping-label {
+  color: var(--p31-muted);
+  font-size: var(--p31-text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--p31-tracking-caps);
+  margin-right: var(--p31-space-1);
+}
+.soup-exhibit-card__ping-btn {
+  font-size: 1.15rem;
+  line-height: 1;
+  padding: 0.35rem 0.55rem;
+  min-width: max(2rem, var(--p31-touch-min, 2rem));
+  min-height: max(2rem, var(--p31-touch-min, 2rem));
+  border-radius: var(--p31-radius-md);
+  border: 1px solid var(--p31-border-subtle);
+  background: var(--p31-surface);
+  color: var(--p31-cloud);
+  cursor: pointer;
+  transition: border-color 0.18s var(--p31-ease-standard), background 0.18s var(--p31-ease-standard);
+}
+.soup-exhibit-card__ping-btn:hover,
+.soup-exhibit-card__ping-btn:focus-visible {
+  border-color: var(--p31-cyan);
+  background: rgba(77, 184, 168, 0.08);
+  outline: none;
+}
+.soup-exhibit-card__ping-btn:active {
+  background: rgba(77, 184, 168, 0.14);
+}
+.soup-exhibit-card__ping-status {
+  margin-left: auto;
+  color: var(--p31-cyan);
+  font-size: var(--p31-text-xs);
+  font-family: var(--p31-font-mono);
+  min-height: 1em;
+}
+
+.soup-exhibit-card__footer {
+  margin: 0;
+  color: var(--p31-muted);
+  font-size: var(--p31-text-xs);
+  text-align: right;
+}
+
+/* Gray Rock: card is interaction-driven; allowed to surface chroma when shown. */
+
+@media (prefers-reduced-motion: reduce) {
+  .soup-exhibit-card { transition: none !important; }
 }
 
 /* Mobile mesh: larger tap targets in family + dev link rows (uses canon --p31-touch-min from p31-style) */
@@ -1209,6 +1877,59 @@ html.soup-app.soup-app--gray-rock .soup-psych-dot--belong {
   color: var(--p31-muted);
   background: var(--p31-muted);
   box-shadow: none;
+}
+
+/* Breath stays internal under Gray Rock — engine still ticks; surface stays inert. */
+html.soup-app.soup-app--gray-rock[data-soup-breath] #canvas-wrap.soup-canvas-shell {
+  animation: none !important;
+  box-shadow: var(--p31-shadow-sm) !important;
+  transition: none !important;
+}
+html.soup-app.soup-app--gray-rock[data-soup-breath] .soup-app-header__welcome strong {
+  color: var(--p31-cloud) !important;
+}
+
+/* —— Posner coherence ramp ——
+ * Set on <html> by SoupEngine.tickCoherence():
+ *   data-soup-coherent="warming"  → PSI ≥ 0.25 + ≥1 saved Posner
+ *   data-soup-coherent="coherent" → PSI ≥ 0.50 + ≥2 saved Posners
+ * Honest reward (`docs/ETHICAL-STYLE-MAP.md` §6): bounded chroma lift only;
+ * no badges, no toasts, no streak counters. Off under Gray Rock and
+ * `prefers-reduced-motion`. The glow ramps over `--soup-psi` (0..1) so the
+ * room responds to live geometry, not a one-shot animation.
+ */
+html.soup-app[data-soup-coherent="warming"] #canvas-wrap.soup-canvas-shell {
+  box-shadow:
+    var(--p31-shadow-lg),
+    0 0 calc(40px + 30px * var(--soup-breath, 0))
+      rgba(77, 184, 168, calc(0.10 + 0.10 * var(--soup-psi, 0))),
+    0 0 18px rgba(77, 184, 168, 0.08);
+  transition: box-shadow 0.4s var(--p31-ease-standard);
+}
+
+html.soup-app[data-soup-coherent="coherent"] #canvas-wrap.soup-canvas-shell {
+  /* Posner warm — phosphate-calcium gold tint mixed with the breath teal */
+  box-shadow:
+    var(--p31-shadow-lg),
+    0 0 calc(48px + 36px * var(--soup-breath, 0))
+      rgba(243, 199, 109, calc(0.14 + 0.14 * var(--soup-psi, 0))),
+    0 0 28px rgba(77, 184, 168, calc(0.06 + 0.10 * var(--soup-psi, 0))),
+    inset 0 0 calc(28px + 12px * var(--soup-breath, 0))
+      rgba(243, 199, 109, calc(0.04 + 0.06 * var(--soup-psi, 0)));
+  transition: box-shadow 0.4s var(--p31-ease-standard);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.soup-app[data-soup-coherent] #canvas-wrap.soup-canvas-shell {
+    transition: none !important;
+    box-shadow: var(--p31-shadow-lg) !important;
+  }
+}
+
+html.soup-app.soup-app--gray-rock[data-soup-coherent] #canvas-wrap.soup-canvas-shell {
+  /* Gray Rock honors the user's "I am not ready for chroma" state. */
+  box-shadow: var(--p31-shadow-sm) !important;
+  transition: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

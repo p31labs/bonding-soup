@@ -114,6 +114,14 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
+      "label": "P31: verify fleet LLM bridge (models.json ↔ Continue ↔ cursor rule)",
+      "type": "shell",
+      "command": "npm run verify:fleet-llm-bridge",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
       "label": "P31: verify passport mirror",
       "type": "shell",
       "command": "npm run verify:passport",
@@ -157,6 +165,46 @@
       "label": "P31: verify doc-library p31ca mirror",
       "type": "shell",
       "command": "npm run verify:doc-library:p31ca-mirror",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: docs hub simulate (temp mirror vs p31ca public, no git)",
+      "type": "shell",
+      "command": "npm run docs:hub:simulate",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: docs hub automate (sync + mirror verify)",
+      "type": "shell",
+      "command": "npm run docs:hub:automate",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: test simulations (hub mirrors + DELTA + geodesic wire fixtures)",
+      "type": "shell",
+      "command": "npm run test:simulations",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify mesh offline (k4 dry-run only)",
+      "type": "shell",
+      "command": "npm run verify:mesh-offline",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: verify geodesic wire fixtures",
+      "type": "shell",
+      "command": "npm run verify:geodesic-wire-fixtures",
       "options": { "cwd": "${workspaceFolder}" },
       "group": "test",
       "presentation": { "reveal": "always", "panel": "shared" }

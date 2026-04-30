@@ -66,7 +66,7 @@ This file is the **single map of record** for what lives under **`/home/p31`**: 
 
 **Rule:** “Site update” in standups means: pick **A**, **B**, or **C** (or more than one **explicitly**), run the matching checks, then deploy the matching project name on Cloudflare — never assume one build updates every domain.
 
-**Deploy spine (which CI/manual/local path hits `p31ca.org`, secrets names, ecosystem-order caveat):** **`docs/P31-DEPLOY-CANON.md`**.
+**Deploy spine (which CI/manual/local path hits `p31ca.org`, secrets names, ecosystem-order caveat, **Workers/DO/KV/Pages → paths**):** **`docs/P31-DEPLOY-CANON.md`**.
 
 **CONNECTION (mission Connect, operator wiring):** **`npm run connection`** — ties deploy canon, ecosystem **`deployables`**, **`P31_*`** catalog, edge commands, live hub URLs (**`scripts/p31-connection.mjs`**); echoed briefly after **`npm run doctor`**.
 

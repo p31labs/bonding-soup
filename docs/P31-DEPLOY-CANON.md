@@ -12,6 +12,27 @@
 
 ---
 
+## Cloudflare primitives → monorepo paths (operator map)
+
+**Authoritative Worker list + bindings:** `andromeda/04_SOFTWARE/p31ca/security/worker-allowlist.json` (inventory verifier walks `04_SOFTWARE/`). Paths below are under **`andromeda/04_SOFTWARE/`** unless noted.
+
+| CF surface | Role in P31 | Code / notes |
+|----------|-------------|--------------|
+| **Pages** | Static hub `p31ca.org` | `p31ca/` — Astro build → `dist/`, `wrangler pages deploy` per matrix below |
+| **Workers (HTTP + cron)** | Product APIs, bridges, relays | Each package with `wrangler.toml` — see allowlist **`name`** ↔ **`path`** |
+| **Durable Objects** | Per-room / per-user consistency (SQLite or legacy KV DO) | e.g. **`geodesic-room`** (GEODESIC_ROOM), **`k4-personal`** (PERSONAL_AGENT), **`k4-cage`** (topology / family room DOs), **`k4-hubs`** (HUB_FUSION) |
+| **KV** | Mesh scopes, challenges, OAuth sessions | Bound per Worker (e.g. `K4_MESH`, passkey `CHALLENGES`) — **not** a source of strong cross-region consistency; use DO when ordering matters |
+| **D1** | Relational edge DB where bound | e.g. **`p31-passkey`** (`workers/passkey`) — see that Worker’s `wrangler.toml` |
+| **R2 / Queues** | Foundry and other pipelines | e.g. `packages/p31-foundry/worker/` (home tree) — not every operator touches these on day one |
+
+**Home repo (bonding-soup) edge:** `wcd33-global-archive/` — WCD-33 Worker (KV, CORS); see `wcd33-global-archive/DEPLOY.md`.
+
+**Shared types / wire contracts:** e.g. `@p31/shared` — `packages/shared/src/geodesic-room-wire.ts` (locks to **`geodesic-room`** Worker); CI in **`p31ca`** runs `verify:geodesic-room-wire`.
+
+When adding or renaming a Worker: update **allowlist**, **`p31-alignment.json`** / ecosystem entries if applicable, and **`docs/runbooks/README.md`** if the service is on-call.
+
+---
+
 ## Flow (repos and triggers)
 
 ```mermaid

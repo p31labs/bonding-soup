@@ -209,6 +209,11 @@
       "optional": true
     },
     {
+      "id": "p31-fleet-llm-sync-canon",
+      "path": "docs/P31-FLEET-GROUND-TRUTH-LLM-SYNC.md",
+      "role": "Mandatory cadence: internal Ollama fleet ↔ ground truth ↔ cloud LLM posture; weekly GitHub workflow + monthly checklist"
+    },
+    {
       "id": "fleet-portal-html",
       "path": "fleet-portal.html",
       "role": "Generated index of all live URLs (npm run build:fleet-portal); polish → p31ca public/fleet-portal.html"
@@ -712,6 +717,7 @@
         "scripts/p31-fleet-ten/lib/verify-smoke.mjs",
         "scripts/p31-fleet-ten/lib/benchmark.mjs",
         "scripts/verify-fleet-ten.mjs",
+        "scripts/verify-fleet-llm-bridge.mjs",
         "scripts/ollama-mcp/server.mjs",
         "scripts/ollama-mcp/package.json",
         "scripts/ollama-mcp/verify.mjs",
@@ -719,12 +725,29 @@
         "scripts/ollama-tunnel.sh",
         "scripts/ollama-tunnel-status.mjs",
         "andromeda/04_SOFTWARE/continue-p31/config.yaml",
-        ".cursor/rules/p31-ollama-fleet.mdc"
+        ".cursor/rules/p31-ollama-fleet.mdc",
+        "docs/P31-FLEET-GROUND-TRUTH-LLM-SYNC.md"
       ],
       "to": [],
       "apply": "cd scripts/p31-fleet-ten && ./setup.sh --pull (requires ollama + base weights); cd scripts/ollama-mcp && npm install (once)",
-      "verify": "npm run verify:fleet-ten && npm run verify:ollama-mcp && npm run verify:ollama-tunnel-config",
+      "verify": "npm run verify:fleet-ten && npm run verify:fleet-llm-bridge && npm run verify:ollama-mcp && npm run verify:ollama-tunnel-config",
       "note": "Prompts under scripts/p31-fleet-ten/prompts/; PARAMETER overlays in models.json; Cursor lanes: MCP + tunnel script + Continue; no model blobs in git"
+    },
+    {
+      "id": "fleet-llm-ground-truth-cadence",
+      "from": [
+        "docs/P31-FLEET-GROUND-TRUTH-LLM-SYNC.md",
+        "scripts/p31-fleet-ten/models.json",
+        "andromeda/04_SOFTWARE/continue-p31/config.yaml",
+        ".cursor/rules/p31-ollama-fleet.mdc",
+        "simplex-v7/src/agents/registry.ts"
+      ],
+      "to": [
+        "(verify + schedule)"
+      ],
+      "apply": "Weekly: GitHub Actions p31-fleet-ground-truth.yml; monthly: human checklist in docs/P31-FLEET-GROUND-TRUTH-LLM-SYNC.md",
+      "verify": "npm run verify:fleet-llm-bridge",
+      "note": "Cloud LLMs are non-authoritative for mesh/hub/legal numbers — repo verifiers + p31.ground-truth are"
     },
     {
       "id": "canon-to-p31ca-about-html-style",
@@ -807,6 +830,19 @@
       "apply": "When adding/removing WS message kinds: update the wire JSON first, then @p31/shared/cars-wire.ts, then switch + mock literals, run npm run verify:cars-wire",
       "verify": "npm run verify:cars-wire",
       "note": "JSON ≡ soup + mock + shared schema/arrays; educators introspect JSON"
+    },
+    {
+      "id": "geodesic-room-wire-fixtures-static-replay",
+      "from": [
+        "scripts/fixtures/geodesic-room-wire-messages.json",
+        "andromeda/04_SOFTWARE/packages/shared/src/geodesic-room-wire.ts"
+      ],
+      "to": [
+        "(verify only)"
+      ],
+      "apply": "Bump p31.geodesicRoomWire/*: align shared + geodesic-room worker + fixture wireSchema and sample messages",
+      "verify": "npm run verify:geodesic-wire-fixtures",
+      "note": "Home static replay of client/server message shapes; complements p31ca verify:geodesic-room-wire"
     },
     {
       "id": "cognitive-passport-schema-shared",
@@ -935,7 +971,7 @@
       ],
       "apply": "npm run build:doc-index",
       "verify": "npm run verify:doc-index (after build:doc-index in root verify; Node uses npm minisearch, browser uses vendor UMD + worker). Browser e2e: npm run test:doc-library:e2e; also run in p31:all unless --skip-e2e",
-      "note": "index.json is generated; UI/worker/vendor are hand-maintained. Schema p31.docLibrary/1.0.0. Hub: npm run sync:doc-library:p31ca → p31ca public/doc-library/ (ground-truth docLibraryHub, redirect /doc-library)"
+      "note": "index.json is generated; UI/worker/vendor are hand-maintained. Schema p31.docLibrary/1.0.0. Hub: build:doc-index auto-runs sync:doc-library:p31ca when p31ca exists (P31_DOC_INDEX_NO_AUTO_SYNC=1 to skip). Manual: npm run sync:doc-library:p31ca → p31ca public/doc-library/ (ground-truth docLibraryHub, redirect /doc-library)"
     },
     {
       "id": "runbooks-sme-index-to-verify-runbooks",
@@ -959,7 +995,7 @@
         "andromeda/04_SOFTWARE/p31ca/public/doc-library/index.html",
         "andromeda/04_SOFTWARE/p31ca/public/doc-library/index.json"
       ],
-      "apply": "npm run sync:doc-library:p31ca (invokes build:doc-index; requires andromeda tree)",
+      "apply": "npm run sync:doc-library:p31ca (invokes build:doc-index; requires andromeda tree). build:doc-index also invokes this after writes when p31ca is present.",
       "verify": "npm run verify:doc-library:p31ca-mirror (after verify:doc-index; fails if Andromeda mirror not committed). p31ca verify:ground-truth fileSnippets docLibrary.hubMirror, edgeRedirect /doc-library",
       "note": "PLAN-DOCUMENT-LIBRARY.md Phase 3; optional partial clone without p31ca"
     },
@@ -1112,7 +1148,7 @@
     ]
   },
   "verifyPipeline": {
-    "description": "Root `package.json` `verify` = prelude + scripts in order (incl. verify:runbooks for docs/runbooks/README.md links; verify:delta-language for DELTA lexicon JSON + hub mirror; verify:public-voice for docs/PUBLIC-VOICE.md anchors + Tier B/C grep guardrails from docs/p31-public-voice-guardrails.json; verify:atmosphere-ramp for docs/p31-atmosphere-ramp.json + docs/p31-atmosphere-routes.json vs universal canon). verify:p31ca-contracts chains build:fleet-entities → verify:fleet-entities → verify:ground-truth → verify:worker-spa-launch → education → … verify:starfield syncs design-assets/starfield → p31ca public/lib; verify:fleet-ten checks scripts/p31-fleet-ten bundle; verify:ollama-mcp + verify:ollama-tunnel-config gate Cursor Ollama bridges; verify:github-org validates docs/github-org-bundle/repos-metadata.json. Tier A face copy remains human pair check — verify:public-voice does not replace that. Update this file whenever `verify` changes.",
+    "description": "Root `package.json` `verify` = prelude + scripts in order (incl. verify:runbooks for docs/runbooks/README.md links; verify:delta-language for DELTA lexicon JSON + hub mirror; verify:public-voice for docs/PUBLIC-VOICE.md anchors + Tier B/C grep guardrails from docs/p31-public-voice-guardrails.json; verify:atmosphere-ramp for docs/p31-atmosphere-ramp.json + docs/p31-atmosphere-routes.json vs universal canon). verify:p31ca-contracts chains build:fleet-entities → verify:fleet-entities → verify:ground-truth → verify:worker-spa-launch → education → … verify:starfield syncs design-assets/starfield → p31ca public/lib; verify:fleet-ten checks scripts/p31-fleet-ten bundle; verify:fleet-llm-bridge aligns models.json ↔ continue-p31 ↔ .cursor/rules; verify:ollama-mcp + verify:ollama-tunnel-config gate Cursor Ollama bridges; verify:github-org validates docs/github-org-bundle/repos-metadata.json. Tier A face copy remains human pair check — verify:public-voice does not replace that. Update this file whenever `verify` changes.",
     "prelude": "verify:alignment",
     "preludeNote": "Fast guard (verify-alignment.mjs): JSON + required sources. Skipped in the `--verify` loop (prelude already satisfied).",
     "scripts": [
@@ -1131,6 +1167,7 @@
       "verify:p31-style",
       "verify:starfield",
       "verify:fleet-ten",
+      "verify:fleet-llm-bridge",
       "verify:ollama-mcp",
       "verify:ollama-tunnel-config",
       "verify:style-alignment",
@@ -1140,6 +1177,7 @@
       "verify:onboarding",
       "verify:fleet-portal",
       "verify:cars-wire",
+      "verify:geodesic-wire-fixtures",
       "verify:poets-room",
       "verify:runbooks",
       "verify:delta-language",

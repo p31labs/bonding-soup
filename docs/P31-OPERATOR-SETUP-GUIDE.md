@@ -257,3 +257,5 @@ Then keep:
 - Anything that requires edge redirects to carry `#hash` fragments (they don’t).
 - Any copy or metaphors that increase legal/clinical friction; keep language plain and specific.
 
+**External stack surveys:** `docs/P31-PHONE-DATACENTER-SURVEY-ALIGNMENT.md` — how generic “phone + Cloudflare + mesh” writeups map to **this** tree (and what the repo does *not* certify).
+

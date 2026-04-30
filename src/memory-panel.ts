@@ -27,52 +27,26 @@ class MemoryPanel {
   private createPanel() {
     this.panelElement = document.createElement('div');
     this.panelElement.id = 'memory-panel';
-    this.panelElement.style.cssText = `
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(26, 26, 42, 0.95);
-      border: 2px solid #9c27b0;
-      border-radius: 8px;
-      padding: 20px;
-      max-width: 600px;
-      max-height: 400px;
-      overflow-y: auto;
-      z-index: 2000;
-      display: none;
-      font-family: monospace;
-      color: white;
-    `;
+    this.panelElement.classList.add('soup-memory-panel');
+    this.panelElement.setAttribute('role', 'dialog');
+    this.panelElement.setAttribute('aria-labelledby', 'memory-panel-title');
+    this.panelElement.setAttribute('aria-hidden', 'true');
+    this.panelElement.hidden = true;
 
     // Header
     const header = document.createElement('div');
-    header.style.cssText = `
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-    `;
+    header.className = 'soup-memory-panel__header';
 
     const title = document.createElement('h3');
-    title.textContent = '💾 Molecular Memory';
-    title.style.cssText = `
-      margin: 0;
-      color: #9c27b0;
-    `;
+    title.id = 'memory-panel-title';
+    title.className = 'soup-memory-panel__title';
+    title.textContent = 'Molecular Memory';
 
     const closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.className = 'soup-memory-panel__close';
     closeBtn.textContent = '×';
-    closeBtn.style.cssText = `
-      background: none;
-      border: none;
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
-      padding: 0;
-      width: 20px;
-      height: 20px;
-    `;
+    closeBtn.setAttribute('aria-label', 'Close molecular memory');
     closeBtn.onclick = () => this.hide();
 
     header.appendChild(title);
@@ -81,32 +55,17 @@ class MemoryPanel {
     // Stats
     const statsDiv = document.createElement('div');
     statsDiv.id = 'memory-stats';
-    statsDiv.style.cssText = `
-      margin-bottom: 15px;
-      font-size: 12px;
-    `;
+    statsDiv.className = 'soup-memory-panel__stats';
 
     const zoneRow = document.createElement('div');
     zoneRow.id = 'memory-spawn-row';
-    zoneRow.style.cssText = `
-      margin-bottom: 12px;
-      font-size: 12px;
-      color: #ccc;
-    `;
+    zoneRow.className = 'soup-memory-panel__zone-row';
     const zoneLabel = document.createElement('span');
     zoneLabel.textContent = 'Rehydration spawn: ';
     const zoneSelect = document.createElement('select');
     zoneSelect.id = 'memory-zone-select';
+    zoneSelect.className = 'soup-memory-panel__zone-select';
     zoneSelect.setAttribute('aria-label', 'Zone to place molecule when returning to Soup');
-    zoneSelect.style.cssText = `
-      background: #1a1a2a;
-      color: #fff;
-      border: 1px solid #9c27b0;
-      border-radius: 4px;
-      padding: 4px 8px;
-      font-family: monospace;
-      font-size: 12px;
-    `;
     const zones: { v: 'calm' | 'lab' | 'kitchen' | 'deep' | 'center'; l: string }[] = [
       { v: 'calm', l: 'Calm (breathing)' },
       { v: 'lab', l: 'Lab' },
@@ -126,15 +85,18 @@ class MemoryPanel {
     // Molecule list
     const listDiv = document.createElement('div');
     listDiv.id = 'memory-list';
-    listDiv.style.cssText = `
-      max-height: 250px;
-      overflow-y: auto;
-    `;
+    listDiv.className = 'soup-memory-panel__list';
+
+    // Privacy footer — honest disclosure of where the memory lives.
+    const footer = document.createElement('p');
+    footer.className = 'soup-memory-panel__footer';
+    footer.textContent = 'Stored locally in your browser. Never uploaded.';
 
     this.panelElement.appendChild(header);
     this.panelElement.appendChild(statsDiv);
     this.panelElement.appendChild(zoneRow);
     this.panelElement.appendChild(listDiv);
+    this.panelElement.appendChild(footer);
 
     document.body.appendChild(this.panelElement);
   }
@@ -143,7 +105,8 @@ class MemoryPanel {
     if (!this.panelElement) return;
 
     this.isVisible = true;
-    this.panelElement.style.display = 'block';
+    this.panelElement.hidden = false;
+    this.panelElement.setAttribute('aria-hidden', 'false');
     this.updateContent();
   }
 
@@ -151,7 +114,8 @@ class MemoryPanel {
     if (!this.panelElement) return;
 
     this.isVisible = false;
-    this.panelElement.style.display = 'none';
+    this.panelElement.hidden = true;
+    this.panelElement.setAttribute('aria-hidden', 'true');
   }
 
   private updateContent() {
@@ -179,61 +143,71 @@ class MemoryPanel {
       listEl.innerHTML = '';
 
       if (savedMolecules.length === 0) {
-        listEl.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">No saved molecules yet. Significant molecules will be automatically saved here.</div>';
+        const empty = document.createElement('div');
+        empty.className = 'soup-memory-panel__empty';
+        empty.textContent =
+          'No saved molecules yet. Tap a molecule and choose "Save this structure" — or significant molecules save themselves.';
+        listEl.appendChild(empty);
         return;
       }
 
+      // Significance is *not* a star rating (no engagement metric, see
+      // ETHICAL-STYLE-MAP §6). Surface only a "Posner" / "Highlight" tag when
+      // the geometry passes the canonical archive thresholds.
+      const archive = this.soup.getGlobalArchive
+        ? this.soup.getGlobalArchive()
+        : { posnerMolecules: [], communityHighlights: [] };
+      const posnerIds = new Set(
+        (archive.posnerMolecules || []).map((m: { id: string }) => m.id)
+      );
+      const highlightIds = new Set(
+        (archive.communityHighlights || []).map((m: { id: string }) => m.id)
+      );
+
       savedMolecules.forEach((molecule: Molecule) => {
         const item = document.createElement('div');
-        item.style.cssText = `
-          border: 1px solid #666;
-          border-radius: 4px;
-          padding: 10px;
-          margin-bottom: 8px;
-          background: rgba(64, 64, 64, 0.3);
-        `;
+        item.className = 'soup-memory-panel__item';
 
         const time = new Date(molecule.creationTime).toLocaleString();
-        const significanceStars = '⭐'.repeat(Math.floor(molecule.significance * 5));
-        const generationInfo = molecule.generation ? ` | Gen ${molecule.generation}` : '';
+        const generationInfo = molecule.generation ? ` · Gen ${molecule.generation}` : '';
+
+        const tags: string[] = [];
+        if (posnerIds.has(molecule.id)) tags.push('Posner');
+        if (highlightIds.has(molecule.id)) tags.push('Highlight');
+        const tagBlock = tags.length
+          ? `<span class="soup-memory-panel__tag">${tags.join(' · ')}</span>`
+          : '';
+
         let heritageBlock = '';
         if (molecule.heritage && molecule.heritage.length > 0) {
           const h = molecule.heritage[0] as { parentId?: string; reactionType?: string };
           const rest = molecule.heritage.length > 1 ? ` +${molecule.heritage.length - 1} more` : '';
           const pid = String(h.parentId || '?').replace(/[<>]/g, '').slice(0, 24);
           const rtype = String(h.reactionType || '?').replace(/[<>]/g, '');
-          heritageBlock = `<div style="font-size: 10px; color: #4fc3f7; margin-top: 4px;">Heritage: from <code>${pid}</code> via ${rtype}${rest}</div>`;
+          heritageBlock = `<div class="soup-memory-panel__heritage">↳ from <code>${pid}</code> via ${rtype}${rest}</div>`;
         }
 
         item.innerHTML = `
-          <div style="font-weight: bold; color: #9c27b0;">${molecule.name}</div>
-          <div style="font-size: 11px; color: #ccc; margin: 5px 0;">
+          <div class="soup-memory-panel__name">${molecule.name}${tagBlock}</div>
+          <div class="soup-memory-panel__meta">
             ${molecule.emotionalContext}<br>
-            Personality: ${molecule.personality} | Born in zone: ${molecule.zone}<br>
-            Created: ${time} | Significance: ${significanceStars}${generationInfo}
+            ${molecule.personality} · zone ${molecule.zone}<br>
+            ${time}${generationInfo}
           </div>
-          <div style="font-size: 10px; color: #888;">
-            ${molecule.atoms.length} atoms, ${molecule.bonds.length} bonds
-            ${molecule.heritage ? ` | ${molecule.heritage.length} heritage link(s)` : ''}
+          <div class="soup-memory-panel__counts">
+            ${molecule.atoms.length} atoms · ${molecule.bonds.length} bonds${
+              molecule.heritage ? ` · ${molecule.heritage.length} heritage link(s)` : ''
+            }
           </div>
           ${heritageBlock}
         `;
 
-        // Add rehydration button
+        // Add rehydration button — calm cyan, not extractive blue
         const loadBtn = document.createElement('button');
+        loadBtn.type = 'button';
+        loadBtn.className = 'soup-memory-panel__return-btn';
         loadBtn.textContent = 'Return to Soup';
         loadBtn.title = 'Spawns a fresh instance at the selected zone; new id, bonds rewired, ready to react';
-        loadBtn.style.cssText = `
-          margin-top: 5px;
-          margin-right: 6px;
-          padding: 4px 8px;
-          background: #4a90e2;
-          border: none;
-          border-radius: 3px;
-          color: white;
-          cursor: pointer;
-          font-size: 11px;
-        `;
         loadBtn.onclick = () => {
           const sel = document.getElementById('memory-zone-select') as HTMLSelectElement | null;
           const z = (sel?.value || 'calm') as 'calm' | 'lab' | 'kitchen' | 'deep' | 'center';

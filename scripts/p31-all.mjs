@@ -14,6 +14,7 @@
  * Flags: --skip-validate, --skip-fleet, --skip-e2e, --skip-sast, --skip-lint, --skip-ecosystem-glass
  * Env: P31_CI_USE_PREFLIGHT=1 — call p31-ci with --skip-root-verify --skip-npm-ci (GitHub Actions
  *   job 2 after job 1 already ran `npm ci` + `npm run verify`).
+ * Env: P31_HUB_SIMULATIONS=1 — after home Playwright e2e, run npm run test:simulations (hub mirror dry-runs + wire fixtures).
  */
 import { execSync } from "node:child_process";
 import fs from "node:fs";
@@ -120,6 +121,13 @@ function main() {
           cwd: root,
           env: { ...process.env, CI: "true" },
         });
+      }
+      if (process.env.P31_HUB_SIMULATIONS === "1") {
+        run(
+          "Hub simulations (doc-library + DELTA mirrors + geodesic wire fixtures)",
+          "npm run test:simulations",
+          { cwd: root }
+        );
       }
     }
     if (p31caE2e) {

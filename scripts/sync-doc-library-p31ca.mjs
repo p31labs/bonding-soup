@@ -4,6 +4,9 @@
  * 1) npm run build:doc-index
  * 2) Copy index.json, app.js, doc-search-worker.js, vendor/
  * 3) Emit index.html from home template with <base> + /p31-style.css + p31ca-safe footer links
+ *
+ * Env: P31_SYNC_DOC_LIB_SKIP_BUILD=1 — skip step 1 (verify bar uses this).
+ *      P31_SYNC_DOC_LIB_PUBLIC_BASE — absolute path treated as `p31ca/public` (simulate / temp mirror).
  */
 import { execSync } from "node:child_process";
 import fs from "node:fs";
@@ -14,13 +17,17 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const p31ca = path.join(root, "andromeda", "04_SOFTWARE", "p31ca");
-const out = path.join(p31ca, "public", "doc-library");
+/** When set (e.g. simulate to a temp dir), writes mirror under this path as if it were `p31ca/public/`. */
+const publicDir = process.env.P31_SYNC_DOC_LIB_PUBLIC_BASE
+  ? path.resolve(process.env.P31_SYNC_DOC_LIB_PUBLIC_BASE)
+  : path.join(p31ca, "public");
+const out = path.join(publicDir, "doc-library");
 const homeIndex = path.join(root, "docs", "doc-library", "index.html");
 const org = "p31labs";
 const repo = "bonding-soup";
 const githubBlob = (p) => `https://github.com/${org}/${repo}/blob/main/${p.replace(/^\/+/, "")}`;
 
-if (!fs.existsSync(p31ca)) {
+if (!process.env.P31_SYNC_DOC_LIB_PUBLIC_BASE && !fs.existsSync(p31ca)) {
   console.error("sync-doc-library-p31ca: missing p31ca tree; skip (partial clone).");
   process.exit(0);
 }
@@ -57,7 +64,7 @@ async function main() {
   /** Minimal home assets so /doc-library/ resolves under p31ca dist (verify-internal-hub-links). */
   const copyIntoPublic = async (fromRel, toRel) => {
     const from = path.join(root, fromRel);
-    const to = path.join(p31ca, "public", toRel);
+    const to = path.join(publicDir, toRel);
     if (!fs.existsSync(from)) {
       throw new Error(`sync-doc-library-p31ca: missing ${fromRel}`);
     }
@@ -136,7 +143,11 @@ async function main() {
     '<p class="lede" role="note">Hub mirror: this index is synced from the P31 home repo; clone <a href="https://github.com/p31labs/bonding-soup" rel="noopener">bonding-soup</a> for the full <code>demo</code> + command-center path. From the repo root: <code>npm run demo</code> then <code>…/docs/doc-library/</code>. Refresh: <code>npm run build:doc-index</code> + <code>npm run sync:doc-library:p31ca</code>.</p>'
   );
   await fsp.writeFile(path.join(out, "index.html"), html, "utf8");
-  console.log("sync-doc-library-p31ca: OK →", path.relative(root, out));
+  if (process.env.P31_SYNC_DOC_LIB_PUBLIC_BASE) {
+    console.log("sync-doc-library-p31ca: OK → (temp public)", publicDir);
+  } else {
+    console.log("sync-doc-library-p31ca: OK →", path.relative(root, out));
+  }
 }
 
 main().catch((e) => {

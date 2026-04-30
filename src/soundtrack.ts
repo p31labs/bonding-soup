@@ -43,6 +43,14 @@ export class SoundtrackEngine {
   private activeOscillators = 0;
   private maxOscillators = 8;
 
+  /**
+   * Master gain baseline (matches the `0.3` set in `initializeAudio`). Kept here so the
+   * 4-4-6 breath modulation in `setBreathAmplitude` can swing around the operator's resting
+   * level without drifting if other code retargets the master.
+   */
+  private masterBaseGain = 0.3;
+  private static readonly BREATH_GAIN_SWING = 0.15; // ±15% around base — sub-audible warmth, not a swell.
+
   // Zone audio profiles
   private zoneProfiles = {
     calm: {
@@ -394,6 +402,25 @@ export class SoundtrackEngine {
       registeredMolecules: this.moleculeAudio.size,
       currentZone: 'detected automatically'
     };
+  }
+
+  /**
+   * Modulate master gain on the global 4-4-6 breath envelope.
+   * `amp` is 0..1 (0 = full exhale, 1 = peak inhale/hold). Gain ramp uses
+   * `setTargetAtTime` with a 400ms time-constant so the change is felt, not heard.
+   * No-op when the audio graph is unavailable (server-side, tests, denied permission).
+   */
+  setBreathAmplitude(amp: number) {
+    if (!this.audioContext || !this.masterGain) return;
+    const a = Math.max(0, Math.min(1, Number.isFinite(amp) ? amp : 0));
+    const target =
+      this.masterBaseGain *
+      (1 - SoundtrackEngine.BREATH_GAIN_SWING + SoundtrackEngine.BREATH_GAIN_SWING * 2 * a);
+    try {
+      this.masterGain.gain.setTargetAtTime(target, this.audioContext.currentTime, 0.4);
+    } catch {
+      /* setTargetAtTime can throw if the context is closed; ignore */
+    }
   }
 
   /**

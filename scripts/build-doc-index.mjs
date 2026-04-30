@@ -3,9 +3,13 @@
  * Build searchable JSON index for docs/doc-library (p31.docLibrary/1.0.0).
  * Reads docs/doc-index.manifest.json — add optional dirs only when present.
  * fingerprint = sha256 of ordered document bodies — stable generatedAt when sources unchanged.
+ *
+ * After a real write (not fingerprint skip): when `andromeda/04_SOFTWARE/p31ca` exists, runs
+ * `npm run sync:doc-library:p31ca` with P31_SYNC_DOC_LIB_SKIP_BUILD=1 so hub `/doc-library` stays aligned
+ * (test:simulations, verify mirror). Opt out: P31_DOC_INDEX_NO_AUTO_SYNC=1.
  */
 import crypto from "node:crypto";
-import { execFileSync } from "node:child_process";
+import { execFileSync, execSync } from "node:child_process";
 import fs from "node:fs";
 import fsp from "node:fs/promises";
 import path from "node:path";
@@ -392,6 +396,21 @@ async function main() {
   await fsp.writeFile(outJson, JSON.stringify(payload, null, 0), "utf8");
   const kb = (Buffer.byteLength(JSON.stringify(payload), "utf8") / 1024).toFixed(1);
   console.log("build-doc-index: wrote", documents.length, "documents,", kb, "kb → docs/doc-library/index.json");
+
+  const p31caRoot = path.join(root, "andromeda", "04_SOFTWARE", "p31ca");
+  if (process.env.P31_DOC_INDEX_NO_AUTO_SYNC !== "1" && fs.existsSync(p31caRoot)) {
+    try {
+      execSync("npm run sync:doc-library:p31ca", {
+        cwd: root,
+        stdio: "inherit",
+        env: { ...process.env, P31_SYNC_DOC_LIB_SKIP_BUILD: "1" },
+      });
+      console.log("build-doc-index: auto-synced doc-library → p31ca public (hub mirror)");
+    } catch (e) {
+      console.error("build-doc-index: auto-sync failed — run npm run sync:doc-library:p31ca manually");
+      throw e;
+    }
+  }
 }
 
 main().catch((e) => {

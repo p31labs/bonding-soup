@@ -77,6 +77,47 @@ function httpGet(port, pathname) {
   });
 }
 
+/**
+ * @param {number} port
+ * @param {string} pathname
+ * @param {string} body
+ */
+function httpPost(port, pathname, body) {
+  return new Promise((resolve, reject) => {
+    const req = http.request(
+      {
+        hostname: "127.0.0.1",
+        port,
+        path: pathname,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": Buffer.byteLength(body),
+        },
+        timeout: 8000,
+      },
+      (res) => {
+        const chunks = [];
+        res.on("data", (c) => chunks.push(c));
+        res.on("end", () => {
+          resolve({
+            status: res.statusCode || 0,
+            headers: res.headers,
+            body: Buffer.concat(chunks).toString("utf8"),
+          });
+        });
+      }
+    );
+    req.on("error", reject);
+    req.on("timeout", () => {
+      req.destroy();
+      reject(new Error("http timeout"));
+    });
+    req.write(body);
+    req.end();
+  });
+}
+
 function killAllCc() {
   try {
     spawnSync("pkill", ["-f", "scripts/p31-local-command-center.mjs"], { stdio: "ignore" });
@@ -390,6 +431,32 @@ async function main() {
         /* ignore */
       }
     }
+  }
+  killAllCc();
+  await new Promise((r) => setTimeout(r, 400));
+
+  log("=== T9: POST /api/run guardrails (GET 404, bad JSON 500, bad action 400) ===");
+  {
+    const child = startCc({});
+    const port = await waitForCcUrlLine(child);
+    const getRun = await httpGet(port, "/api/run");
+    if (getRun.status !== 404) throw new Error(`GET /api/run expected 404, got ${getRun.status}`);
+    const badJson = await httpPost(port, "/api/run", "not-json");
+    if (badJson.status !== 500) throw new Error(`invalid JSON expected 500, got ${badJson.status}`);
+    const noAction = await httpPost(port, "/api/run", "{}");
+    if (noAction.status !== 400) throw new Error(`missing action expected 400, got ${noAction.status}`);
+    const noJ = JSON.parse(noAction.body);
+    if (noJ.code !== 1 || !String(noJ.stderr || "").includes("bad action")) {
+      throw new Error("missing action JSON shape");
+    }
+    const badAct = await httpPost(
+      port,
+      "/api/run",
+      JSON.stringify({ action: "__not_whitelisted__" })
+    );
+    if (badAct.status !== 400) throw new Error(`bad action expected 400, got ${badAct.status}`);
+    child.kill("SIGTERM");
+    await new Promise((r) => setTimeout(r, 200));
   }
   killAllCc();
 

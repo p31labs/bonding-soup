@@ -28,6 +28,44 @@ function httpGet(url) {
   });
 }
 
+/**
+ * @param {string} url
+ * @param {string} body
+ * @param {string} [contentType]
+ */
+function httpPost(url, body, contentType = "application/json") {
+  return new Promise((resolve, reject) => {
+    const u = new URL(url);
+    const req = http.request(
+      {
+        hostname: u.hostname,
+        port: u.port || (u.protocol === "https:" ? 443 : 80),
+        path: u.pathname + u.search,
+        method: "POST",
+        headers: {
+          "Content-Type": contentType,
+          "Content-Length": Buffer.byteLength(body),
+        },
+        timeout: 8000,
+      },
+      (res) => {
+        let b = "";
+        res.on("data", (c) => {
+          b += c;
+        });
+        res.on("end", () => resolve({ status: res.statusCode || 0, body: b, headers: res.headers || {} }));
+      }
+    );
+    req.on("error", reject);
+    req.on("timeout", () => {
+      req.destroy();
+      reject(new Error("POST timeout"));
+    });
+    req.write(body);
+    req.end();
+  });
+}
+
 function waitFor(predicate, maxMs, stepMs = 40) {
   const t0 = Date.now();
   return new Promise((resolve, reject) => {
@@ -160,6 +198,31 @@ async function main() {
     if (typeof sxj.ok !== "boolean") {
       throw new Error("command-center smoke: simplex-state missing ok");
     }
+
+    const getRun = await httpGet(`http://127.0.0.1:${port}/api/run`);
+    if (getRun.status !== 404) {
+      throw new Error("command-center smoke: GET /api/run must be 404, got " + getRun.status);
+    }
+    const badJson = await httpPost(`http://127.0.0.1:${port}/api/run`, "not-json");
+    if (badJson.status !== 500) {
+      throw new Error("command-center smoke: POST /api/run invalid JSON " + badJson.status);
+    }
+    const noAction = await httpPost(`http://127.0.0.1:${port}/api/run`, "{}");
+    if (noAction.status !== 400) {
+      throw new Error("command-center smoke: POST /api/run missing action " + noAction.status);
+    }
+    const noActionJ = JSON.parse(noAction.body);
+    if (noActionJ.code !== 1 || !String(noActionJ.stderr || "").includes("bad action")) {
+      throw new Error("command-center smoke: missing action response shape");
+    }
+    const badAction = await httpPost(
+      `http://127.0.0.1:${port}/api/run`,
+      JSON.stringify({ action: "__not_a_whitelisted_action__" })
+    );
+    if (badAction.status !== 400) {
+      throw new Error("command-center smoke: unknown action status " + badAction.status);
+    }
+
     const desk = await httpGet(`http://127.0.0.1:${port}/desk`);
     if (desk.status !== 200) {
       throw new Error("command-center smoke: /desk " + desk.status);

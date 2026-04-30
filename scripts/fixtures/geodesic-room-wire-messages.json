@@ -1,0 +1,77 @@
+{
+  "schema": "p31.geodesicRoomWire.fixtures/1.0.0",
+  "wireSchema": "p31.geodesicRoomWire/0.2.2",
+  "clientMessages": [
+    { "type": "SET_VERTEX", "id": "v0", "x": 0, "y": 1, "z": 0 },
+    {
+      "type": "ADD_SHAPE",
+      "shapeId": "s1",
+      "shapeType": "tet",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rotY": 0.1,
+      "tint": 2
+    },
+    { "type": "MOVE_SHAPE", "shapeId": "s1", "x": 1, "y": 0, "z": 0 },
+    { "type": "REMOVE_SHAPE", "shapeId": "s1" },
+    { "type": "RESET_SHAPES" },
+    {
+      "type": "ADD_STRUT",
+      "strutId": "st1",
+      "aShape": "a",
+      "aVi": 0,
+      "bShape": "b",
+      "bVi": 1
+    },
+    { "type": "REMOVE_STRUT", "strutId": "st1" },
+    { "type": "RESET" },
+    { "type": "ping" }
+  ],
+  "serverMessages": [
+    {
+      "type": "hello",
+      "state": {
+        "v0": { "x": 0, "y": 1, "z": 0, "label": "A" },
+        "v1": { "x": 1, "y": 0, "z": 0, "label": "B" },
+        "v2": { "x": 0, "y": 0, "z": 1, "label": "C" },
+        "v3": { "x": 0, "y": 0, "z": 0, "label": "D" }
+      },
+      "shapes": {},
+      "struts": {},
+      "version": 1,
+      "clientId": "c-test",
+      "rigidity": { "V": 4, "E": 6, "F": 4, "rigid": true, "m": 0 }
+    },
+    {
+      "type": "op",
+      "op": {
+        "type": "ADD_SHAPE",
+        "shapeId": "s1",
+        "shapeType": "tet",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "version": 2,
+        "ts": 1,
+        "clientId": "c-test",
+        "rigidity": { "V": 4, "E": 6, "F": 4, "rigid": true, "m": 0 }
+      }
+    },
+    {
+      "type": "reset",
+      "state": {
+        "v0": { "x": 0, "y": 1, "z": 0, "label": "A" },
+        "v1": { "x": 1, "y": 0, "z": 0, "label": "B" },
+        "v2": { "x": 0, "y": 0, "z": 1, "label": "C" },
+        "v3": { "x": 0, "y": 0, "z": 0, "label": "D" }
+      },
+      "version": 0,
+      "ts": 2
+    },
+    { "type": "joined", "clientId": "c2", "ts": 3 },
+    { "type": "left", "clientId": "c2", "ts": 4 },
+    { "type": "pong", "ts": 5 },
+    { "type": "error", "code": "SHAPE_CAP", "max": 50 }
+  ]
+}

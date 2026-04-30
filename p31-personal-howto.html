@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-p31-appearance="hub">
 <head>
   <meta charset="UTF-8" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -7,319 +7,333 @@
   <link rel="manifest" href="p31-bonding.webmanifest" crossorigin="anonymous" />
   <link rel="apple-touch-icon" href="p31-bonding-icons/apple-touch-180.png" sizes="180x180" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
-  <title>P31 — personal how-to (interactive)</title>
+  <meta name="color-scheme" content="dark" />
+  <meta name="description" content="P31 home operator runbook — every npm script that ships, deploys, or repairs the mesh. Same canon as device setup; every command is copy-able." />
+  <meta name="theme-color" content="#0f1115" />
+  <title>P31 — personal how-to (operator runbook)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700&family=JetBrains+Mono:ital,wght@0,400;0,600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="cognitive-passport/p31-style.css" />
+  <link rel="stylesheet" href="p31-shared-surface.css" />
   <link rel="stylesheet" href="cognitive-passport/p31-responsive-surface.css" />
+  <script src="cognitive-passport/lib/p31-subject-prefs.js"></script>
   <style>
-    :root {
-      --bg: #0a0a12;
-      --panel: #12121c;
-      --border: #2a2a3c;
-      --text: #e4e4ee;
-      --muted: #8b8ba3;
-      --accent: #5eead4;
-      --accent2: #a5b4fc;
-      --warn: #fcd34d;
+    /* Page-local extras: filter input + AASO heart line. All other styling
+       comes from the shared .p31-doc-* canon (same as device setup). */
+    .howto-search {
+      width: 100%;
+      max-width: 22rem;
+      padding: var(--p31-space-2) var(--p31-space-3);
+      font: inherit;
+      font-size: var(--p31-text-sm);
+      font-family: var(--p31-font-sans);
+      color: var(--p31-cloud);
+      background: var(--p31-void);
+      border: 1px solid var(--p31-glass-border);
+      border-radius: var(--p31-radius-md);
+      transition: border-color var(--p31-duration-fast) var(--p31-ease-standard);
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; min-height: 100vh; min-height: 100dvh; font-family: system-ui, sans-serif;
-      background: var(--bg); color: var(--text);
-      line-height: 1.5;
+    .howto-search::placeholder { color: var(--p31-muted); }
+    .howto-search:focus {
+      outline: none;
+      border-color: var(--p31-cyan);
+      box-shadow: var(--p31-shadow-glowTeal);
     }
-    a { color: var(--accent); }
-    a:hover { text-decoration: underline; }
-    code { background: #1a1a28; padding: 0.12em 0.35em; border-radius: 4px; font-size: 0.9em; color: #c4b5fd; }
-    header {
-      position: sticky; top: 0; z-index: 10;
-      background: linear-gradient(180deg, #10101a, rgba(10,10,18,0.95));
-      border-bottom: 1px solid var(--border);
-      padding: max(0.75rem, env(safe-area-inset-top, 0px)) max(1rem, env(safe-area-inset-right, 0px)) 0.75rem max(1rem, env(safe-area-inset-left, 0px));
-    }
-    header h1 { margin: 0; font-size: clamp(0.95rem, 2vw + 0.75rem, 1.1rem); font-weight: 600; letter-spacing: -0.02em; }
-    header p { margin: 0.25rem 0 0; font-size: 0.8rem; color: var(--muted); }
-    .tabs {
-      display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.6rem;
-    }
-    .tabs button {
-      font: inherit; font-size: 0.78rem; padding: 0.4rem 0.75rem;
-      border: 1px solid var(--border); border-radius: 8px;
-      background: var(--panel); color: var(--text); cursor: pointer;
-    }
-    .tabs button:hover { border-color: var(--accent2); }
-    .tabs button[aria-selected="true"] {
-      background: #1e1e32; border-color: var(--accent); color: var(--accent);
-    }
-    section[hidden] { display: none; }
-    section h2 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin: 0 0 0.75rem; }
-    .card {
-      background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
-      padding: 1rem; margin-bottom: 1rem;
-    }
-    .search {
-      width: 100%; max-width: min(20rem, 100%); padding: 0.5rem 0.75rem; margin: 0 0 0.75rem;
-      font: inherit; font-size: 0.9rem; border-radius: 8px;
-      border: 1px solid var(--border); background: #0c0c14; color: var(--text);
-    }
-    .search:focus { outline: none; border-color: var(--accent2); }
-    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    th, td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
-    th { color: var(--muted); font-weight: 500; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; }
-    tr[hidden] { display: none; }
-    .cmd { font-family: ui-monospace, monospace; color: #c4b5fd; word-break: break-all; }
-    .copy {
-      display: inline-block; margin-left: 0.35rem; padding: 0.15rem 0.4rem; font-size: 0.65rem;
-      border: 1px solid var(--border); border-radius: 4px; background: #18182a; color: var(--muted);
-      cursor: pointer; vertical-align: middle;
-    }
-    .copy:hover { border-color: var(--accent); color: var(--accent); }
-    details { border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 0.75rem; margin: 0.5rem 0; background: #0c0c14; }
-    summary { cursor: pointer; color: var(--accent2); font-size: 0.9rem; }
-    .toast {
-      position: fixed; bottom: max(1rem, env(safe-area-inset-bottom, 0px)); right: max(1rem, env(safe-area-inset-right, 0px)); padding: 0.5rem 0.9rem; border-radius: 8px;
-      background: #1a3a32; color: #a7f3d0; font-size: 0.85rem; opacity: 0; pointer-events: none;
-      transition: opacity 0.2s; z-index: 20;
-    }
-    .toast.show { opacity: 1; }
-    .link-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0; }
-    .link-row a {
-      display: inline-block; padding: 0.4rem 0.7rem; border: 1px solid var(--border);
-      border-radius: 8px; text-decoration: none; font-size: 0.85rem;
-    }
-    .link-row a:hover { border-color: var(--accent2); }
-    .pill { display: inline-block; padding: 0.15rem 0.4rem; border-radius: 4px; background: #1e1e32; font-size: 0.75rem; color: var(--accent2); }
-    .aaso-line {
-      margin: 0.5rem 0 0;
-      font-size: 0.88rem;
-      line-height: 1.5;
-      color: #9a96b0;
+    .howto-aaso {
+      margin-top: var(--p31-space-3);
+      padding: var(--p31-space-3) var(--p31-space-4);
+      background: color-mix(in srgb, var(--p31-surface2) 70%, var(--p31-void));
+      border-left: 3px solid var(--p31-coral);
+      border-radius: 0 var(--p31-radius-md) var(--p31-radius-md) 0;
+      font-size: var(--p31-text-sm);
+      color: color-mix(in srgb, var(--p31-cloud) 92%, var(--p31-void));
       max-width: 44rem;
     }
-    .aaso-line a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(94, 234, 212, 0.35); }
-    .aaso-line a:hover { border-bottom-color: var(--accent2); color: var(--accent2); }
-    .aaso-line .aaso-love { color: #f472b6; }
+    .howto-aaso em { color: var(--p31-butter); font-style: normal; font-weight: 600; }
+    .howto-heart {
+      display: inline-block;
+      color: var(--p31-coral);
+      font-style: normal;
+      animation: howto-pulse 2.4s ease-in-out infinite;
+      transform-origin: center;
+    }
+    @keyframes howto-pulse {
+      0%, 100% { transform: scale(1); opacity: 0.85; }
+      50%      { transform: scale(1.12); opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .howto-heart { animation: none; }
+    }
+    /* Inline command cell — keep code visible without breaking layout. */
+    td.cmd { font-family: var(--p31-font-mono); font-size: var(--p31-text-xs); word-break: break-word; }
+    td.cmd .p31-doc-copy {
+      position: static;
+      display: inline-block;
+      margin-left: var(--p31-space-2);
+      vertical-align: middle;
+    }
+    /* Filter "no match" row — show context, not nothing. */
+    tr[hidden] { display: none; }
   </style>
 </head>
-<body class="p31-mesh-m-first p31-responsive-surface">
-  <header>
-    <h1>P31 personal how-to <span class="pill">interactive</span></h1>
-    <p class="p31-host-mind">Host mind: <strong>Operator</strong> — command index altitude on the same night sky.</p>
-    <p>Ship bar (merge/deploy): <a href="docs/P31-ENGINEERING-STANDARD.md">docs/P31-ENGINEERING-STANDARD.md</a> · Map: <a href="P31-ROOT-MAP.md">P31-ROOT-MAP.md</a> · <a href="AGENTS.md">AGENTS.md</a></p>
-    <p class="aaso-line"><em>As above, so below:</em> same <code>npm run demo</code> / <code>build:doc-index</code> rhythm as <a href="soup.html">C.A.R.S.</a>, <a href="docs/doc-library/index.html">doc library</a>, <a href="docs/physics-learn/index.html">physics learn</a>, <a href="p31-slicer.html">browser slicer</a>, <a href="p31-sovereign-lab.html">sovereign lab</a>, <a href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (with <code>andromeda/</code>), <a href="fleet-portal.html">live fleet &amp; pages index</a>, <a href="poets-room.html">Poets room</a>, <a href="http://127.0.0.1:3131/">local command center</a>, <a href="docs/P31-DEPLOY-CANON.md">CONNECTION</a> (<code>npm run connection</code>), and the <a href="docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">when-scale plan</a> — files in git, warmth in the browser. <span class="aaso-love" title="love">&#9829;</span><span title="&lt;3" aria-label="less than three"> &lt;3</span></p>
-    <div class="link-row" role="navigation" aria-label="Create and connect (hub)">
-      <a href="p31-slicer.html" title="Kiri:Moto — browser FDM/CAM slicer">Browser slicer</a>
-      <a href="p31-sovereign-lab.html" title="Sovereign Lab — research-doc slice">Sovereign Lab</a>
-      <a href="p31-device-setup.html" title="Chromebook (Spin 7xx) and mobile — full operator setup">Device setup</a>
-      <a href="andromeda/04_SOFTWARE/p31ca/public/initial-build.html" title="Initial build (local)">Create</a>
-      <a href="andromeda/04_SOFTWARE/p31ca/public/connect.html" title="K₄ navigator (local)">Connect</a>
-      <a href="https://p31ca.org/build" rel="noopener" title="Initial build (live)">p31ca.org/build</a>
-      <a href="https://p31ca.org/connect.html" rel="noopener" title="Connect (live)">p31ca.org/connect</a>
-    </div>
-    <div class="tabs" role="tablist" aria-label="Sections">
-      <button type="button" role="tab" aria-selected="true" aria-controls="panel-model" id="tab-model" data-panel="panel-model">Mental model</button>
-      <button type="button" role="tab" aria-selected="false" aria-controls="panel-home" id="tab-home" data-panel="panel-home">Home commands</button>
-      <button type="button" role="tab" aria-selected="false" aria-controls="panel-andro" id="tab-andro" data-panel="panel-andro">Andromeda</button>
-      <button type="button" role="tab" aria-selected="false" aria-controls="panel-god" id="tab-god" data-panel="panel-god">G.O.D. shells</button>
-      <button type="button" role="tab" aria-selected="false" aria-controls="panel-git" id="tab-git" data-panel="panel-git">Git & editor</button>
-      <button type="button" role="tab" aria-selected="false" aria-controls="panel-911" id="tab-911" data-panel="panel-911">Emergencies</button>
-    </div>
-  </header>
-  <main class="p31-shell" style="--p31-shell-max: 56rem; --p31-shell-pad: 1rem; --p31-shell-pad-bottom: 2rem">
-    <section id="panel-model" role="tabpanel" aria-labelledby="tab-model">
-      <h2>Three layers (not twenty products)</h2>
-      <div class="card">
-        <div class="p31-table-scroll">
-        <table>
-          <thead>
-            <tr><th>Layer</th><th>What</th><th>Path / note</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>P31 home</strong></td>
-              <td>bonding-soup repo: constants, scripts, passport, soup demo, CI <code>verify</code></td>
-              <td>Workspace root (e.g. <code>~/p31</code>)</td>
-            </tr>
-            <tr>
-              <td><strong>Andromeda</strong></td>
-              <td>Separate git repo: pnpm monorepo, p31ca, Workers, donate-api, command-center</td>
-              <td><code>andromeda/</code> — may be gitignored from home’s view</td>
-            </tr>
-            <tr>
-              <td><strong>Live</strong></td>
-              <td>Deployed sites — you build in a repo, deploy with wrangler / Pages</td>
-              <td>Browser</td>
-            </tr>
-          </tbody>
-        </table>
-        </div>
-        <p style="margin: 0.75rem 0 0; color: var(--muted); font-size: 0.9rem;">
-          <strong>Rule of thumb:</strong> operator numbers + home scripts → P31 home. Hub, Workers, BONDING apps → <code>andromeda/04_SOFTWARE/</code>.
-        </p>
-      </div>
-      <details>
-        <summary>Machine gate wins over prose</summary>
-        <p style="font-size: 0.9rem; color: var(--muted); margin: 0.5rem 0 0;">
-          When <code>npm run verify</code> disagrees with this page, fix the project or the doc — not your memory.
-        </p>
-      </details>
-    </section>
+<body class="p31-doc p31-mesh-m-first p31-responsive-surface">
+  <canvas id="howto-star-plate" width="4" height="4" aria-hidden="true" style="position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block"></canvas>
+  <script type="module">
+    /* Static-plate boot — same canon as device setup. Fail quiet. */
+    const cv = document.getElementById("howto-star-plate");
+    if (cv instanceof HTMLCanvasElement) {
+      try {
+        const mod = await import("./design-assets/starfield/p31-starfield-static-plate.js");
+        mod.initStaticStarPlate(cv, { preset: "hub" });
+      } catch (_e) { /* offline-friendly */ }
+    }
+  </script>
+  <a class="p31-doc-skip" href="#main">Skip to content</a>
+  <div class="p31-doc-wrap" id="main">
 
-    <section id="panel-home" role="tabpanel" aria-labelledby="tab-home" hidden>
-      <h2>From P31 home root</h2>
-      <p style="color: var(--muted); font-size: 0.9rem; margin: 0 0 0.5rem;">Filter rows:</p>
-      <input type="search" class="search" id="filter-home" placeholder="Filter by goal, command, notes…" autocomplete="off" />
-      <div class="card">
-        <div class="p31-table-scroll">
-        <table id="table-home">
-          <thead>
-            <tr>
-              <th>Goal</th>
-              <th>Command</th>
-              <th>Notes</th>
-            </tr>
-          </thead>
-          <tbody id="tbody-home">
-            <tr data-cmd="npm run setup"><td>New machine / clean clone</td><td class="cmd">npm run setup <button type="button" class="copy" data-copy="npm run setup">copy</button></td><td>apply:constants, verify, p31ca install, optional hooks</td></tr>
-            <tr data-cmd="npm run verify"><td>Sanity (CI bar)</td><td class="cmd">npm run verify <button type="button" class="copy" data-copy="npm run verify">copy</button></td><td>ecosystem, MAP, contracts, egg-hunt, tsc</td></tr>
-            <tr data-cmd="npm run connection"><td>CONNECTION spine</td><td class="cmd">npm run connection <button type="button" class="copy" data-copy="npm run connection">copy</button></td><td>Deploy canon, ecosystem order, <code>P31_*</code> catalog, hub URLs — see <a href="docs/P31-DEPLOY-CANON.md">DEPLOY-CANON</a>; also <code>npm run p31 -- connect</code></td></tr>
-            <tr data-cmd="npm run validate:full"><td>Full local + live audits</td><td class="cmd">npm run validate:full <button type="button" class="copy" data-copy="npm run validate:full">copy</button></td><td>Report in /tmp</td></tr>
-            <tr data-cmd="npm run release:check"><td>Release check</td><td class="cmd">npm run release:check <button type="button" class="copy" data-copy="npm run release:check">copy</button></td><td>verify + p31ca build when present</td></tr>
-            <tr data-cmd="npm run p31:all"><td>Heaviest gate</td><td class="cmd">npm run p31:all <button type="button" class="copy" data-copy="npm run p31:all">copy</button></td><td>see AGENTS.md</td></tr>
-            <tr data-cmd="apply:constants"><td>Change constants (EIN, mesh, payment URLs)</td><td class="cmd">Edit p31-constants.json → npm run apply:constants → npm run verify <button type="button" class="copy" data-copy="npm run apply:constants && npm run verify">copy</button></td><td>Single source of truth</td></tr>
-            <tr data-cmd="sync:passport"><td>Passport → p31ca mirror</td><td class="cmd">npm run sync:passport <button type="button" class="copy" data-copy="npm run sync:passport && npm run verify:passport">copy</button></td><td>Then verify:passport</td></tr>
-            <tr data-cmd="verify:monetary"><td>Monetary (fast)</td><td class="cmd">npm run verify:monetary <button type="button" class="copy" data-copy="npm run verify:monetary">copy</button></td><td>ecosystem + MAP + economy</td></tr>
-            <tr data-cmd="verify:map-pipeline"><td>MAP only</td><td class="cmd">npm run verify:map-pipeline <button type="button" class="copy" data-copy="npm run verify:map-pipeline">copy</button></td><td>Andromedia donate + secret scan</td></tr>
-            <tr data-cmd="verify:mesh"><td>Mesh</td><td class="cmd">npm run verify:mesh <button type="button" class="copy" data-copy="npm run verify:mesh">copy</button></td><td>k4-personal + live API</td></tr>
-            <tr data-cmd="command-center"><td>Clickable local UI</td><td class="cmd">npm run command-center <button type="button" class="copy" data-copy="npm run command-center">copy</button></td><td>http://127.0.0.1:3131</td></tr>
-            <tr data-cmd="git:hooks"><td>Install git hooks</td><td class="cmd">npm run git:hooks <button type="button" class="copy" data-copy="npm run git:hooks">copy</button></td><td>.githooks</td></tr>
-            <tr data-cmd="npm run pr"><td>PR + auto-merge</td><td class="cmd">npm run pr <button type="button" class="copy" data-copy="npm run pr">copy</button></td><td>or pnpm pr inside andromeda/</td></tr>
-            <tr data-cmd="git:remotes"><td>Remotes</td><td class="cmd">npm run git:remotes <button type="button" class="copy" data-copy="npm run git:remotes">copy</button></td><td>p31-github.json</td></tr>
-            <tr data-cmd="build:doc-index"><td>Rebuild doc search index</td><td class="cmd">npm run build:doc-index <button type="button" class="copy" data-copy="npm run build:doc-index">copy</button></td><td>After editing home <code>docs/*.md</code>; also runs in <code>npm run verify</code>. Open <code>docs/doc-library/index.html</code> after <code>demo</code> (same as Soup link).</td></tr>
-            <tr data-cmd="build:fleet-portal"><td>Live URL index (fleet + glass + mesh)</td><td class="cmd">npm run build:fleet-portal <button type="button" class="copy" data-copy="npm run build:fleet-portal">copy</button></td><td>Regenerates <code>fleet-portal.html</code> from <code>p31-live-fleet.json</code>, <code>p31-ecosystem.json</code>, <code>p31-constants.json</code>. <code>npm run polish</code> copies to p31ca <code>public/fleet-portal.html</code>; live <a href="https://p31ca.org/fleet-portal">p31ca.org/fleet-portal</a>.</td></tr>
-            <tr data-cmd="soup:prep"><td>C.A.R.S. — compile <code>dist/</code> + static checks</td><td class="cmd">npm run soup:prep <button type="button" class="copy" data-copy="npm run soup:prep">copy</button></td><td>TS → <code>dist/</code>, verifies CSS/JSON/manifest paths. <code>npm run setup</code> runs this after install. After <code>verify</code>: <code>npm run soup:prep:check</code> (no rebuild).</td></tr>
-            <tr data-cmd="soup:prep:check"><td>Soup prep — check only</td><td class="cmd">npm run soup:prep:check <button type="button" class="copy" data-copy="npm run soup:prep:check">copy</button></td><td>No <code>tsc</code>; confirms <code>dist/</code> + assets (e.g. after CI <code>verify</code>).</td></tr>
-            <tr data-cmd="soup:room-scale"><td>Soup room-scale gate (WCD-32 probe)</td><td class="cmd">npm run soup:room-scale <button type="button" class="copy" data-copy="npm run soup:room-scale">copy</button></td><td>Wraps <code>test:mock-ws</code>; manual steps: <code>docs/SOUP-ROOM-SCALE-RUNBOOK.md</code>.</td></tr>
-            <tr data-cmd="npm run demo"><td>Soup + passport + doc library in browser</td><td class="cmd">npm run demo <button type="button" class="copy" data-copy="npm run demo">copy</button></td><td>port 8080 — <code>soup.html</code>, <code>poets-room.html</code>, passport, <code>docs/doc-library/index.html</code> (opt. <code>?q=mesh</code>). In search: <kbd>/</kbd>, <kbd>↓</kbd>/<kbd>↑</kbd> in results, try chips — same hints as the doc library page.</td></tr>
-          </tbody>
-        </table>
-        </div>
-      </div>
-    </section>
-
-    <section id="panel-andro" role="tabpanel" aria-labelledby="tab-andro" hidden>
-      <h2>Andromeda repo</h2>
-      <input type="search" class="search" id="filter-andro" placeholder="Filter…" autocomplete="off" />
-      <div class="card">
-        <div class="p31-table-scroll">
-        <table id="table-andro">
-          <thead><tr><th>Goal</th><th>Where</th><th>Typical</th></tr></thead>
-          <tbody id="tbody-andro">
-            <tr><td>p31ca.org hub</td><td><code>andromeda/04_SOFTWARE/p31ca</code></td><td class="cmd">npm run verify, build, deploy <button type="button" class="copy" data-copy="cd andromeda/04_SOFTWARE/p31ca && npm run verify">copy</button></td></tr>
-            <tr><td>EPCP / G.O.D. Worker</td><td><code>.../cloudflare-worker/command-center</code></td><td class="cmd">wrangler deploy <button type="button" class="copy" data-copy="cd andromeda/04_SOFTWARE/cloudflare-worker/command-center && npx wrangler deploy">copy</button></td></tr>
-            <tr><td>MAP (donate)</td><td>home calls Andromedia script</td><td class="cmd">npm run verify:map-pipeline <button type="button" class="copy" data-copy="npm run verify:map-pipeline">copy</button> (from home)</td></tr>
-            <tr><td>pnpm wide</td><td><code>andromeda/04_SOFTWARE</code></td><td class="cmd">pnpm install && pnpm run quality <button type="button" class="copy" data-copy="cd andromeda/04_SOFTWARE && pnpm install && pnpm run quality">copy</button></td></tr>
-            <tr><td>Hooks in Andromedia clone</td><td><code>andromeda/</code> root</td><td class="cmd">npm run git:hooks <button type="button" class="copy" data-copy="cd andromeda && npm run git:hooks">copy</button></td></tr>
-          </tbody>
-        </table>
-        </div>
-      </div>
-    </section>
-
-    <section id="panel-god" role="tabpanel" aria-labelledby="tab-god" hidden>
-      <h2>Three shells (G.O.D. pattern)</h2>
-      <p class="card" style="color: var(--muted); font-size: 0.9rem;">
-        Different trust boundaries — pick the right surface; there is no single magic origin for everything.
+    <header class="p31-doc-hero">
+      <span class="p31-doc-kicker p31-doc-kicker--coral">Operator runbook</span>
+      <h1>Personal how-to — every command, one page</h1>
+      <p class="p31-host-mind">Host mind: <strong>Operator</strong> — command-index altitude on the same night sky.</p>
+      <p>
+        Every npm script that ships, deploys, or repairs the mesh.
+        Same canon as <a href="p31-device-setup.html">device setup</a>; every command is copy-able.
+        When <code>npm run verify</code> disagrees with this page, fix the project — not your memory.
       </p>
-      <div class="link-row">
-        <a href="http://127.0.0.1:3131/" target="_blank" rel="noopener">Local (run <code>npm run command-center</code> first)</a>
-        <a href="https://p31ca.org/ops/" target="_blank" rel="noopener">p31ca /ops (glass)</a>
-        <a href="https://command-center.trimtab-signal.workers.dev/" target="_blank" rel="noopener">Edge EPCP</a>
+      <div class="p31-doc-meta">
+        <span>Markdown: <a href="docs/P31-PERSONAL-HOW-TO.md">P31-PERSONAL-HOW-TO.md</a></span>
+        <span>Ship bar (merge/deploy): <a href="docs/P31-ENGINEERING-STANDARD.md">P31-ENGINEERING-STANDARD.md</a></span>
+        <span>Map: <a href="P31-ROOT-MAP.md">P31-ROOT-MAP.md</a></span>
+        <span>Agents: <a href="AGENTS.md">AGENTS.md</a></span>
       </div>
-      <div class="card" style="margin-top: 0.75rem;">
-        <p style="margin:0 0 0.5rem; font-size:0.8rem; color: var(--muted);">Local deck can trigger the same action as <code>npm run verify:map-pipeline</code> (Andromedia MAP + optional parent <code>p31-constants</code> checks).</p>
-        <div class="p31-table-scroll">
-        <table>
-          <tbody>
-            <tr data-cmd="command-center">
-              <td>Start local deck</td>
-              <td class="cmd">npm run command-center <button type="button" class="copy" data-copy="npm run command-center">copy</button></td>
-              <td>Then <em>home-verify-map</em> in the list, or the line below from any shell</td>
-            </tr>
-            <tr data-cmd="verify:map-pipeline">
-              <td>MAP (CLI)</td>
-              <td class="cmd">npm run verify:map-pipeline <button type="button" class="copy" data-copy="npm run verify:map-pipeline">copy</button></td>
-              <td>From P31 home; nest <code>andromeda/</code> to pick up parent <code>p31-constants</code> in the verifier</td>
-            </tr>
-          </tbody>
-        </table>
+
+      <p class="howto-aaso">
+        <em>As above, so below:</em> same <code>npm run demo</code> / <code>build:doc-index</code> rhythm as
+        <a href="soup.html">C.A.R.S.</a>,
+        <a href="docs/doc-library/index.html">doc library</a>,
+        <a href="docs/physics-learn/index.html">physics learn</a>,
+        <a href="p31-slicer.html">browser slicer</a>,
+        <a href="p31-sovereign-lab.html">sovereign lab</a>,
+        <a href="andromeda/04_SOFTWARE/p31ca/public/k4market.html">K4 market</a> (with <code>andromeda/</code>),
+        <a href="fleet-portal.html">fleet portal</a>,
+        <a href="poets-room.html">Poets room</a>,
+        <a href="http://127.0.0.1:3131/">local command center</a>,
+        <a href="docs/P31-DEPLOY-CANON.md">CONNECTION</a> (<code>npm run connection</code>),
+        and the <a href="docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">when-scale plan</a> —
+        files in git, warmth in the browser.
+        <span class="howto-heart" aria-hidden="true">&#9829;</span>
+        <span aria-label="less than three">&nbsp;&lt;3</span>
+      </p>
+
+      <ul class="p31-doc-toc" role="list">
+        <li><a href="#model">Mental model</a></li>
+        <li><a href="#home">Home commands</a></li>
+        <li><a href="#andro">Andromeda</a></li>
+        <li><a href="#god">G.O.D. shells</a></li>
+        <li><a href="#git">Git &amp; editor</a></li>
+        <li><a href="#911">Emergencies</a></li>
+      </ul>
+    </header>
+
+    <section class="p31-doc-section" id="model" aria-labelledby="h-model">
+      <h2 id="h-model">Mental model — three layers (not twenty products)</h2>
+      <div class="p31-doc-card">
+        <div class="p31-doc-table-wrap">
+          <table>
+            <thead>
+              <tr><th>Layer</th><th>What</th><th>Path / note</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>P31 home</strong></td>
+                <td>bonding-soup repo: constants, scripts, passport, Soup demo, CI <code>verify</code></td>
+                <td>Workspace root (e.g. <code>~/p31</code>)</td>
+              </tr>
+              <tr>
+                <td><strong>Andromeda</strong></td>
+                <td>Separate git repo: pnpm monorepo, p31ca, Workers, donate-api, command-center</td>
+                <td><code>andromeda/</code> — may be gitignored from home’s view</td>
+              </tr>
+              <tr>
+                <td><strong>Live</strong></td>
+                <td>Deployed sites — build in a repo, deploy with wrangler / Pages</td>
+                <td>Browser</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="p31-doc-callout">
+          <strong>Rule of thumb:</strong> operator numbers + home scripts → <strong>P31 home</strong>.
+          Hub, Workers, BONDING apps → <code>andromeda/04_SOFTWARE/</code>.
+          Machine gate (<code>verify</code>) wins over prose every time.
+        </p>
+      </div>
+    </section>
+
+    <section class="p31-doc-section" id="home" aria-labelledby="h-home">
+      <h2 id="h-home">Home commands (from P31 home root)</h2>
+      <div class="p31-doc-card">
+        <p>Filter the table — type any goal, command name, or note.</p>
+        <input type="search" class="howto-search" id="filter-home" placeholder="Filter by goal, command, notes…" autocomplete="off" aria-label="Filter home commands" />
+        <div class="p31-doc-table-wrap">
+          <table id="table-home">
+            <thead><tr><th>Goal</th><th>Command</th><th>Notes</th></tr></thead>
+            <tbody id="tbody-home">
+              <tr><td>New machine / clean clone</td><td class="cmd">npm run setup<button type="button" class="p31-doc-copy" data-copy="npm run setup">Copy</button></td><td>apply:constants, verify, p31ca install, optional hooks</td></tr>
+              <tr><td>Sanity (CI bar)</td><td class="cmd">npm run verify<button type="button" class="p31-doc-copy" data-copy="npm run verify">Copy</button></td><td>ecosystem, MAP, contracts, egg-hunt, tsc</td></tr>
+              <tr><td>CONNECTION spine</td><td class="cmd">npm run connection<button type="button" class="p31-doc-copy" data-copy="npm run connection">Copy</button></td><td>Deploy canon, ecosystem order, <code>P31_*</code> catalog, hub URLs — see <a href="docs/P31-DEPLOY-CANON.md">DEPLOY-CANON</a>; also <code>npm run p31 -- connect</code></td></tr>
+              <tr><td>Full local + live audits</td><td class="cmd">npm run validate:full<button type="button" class="p31-doc-copy" data-copy="npm run validate:full">Copy</button></td><td>Report in <code>/tmp</code></td></tr>
+              <tr><td>Release check</td><td class="cmd">npm run release:check<button type="button" class="p31-doc-copy" data-copy="npm run release:check">Copy</button></td><td>verify + p31ca build when present</td></tr>
+              <tr><td>Heaviest gate</td><td class="cmd">npm run p31:all<button type="button" class="p31-doc-copy" data-copy="npm run p31:all">Copy</button></td><td>see <a href="AGENTS.md">AGENTS.md</a></td></tr>
+              <tr><td>Change constants (EIN, mesh, payment URLs)</td><td class="cmd">apply:constants<button type="button" class="p31-doc-copy" data-copy="npm run apply:constants &amp;&amp; npm run verify">Copy</button></td><td>Edit <code>p31-constants.json</code> → <code>apply:constants</code> → <code>verify</code> — single source of truth</td></tr>
+              <tr><td>Passport → p31ca mirror</td><td class="cmd">npm run sync:passport<button type="button" class="p31-doc-copy" data-copy="npm run sync:passport &amp;&amp; npm run verify:passport">Copy</button></td><td>Then <code>verify:passport</code></td></tr>
+              <tr><td>Monetary (fast)</td><td class="cmd">npm run verify:monetary<button type="button" class="p31-doc-copy" data-copy="npm run verify:monetary">Copy</button></td><td>ecosystem + MAP + economy</td></tr>
+              <tr><td>MAP only</td><td class="cmd">npm run verify:map-pipeline<button type="button" class="p31-doc-copy" data-copy="npm run verify:map-pipeline">Copy</button></td><td>Andromedia donate + secret scan</td></tr>
+              <tr><td>Mesh (k4-personal + live API)</td><td class="cmd">npm run verify:mesh<button type="button" class="p31-doc-copy" data-copy="npm run verify:mesh">Copy</button></td><td>Strict via <code>MESH_LIVE_STRICT=1</code></td></tr>
+              <tr><td>Clickable local UI</td><td class="cmd">npm run command-center<button type="button" class="p31-doc-copy" data-copy="npm run command-center">Copy</button></td><td><a href="http://127.0.0.1:3131/">http://127.0.0.1:3131</a></td></tr>
+              <tr><td>Install git hooks</td><td class="cmd">npm run git:hooks<button type="button" class="p31-doc-copy" data-copy="npm run git:hooks">Copy</button></td><td>Wires <code>.githooks/pre-commit</code></td></tr>
+              <tr><td>PR + auto-merge</td><td class="cmd">npm run pr<button type="button" class="p31-doc-copy" data-copy="npm run pr">Copy</button></td><td>Or <code>pnpm pr</code> inside <code>andromeda/</code></td></tr>
+              <tr><td>Remotes</td><td class="cmd">npm run git:remotes<button type="button" class="p31-doc-copy" data-copy="npm run git:remotes">Copy</button></td><td><code>p31-github.json</code></td></tr>
+              <tr><td>Rebuild doc search index</td><td class="cmd">npm run build:doc-index<button type="button" class="p31-doc-copy" data-copy="npm run build:doc-index">Copy</button></td><td>After editing <code>docs/*.md</code>; runs in <code>verify</code>. Open <code>docs/doc-library/index.html</code> after <code>demo</code>.</td></tr>
+              <tr><td>Live URL index (fleet + glass + mesh)</td><td class="cmd">npm run build:fleet-portal<button type="button" class="p31-doc-copy" data-copy="npm run build:fleet-portal">Copy</button></td><td>Regenerates <code>fleet-portal.html</code> from <code>p31-live-fleet.json</code>, <code>p31-ecosystem.json</code>, <code>p31-constants.json</code>. <code>polish</code> mirrors to <a href="https://p31ca.org/fleet-portal">p31ca.org/fleet-portal</a>.</td></tr>
+              <tr><td>C.A.R.S. — compile <code>dist/</code></td><td class="cmd">npm run soup:prep<button type="button" class="p31-doc-copy" data-copy="npm run soup:prep">Copy</button></td><td>TS → <code>dist/</code>, verifies CSS/JSON paths. Setup runs this after install.</td></tr>
+              <tr><td>Soup prep — check only</td><td class="cmd">npm run soup:prep:check<button type="button" class="p31-doc-copy" data-copy="npm run soup:prep:check">Copy</button></td><td>No <code>tsc</code>; confirms <code>dist/</code> + assets</td></tr>
+              <tr><td>Soup room-scale gate (WCD-32 probe)</td><td class="cmd">npm run soup:room-scale<button type="button" class="p31-doc-copy" data-copy="npm run soup:room-scale">Copy</button></td><td>Wraps <code>test:mock-ws</code>; manual: <a href="docs/SOUP-ROOM-SCALE-RUNBOOK.md">SOUP-ROOM-SCALE-RUNBOOK.md</a></td></tr>
+              <tr><td>Soup + passport + doc library in browser</td><td class="cmd">npm run demo<button type="button" class="p31-doc-copy" data-copy="npm run demo">Copy</button></td><td>Port 8080 — <code>soup.html</code>, <code>poets-room.html</code>, passport, doc library. Search hints: <kbd>/</kbd>, <kbd>↓</kbd>/<kbd>↑</kbd>, chips.</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
 
-    <section id="panel-git" role="tabpanel" aria-labelledby="tab-git" hidden>
-      <h2>Which repo am I in?</h2>
-      <div class="card">
-        <p><code>git rev-parse --show-toplevel</code> <button type="button" class="copy" data-copy="git rev-parse --show-toplevel">copy</button></p>
-        <ul style="color: var(--muted); font-size: 0.9rem;">
+    <section class="p31-doc-section" id="andro" aria-labelledby="h-andro">
+      <h2 id="h-andro">Andromeda repo</h2>
+      <div class="p31-doc-card">
+        <p>Filter the table — same pattern as home.</p>
+        <input type="search" class="howto-search" id="filter-andro" placeholder="Filter Andromeda commands…" autocomplete="off" aria-label="Filter Andromeda commands" />
+        <div class="p31-doc-table-wrap">
+          <table id="table-andro">
+            <thead><tr><th>Goal</th><th>Where</th><th>Typical</th></tr></thead>
+            <tbody id="tbody-andro">
+              <tr><td>p31ca.org hub</td><td><code>andromeda/04_SOFTWARE/p31ca</code></td><td class="cmd">verify, build, deploy<button type="button" class="p31-doc-copy" data-copy="cd andromeda/04_SOFTWARE/p31ca && npm run verify">Copy</button></td></tr>
+              <tr><td>EPCP / G.O.D. Worker</td><td><code>.../cloudflare-worker/command-center</code></td><td class="cmd">wrangler deploy<button type="button" class="p31-doc-copy" data-copy="cd andromeda/04_SOFTWARE/cloudflare-worker/command-center && npx wrangler deploy">Copy</button></td></tr>
+              <tr><td>MAP (donate)</td><td>home calls Andromedia script</td><td class="cmd">verify:map-pipeline<button type="button" class="p31-doc-copy" data-copy="npm run verify:map-pipeline">Copy</button></td></tr>
+              <tr><td>pnpm wide</td><td><code>andromeda/04_SOFTWARE</code></td><td class="cmd">pnpm install &amp;&amp; pnpm run quality<button type="button" class="p31-doc-copy" data-copy="cd andromeda/04_SOFTWARE && pnpm install && pnpm run quality">Copy</button></td></tr>
+              <tr><td>Hooks in Andromeda clone</td><td><code>andromeda/</code> root</td><td class="cmd">npm run git:hooks<button type="button" class="p31-doc-copy" data-copy="cd andromeda && npm run git:hooks">Copy</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="p31-doc-section" id="god" aria-labelledby="h-god">
+      <h2 id="h-god">G.O.D. shells (three trust boundaries)</h2>
+      <div class="p31-doc-card">
+        <p>Different trust boundaries — pick the right surface; there is no single magic origin for everything.</p>
+        <div class="p31-doc-links">
+          <a href="http://127.0.0.1:3131/" target="_blank" rel="noopener">Local (run <code>command-center</code> first)</a>
+          <a href="https://p31ca.org/ops/" target="_blank" rel="noopener">p31ca /ops (glass)</a>
+          <a href="https://command-center.trimtab-signal.workers.dev/" target="_blank" rel="noopener">Edge EPCP</a>
+        </div>
+        <h3>Map → run</h3>
+        <div class="p31-doc-table-wrap">
+          <table>
+            <tbody>
+              <tr>
+                <td>Start local deck</td>
+                <td class="cmd">npm run command-center<button type="button" class="p31-doc-copy" data-copy="npm run command-center">Copy</button></td>
+                <td>Then trigger <em>home-verify-map</em> in the list, or use the line below from any shell</td>
+              </tr>
+              <tr>
+                <td>MAP (CLI)</td>
+                <td class="cmd">npm run verify:map-pipeline<button type="button" class="p31-doc-copy" data-copy="npm run verify:map-pipeline">Copy</button></td>
+                <td>From P31 home; nest <code>andromeda/</code> to pick up parent <code>p31-constants</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="p31-doc-section" id="git" aria-labelledby="h-git">
+      <h2 id="h-git">Git &amp; editor — which repo am I in?</h2>
+      <div class="p31-doc-card">
+        <div class="p31-doc-cmd">
+          git rev-parse --show-toplevel
+          <button type="button" class="p31-doc-copy" data-copy="git rev-parse --show-toplevel">Copy</button>
+        </div>
+        <h3>How to tell</h3>
+        <ul style="font-size: var(--p31-text-sm); color: color-mix(in srgb, var(--p31-cloud) 88%, var(--p31-void)); padding-left: 1.25rem; margin: 0;">
           <li>Home: <code>package.json</code> name often <code>bonding-soup</code></li>
           <li>Andromeda: name <code>p31-andromeda</code>, has <code>04_SOFTWARE/pnpm-workspace.yaml</code></li>
           <li>Nested: two histories — commit where the <code>.git</code> for that change lives</li>
         </ul>
-        <p style="margin: 0.75rem 0 0; font-size: 0.9rem;">
-          <strong>Cursor/VS Code:</strong> <em>Run Task</em> → search <code>P31:</code> — see <code>.vscode/tasks.json</code>
+        <p class="p31-doc-callout">
+          <strong>Cursor / VS Code:</strong> <em>Run Task</em> → search <code>P31:</code> — see <code>.vscode/tasks.json</code>.
         </p>
       </div>
     </section>
 
-    <section id="panel-911" role="tabpanel" aria-labelledby="tab-911" hidden>
-      <h2>One-liners</h2>
-      <div class="card">
-        <div class="p31-table-scroll">
-        <table>
-          <tbody>
-            <tr><td>CI / verify red</td><td class="cmd">npm run verify <button type="button" class="copy" data-copy="npm run verify">copy</button></td></tr>
-            <tr><td>Payment URLs</td><td class="cmd">npm run verify:monetary <button type="button" class="copy" data-copy="npm run verify:monetary">copy</button></td></tr>
-            <tr><td>gh / credential noise</td><td class="cmd">npm run fix:gh <button type="button" class="copy" data-copy="npm run fix:gh">copy</button></td></tr>
-            <tr><td>Folder map</td><td><a href="P31-ROOT-MAP.md">P31-ROOT-MAP.md</a> (open in editor)</td></tr>
-          </tbody>
-        </table>
+    <section class="p31-doc-section" id="911" aria-labelledby="h-911">
+      <h2 id="h-911">Emergencies — one-liners</h2>
+      <div class="p31-doc-card">
+        <div class="p31-doc-table-wrap">
+          <table>
+            <thead><tr><th>Symptom</th><th>What to do</th></tr></thead>
+            <tbody>
+              <tr><td>CI / verify red</td><td class="cmd">npm run verify<button type="button" class="p31-doc-copy" data-copy="npm run verify">Copy</button></td></tr>
+              <tr><td>Payment URLs drift</td><td class="cmd">npm run verify:monetary<button type="button" class="p31-doc-copy" data-copy="npm run verify:monetary">Copy</button></td></tr>
+              <tr><td><code>gh</code> / credential noise</td><td class="cmd">npm run fix:gh<button type="button" class="p31-doc-copy" data-copy="npm run fix:gh">Copy</button></td></tr>
+              <tr><td>Folder map (where do I edit?)</td><td><a href="P31-ROOT-MAP.md">P31-ROOT-MAP.md</a> — open in editor</td></tr>
+              <tr><td>Mesh strict failing offline</td><td class="cmd">MESH_LIVE_STRICT=0 npm run verify<button type="button" class="p31-doc-copy" data-copy="MESH_LIVE_STRICT=0 npm run verify">Copy</button></td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
 
-    <p style="text-align: center; font-size: 0.8rem; color: var(--muted); margin: 2rem 0 1rem;">
-      Markdown version: <a href="docs/P31-PERSONAL-HOW-TO.md">docs/P31-PERSONAL-HOW-TO.md</a>
-    </p>
-  </main>
-  <div id="toast" class="toast" role="status">Copied</div>
+    <div class="p31-doc-links" style="margin-bottom: var(--p31-space-10)">
+      <a href="p31-device-setup.html">Device setup (Chromebook + mobile)</a>
+      <a href="soup.html">C.A.R.S.</a>
+      <a href="docs/doc-library/index.html">Document library</a>
+      <a href="fleet-portal.html">Fleet &amp; URLs</a>
+      <a href="cognitive-passport/index.html">Cognitive passport</a>
+    </div>
+
+    <footer class="p31-doc-foot">
+      <p>P31 home · operator runbook · <span class="p31-doc-bead" aria-hidden="true">Build, Create, Connect</span></p>
+      <p>Markdown twin: <a href="docs/P31-PERSONAL-HOW-TO.md">docs/P31-PERSONAL-HOW-TO.md</a> · Ecosystem: <a href="docs/ECOSYSTEM-PRODUCTION-11.md">ECOSYSTEM-PRODUCTION-11</a></p>
+    </footer>
+  </div>
+
+  <div class="p31-doc-toast" id="howto-toast" role="status" aria-live="polite"></div>
 
   <script>
     (function () {
-      const tabs = document.querySelectorAll('.tabs [role="tab"]');
-      const panels = document.querySelectorAll('main [role="tabpanel"]');
-      tabs.forEach(function (tab) {
-        tab.addEventListener('click', function () {
-          const id = tab.getAttribute('data-panel');
-          tabs.forEach(function (t) { t.setAttribute('aria-selected', t === tab); });
-          panels.forEach(function (p) { p.hidden = p.id !== id; });
-        });
-      });
-
-      function toast() {
-        var el = document.getElementById('toast');
-        el.classList.add('show');
-        setTimeout(function () { el.classList.remove('show'); }, 1400);
+      function showToast() {
+        var el = document.getElementById('howto-toast');
+        if (!el) return;
+        el.textContent = 'Copied';
+        el.classList.add('p31-doc-toast--on');
+        clearTimeout(el._h);
+        el._h = setTimeout(function () { el.classList.remove('p31-doc-toast--on'); }, 1600);
       }
-      function copy(s) {
-        s = s.trim();
+      function copyText(s) {
+        s = (s || '').trim();
+        if (!s) return;
         if (navigator.clipboard && window.isSecureContext) {
-          navigator.clipboard.writeText(s).then(toast, fallback);
+          navigator.clipboard.writeText(s).then(showToast).catch(fallback);
         } else { fallback(); }
         function fallback() {
           var ta = document.createElement('textarea');
-          ta.value = s; ta.style.position = 'fixed'; ta.style.left = '-99px';
-          document.body.appendChild(ta); ta.select();
-          try { document.execCommand('copy'); toast(); } catch (e) {}
+          ta.value = s;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); showToast(); } catch (_e) {}
           document.body.removeChild(ta);
         }
       }
@@ -327,7 +341,7 @@
         var b = e.target.closest('[data-copy]');
         if (!b) return;
         e.preventDefault();
-        copy(b.getAttribute('data-copy') || '');
+        copyText(b.getAttribute('data-copy') || '');
       });
 
       function wireFilter(inputId, tbodyId) {
@@ -345,6 +359,7 @@
       wireFilter('filter-andro', 'tbody-andro');
     })();
   </script>
+  <script type="module" src="design-assets/p31-doc-surface.js"></script>
   <script src="cognitive-passport/lib/p31-return-ribbon.js" data-local-soup="soup.html" defer></script>
 </body>
 </html>

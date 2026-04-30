@@ -33,6 +33,24 @@ export interface ReactionEvent {
   productMolecules?: string[]; // IDs of product molecules
 }
 
+/**
+ * Optional thermodynamic context passed by `SoupEngine.update()` so reaction
+ * rates obey **real** Arrhenius and Le Chatelier behaviour, not just empirical
+ * thresholds. Backwards compatible: when omitted, the engine falls back to the
+ * legacy probability gating.
+ *
+ * - `temperatureAt(x, y)`: dimensionless local temperature (room baseline = 1.0).
+ *   Calm Zone runs cool (~0.7 → +20% activation barrier), Lab runs warm (~1.2),
+ *   Deep runs coolest (~0.6) — `docs/affective-chemistry-spec.md` §5,
+ *   `docs/soup-world-design.md` §3.
+ * - `fuelFraction`: proportion of live molecules carrying the Fuel archetype
+ *   (0..1). Drives the Le Chatelier compensatory bias (`§6 System homeostasis`).
+ */
+export interface ReactionContext {
+  temperatureAt(x: number, y: number): number;
+  fuelFraction: number;
+}
+
 export class ReactionEngine {
   private reactionHistory: ReactionEvent[] = [];
   private activationEnergy = 0.5; // Base activation energy (0-1 scale)
@@ -48,9 +66,26 @@ export class ReactionEngine {
   };
 
   /**
-   * Find potential reactions between nearby molecules
+   * Find potential reactions between nearby molecules.
+   *
+   * When `ctx` is supplied, each candidate is gated by an **Arrhenius** factor
+   * `k ∝ exp(-Eₐ/T)` (normalised; T=1 is room temperature) and biased by
+   * **Le Chatelier**: when the bowl is flooded with Fuel-archetype molecules,
+   * synthesis is up-rated (the system traps volatile states into stable structure);
+   * when Fuel is depleted, decomposition gets a small nudge (avoid over-rigidity).
+   *
+   * Math anchor (`docs/affective-chemistry-spec.md` §5–6):
+   *   - Arrhenius: `k = A · exp(-Eₐ/(R·T))` — we use `R = 1`, `T` from `ctx`,
+   *     `Eₐ ∈ [0.1, 2.0]` derived from the engine's `activationEnergy` dial.
+   *   - Le Chatelier: synthesis × (1 + 0.5·max(0, fuelFraction − 0.5)) up to ×1.25.
+   *
+   * Without `ctx`, behaviour is unchanged (legacy threshold gate).
    */
-  findPotentialReactions(atoms: Atom[], bonds: Bond[]): ReactionCandidate[] {
+  findPotentialReactions(
+    atoms: Atom[],
+    bonds: Bond[],
+    ctx?: ReactionContext
+  ): ReactionCandidate[] {
     const candidates: ReactionCandidate[] = [];
 
     // Check each pair of atoms for reaction potential
@@ -65,12 +100,58 @@ export class ReactionEngine {
         // Only consider atoms within interaction range
         if (distance <= combinedRadius * 1.5) {
           const reactions = this.checkReactionPotential(atom1, atom2, atoms, bonds);
-          candidates.push(...reactions);
+          if (ctx) {
+            for (const c of reactions) {
+              candidates.push(this.applyThermodynamics(c, ctx));
+            }
+          } else {
+            candidates.push(...reactions);
+          }
         }
       }
     }
 
     return candidates;
+  }
+
+  /**
+   * Apply Arrhenius + Le Chatelier to a candidate's probability.
+   * Pure: takes a candidate, returns a new candidate with adjusted probability.
+   */
+  private applyThermodynamics(
+    candidate: ReactionCandidate,
+    ctx: ReactionContext
+  ): ReactionCandidate {
+    if (!candidate.reactants.length) return candidate;
+    let cx = 0;
+    let cy = 0;
+    for (const a of candidate.reactants) {
+      cx += a.x;
+      cy += a.y;
+    }
+    cx /= candidate.reactants.length;
+    cy /= candidate.reactants.length;
+
+    const T = Math.max(0.1, ctx.temperatureAt(cx, cy));
+    // Map engine `activationEnergy` (0..1) → Eₐ in [0.1, 0.3]. Calibrated so that
+    // room temperature (T=1.0) keeps reaction rates near legacy values; cooler
+    // zones (Calm 0.7, Deep 0.6) gate harder, warmer zone (Lab 1.2) eases.
+    // exp(-0.2/1.0)=0.82 vs exp(-0.2/0.7)=0.75 vs exp(-0.2/1.2)=0.85.
+    const Ea = 0.1 + 0.2 * Math.max(0, Math.min(1, this.activationEnergy));
+    const arrhenius = Math.exp(-Ea / T);
+
+    let leChatelier = 1;
+    const fuel = Math.max(0, Math.min(1, ctx.fuelFraction));
+    if (candidate.type === ReactionType.SYNTHESIS && fuel > 0.5) {
+      // Compensatory: trap volatile states in stable structure
+      leChatelier = 1 + 0.5 * (fuel - 0.5);
+    } else if (candidate.type === ReactionType.DECOMPOSITION && fuel < 0.2) {
+      // Tiny nudge to break over-rigid systems
+      leChatelier = 1 + 0.25 * (0.2 - fuel);
+    }
+
+    const next = Math.max(0, Math.min(1, candidate.probability * arrhenius * leChatelier));
+    return { ...candidate, probability: next };
   }
 
   /**

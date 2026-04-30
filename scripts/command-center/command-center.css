@@ -1076,6 +1076,58 @@ html[data-cc-alive-bypass="1"] body:not([data-cc-gate-armed="1"]) .cc-primer {
   position: relative;
   top: auto;
 }
+/* ============================================================
+   P31 lobby polish — additive, additive only.
+   Goal: same warmth as demo-tour.html / soup.html / passport.
+   No behavior change. Respects prefers-reduced-motion.
+   ============================================================ */
+
+/* Coral hearth glow at the bottom of the viewport — same vector as the lobby. */
+.cc-v2::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(70vmax 36vmax at 50% 108%,
+      rgba(204, 98, 71, 0.10),
+      rgba(204, 98, 71, 0.03) 40%,
+      transparent 65%),
+    radial-gradient(80vmax 40vmax at 50% -8%,
+      rgba(77, 184, 168, 0.05),
+      transparent 60%);
+  mix-blend-mode: screen;
+}
+
+/* Brand mark: gentle Larmor-style breathing so the room feels alive. */
+.cc-brand__mark {
+  background: linear-gradient(180deg, var(--p31-cyan, #4db8a8), var(--p31-coral, #cc6247));
+  box-shadow: 0 0 12px -2px rgba(77, 184, 168, 0.45);
+  animation: cc-brand-breathe 12s ease-in-out infinite;
+}
+@keyframes cc-brand-breathe {
+  0%, 100% { transform: scaleY(1);    box-shadow: 0 0 12px -2px rgba(77, 184, 168, 0.40); }
+  50%      { transform: scaleY(1.06); box-shadow: 0 0 18px -2px rgba(204,  98, 71, 0.45); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cc-brand__mark { animation: none; }
+}
+
+/* Gate dot — when armed, soft coral pulse so the operator sees authority. */
+.cc-safety__state[data-state="armed"] .cc-safety__dot {
+  animation: cc-gate-armed-pulse 2.6s ease-in-out infinite;
+}
+@keyframes cc-gate-armed-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(59, 163, 114, 0.35); }
+  50%      { box-shadow: 0 0 0 6px rgba(59, 163, 114, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cc-safety__state[data-state="armed"] .cc-safety__dot { animation: none; }
+}
+
+/* ===== end lobby polish ===== */
+
 .cc-v2[data-cc-lan="1"] .cc-filter-row,
 .cc-v2[data-cc-lan="1"] .cc-primer,
 .cc-v2[data-cc-lan="1"] .cc-joy,
@@ -1138,4 +1190,57 @@ html[data-cc-alive-bypass="1"] body:not([data-cc-gate-armed="1"]) .cc-primer {
   font-size: 0.78rem;
   color: var(--p31-muted, rgba(232, 234, 240, 0.55));
   font-family: var(--p31-font-mono, "JetBrains Mono", ui-monospace, monospace);
+}
+
+/* --- Section accents (color-coded left border by category) ---
+   Polish-pass 2026-04-30. Additive only; mounts via data-cc-section attr
+   set in command-center.js. Colors come from p31-universal-canon (teal /
+   coral / phosphor) with low-alpha rails so locked sections stay calm.   */
+.cc-section-wrap[data-cc-section] {
+  border-left-width: 3px;
+  border-left-style: solid;
+  border-left-color: rgba(255, 255, 255, 0.06);
+  transition: border-left-color 0.25s ease, box-shadow 0.25s ease;
+}
+.cc-section-wrap[data-cc-section]:hover,
+.cc-section-wrap[data-cc-section][open] {
+  box-shadow: inset 3px 0 0 0 var(--cc-section-accent, transparent);
+}
+
+/* Teal — daily / planning / spine */
+.cc-section-wrap[data-cc-section="diagnostics"],
+.cc-section-wrap[data-cc-section="slices"],
+.cc-section-wrap[data-cc-section="simplex"],
+.cc-section-wrap[data-cc-section="local"],
+.cc-section-wrap[data-cc-section="chromebook-iphone"] {
+  --cc-section-accent: rgba(77, 184, 168, 0.55);
+  border-left-color: rgba(77, 184, 168, 0.45);
+}
+
+/* Phosphor — Ollama fleet (local AI) */
+.cc-section-wrap[data-cc-section="ollama"] {
+  --cc-section-accent: rgba(59, 163, 114, 0.6);
+  border-left-color: rgba(59, 163, 114, 0.5);
+}
+
+/* Coral — heavy / state-changing / deploy actions */
+.cc-section-wrap[data-cc-section="ci"],
+.cc-section-wrap[data-cc-section="ship"],
+.cc-section-wrap[data-cc-section="operator"] {
+  --cc-section-accent: rgba(204, 98, 71, 0.55);
+  border-left-color: rgba(204, 98, 71, 0.4);
+}
+
+/* Neutral — Git, GitHub-org, Andromeda hand-off */
+.cc-section-wrap[data-cc-section="git"],
+.cc-section-wrap[data-cc-section="github-org"],
+.cc-section-wrap[data-cc-section="andromeda"] {
+  --cc-section-accent: rgba(255, 255, 255, 0.18);
+  border-left-color: rgba(255, 255, 255, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cc-section-wrap[data-cc-section] {
+    transition: none;
+  }
 }

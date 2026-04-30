@@ -15,6 +15,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700&family=JetBrains+Mono:ital,wght@0,400;0,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="cognitive-passport/p31-style.css">
+    <link rel="stylesheet" href="p31-shared-surface.css">
     <link rel="stylesheet" href="cognitive-passport/p31-responsive-surface.css">
     <link rel="stylesheet" href="soup-quantum.css">
     <script>
@@ -64,22 +65,46 @@
                 <span class="soup-larmor__detail" id="larmor-coherence">—</span>
             </div>
         </div>
-        <div class="soup-hero--parents" id="parents-hero" role="region" aria-label="Parent and guardian notes">
-            <h2>For parents & guardians</h2>
-            <p class="soup-hero__p-tight">This page is <strong>local-first</strong>: you choose a shared <code>room</code> string for your household—it is not public matchmaking. Stay in the loop on which room name is in use.</p>
-            <p class="soup-hero__p-tight"><strong>Prep once</strong> (repo root): <code>npm run soup:prep</code> — compiles TypeScript into <code>dist/</code> and checks static assets. After a full <code>npm run verify</code>, <code>npm run soup:prep:check</code> re-checks without rebuilding. Then <strong>run two things</strong> while you play:</p>
-            <span class="ph-run"><code>npm run demo</code> — static server (port 8080)</span>
-            <span class="ph-run"><code>node spikes/mock-ws-server/server.js</code> — WebSocket (port 8082, or set <code>MOCK_WS_PORT</code>)</span>
-            <p class="soup-hero__p-tight soup-hero__p-secondary">Then open a <strong>second browser or tab</strong> with the same <code>room</code> and a different <code>name</code>. Use <strong>Copy invite link</strong> below when family play is active.</p>
-            <div class="parents-actions soup-tap">
-                <a id="parent-kid-view-link" href="#">Open kid-friendly view (larger UI)</a>
-                <button type="button" id="copy-kid-view-link" title="Same room + WebSocket, adds big-kid mode">Copy kid-view link</button>
+        <!-- Calm landing strip: names the 4-4-6 breath without dev clutter.
+             Visible to everyone; the dev runbook is now in <details> below. -->
+        <p class="soup-calm-strip" aria-label="Breath rhythm">
+            <span class="soup-calm-strip__phase" data-soup-breath-mirror>4-4-6</span>
+            <span class="soup-calm-strip__sub">inhale four, hold four, exhale six — the room breathes when you do</span>
+        </p>
+
+        <!-- Cognitive Escrow residue — quiet memory return, hidden until populated.
+             Spec: docs/CONCEPT-COGNITIVE-ESCROW.md. One line, one dismiss, no streak. -->
+        <p class="soup-escrow-strip" id="soup-escrow-strip" role="status" aria-live="polite" hidden>
+            <span class="soup-escrow-strip__icon" aria-hidden="true">⟲</span>
+            <span class="soup-escrow-strip__text" id="soup-escrow-text"></span>
+            <button type="button" class="soup-escrow-strip__close" id="soup-escrow-close" aria-label="Dismiss residue">×</button>
+        </p>
+
+        <!-- First-visit hint — single line, auto-dismisses on first canvas click.
+             Replaces the empty state with "click anything for its story",
+             so the room invites curiosity instead of demanding attention. -->
+        <p class="soup-firstvisit-hint" id="soup-firstvisit-hint" hidden>
+            <span aria-hidden="true">·</span> tap any molecule for its story — born, geometry, lineage, save.
+        </p>
+
+        <details class="soup-hero--parents soup-details" id="parents-hero" aria-label="Parent and guardian setup">
+            <summary class="soup-details__summary">Set up family play (parents & guardians)</summary>
+            <div class="soup-details__body">
+                <p class="soup-hero__p-tight">This page is <strong>local-first</strong>: you choose a shared <code>room</code> string for your household—it is not public matchmaking. Stay in the loop on which room name is in use.</p>
+                <p class="soup-hero__p-tight"><strong>Prep once</strong> (repo root): <code>npm run soup:prep</code> — compiles TypeScript into <code>dist/</code> and checks static assets. After a full <code>npm run verify</code>, <code>npm run soup:prep:check</code> re-checks without rebuilding. Then <strong>run two things</strong> while you play:</p>
+                <span class="ph-run"><code>npm run demo</code> — static server (port 8080)</span>
+                <span class="ph-run"><code>node spikes/mock-ws-server/server.js</code> — WebSocket (port 8082, or set <code>MOCK_WS_PORT</code>)</span>
+                <p class="soup-hero__p-tight soup-hero__p-secondary">Then open a <strong>second browser or tab</strong> with the same <code>room</code> and a different <code>name</code>. Use <strong>Copy invite link</strong> below when family play is active.</p>
+                <div class="parents-actions soup-tap">
+                    <a id="parent-kid-view-link" href="#">Open kid-friendly view (larger UI)</a>
+                    <button type="button" id="copy-kid-view-link" title="Same room + WebSocket, adds big-kid mode">Copy kid-view link</button>
+                </div>
+                <div id="parents-runbook-below" class="soup-runbook">
+                    <div>Live · from this WebSocket (same lines as the server process prints, and <code>connectionInit</code>)</div>
+                    <div id="parents-runbook-lines"></div>
+                </div>
             </div>
-            <div id="parents-runbook-below" class="soup-runbook">
-                <div>Live · from this WebSocket (same lines as the server process prints, and <code>connectionInit</code>)</div>
-                <div id="parents-runbook-lines"></div>
-            </div>
-        </div>
+        </details>
         <div class="soup-hero--kids" id="kids-hero" role="region" aria-label="Bigger play mode">
             <div><strong>Bigger play</strong> — the soup fills more of the screen, buttons are easy to hit, and you can <strong>play in the same room</strong> with someone on another computer.</div>
             <p class="soup-kids-hint">Quick name tags (same house: pick a <strong>room</strong> first, e.g. <code>living-room</code>):</p>
@@ -110,6 +135,10 @@
                 <div class="stat">LOD: <span id="lod">--</span></div>
                 <div class="stat" id="stat-reactions" title="A new reaction is a small shared win—informational, not a loot roll">Reactions: <span id="reactions">--</span></div>
                 <div class="stat">Audio: <span id="audio">--</span></div>
+                <div class="stat" id="stat-psi" title="Posner Stability Index — 0.6 × tetrahedral fraction (live AX₄) + 0.4 × min(1, saved Posners). The only room-level score; no engagement metric.">PSI: <span id="psi">--</span></div>
+                <div class="stat" id="stat-breath" title="4-4-6 breath clock — 4s inhale · 4s hold · 6s exhale. Off under prefers-reduced-motion.">Breath: <span id="breath">--</span></div>
+                <div class="stat" id="stat-thermo" title="Thermodynamics — center-of-room temperature (Arrhenius gate) + Fuel-archetype fraction (Le Chatelier compensatory bias).">Thermo: <span id="thermo">--</span></div>
+                <div class="stat" id="stat-coherence" title="Coherence ramp — '' → 'warming' (PSI≥0.25 + ≥1 Posner) → 'coherent' (PSI≥0.5 + ≥2 Posners). Off under Gray Rock or reduced-motion.">Coherence: <span id="coherence">--</span></div>
             </div>
             <div class="stats stats--connection">
                 <div class="stat stat--connection">
@@ -185,6 +214,42 @@
     </div>
 
     <div id="soup-reward-toast" class="soup-reward-toast" role="status" aria-live="polite" hidden></div>
+
+    <!-- Exhibit A — tap a molecule to see its birth + matching event log entries.
+         Spec: docs/soup-world-design.md §4 (spatial chat) + §6.4 (faded ghosts). -->
+    <aside id="soup-exhibit-card" class="soup-exhibit-card" role="dialog" aria-labelledby="soup-exhibit-title" aria-hidden="true" hidden>
+        <button type="button" class="soup-exhibit-card__close" id="soup-exhibit-close" aria-label="Close Exhibit A">×</button>
+        <h3 id="soup-exhibit-title" class="soup-exhibit-card__title">Exhibit A</h3>
+        <p class="soup-exhibit-card__subtitle" id="soup-exhibit-subtitle">—</p>
+        <dl class="soup-exhibit-card__meta">
+            <dt>Born</dt><dd id="soup-exhibit-born">—</dd>
+            <dt>Geometry</dt><dd id="soup-exhibit-geo">—</dd>
+            <dt>Personality</dt><dd id="soup-exhibit-pers">—</dd>
+            <dt>State</dt><dd id="soup-exhibit-state">—</dd>
+            <dt class="soup-exhibit-card__saved-row" id="soup-exhibit-saved-dt" hidden>Saved</dt>
+            <dd class="soup-exhibit-card__saved-row" id="soup-exhibit-saved-dd" hidden>—</dd>
+        </dl>
+        <div class="soup-exhibit-card__save" id="soup-exhibit-save-row" hidden>
+            <button type="button" class="soup-exhibit-card__save-btn" id="soup-exhibit-save-btn">Save this structure</button>
+            <span class="soup-exhibit-card__save-hint" id="soup-exhibit-save-hint">Keeps the geometry across sessions. No upload.</span>
+        </div>
+        <div class="soup-exhibit-card__events" id="soup-exhibit-events" aria-label="Event log entries"></div>
+        <div class="soup-exhibit-card__lineage" id="soup-exhibit-lineage" aria-label="Lineage" hidden>
+            <h4 class="soup-exhibit-card__lineage-title">Lineage</h4>
+            <ol class="soup-exhibit-card__lineage-list" id="soup-exhibit-lineage-list"></ol>
+        </div>
+        <div class="soup-exhibit-card__ping" id="soup-exhibit-ping" role="group" aria-label="Send a spatial chat ping" hidden>
+            <span class="soup-exhibit-card__ping-label">Ping</span>
+            <button type="button" class="soup-exhibit-card__ping-btn" data-ping-emoji="💧" title="Soft acknowledgement">💧</button>
+            <button type="button" class="soup-exhibit-card__ping-btn" data-ping-emoji="✨" title="Notice / appreciation">✨</button>
+            <button type="button" class="soup-exhibit-card__ping-btn" data-ping-emoji="🫶" title="Care">🫶</button>
+            <button type="button" class="soup-exhibit-card__ping-btn" data-ping-emoji="🌱" title="Growing / building">🌱</button>
+            <button type="button" class="soup-exhibit-card__ping-btn" data-ping-emoji="🪞" title="I see you">🪞</button>
+            <span class="soup-exhibit-card__ping-status" id="soup-exhibit-ping-status" aria-live="polite"></span>
+        </div>
+        <p class="soup-exhibit-card__footer">No analytics. This card reads only the local engine + event log.</p>
+    </aside>
+
     <div class="soup-tbar-dock" id="soup-tbar-dock" role="toolbar" aria-label="Main actions: tutorial, sync archive, memory"></div>
 
     <script type="module">
@@ -236,6 +301,100 @@
             const ptitle = document.getElementById('presence-title');
             if (ptitle) ptitle.textContent = 'Who is here with you';
         }
+        // Auto-open the family-setup details for operator / parents / dev,
+        // collapsed for first-time visitors so the landing stays calm.
+        (function openParentsDetailsIfRelevant() {
+            const det = document.getElementById('parents-hero');
+            if (!det) return;
+            const isDev = /[?&]dev=1(?:&|$)/.test(location.search) || /[?&]debug(?:=1)?(?:&|$)/.test(location.search);
+            if (isParents || isDev) det.open = true;
+        })();
+        // Mirror the engine's data-soup-breath onto the calm strip text so the
+        // 4-4-6 rhythm is *named*, not only implied. Updates ~ once per second.
+        (function bindCalmStripBreath() {
+            const el = document.querySelector('[data-soup-breath-mirror]');
+            if (!el) return;
+            const labels = { inhale: '4 · inhale', hold: '4 · hold', exhale: '6 · exhale' };
+            setInterval(() => {
+                const phase = document.documentElement.getAttribute('data-soup-breath');
+                if (phase && labels[phase]) el.textContent = labels[phase];
+            }, 1000);
+        })();
+
+        // Cognitive Escrow welcome — memory return on landing.
+        // - Read once, never auto-refresh (no engagement bait).
+        // - Hidden if no archived residue (first visit) or operator dismissed
+        //   it this session.
+        // - Dismissed via × button (sessionStorage flag — clears next reload).
+        (function bindEscrowResidue() {
+            const stripEl = document.getElementById('soup-escrow-strip');
+            const textEl = document.getElementById('soup-escrow-text');
+            const closeBtn = document.getElementById('soup-escrow-close');
+            if (!stripEl || !textEl) return;
+            const dismissedKey = 'p31-soup-escrow-dismissed';
+            try {
+                if (sessionStorage.getItem(dismissedKey) === '1') return;
+            } catch {/* sessionStorage may be blocked; ignore */}
+
+            // Defer to allow PersistenceLayer to load from storage.
+            setTimeout(() => {
+                let residue = null;
+                try { residue = soup.getEscrowResidue(); } catch { residue = null; }
+                if (!residue) return;
+
+                const parts = [];
+                const ageDays = residue.ageMs / 86400000;
+                if (ageDays >= 1) {
+                    parts.push('last visit ' + Math.floor(ageDays) + 'd ago');
+                } else if (residue.lastUpdate > 0) {
+                    parts.push('last visit recently');
+                }
+                if (residue.posners > 0) {
+                    parts.push(residue.posners + ' Posner' + (residue.posners === 1 ? '' : 's'));
+                }
+                if (residue.highlights > 0) {
+                    parts.push(residue.highlights + ' highlight' + (residue.highlights === 1 ? '' : 's'));
+                }
+                if (residue.totalSyntheses > 0) {
+                    parts.push(residue.totalSyntheses + ' synthes' + (residue.totalSyntheses === 1 ? 'is' : 'es'));
+                }
+                if (residue.heritageDepth > 1) {
+                    parts.push(residue.heritageDepth + '-gen heritage');
+                }
+                if (parts.length === 0) return;
+
+                textEl.textContent = 'Welcome back — your bowl held ' + parts.join(' · ') + '.';
+                stripEl.hidden = false;
+            }, 600);
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    stripEl.hidden = true;
+                    try { sessionStorage.setItem(dismissedKey, '1'); } catch {/* ignore */}
+                });
+            }
+        })();
+
+        // First-visit hint — invites the operator to tap a molecule. Hidden once
+        // the operator clicks the canvas (any click — no nag loop), and never
+        // shown again in the same session. No analytics event on dismiss.
+        (function bindFirstVisitHint() {
+            const hintEl = document.getElementById('soup-firstvisit-hint');
+            if (!hintEl) return;
+            const dismissedKey = 'p31-soup-firstvisit-dismissed';
+            try {
+                if (sessionStorage.getItem(dismissedKey) === '1') return;
+            } catch {/* ignore */}
+            // Show after a calm 800ms — give the breath strip first attention.
+            setTimeout(() => { hintEl.hidden = false; }, 800);
+
+            const dismiss = () => {
+                hintEl.hidden = true;
+                try { sessionStorage.setItem(dismissedKey, '1'); } catch {/* ignore */}
+                canvas.removeEventListener('click', dismiss);
+            };
+            canvas.addEventListener('click', dismiss);
+        })();
         if (isParents && isKids) {
             document.title = 'C.A.R.S. (family)';
         } else if (isParents) {
@@ -383,6 +542,232 @@
         canvas.width = DEMO_W;
         canvas.height = DEMO_H;
         const ctx = canvas.getContext('2d');
+
+        // Exhibit A — tap a (faded) molecule for its event-log card.
+        // Scope: local engine + event log only. No network read on click.
+        const exhibitCard = document.getElementById('soup-exhibit-card');
+        const exhibitClose = document.getElementById('soup-exhibit-close');
+        const exhibitSubtitle = document.getElementById('soup-exhibit-subtitle');
+        const exhibitBorn = document.getElementById('soup-exhibit-born');
+        const exhibitGeo = document.getElementById('soup-exhibit-geo');
+        const exhibitPers = document.getElementById('soup-exhibit-pers');
+        const exhibitState = document.getElementById('soup-exhibit-state');
+        const exhibitEvents = document.getElementById('soup-exhibit-events');
+        const exhibitLineage = document.getElementById('soup-exhibit-lineage');
+        const exhibitLineageList = document.getElementById('soup-exhibit-lineage-list');
+        const exhibitSavedDt = document.getElementById('soup-exhibit-saved-dt');
+        const exhibitSavedDd = document.getElementById('soup-exhibit-saved-dd');
+        const exhibitSaveRow = document.getElementById('soup-exhibit-save-row');
+        const exhibitSaveBtn = document.getElementById('soup-exhibit-save-btn');
+        const exhibitSaveHint = document.getElementById('soup-exhibit-save-hint');
+        let exhibitCurrentMoleculeId = null;
+        const exhibitPingRow = document.getElementById('soup-exhibit-ping');
+        const exhibitPingStatus = document.getElementById('soup-exhibit-ping-status');
+        let exhibitPingTarget = null;
+
+        function closeExhibit() {
+            if (!exhibitCard) return;
+            exhibitCard.hidden = true;
+            exhibitCard.setAttribute('aria-hidden', 'true');
+        }
+        if (exhibitClose) exhibitClose.addEventListener('click', closeExhibit);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && exhibitCard && !exhibitCard.hidden) closeExhibit();
+        });
+
+        function timeAgo(ms) {
+            const sec = Math.max(0, (Date.now() - ms) / 1000);
+            if (sec < 60) return Math.floor(sec) + 's ago';
+            if (sec < 3600) return Math.floor(sec / 60) + 'min ago';
+            if (sec < 86400) return Math.floor(sec / 3600) + 'h ago';
+            const d = sec / 86400;
+            if (d < 30) return Math.floor(d) + 'd ago';
+            return Math.floor(d / 30) + 'mo ago';
+        }
+
+        function geometryLabel(atomCount) {
+            // VSEPR archetype mapping — docs/affective-chemistry-spec.md §3.
+            if (atomCount === 2) return 'linear (AX₂)';
+            if (atomCount === 3) return 'trigonal planar (AX₃)';
+            if (atomCount === 4) return 'tetrahedral (AX₄) — stable';
+            if (atomCount === 6) return 'octahedral (AX₆) — high-functioning';
+            return atomCount + ' atoms';
+        }
+
+        function showExhibitFor(molecule) {
+            if (!exhibitCard || !molecule) return;
+            const fade = SoupEngine.computeMoleculeFadeAlpha(molecule.creationTime);
+            const ageDays = (Date.now() - molecule.creationTime) / 86400000;
+            const elements = molecule.atoms.map(a => a.element).join('+');
+            exhibitSubtitle.textContent = elements + ' · ' + molecule.atoms.length + '-atom';
+            exhibitBorn.textContent = new Date(molecule.creationTime).toLocaleString() +
+                ' (' + timeAgo(molecule.creationTime) + ')';
+            exhibitGeo.textContent = geometryLabel(molecule.atoms.length);
+            exhibitPers.textContent = molecule.personality;
+            let stateLabel = 'fresh (alpha ' + fade.toFixed(2) + ')';
+            if (ageDays > 30 && fade > SoupEngine.FADE_GHOST_ALPHA) stateLabel = 'fading (alpha ' + fade.toFixed(2) + ')';
+            else if (fade <= SoupEngine.FADE_GHOST_ALPHA) stateLabel = 'ghost (alpha ' + fade.toFixed(2) + ')';
+            exhibitState.textContent = stateLabel;
+
+            // Pull matching event-log entries (pings to the molecule's atoms)
+            const events = soup.findEventsForMolecule(molecule.id) || [];
+            exhibitEvents.innerHTML = '';
+            if (events.length === 0) {
+                const p = document.createElement('p');
+                p.className = 'soup-exhibit-card__empty';
+                p.textContent = 'No event-log entries yet. Pings and reactions for this molecule will land here.';
+                exhibitEvents.appendChild(p);
+            } else {
+                events.slice(-6).forEach(ev => {
+                    const li = document.createElement('div');
+                    li.className = 'soup-exhibit-card__event';
+                    const when = document.createElement('time');
+                    when.textContent = timeAgo(ev.timestamp);
+                    when.title = new Date(ev.timestamp).toLocaleString();
+                    const msg = document.createElement('span');
+                    msg.textContent = ' · ' + (ev.actorId || 'someone') + ' ' + (ev.message || ev.type);
+                    li.appendChild(when);
+                    li.appendChild(msg);
+                    exhibitEvents.appendChild(li);
+                });
+            }
+
+            // Lineage — bounded family tree of parent molecules through reactions.
+            // The "connect" axis: each entry is a literal causal link, not a feed.
+            const heritage = soup.getMoleculeHeritage ? soup.getMoleculeHeritage(molecule.id, 6) : [];
+            if (exhibitLineage && exhibitLineageList) {
+                if (heritage && heritage.length > 0) {
+                    exhibitLineageList.innerHTML = '';
+                    heritage.forEach(rec => {
+                        const li = document.createElement('li');
+                        li.className = 'soup-exhibit-card__lineage-item';
+                        const pname = rec.parentName || rec.parentId.slice(0, 16);
+                        const tag = rec.reactionType ? rec.reactionType : 'reaction';
+                        li.textContent = pname + ' → via ' + tag + ' · ' + timeAgo(rec.timestamp);
+                        if (rec.emotionalContext) {
+                            const ctx = document.createElement('span');
+                            ctx.className = 'soup-exhibit-card__lineage-ctx';
+                            ctx.textContent = ' — ' + rec.emotionalContext;
+                            li.appendChild(ctx);
+                        }
+                        exhibitLineageList.appendChild(li);
+                    });
+                    exhibitLineage.hidden = false;
+                } else {
+                    exhibitLineage.hidden = true;
+                }
+            }
+
+            // Saved-structure recognition — "I remember this one" (read-only).
+            // When the molecule has been saved, show its name + emotional context
+            // + how long ago. When not saved, offer a single, calm save action.
+            exhibitCurrentMoleculeId = molecule.id;
+            const savedMeta = soup.getSavedMoleculeMeta(molecule.id);
+            if (savedMeta) {
+                if (exhibitSavedDt) exhibitSavedDt.hidden = false;
+                if (exhibitSavedDd) {
+                    exhibitSavedDd.hidden = false;
+                    const savedAge = timeAgo(savedMeta.creationTime);
+                    const tag = savedMeta.isPosner ? 'Posner · ' : '';
+                    exhibitSavedDd.textContent =
+                        tag + savedMeta.name + ' (' + savedAge + ', ' + savedMeta.zone + ')';
+                }
+                if (exhibitSaveRow) exhibitSaveRow.hidden = true;
+            } else {
+                if (exhibitSavedDt) exhibitSavedDt.hidden = true;
+                if (exhibitSavedDd) exhibitSavedDd.hidden = true;
+                // Only offer save when the molecule is bonded geometry (>=2 atoms),
+                // not a free-floating singleton — avoids saving noise.
+                const isWorthSaving = molecule.atoms.length >= 2;
+                if (exhibitSaveRow) exhibitSaveRow.hidden = !isWorthSaving;
+                if (exhibitSaveBtn) {
+                    exhibitSaveBtn.disabled = false;
+                    exhibitSaveBtn.textContent = 'Save this structure';
+                }
+                if (exhibitSaveHint) {
+                    exhibitSaveHint.textContent = 'Keeps the geometry across sessions. No upload.';
+                }
+            }
+
+            // Spatial chat ping palette — only when multiplayer is live.
+            // Hidden in mock-only mode (no real peer to receive the ping).
+            const conn = soup.getConnectionStatus();
+            const canPing = !!(conn && conn.connected && conn.familyMode && molecule.atoms[0]);
+            if (exhibitPingRow) {
+                exhibitPingRow.hidden = !canPing;
+                exhibitPingTarget = canPing ? molecule.atoms[0].id : null;
+                if (exhibitPingStatus) exhibitPingStatus.textContent = '';
+            }
+
+            exhibitCard.hidden = false;
+            exhibitCard.setAttribute('aria-hidden', 'false');
+        }
+
+        if (exhibitSaveBtn) {
+            exhibitSaveBtn.addEventListener('click', () => {
+                if (!exhibitCurrentMoleculeId) return;
+                let savedId = null;
+                try { savedId = soup.saveLiveMolecule(exhibitCurrentMoleculeId); } catch (e) { savedId = null; }
+                if (savedId) {
+                    exhibitSaveBtn.disabled = true;
+                    exhibitSaveBtn.textContent = 'Saved';
+                    if (exhibitSaveHint) exhibitSaveHint.textContent = 'Stored locally. Visible from the memory panel.';
+                    // Refresh the meta row so it shows the new saved info on next click.
+                    setTimeout(() => {
+                        const meta = soup.getSavedMoleculeMeta(exhibitCurrentMoleculeId);
+                        if (meta && exhibitSavedDt && exhibitSavedDd) {
+                            exhibitSavedDt.hidden = false;
+                            exhibitSavedDd.hidden = false;
+                            const tag = meta.isPosner ? 'Posner · ' : '';
+                            exhibitSavedDd.textContent =
+                                tag + meta.name + ' (just now, ' + meta.zone + ')';
+                        }
+                        if (exhibitSaveRow) exhibitSaveRow.hidden = true;
+                    }, 200);
+                } else {
+                    if (exhibitSaveHint) exhibitSaveHint.textContent = 'Could not save (molecule no longer present).';
+                }
+            });
+        }
+
+        if (exhibitPingRow) {
+            exhibitPingRow.addEventListener('click', (e) => {
+                const btn = e.target && e.target.closest && e.target.closest('[data-ping-emoji]');
+                if (!btn || !exhibitPingTarget) return;
+                const emoji = btn.getAttribute('data-ping-emoji') || '💧';
+                try {
+                    soup.sendPing(exhibitPingTarget, emoji);
+                    if (exhibitPingStatus) exhibitPingStatus.textContent = 'sent ' + emoji;
+                } catch (err) {
+                    if (exhibitPingStatus) exhibitPingStatus.textContent = 'not sent (offline)';
+                }
+                // Bounded acknowledgement — clears in 2s, never lingers as nag.
+                setTimeout(() => {
+                    if (exhibitPingStatus) exhibitPingStatus.textContent = '';
+                }, 2000);
+            });
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const sx = (e.clientX - rect.left) * (canvas.width / Math.max(1, rect.width));
+            const sy = (e.clientY - rect.top) * (canvas.height / Math.max(1, rect.height));
+            const mol = soup.getMoleculeAt(sx, sy, 8);
+            if (mol) showExhibitFor(mol);
+        });
+
+        // Operator probe: ?fadeProbe=N backdates molecule creationTime by N days
+        // so the 30-day half-life is testable without waiting calendar days.
+        const fadeProbeRaw = urlParams.get('fadeProbe');
+        const fadeProbeDays = fadeProbeRaw ? Math.max(0, parseFloat(fadeProbeRaw)) : 0;
+        if (fadeProbeDays > 0) {
+            // Apply once a few seconds after init so spawned + saved molecules exist.
+            setTimeout(() => {
+                const n = soup.applyFadeProbe(fadeProbeDays);
+                log(`fadeProbe: backdated ${n} molecules by ${fadeProbeDays}d (lifecycle test).`);
+            }, 1200);
+        }
+
         const fpsEl = document.getElementById('fps');
         const moleculesEl = document.getElementById('molecules');
         const atomsEl = document.getElementById('atoms');
@@ -505,20 +890,35 @@
             ctx.fillStyle = P31Q.void;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Draw bonds
-            ctx.strokeStyle = P31Q.bond;
+            // Build atom→molecule map once per frame so atom draws can apply
+            // their molecule's fade alpha (spec: docs/soup-world-design.md §6.4).
+            const molByAtom = new Map();
+            const nowMs = Date.now();
+            soup.getMolecules().forEach(m => {
+                m.atoms.forEach(a => molByAtom.set(a.id, m));
+            });
+
+            // Draw bonds (fade tracks the molecule of atom1)
             ctx.lineWidth = 1;
             soup.getBonds().forEach(bond => {
+                const mol = molByAtom.get(bond.atom1.id);
+                const fade = mol ? SoupEngine.computeMoleculeFadeAlpha(mol.creationTime, nowMs) : 1;
+                ctx.save();
+                ctx.globalAlpha = fade;
+                ctx.strokeStyle = P31Q.bond;
                 ctx.beginPath();
                 ctx.moveTo(bond.atom1.x, bond.atom1.y);
                 ctx.lineTo(bond.atom2.x, bond.atom2.y);
                 ctx.stroke();
+                ctx.restore();
             });
 
             // Draw atoms
             soup.getAtoms().forEach(atom => {
                 // Different rendering for ghost molecules
                 const isGhost = atom.id.startsWith('ghost_');
+                const mol = isGhost ? null : molByAtom.get(atom.id);
+                const fade = mol ? SoupEngine.computeMoleculeFadeAlpha(mol.creationTime, nowMs) : 1;
 
                 if (isGhost) {
                     // Ghost molecules: semi-transparent with dashed border
@@ -544,17 +944,28 @@
                     ctx.textAlign = 'center';
                     ctx.fillText(atom.element, atom.x, atom.y + 3);
                 } else {
-                    // Local molecules: solid rendering
+                    // Local molecules: solid rendering, faded over the 30+7-day lifecycle
+                    ctx.save();
+                    ctx.globalAlpha = fade;
                     ctx.fillStyle = atom.color;
                     ctx.beginPath();
                     ctx.arc(atom.x, atom.y, atom.radius, 0, Math.PI * 2);
                     ctx.fill();
+
+                    // Faded molecules also pulse a 1Hz outline (memory surfacing — spec §6.5)
+                    if (fade < 1) {
+                        const pulse = 0.18 + 0.18 * Math.abs(Math.sin(nowMs / 1000 * Math.PI));
+                        ctx.lineWidth = 1.2;
+                        ctx.strokeStyle = `rgba(204, 98, 71, ${pulse})`;
+                        ctx.stroke();
+                    }
 
                     // Draw element symbol
                     ctx.fillStyle = P31Q.paper;
                     ctx.font = '10px monospace';
                     ctx.textAlign = 'center';
                     ctx.fillText(atom.element, atom.x, atom.y + 3);
+                    ctx.restore();
                 }
             });
 
@@ -726,6 +1137,46 @@
             }
             lastReactionCount = rc;
             audioEl.textContent = stats.audio ? `${stats.audio.activeOscillators}/${stats.audio.maxOscillators}` : 'N/A';
+
+            // PSI — defensible structural read, replaces engagement metrics
+            const psiInfo = soup.getPosnerStabilityIndex();
+            const psiEl = document.getElementById('psi');
+            if (psiEl) {
+                psiEl.textContent =
+                    psiInfo.psi.toFixed(2) +
+                    '  · tetra ' + psiInfo.tetrahedralCount + '/' + psiInfo.moleculeCount +
+                    ' · posners ' + psiInfo.savedPosners;
+            }
+
+            // Breath — phase + amplitude (engine drives --soup-breath; this is just a readout)
+            const breath = soup.getBreathState();
+            const breathEl = document.getElementById('breath');
+            if (breathEl) {
+                breathEl.textContent =
+                    breath.phase + ' · ' + breath.amplitude.toFixed(2);
+            }
+
+            // Coherence readout — pure mirror of the engine's ramp state
+            const cohEl = document.getElementById('coherence');
+            if (cohEl) {
+                const cohState = document.documentElement.getAttribute('data-soup-coherent') || 'ordinary';
+                cohEl.textContent = cohState;
+            }
+
+            // Thermo readout — center-of-bowl temperature + Fuel fraction
+            const thermoEl = document.getElementById('thermo');
+            if (thermoEl) {
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2;
+                const T = soup.getZoneTemperatureAt
+                    ? soup.getZoneTemperatureAt(cx, cy)
+                    : 1.0;
+                const fuel = soup.getFuelFraction
+                    ? soup.getFuelFraction()
+                    : 0;
+                thermoEl.textContent =
+                    'T ' + T.toFixed(2) + ' · fuel ' + (fuel * 100).toFixed(0) + '%';
+            }
 
             // Update saved molecules count
             const persistenceStats = soup.getPersistenceStats();

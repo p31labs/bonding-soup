@@ -106,7 +106,7 @@ a.od-inline:hover {
 .od-card {
   background: var(--od-surface);
   border: 1px solid var(--od-border);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 1rem 1.1rem;
 }
 .od-card h2 {
@@ -275,4 +275,163 @@ main[aria-busy="true"] .od-card {
 }
 .od-root .p31-host-mind {
   color: var(--p31-muted, var(--od-muted));
+}
+
+/* ============================================================
+   P31 lobby polish — additive, calm.
+   The desk has a static star plate; we add a hearth glow and a
+   breathing K4 wireframe in the corner so the room feels lived in.
+   No HTML changes. Respects prefers-reduced-motion.
+   ============================================================ */
+
+/* Hearth glow at viewport bottom-center, plus faint teal halo at the top —
+   same vector field as the lobby. */
+body.od-root::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(70vmax 36vmax at 50% 108%,
+      rgba(204, 98, 71, 0.08),
+      rgba(204, 98, 71, 0.025) 40%,
+      transparent 65%),
+    radial-gradient(80vmax 40vmax at 50% -8%,
+      rgba(77, 184, 168, 0.05),
+      transparent 60%);
+  mix-blend-mode: screen;
+}
+
+/* K4 wireframe corner mark — quietly breathes so the desk never reads as a
+   dead page. Uses an inline SVG data URI so no extra asset routing. */
+body.od-root::before {
+  content: "";
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  width: 56px;
+  height: 56px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.55;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%234db8a8' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='50' y1='14' x2='14' y2='80'/%3E%3Cline x1='50' y1='14' x2='86' y2='80'/%3E%3Cline x1='14' y1='80' x2='86' y2='80'/%3E%3Cline x1='50' y1='14' x2='50' y2='56'/%3E%3Cline x1='14' y1='80' x2='50' y2='56'/%3E%3Cline x1='86' y1='80' x2='50' y2='56'/%3E%3Ccircle cx='50' cy='14' r='2.4' fill='%234db8a8' stroke='none'/%3E%3Ccircle cx='14' cy='80' r='2.4' fill='%234db8a8' stroke='none'/%3E%3Ccircle cx='86' cy='80' r='2.4' fill='%234db8a8' stroke='none'/%3E%3Ccircle cx='50' cy='56' r='2.4' fill='%23cc6247' stroke='none'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: od-k4-breathe 14s ease-in-out infinite;
+  transform-origin: 50% 50%;
+}
+@keyframes od-k4-breathe {
+  0%, 100% { transform: scale(1)    rotate(-2deg); opacity: 0.42; }
+  50%      { transform: scale(1.05) rotate( 2deg); opacity: 0.62; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.od-root::before { animation: none; opacity: 0.5; }
+}
+
+/* Subtle warmth lift on cards — keeps the calm, but ever so slightly alive. */
+.od-card {
+  background: linear-gradient(180deg,
+    rgba(20, 24, 30, 0.94),
+    rgba(14, 17, 22, 0.94));
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.02) inset;
+}
+
+/* Pills — when status is healthy, a slow inner phosphor breath. */
+.od-pill {
+  position: relative;
+  overflow: hidden;
+}
+.od-pill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(60% 80% at 50% 50%, rgba(77,184,168,0.18), transparent 70%);
+  opacity: 0;
+  animation: od-pill-breathe 5.5s ease-in-out infinite;
+}
+.od-pill--warn::after {
+  background: radial-gradient(60% 80% at 50% 50%, rgba(232,192,106,0.20), transparent 70%);
+}
+.od-pill--bad::after {
+  background: radial-gradient(60% 80% at 50% 50%, rgba(232,145,122,0.22), transparent 70%);
+}
+@keyframes od-pill-breathe {
+  0%, 100% { opacity: 0; }
+  50%      { opacity: 0.55; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .od-pill::after { animation: none; opacity: 0; }
+}
+
+/* ===== end lobby polish ===== */
+
+/* --- Operator-desk header pill + deploy-list status dots ---
+   Polish-pass 2026-04-30. Additive only; matches canon teal/cyan tokens.   */
+.od-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+}
+.od-kicker__text {
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+}
+.od-pill--surface {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: rgba(77, 184, 168, 0.18);
+  color: var(--p31-cyan, #4db8a8);
+  border: 1px solid rgba(77, 184, 168, 0.45);
+  font-weight: 700;
+}
+
+/* Deploy spine list: status-dot per worker (gray = unknown / not probed locally;
+   tooltip explains we'd need wrangler for live state). */
+.od-list { padding-left: 0; list-style: none; margin: 0; display: grid; gap: 0.35rem; }
+.od-list li {
+  position: relative;
+  padding: 0.3rem 0.5rem 0.3rem 1.4rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.18);
+  font-family: var(--p31-font-mono, "JetBrains Mono", ui-monospace, monospace);
+  font-size: 0.82rem;
+}
+.od-list li::before {
+  content: "";
+  position: absolute;
+  left: 0.55rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.04);
+}
+.od-list li[data-status="up"]::before {
+  background: var(--p31-phosphorus, #3ba372);
+  box-shadow: 0 0 0 2px rgba(59, 163, 114, 0.25);
+}
+.od-list li[data-status="warn"]::before {
+  background: #e8c06a;
+  box-shadow: 0 0 0 2px rgba(232, 192, 106, 0.25);
+}
+.od-list li[data-status="down"]::before {
+  background: var(--p31-coral, #cc6247);
+  box-shadow: 0 0 0 2px rgba(204, 98, 71, 0.25);
+}
+.od-list__more {
+  opacity: 0.65;
+  font-style: italic;
+}
+@media (prefers-reduced-motion: reduce) {
+  .od-list li::before { box-shadow: none; }
 }

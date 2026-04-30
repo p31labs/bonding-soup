@@ -296,6 +296,7 @@ function buildPageHtml(portForUi) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:ital,wght@0,400;0,500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/assets/p31-style.css" />
+  <link rel="stylesheet" href="/assets/p31-shared-surface.css" />
   <link rel="stylesheet" href="/assets/p31-responsive-surface.css" />
   <link rel="stylesheet" href="/assets/command-center.css" />
   <link rel="stylesheet" href="/assets/p31-starfield.css" />
@@ -438,7 +439,7 @@ function buildPageHtml(portForUi) {
           </div>
         </details>
 
-        <details class="cc-joy" id="cc-joy">
+        <details class="cc-joy" id="cc-joy" open>
           <summary>Trim tab — moment of joy</summary>
           ${joyListBlock}
           <p class="cc-joy__slot" id="cc-joy-slot" hidden></p>
@@ -565,6 +566,7 @@ function buildOperatorDeskHtml(portForUi) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:ital,wght@0,400;0,500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/assets/p31-style.css" />
+  <link rel="stylesheet" href="/assets/p31-shared-surface.css" />
   <link rel="stylesheet" href="/assets/operator-desk.css" />
   <script type="module" src="/assets/od-starfield-boot.js"></script>
   <script src="/assets/operator-desk.js" defer></script>
@@ -575,7 +577,10 @@ function buildOperatorDeskHtml(portForUi) {
   <header class="od-header">
     <div class="od-header__inner">
       <div>
-        <p class="od-kicker">P31 labs · read-first plane</p>
+        <p class="od-kicker">
+          <span class="od-pill od-pill--surface">Operator desk</span>
+          <span class="od-kicker__text">P31 labs · read-first plane</span>
+        </p>
         <h1 class="od-title">Operator desk</h1>
         <p class="p31-host-mind">Host mind: <strong>Operator</strong> — read-only; same static star plate as the control room.</p>
         <p class="od-lead">Live CONNECTION counts, glass snapshot, and SIMPLEX proxy lines. Whitelisted runs and the automation gate live on the <a class="od-inline" href="/">control plane</a>.</p>
@@ -633,6 +638,7 @@ function buildOperatorDeskHtml(portForUi) {
 
 const manifestBody = buildManifestJson();
 const p31StylePath = path.join(repoRoot, "cognitive-passport", "p31-style.css");
+const p31SharedSurfacePath = path.join(repoRoot, "p31-shared-surface.css");
 const p31ResponsiveSurfacePath = path.join(repoRoot, "cognitive-passport", "p31-responsive-surface.css");
 const p31SubjectPrefsPath = path.join(repoRoot, "cognitive-passport", "lib", "p31-subject-prefs.js");
 const p31ReturnRibbonPath = path.join(repoRoot, "cognitive-passport", "lib", "p31-return-ribbon.js");
@@ -931,6 +937,10 @@ const server = http.createServer((req, res) => {
   }
   if (req.method === "GET" && assetBase === "/assets/p31-responsive-surface.css") {
     sendAsset(res, req, p31ResponsiveSurfacePath, "text/css; charset=utf-8");
+    return;
+  }
+  if (req.method === "GET" && assetBase === "/assets/p31-shared-surface.css") {
+    sendAsset(res, req, p31SharedSurfacePath, "text/css; charset=utf-8");
     return;
   }
   if (req.method === "GET" && assetBase === "/assets/p31-style.css") {

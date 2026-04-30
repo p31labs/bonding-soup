@@ -99,10 +99,34 @@ async function main() {
     if (!metaText || !/Found|match|All \d+ document|Index /i.test(metaText)) {
       throw new Error("unexpected meta: " + metaText);
     }
+
+    await page.locator("input#q").fill("", { force: true });
+    await page.locator("input#q").fill("legal:", { force: true });
+    await page.locator("ol.hits li").first().waitFor({ state: "attached", timeout: 20000 });
+    const nTag = await page.locator("ol.hits li").count();
+    if (nTag < 1) {
+      throw new Error("expected >= 1 hit for legal: tag query, got " + nTag);
+    }
+
+    const nodeCount = await page.locator("#constellation-nodes *").count();
+    if (nodeCount < 3) {
+      throw new Error("constellation expected multiple nodes, got " + nodeCount);
+    }
+
+    await page.locator("#btn-view-list").click();
+    await page.waitForFunction(() => document.body.classList.contains("doclib-mode-list"), {
+      timeout: 10000,
+    });
+    await page.locator("#btn-view-constellation").click();
+    await page.waitForFunction(() => !document.body.classList.contains("doclib-mode-list"), {
+      timeout: 10000,
+    });
   } finally {
     await browser.close();
   }
-  console.log("doc-library-e2e: ok — mesh query returned hits in headless Chromium");
+  console.log(
+    "doc-library-e2e: ok — mesh + legal: + constellation + list/constellation toggle (headless Chromium)"
+  );
 }
 
 function shutdown() {

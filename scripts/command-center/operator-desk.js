@@ -245,10 +245,12 @@
         const mode = String(v.mode || "—");
         const modeEl =
           mode === "apply"
-            ? pill(mode, "")
+            ? pill(mode, "warn")
             : mode === "dry-run"
               ? pill(mode, "warn")
-              : pill(mode, "bad");
+              : mode === "closed"
+                ? pill(mode, "")
+                : pill(mode, "bad");
         setRow(dlGo, "Valve", modeEl);
         if (v.updatedAt) setRow(dlGo, "Updated", String(v.updatedAt));
         const le = go.json.lastEvent;
@@ -282,6 +284,8 @@
         const cap = Math.min(prev.length, MAX_DEPLOY_PREVIEW);
         for (let i = 0; i < cap; i++) {
           const li = document.createElement("li");
+          li.dataset.status = "unknown";
+          li.title = "Deploy status not probed locally — needs `wrangler` to read live worker state.";
           li.textContent = String(prev[i]);
           ulDeploy.appendChild(li);
         }

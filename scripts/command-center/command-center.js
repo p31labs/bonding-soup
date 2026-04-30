@@ -485,6 +485,7 @@
     SECTIONS.forEach((sec, secIdx) => {
       const det = document.createElement("details");
       det.className = "cc-section-wrap";
+      if (sec && typeof sec.id === "string") det.dataset.ccSection = sec.id;
       if (!prefersReducedMotion) det.style.setProperty("--cc-stagger", String(secIdx * 40));
 
       const sum = document.createElement("summary");

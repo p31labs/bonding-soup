@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="p31-ds" lang="en" data-p31-appearance="hub">
+<html lang="en" data-p31-appearance="hub">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
@@ -10,30 +10,43 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700&family=JetBrains+Mono:ital,wght@0,400;0,600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="cognitive-passport/p31-style.css" />
+  <link rel="stylesheet" href="p31-shared-surface.css" />
   <link rel="stylesheet" href="cognitive-passport/p31-responsive-surface.css" />
-  <link rel="stylesheet" href="p31-device-setup.css" />
   <script src="cognitive-passport/lib/p31-subject-prefs.js"></script>
   <link rel="apple-touch-icon" href="p31-bonding-icons/p31-icon.svg" />
   <link rel="manifest" href="p31-bonding.webmanifest" crossorigin="anonymous" />
   <title>P31 — Chromebook &amp; mobile (operator setup)</title>
 </head>
-<body class="p31-mesh-m-first p31-responsive-surface">
-  <a class="p31-ds-skip" href="#p31-ds-main">Skip to content</a>
-  <div class="p31-ds-wrap" id="p31-ds-main">
-    <header class="p31-ds-hero">
-      <span class="p31-ds-kicker">Operator runbook</span>
+<body class="p31-doc p31-mesh-m-first p31-responsive-surface">
+  <canvas id="ds-star-plate" width="4" height="4" aria-hidden="true" style="position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block"></canvas>
+  <script type="module">
+    /* SMART starfield: persistent fixed-viewport static plate. Same canon
+       as operator desk; fail quiet (Gray Rock).                         */
+    const cv = document.getElementById("ds-star-plate");
+    if (cv instanceof HTMLCanvasElement) {
+      try {
+        const mod = await import("./design-assets/starfield/p31-starfield-static-plate.js");
+        mod.initStaticStarPlate(cv, { preset: "hub" });
+      } catch (_e) { /* offline-friendly */ }
+    }
+  </script>
+  <a class="p31-doc-skip" href="#main">Skip to content</a>
+  <div class="p31-doc-wrap" id="main">
+
+    <header class="p31-doc-hero">
+      <span class="p31-doc-kicker p31-doc-kicker--coral">Operator runbook</span>
       <h1>Chromebook &amp; mobile — operator setup</h1>
       <p class="p31-host-mind">Host mind: <strong>Operator · Parent</strong> — device plane; same void, different altitude.</p>
       <p>
-        <strong class="p31-ds-bead">Acer Spin 7xx</strong> class · Chrome OS · Linux (<code>penguin</code>) · phone as mesh-first companion.
+        <strong class="p31-doc-bead">Acer Spin 7xx</strong> class · Chrome OS · Linux (<code>penguin</code>) · phone as mesh-first companion.
         Same canon as the hub: calm structure, honest limits, no install gatekeeping.
       </p>
-      <div class="p31-ds-meta">
+      <div class="p31-doc-meta">
         <span>Version 1.0.0</span>
         <span>Ship bar: <a href="docs/P31-ENGINEERING-STANDARD.md">P31-ENGINEERING-STANDARD.md</a></span>
         <span>Markdown: <a href="docs/P31-DEVICE-SETUP-CHROMEBOOK-MOBILE.md">P31-DEVICE-SETUP-CHROMEBOOK-MOBILE.md</a></span>
       </div>
-      <ul class="p31-ds-toc" role="list">
+      <ul class="p31-doc-toc" role="list">
         <li><a href="#principles">Principles</a></li>
         <li><a href="#checklist">Checklist</a></li>
         <li><a href="#spin">Spin 7xx</a></li>
@@ -44,11 +57,11 @@
       </ul>
     </header>
 
-    <section class="p31-ds-section" id="principles" aria-labelledby="h-principles">
+    <section class="p31-doc-section" id="principles" aria-labelledby="h-principles">
       <h2 id="h-principles">Principles</h2>
-      <div class="p31-ds-card">
+      <div class="p31-doc-card">
         <p>Aligned with <a href="docs/ETHICAL-STYLE-MAP.md">ethical style</a> and the hub: clarity, autonomy, browser-first mesh on phone — add-to-home is optional.</p>
-        <div class="p31-ds-table-wrap">
+        <div class="p31-doc-table-wrap">
           <table>
             <thead>
               <tr><th scope="col">Value</th><th scope="col">On this device</th></tr>
@@ -72,11 +85,11 @@
       </div>
     </section>
 
-    <section class="p31-ds-section" id="checklist" aria-labelledby="h-checklist">
+    <section class="p31-doc-section" id="checklist" aria-labelledby="h-checklist">
       <h2 id="h-checklist">Full setup checklist</h2>
-      <div class="p31-ds-card">
+      <div class="p31-doc-card">
         <p>Run in order. If <code>npm run verify</code> disagrees with a step, fix the environment first.</p>
-        <ol class="p31-ds-checklist">
+        <ol class="p31-doc-checklist">
           <li><strong>Chrome OS</strong> current stable; reboot after large updates.</li>
           <li><strong>Developers → Linux</strong> — install Crostini; <strong>resize disk</strong> for Node + <code>node_modules</code> (and Andromeda if present).</li>
           <li><strong>Node 20+</strong> in Linux — see repo <a href=".nvmrc"><code>.nvmrc</code></a> and <a href="AGENTS.md">AGENTS.md</a>.</li>
@@ -84,17 +97,17 @@
           <li><strong>One-shot</strong> — <code>npm run setup</code> from repo root (install, soup prep, apply constants / style, verify).</li>
           <li><strong>Bookmarks</strong> — local demo, <a href="https://p31ca.org" rel="noopener">p31ca.org</a>, <a href="https://bonding.p31ca.org/soup" rel="noopener">C.A.R.S. (live)</a>; same repo also hosts <a href="p31-sovereign-lab.html">Sovereign Lab</a>, <a href="p31-slicer.html">slicer</a>, and (with <code>npm run demo:geodesic-preview</code>) <a href="http://127.0.0.1:5174/">GeodesicRoom state</a>; this page.</li>
         </ol>
-        <div class="p31-ds-cmd" style="padding-right: 4.5rem">
+        <div class="p31-doc-cmd">
           npm run setup
-          <button type="button" class="p31-ds-copy" data-copy="npm run setup" aria-label="Copy npm run setup">Copy</button>
+          <button type="button" class="p31-doc-copy" data-copy="npm run setup" aria-label="Copy npm run setup">Copy</button>
         </div>
-        <p class="p31-ds-callout">Optional daily rhythm: <code>npm run morning</code> (pull, converge, command center) — when you have adopted that script.</p>
+        <p class="p31-doc-callout">Optional daily rhythm: <code>npm run morning</code> (pull, converge, command center) — when you have adopted that script.</p>
       </div>
     </section>
 
-    <section class="p31-ds-section" id="spin" aria-labelledby="h-spin">
+    <section class="p31-doc-section" id="spin" aria-labelledby="h-spin">
       <h2 id="h-spin">Acer Spin 7xx (typical)</h2>
-      <div class="p31-ds-card">
+      <div class="p31-doc-card">
         <p><strong>2-in-1</strong> — use tablet mode for long reads (doc library, <code>docs/</code>); clamshell + power for builds.</p>
         <p><strong>Stylus (USI)</strong> — model-dependent; not required for development.</p>
         <p><strong>Thermals</strong> — expect fan noise under <code>npm run p31:all</code> or large <code>pnpm install</code>; that is normal. Prefer a cool, hard surface.</p>
@@ -102,30 +115,30 @@
       </div>
     </section>
 
-    <section class="p31-ds-section" id="linux" aria-labelledby="h-linux">
+    <section class="p31-doc-section" id="linux" aria-labelledby="h-linux">
       <h2 id="h-linux">Linux · path · static server</h2>
-      <div class="p31-ds-card">
+      <div class="p31-doc-card">
         <h3>Always serve from the repo root</h3>
         <p>The demo script binds the directory that contains <code>soup.html</code>. Wrong directory = wrong site.</p>
-        <div class="p31-ds-cmd" style="padding-right: 4.5rem">
+        <div class="p31-doc-cmd">
           cd ~/p31 &amp;&amp; npm run demo
-          <button type="button" class="p31-ds-copy" data-copy="cd ~/p31 && npm run demo" aria-label="Copy cd and demo">Copy</button>
+          <button type="button" class="p31-doc-copy" data-copy="cd ~/p31 && npm run demo" aria-label="Copy cd and demo">Copy</button>
         </div>
         <p>Adjust <code>~/p31</code> to your clone. Or: <code>npm run demo --prefix /path/to/p31</code>.</p>
         <h3>Port 8080 busy</h3>
-        <div class="p31-ds-cmd" style="padding-right: 4.5rem">
+        <div class="p31-doc-cmd">
           P31_DEMO_PORT=8090 npm run demo
-          <button type="button" class="p31-ds-copy" data-copy="P31_DEMO_PORT=8090 npm run demo" aria-label="Copy P31_DEMO_PORT demo">Copy</button>
+          <button type="button" class="p31-doc-copy" data-copy="P31_DEMO_PORT=8090 npm run demo" aria-label="Copy P31_DEMO_PORT demo">Copy</button>
         </div>
         <p>Details: <a href="docs/SOUP-LOCAL-DEMO.md">SOUP-LOCAL-DEMO.md</a>.</p>
       </div>
     </section>
 
-    <section class="p31-ds-section" id="mobile" aria-labelledby="h-mobile">
+    <section class="p31-doc-section" id="mobile" aria-labelledby="h-mobile">
       <h2 id="h-mobile">Mobile (hub &amp; BONDING)</h2>
-      <div class="p31-ds-card">
+      <div class="p31-doc-card">
         <p><strong>Public mesh-first surfaces</strong> (TLS) — use the browser; no app store required.</p>
-        <div class="p31-ds-links">
+        <div class="p31-doc-links">
           <a href="https://p31ca.org" rel="noopener">p31ca.org (hub)</a>
           <a href="https://bonding.p31ca.org/soup" rel="noopener">C.A.R.S. (live)</a>
         </div>
@@ -133,26 +146,26 @@
       </div>
     </section>
 
-    <section class="p31-ds-section" id="lan" aria-labelledby="h-lan">
+    <section class="p31-doc-section" id="lan" aria-labelledby="h-lan">
       <h2 id="h-lan">Command center on your phone (LAN, trusted Wi‑Fi)</h2>
-      <div class="p31-ds-card">
+      <div class="p31-doc-card">
         <p>Whitelisted actions from the phone against your Chromebook. <strong>Same network only</strong> — not for coffee-shop Wi‑Fi.</p>
-        <div class="p31-ds-cmd" style="padding-right: 4.5rem">
+        <div class="p31-doc-cmd">
           P31_CMD_CENTER_LAN=1 npm run command-center
-          <button type="button" class="p31-ds-copy" data-copy="P31_CMD_CENTER_LAN=1 npm run command-center" aria-label="Copy LAN command center">Copy</button>
+          <button type="button" class="p31-doc-copy" data-copy="P31_CMD_CENTER_LAN=1 npm run command-center" aria-label="Copy LAN command center">Copy</button>
         </div>
         <p>Then open <code>http://&lt;CHROMEBOOK_LAN_IP&gt;:3131</code> on the phone. The UI shows a phone-friendly URL. iOS: Safari → <strong>Add to Home Screen</strong> — <a href="docs/MOBILE-OPS-PHASE2.md">MOBILE-OPS-PHASE2</a>.</p>
-        <div class="p31-ds-cmd" style="padding-right: 4.5rem">
+        <div class="p31-doc-cmd">
           hostname -I | awk '{print $1}'
-          <button type="button" class="p31-ds-copy" data-copy="hostname -I | awk '{print $1}'" aria-label="Copy hostname command">Copy</button>
+          <button type="button" class="p31-doc-copy" data-copy="hostname -I | awk '{print $1}'" aria-label="Copy hostname command">Copy</button>
         </div>
       </div>
     </section>
 
-    <section class="p31-ds-section" id="trouble" aria-labelledby="h-trouble">
+    <section class="p31-doc-section" id="trouble" aria-labelledby="h-trouble">
       <h2 id="h-trouble">Troubleshooting</h2>
-      <div class="p31-ds-card">
-        <div class="p31-ds-table-wrap">
+      <div class="p31-doc-card">
+        <div class="p31-doc-table-wrap">
           <table>
             <thead>
               <tr><th>Symptom</th><th>What to do</th></tr>
@@ -180,25 +193,25 @@
       </div>
     </section>
 
-    <div class="p31-ds-links" style="margin-bottom: var(--p31-space-10)">
+    <div class="p31-doc-links" style="margin-bottom: var(--p31-space-10)">
       <a href="p31-personal-howto.html">Personal how-to (all commands)</a>
       <a href="soup.html">C.A.R.S.</a>
       <a href="docs/doc-library/index.html">Document library</a>
       <a href="fleet-portal.html">Fleet &amp; URLs</a>
     </div>
 
-    <footer class="p31-ds-foot">
-      <p>P31 home · C.A.R.S. · <span class="p31-ds-bead" aria-hidden="true">Build, Create, Connect</span></p>
+    <footer class="p31-doc-foot">
+      <p>P31 home · C.A.R.S. · <span class="p31-doc-bead" aria-hidden="true">Build, Create, Connect</span></p>
       <p>Command center deep-dives: <a href="docs/P31-CHROMEBOOK-COMMAND-READINESS.md">Chromebook readiness</a> · <a href="docs/P31-IPHONE-COMMAND-READINESS.md">iPhone readiness</a></p>
       <p>Full ecosystem context: <a href="docs/ECOSYSTEM-PRODUCTION-11.md">ECOSYSTEM-PRODUCTION-11</a> · <a href="AGENTS.md">AGENTS.md</a></p>
     </footer>
   </div>
 
-  <div class="p31-ds-toast" id="p31-ds-toast" role="status" aria-live="polite"></div>
+  <div class="p31-doc-toast" id="p31-doc-toast" role="status" aria-live="polite"></div>
   <script>
     (function () {
-      var root = document.querySelector('.p31-ds');
-      root.querySelectorAll('.p31-ds-copy').forEach(function (btn) {
+      var copyBtns = document.querySelectorAll('.p31-doc-copy');
+      copyBtns.forEach(function (btn) {
         btn.addEventListener('click', function () {
           var t = btn.getAttribute('data-copy') || '';
           if (!t) return;
@@ -215,25 +228,23 @@
             ta.style.left = '-9999px';
             document.body.appendChild(ta);
             ta.select();
-            try {
-              document.execCommand('copy');
-              show();
-            } catch (e) {}
+            try { document.execCommand('copy'); show(); } catch (e) {}
             document.body.removeChild(ta);
           }
           function show() {
-            var el = document.getElementById('p31-ds-toast');
+            var el = document.getElementById('p31-doc-toast');
             el.textContent = 'Copied';
-            el.classList.add('p31-ds-toast--on');
+            el.classList.add('p31-doc-toast--on');
             clearTimeout(el._h);
             el._h = setTimeout(function () {
-              el.classList.remove('p31-ds-toast--on');
+              el.classList.remove('p31-doc-toast--on');
             }, 1800);
           }
         });
       });
     })();
   </script>
+  <script type="module" src="design-assets/p31-doc-surface.js"></script>
   <script src="cognitive-passport/lib/p31-return-ribbon.js" data-local-soup="soup.html" defer></script>
 </body>
 </html>

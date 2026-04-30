@@ -13,8 +13,10 @@ const root = path.join(__dirname, "..");
 const MUST = [
   'id="fp-atc"',
   'id="fp-body"',
-  "fp-gray-rock",
-  'id="fp-reveal-tables"',
+  // Default surface state is now `fp-alive` (tables visible inline) — the
+  // Gray-Rock + reveal-button gate was removed in the unification pass
+  // (2026-04-30) so the route tables don't hide behind a click.
+  "fp-alive",
   'id="fp-detail"',
   "fp-glass-strip",
   "fp-status-legend",

@@ -1,0 +1,78 @@
+{
+  "schema": "p31.publicVoiceGuardrails/1.0.0",
+  "version": "1.0.0",
+  "requiredMdAnchors": [
+    "## Copy ship checklist",
+    "## What we never say",
+    "## Tiers (reminder)",
+    "### Rolling alignment (Tier B/C surfaces adjusted first)"
+  ],
+  "requiredSubstrings": [
+    {
+      "path": "p31-device-setup.html",
+      "mustContain": "Ship bar:"
+    },
+    {
+      "path": "p31-personal-howto.html",
+      "mustContain": "Ship bar (merge/deploy):"
+    }
+  ],
+  "watch": [
+    { "path": "cognitive-passport/index.html", "optional": false },
+    { "path": "soup.html", "optional": false },
+    { "path": "p31-personal-howto.html", "optional": false },
+    { "path": "p31-device-setup.html", "optional": false },
+    { "path": "fleet-portal.html", "optional": false },
+    { "path": "poets-room.html", "optional": false },
+    { "path": "scripts/build-fleet-portal.mjs", "optional": false },
+    { "path": "docs/physics-learn/labs.html", "optional": false },
+    {
+      "path": "andromeda/04_SOFTWARE/p31ca/src/pages/index.astro",
+      "optional": true
+    }
+  ],
+  "patterns": [
+    {
+      "id": "delve",
+      "regex": "\\bdelve\\b",
+      "flags": "i",
+      "note": "PUBLIC-VOICE avoid-list"
+    },
+    {
+      "id": "empower",
+      "regex": "\\bempower\\b",
+      "flags": "i",
+      "note": "PUBLIC-VOICE avoid-list"
+    },
+    {
+      "id": "synergy",
+      "regex": "\\bsynergy\\b",
+      "flags": "i",
+      "note": "PUBLIC-VOICE avoid-list"
+    },
+    {
+      "id": "revolutionary",
+      "regex": "\\brevolutionary\\b",
+      "flags": "i",
+      "note": "PUBLIC-VOICE avoid-list"
+    },
+    {
+      "id": "cutting-edge",
+      "regex": "cutting[\\s-]+edge",
+      "flags": "i",
+      "note": "PUBLIC-VOICE avoid-list"
+    },
+    {
+      "id": "unlock",
+      "regex": "\\bunlock\\b",
+      "flags": "i",
+      "note": "Prefer plain verbs unless documenting the avoid-list term itself"
+    },
+    {
+      "id": "normative-strip",
+      "regex": "Normative:\\s*<a[^>]+href=[\"']docs/P31-ENGINEERING-STANDARD",
+      "flags": "",
+      "note": "Use Ship bar label for ENGINEERING-STANDARD strip (Tier B/C surfaces)"
+    }
+  ]
+}

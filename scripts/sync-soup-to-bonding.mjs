@@ -33,6 +33,12 @@ fs.rmSync(out, { recursive: true, force: true });
 fs.mkdirSync(path.join(out, "dist"), { recursive: true });
 fs.mkdirSync(path.join(out, "cognitive-passport"), { recursive: true });
 
+console.log("sync-soup-to-bonding: sync atmosphere (design + p31ca + bonding /p31-atmosphere/) …");
+execSync(process.execPath, [path.join(root, "scripts", "sync-p31-atmosphere.mjs")], {
+  cwd: root,
+  stdio: "inherit",
+});
+
 console.log("sync-soup-to-bonding: compiling home dist/ …");
 execSync("npm run build", { cwd: root, stdio: "inherit" });
 
@@ -90,6 +96,15 @@ if (fs.existsSync(stlSrc)) {
   fs.mkdirSync(path.dirname(stlOut), { recursive: true });
   fs.cpSync(stlSrc, stlOut, { recursive: true });
   console.log("  design-assets/stl/* → public/soup/design-assets/stl/");
+}
+
+for (const sub of ["starfield", "atmosphere"]) {
+  const src = path.join(root, "design-assets", sub);
+  if (!fs.existsSync(src)) continue;
+  const dest = path.join(out, "design-assets", sub);
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
+  fs.cpSync(src, dest, { recursive: true });
+  console.log(`  design-assets/${sub}/* → public/soup/design-assets/${sub}/`);
 }
 
 console.log("sync-soup-to-bonding: OK — next: cd andromeda/04_SOFTWARE/bonding && npm run build && npx wrangler pages deploy dist --project-name bonding");

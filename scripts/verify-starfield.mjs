@@ -14,6 +14,8 @@ const src = path.join(root, "design-assets", "starfield", "p31-starfield.js");
 const pub = path.join(root, "andromeda", "04_SOFTWARE", "p31ca", "public", "lib", "p31-starfield.js");
 const srcMt = path.join(root, "design-assets", "starfield", "p31-mesh-touches.js");
 const pubMt = path.join(root, "andromeda", "04_SOFTWARE", "p31ca", "public", "lib", "p31-mesh-touches.js");
+const srcPlate = path.join(root, "design-assets", "starfield", "p31-starfield-static-plate.js");
+const pubPlate = path.join(root, "andromeda", "04_SOFTWARE", "p31ca", "public", "lib", "p31-starfield-static-plate.js");
 
 function sha256(p) {
   return crypto.createHash("sha256").update(fs.readFileSync(p)).digest("hex");
@@ -60,7 +62,21 @@ function main() {
     }
   }
 
+  if (!fs.existsSync(srcPlate)) {
+    console.error("verify-starfield: missing p31-starfield-static-plate.js");
+    process.exit(1);
+  }
+  const plateTxt = fs.readFileSync(srcPlate, "utf8");
+  if (!plateTxt.includes("export function initStaticStarPlate")) {
+    console.error("verify-starfield: static plate must export initStaticStarPlate");
+    process.exit(1);
+  }
+
   execFileSync(process.execPath, [path.join(root, "scripts", "sync-p31-starfield.mjs")], {
+    cwd: root,
+    stdio: "pipe",
+  });
+  execFileSync(process.execPath, [path.join(root, "scripts", "sync-p31-atmosphere.mjs")], {
     cwd: root,
     stdio: "pipe",
   });
@@ -82,6 +98,11 @@ function main() {
   }
   if (sha256(srcMt) !== sha256(pubMt)) {
     console.error("verify-starfield: mesh-touches design vs public mismatch");
+    process.exit(1);
+  }
+
+  if (!fs.existsSync(pubPlate) || sha256(srcPlate) !== sha256(pubPlate)) {
+    console.error("verify-starfield: p31-starfield-static-plate.js out of sync (run sync:p31-starfield)");
     process.exit(1);
   }
 

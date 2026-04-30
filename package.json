@@ -75,6 +75,7 @@
     "test:physics-learn:e2e": "node scripts/physics-learn-e2e.mjs",
     "test:k4market:smoke": "node scripts/k4market-smoke.mjs",
     "test:oqe-icosa:e2e": "node scripts/oqe-icosa-e2e.mjs",
+    "spike:appshell": "npm run spike:appshell --prefix andromeda/04_SOFTWARE/p31ca",
     "demo": "node scripts/demo-server.mjs",
     "server": "node scripts/p31-static-server.mjs",
     "demo:geodesic-preview": "npm run dev --prefix spikes/sovereign-geodesic-preview",

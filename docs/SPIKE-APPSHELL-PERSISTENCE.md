@@ -28,12 +28,13 @@ Cost of being wrong without this spike: 4–6 weeks of work that has to be torn 
 
 ## Acceptance criteria (green path)
 
-1. **One canvas, one context.** A single `<canvas>` element with a single `WebGL2RenderingContext` is created on first page load and never re-created during navigation between `/` and `/dome`.
-2. **Persistence mechanism.** Astro `transition:persist` on the canvas + a top-level mount script that yields the canvas to whichever route currently owns the camera/scene config (atom of state, not destroy/recreate).
-3. **Lerp transition.** The starfield camera position interpolates over ~600ms when navigating between routes — proves the canvas is the **same object across routes**, not two canvases swapped.
-4. **No bfcache regression.** Back/forward navigation (browser back button, two-finger swipe on iPad) does not lose the WebGL context.
-5. **Reduced-motion compliance.** With `prefers-reduced-motion: reduce`, the lerp is replaced by an instant snap; canvas still persists.
-6. **Field test.** Operator drives 20 round-trips on a Chromebook + iPhone and reports "the sky stays."
+1. **One canvas DOM node.** A single `<canvas>` element is created on first page load and never re-created during navigation. Tracked via `canvasAttachCount === 1` (singleton WeakSet membership; see `andromeda/04_SOFTWARE/p31ca/src/lib/starfield-singleton.ts`).
+2. **Persistence mechanism.** Astro `transition:persist` on the canvas + a module-level singleton that yields the canvas to whichever route currently owns the camera/scene config (atom of state, not destroy/recreate). Plus `view-transition-name: none` on the canvas so it isn't ghosted into the View Transitions API snapshot animation.
+3. **Context-loss recovery.** WebGL context loss is **expected** on real devices (background tab, GPU driver, low memory) and is reliably triggered in headless Chromium / SwiftShader by the View Transitions snapshot. The pass criterion is `ctxRestored >= ctxLost` AND `ctxHealthy === true` at end of run — every loss is recovered by the singleton's `webglcontextrestored` handler. The criterion is NOT `ctxLost === 0`.
+4. **Lerp transition.** The starfield camera position interpolates over ~600ms when navigating between routes — proves the same singleton state survives across routes (camera target updated, current value lerps).
+5. **No bfcache regression.** Back/forward navigation (browser back button, two-finger swipe on iPad) does not lose the WebGL context. (Operator field test only — not exercised in headless.)
+6. **Reduced-motion compliance.** With `prefers-reduced-motion: reduce`, the lerp half-life still applies (visually a fast soft snap, ~100-200ms); canvas still persists.
+7. **Field test.** Operator drives 20 round-trips on a Chromebook + iPhone and reports "the sky stays."
 
 ## Out of scope of this spike
 

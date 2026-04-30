@@ -50,8 +50,8 @@ export const P31_CONSTANTS = {
     "fileVersion": "1.0.0"
   },
   "edge": {
-    "workerFleetCount": 11,
-    "notes": "Production Worker count (operator snapshot); includes cf-edge-lab when shipped; not auto-verified against Cloudflare API here."
+    "workerFleetCount": 12,
+    "notes": "Production Worker count (operator snapshot); includes cf-edge-lab + tetra-hub when shipped; not auto-verified against Cloudflare API here."
   },
   "research": {
     "orcid": "0009-0002-2492-9079",
@@ -226,6 +226,7 @@ export const P31_CONSTANTS = {
     "orchestratorWorkerUrl": "https://p31-orchestrator.trimtab-signal.workers.dev",
     "passkeyApiBasePath": "/api/passkey",
     "edgeLabWorkerUrl": "https://cf-edge-lab.trimtab-signal.workers.dev",
+    "tetraHubWorkerUrl": "https://tetra-hub.trimtab-signal.workers.dev",
     "remembranceWarmWhite": "#f5f0e8",
     "remembranceBereavementKvKey": "mesh_bereavement_until",
     "vertexStateRemembered": "remembered"

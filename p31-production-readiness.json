@@ -105,6 +105,31 @@
       ]
     },
     {
+      "id": "tetra-hub",
+      "kind": "worker",
+      "label": "tetra-hub (K₄ trio read model)",
+      "score": {
+        "liveReachable": 10,
+        "deployability": 8,
+        "verificationHooks": 7,
+        "testingDepth": 5,
+        "contractsSchemas": 6,
+        "observability": 8,
+        "securityPosture": 8,
+        "operationalClarity": 7,
+        "uxCompleteness": 6,
+        "ephemeralizationAlignment": 9
+      },
+      "proof": {
+        "canonicalSources": ["p31-live-fleet.json", "p31-constants.json"],
+        "verifyCommands": ["npm run verify:ecosystem", "npm run ecosystem:glass"]
+      },
+      "nextSteps": [
+        "Add allowlist + inventory row when Worker path is stable under repo",
+        "Document public JSON shape for hub consumers (if any beyond internal)"
+      ]
+    },
+    {
       "id": "p31ca",
       "kind": "pages",
       "label": "p31ca.org hub (Cloudflare Pages + ground-truth)",

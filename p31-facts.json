@@ -9,6 +9,7 @@
       "mesh.k4HubsWorkerUrl",
       "mesh.agentHubWorkerUrl",
       "mesh.orchestratorWorkerUrl",
+      "mesh.tetraHubWorkerUrl",
       "mesh.passkeyApiBasePath"
     ],
     "pathsMustBeHttps": [
@@ -16,7 +17,8 @@
       "mesh.k4CageWorkerUrl",
       "mesh.k4HubsWorkerUrl",
       "mesh.agentHubWorkerUrl",
-      "mesh.orchestratorWorkerUrl"
+      "mesh.orchestratorWorkerUrl",
+      "mesh.tetraHubWorkerUrl"
     ],
     "organization": {
       "requiredStringPaths": ["ein", "legalName"]

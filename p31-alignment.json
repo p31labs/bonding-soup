@@ -114,6 +114,11 @@
       "role": "p31.publicVoiceGuardrails/1.0.0 — watched paths + regex guardrails for verify:public-voice (pairs docs/PUBLIC-VOICE.md)"
     },
     {
+      "id": "p31-phos-play-session-bridge-md",
+      "path": "docs/P31-PHOS-PLAY-SESSION-BRIDGE.md",
+      "role": "Normative garden_state.play_session (Pollination Courier) + Phos prompt/handler pairing; verify:phos-play-session-bridge"
+    },
+    {
       "id": "p31-atmosphere-ramp-json",
       "path": "docs/p31-atmosphere-ramp.json",
       "role": "p31.atmosphereRamp/1.0.0 — per-surface motion/type/starfield/sound posture vs universal canon; npm run verify:atmosphere-ramp"
@@ -499,6 +504,19 @@
       "apply": "Tier A: operator-owned final draft + pair check; Tier B/C: copy ship checklist + npm run verify:public-voice",
       "verify": "npm run verify:public-voice",
       "note": "Grep guardrails + required doc anchors do not judge Tier A narrative quality; pair check remains mandatory for face/fundraising"
+    },
+    {
+      "id": "phos-play-session-garden-handoff",
+      "from": [
+        "p31-phos-play-session-bridge-md"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/quantum-family.html",
+        "simplex-v7/src/skills/phos-prompt.ts"
+      ],
+      "apply": "Garden Log optional checkbox merges Courier snapshot into garden_state; Phos system prompt names play_session as non-evaluative context only.",
+      "verify": "npm run verify:phos-play-session-bridge",
+      "note": "Verifier skips when p31ca path missing (partial clone)."
     },
     {
       "id": "p31-atmosphere-ramp-suite",
@@ -1148,7 +1166,7 @@
     ]
   },
   "verifyPipeline": {
-    "description": "Root `package.json` `verify` = prelude + scripts in order (incl. verify:runbooks for docs/runbooks/README.md links; verify:delta-language for DELTA lexicon JSON + hub mirror; verify:public-voice for docs/PUBLIC-VOICE.md anchors + Tier B/C grep guardrails from docs/p31-public-voice-guardrails.json; verify:atmosphere-ramp for docs/p31-atmosphere-ramp.json + docs/p31-atmosphere-routes.json vs universal canon). verify:p31ca-contracts chains build:fleet-entities → verify:fleet-entities → verify:ground-truth → verify:worker-spa-launch → education → … verify:starfield syncs design-assets/starfield → p31ca public/lib; verify:fleet-ten checks scripts/p31-fleet-ten bundle; verify:fleet-llm-bridge aligns models.json ↔ continue-p31 ↔ .cursor/rules; verify:ollama-mcp + verify:ollama-tunnel-config gate Cursor Ollama bridges; verify:github-org validates docs/github-org-bundle/repos-metadata.json. Tier A face copy remains human pair check — verify:public-voice does not replace that. Update this file whenever `verify` changes.",
+    "description": "Root `package.json` `verify` = prelude + scripts in order (incl. verify:runbooks for docs/runbooks/README.md links; verify:delta-language for DELTA lexicon JSON + hub mirror; verify:public-voice for docs/PUBLIC-VOICE.md anchors + Tier B/C grep guardrails from docs/p31-public-voice-guardrails.json; verify:phos-play-session-bridge for quantum-family Phos handoff anchors (skips if p31ca missing); verify:atmosphere-ramp for docs/p31-atmosphere-ramp.json + docs/p31-atmosphere-routes.json vs universal canon). verify:p31ca-contracts chains build:fleet-entities → verify:fleet-entities → verify:ground-truth → verify:worker-spa-launch → education → … verify:starfield syncs design-assets/starfield → p31ca public/lib; verify:fleet-ten checks scripts/p31-fleet-ten bundle; verify:fleet-llm-bridge aligns models.json ↔ continue-p31 ↔ .cursor/rules; verify:ollama-mcp + verify:ollama-tunnel-config gate Cursor Ollama bridges; verify:github-org validates docs/github-org-bundle/repos-metadata.json. Tier A face copy remains human pair check — verify:public-voice does not replace that. Update this file whenever `verify` changes.",
     "prelude": "verify:alignment",
     "preludeNote": "Fast guard (verify-alignment.mjs): JSON + required sources. Skipped in the `--verify` loop (prelude already satisfied).",
     "scripts": [
@@ -1182,6 +1200,7 @@
       "verify:runbooks",
       "verify:delta-language",
       "verify:public-voice",
+      "verify:phos-play-session-bridge",
       "verify:atmosphere-ramp",
       "build:doc-index",
       "verify:doc-index",

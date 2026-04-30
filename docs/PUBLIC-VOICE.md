@@ -133,6 +133,7 @@ Record a voice memo: what is this thing and who is it for? Transcribe it. Clean 
 - **`andromeda/04_SOFTWARE/p31ca/src/pages/index.astro`** — nav `title` on Context Card: passport framing without generic “AI context” hype.
 - **`docs/physics-learn/labs.html`** — avoid **unlock** in learner-facing copy where **open** means the same thing.
 - **`docs/p31-public-voice-guardrails.json`** — machine list of watched paths + regex rules for **`npm run verify:public-voice`**; extend when you add a rolling surface.
+- **`andromeda/04_SOFTWARE/p31ca/public/quantum-family.html`** — kid hub: operator-auditable strips (session manifest, design charter) stay concrete; deterministic play is not generative-AI product behavior — do not imply cloud magic. Phos handoff remains grown-up-gated (see **`docs/P31-PHOS-PLAY-SESSION-BRIDGE.md`**).
 
 Tier **A** (founder-led org story, Ko-fi body, grant prose): use **Tier A writing prompts** above — human draft first; paste final copy when ready.
 

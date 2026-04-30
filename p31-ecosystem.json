@@ -283,6 +283,12 @@
       "steps": [["npx", "wrangler", "deploy"]]
     },
     {
+      "id": "tetra-hub-worker",
+      "cwd": ".",
+      "description": "tetra-hub — read-only GET /api/tetra over K₄ trio (after k4-hubs)",
+      "steps": [["npm", "run", "tetra-hub:deploy"]]
+    },
+    {
       "id": "p31-orchestrator-worker",
       "cwd": "andromeda/04_SOFTWARE/workers",
       "description": "mesh.orchestratorWorkerUrl",

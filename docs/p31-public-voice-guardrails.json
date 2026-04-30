@@ -29,6 +29,10 @@
     {
       "path": "andromeda/04_SOFTWARE/p31ca/src/pages/index.astro",
       "optional": true
+    },
+    {
+      "path": "andromeda/04_SOFTWARE/p31ca/public/quantum-family.html",
+      "optional": true
     }
   ],
   "patterns": [

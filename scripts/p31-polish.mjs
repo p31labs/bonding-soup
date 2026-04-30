@@ -65,6 +65,7 @@ function main() {
       "npm run sync:doc-library:p31ca",
       root
     );
+    run("sync:delta-language (DELTA glossary + JSON → p31ca public)", "npm run sync:delta-language", root);
   } else if (!fs.existsSync(p31caRoot)) {
     console.log("\n\x1b[33m▶\x1b[0m polish: skip sync:doc-library:p31ca — no andromeda/04_SOFTWARE/p31ca\n");
   }

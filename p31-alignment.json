@@ -89,6 +89,38 @@
       "role": "Normative Gray Rock → Alive layouts and component patterns; pairs with canon-to-style-css + emitDesignDoctrineBlock"
     },
     {
+      "id": "p31-universal-ui-vision-md",
+      "path": "docs/P31-UNIVERSAL-UI-VISION.md",
+      "role": "Design constitution: one night sky / twenty-three windows — altitude, five minds, Layer-1.5 starfield, return ribbon, jarring-cut fixes; pairs p31-universal-canon, design doctrine, ethical style map, starfield assets"
+    },
+    {
+      "id": "p31-delta-language-md",
+      "path": "docs/P31-DELTA-LANGUAGE.md",
+      "role": "Normative DELTA vocabulary — same void/sky, layers, bridges, topology speaks; pairs docs/p31-delta-language.json + verify:delta-language"
+    },
+    {
+      "id": "p31-delta-language-json",
+      "path": "docs/p31-delta-language.json",
+      "role": "p31.deltaLanguage/1.0.0 machine registry (terms, anchors, forbidden, surface phrase packs); npm run verify:delta-language; sync → p31ca public via npm run sync:delta-language"
+    },
+    {
+      "id": "p31-delta-glossary-html",
+      "path": "docs/p31-delta-glossary.html",
+      "role": "Interactive searchable DELTA glossary (fetch JSON); mirrored to p31ca public/delta-language.html"
+    },
+    {
+      "id": "p31-delta-language-hub-json",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/p31-delta-language.json",
+      "optional": true,
+      "role": "Hub mirror of docs/p31-delta-language.json — kept in sync by npm run sync:delta-language / polish"
+    },
+    {
+      "id": "p31-delta-language-hub-html",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/delta-language.html",
+      "optional": true,
+      "role": "Hub-hosted glossary — live https://p31ca.org/delta-language.html; footer links to canonical Markdown on GitHub"
+    },
+    {
       "id": "p31-starfield-module",
       "path": "design-assets/starfield/p31-starfield.js",
       "role": "Ambient mesh canvas (spoons → density/speed, voltage → coral, bursts, hearth breath); paired README + demo; sync → p31ca public/lib; npm run verify:starfield"
@@ -117,6 +149,17 @@
       "id": "p31-fleet-ten-local-ollama",
       "path": "scripts/p31-fleet-ten/models.json",
       "role": "Ten Ollama personas (merged prompts + setup.sh/verify.sh/benchmark.sh); static gate npm run verify:fleet-ten"
+    },
+    {
+      "id": "p31-ollama-mcp-bridge",
+      "path": "scripts/ollama-mcp/server.mjs",
+      "role": "MCP bridge — one Cursor tool per fleet persona; static + JSON-RPC tools/list gate npm run verify:ollama-mcp"
+    },
+    {
+      "id": "p31-continue-extension-config",
+      "path": "andromeda/04_SOFTWARE/continue-p31/config.yaml",
+      "role": "Continue.dev canonical Ollama sidebar config; sync with bash scripts/p31-fleet-ten/setup.sh --with-continue",
+      "optional": true
     },
     {
       "id": "fleet-portal-html",
@@ -242,6 +285,11 @@
       "role": "Allowlist of markdown roots for docs/doc-library search index (p31.docIndexManifest/1.0.0)"
     },
     {
+      "id": "sic-povm-mathematical-appendix-md",
+      "path": "docs/SIC-POVM-MATHEMATICAL-APPENDIX.md",
+      "role": "Rigorous QI: POVM / SIC axioms, d = 2 Bloch tetrahedron, |<psi_j|psi_k>|^2 = 1/3; contract vs P31 metaphor + CI (Larmor)"
+    },
+    {
       "id": "physics-learn-shell",
       "path": "docs/physics-learn/index.html",
       "role": "Physics Learn shape codec — eight full-viewport rooms; paired with physics-learn-codec-js"
@@ -352,6 +400,14 @@
       "apply": "edit p31-env-manifest.json when adding or renaming documented P31_* variables",
       "verify": "npm run verify:p31-env",
       "note": "Deploy spine + env lore: docs/P31-DEPLOY-CANON.md; never store secret values in the manifest"
+    },
+    {
+      "id": "p31-delta-language-suite",
+      "from": ["docs/P31-DELTA-LANGUAGE.md", "docs/p31-delta-language.json", "docs/p31-delta-glossary.html"],
+      "to": ["andromeda/04_SOFTWARE/p31ca/public/p31-delta-language.json", "andromeda/04_SOFTWARE/p31ca/public/delta-language.html"],
+      "apply": "Edit normative Markdown + JSON together; run npm run sync:delta-language when p31ca checkout exists; glossary HTML uses meta p31-delta-json-href",
+      "verify": "npm run verify:delta-language",
+      "note": "Speakable layer over Universal UI vision — anchors, term groups, forbidden phrases; hub mirror optional for partial clone"
     },
     {
       "id": "p31-production-readiness-suite",
@@ -492,11 +548,29 @@
     },
     {
       "id": "p31-fleet-ten-bundle",
-      "from": ["scripts/p31-fleet-ten/models.json", "scripts/p31-fleet-ten/setup.sh", "scripts/p31-fleet-ten/verify.sh", "scripts/p31-fleet-ten/benchmark.sh", "scripts/p31-fleet-ten/lib/ollama-create-all.mjs", "scripts/p31-fleet-ten/lib/merge-system-prompt.mjs", "scripts/p31-fleet-ten/lib/verify-smoke.mjs", "scripts/p31-fleet-ten/lib/benchmark.mjs", "scripts/verify-fleet-ten.mjs"],
+      "from": [
+        "scripts/p31-fleet-ten/models.json",
+        "scripts/p31-fleet-ten/setup.sh",
+        "scripts/p31-fleet-ten/verify.sh",
+        "scripts/p31-fleet-ten/benchmark.sh",
+        "scripts/p31-fleet-ten/lib/ollama-create-all.mjs",
+        "scripts/p31-fleet-ten/lib/merge-system-prompt.mjs",
+        "scripts/p31-fleet-ten/lib/verify-smoke.mjs",
+        "scripts/p31-fleet-ten/lib/benchmark.mjs",
+        "scripts/verify-fleet-ten.mjs",
+        "scripts/ollama-mcp/server.mjs",
+        "scripts/ollama-mcp/package.json",
+        "scripts/ollama-mcp/verify.mjs",
+        "scripts/ollama-mcp/README.md",
+        "scripts/ollama-tunnel.sh",
+        "scripts/ollama-tunnel-status.mjs",
+        "andromeda/04_SOFTWARE/continue-p31/config.yaml",
+        ".cursor/rules/p31-ollama-fleet.mdc"
+      ],
       "to": [],
-      "apply": "cd scripts/p31-fleet-ten && ./setup.sh --pull (requires ollama + base weights)",
-      "verify": "npm run verify:fleet-ten",
-      "note": "Prompts under scripts/p31-fleet-ten/prompts/; no generated model blobs in git"
+      "apply": "cd scripts/p31-fleet-ten && ./setup.sh --pull (requires ollama + base weights); cd scripts/ollama-mcp && npm install (once)",
+      "verify": "npm run verify:fleet-ten && npm run verify:ollama-mcp && npm run verify:ollama-tunnel-config",
+      "note": "Prompts under scripts/p31-fleet-ten/prompts/; PARAMETER overlays in models.json; Cursor lanes: MCP + tunnel script + Continue; no model blobs in git"
     },
     {
       "id": "canon-to-p31ca-about-html-style",
@@ -814,7 +888,7 @@
     ]
   },
   "verifyPipeline": {
-    "description": "Root `package.json` `verify` = prelude + scripts in order (incl. verify:runbooks for docs/runbooks/README.md links). verify:p31ca-contracts chains build:fleet-entities → verify:fleet-entities → verify:ground-truth → verify:worker-spa-launch → education → … verify:starfield syncs design-assets/starfield → p31ca public/lib; verify:fleet-ten checks scripts/p31-fleet-ten bundle. Update this file whenever `verify` changes.",
+    "description": "Root `package.json` `verify` = prelude + scripts in order (incl. verify:runbooks for docs/runbooks/README.md links; verify:delta-language for DELTA lexicon JSON + hub mirror). verify:p31ca-contracts chains build:fleet-entities → verify:fleet-entities → verify:ground-truth → verify:worker-spa-launch → education → … verify:starfield syncs design-assets/starfield → p31ca public/lib; verify:fleet-ten checks scripts/p31-fleet-ten bundle; verify:ollama-mcp + verify:ollama-tunnel-config gate Cursor Ollama bridges; verify:github-org validates docs/github-org-bundle/repos-metadata.json. Update this file whenever `verify` changes.",
     "prelude": "verify:alignment",
     "preludeNote": "Fast guard (verify-alignment.mjs): JSON + required sources. Skipped in the `--verify` loop (prelude already satisfied).",
     "scripts": [
@@ -833,6 +907,8 @@
       "verify:p31-style",
       "verify:starfield",
       "verify:fleet-ten",
+      "verify:ollama-mcp",
+      "verify:ollama-tunnel-config",
       "verify:style-alignment",
       "verify:command-center",
       "verify:p31ca-contracts",
@@ -842,9 +918,11 @@
       "verify:cars-wire",
       "verify:poets-room",
       "verify:runbooks",
+      "verify:delta-language",
       "build:doc-index",
       "verify:doc-index",
       "verify:doc-library:p31ca-mirror",
+      "verify:github-org",
       "verify:simplex",
       "verify:simplex-email",
       "verify:simplex-bootstrap",

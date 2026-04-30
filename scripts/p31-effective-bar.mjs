@@ -109,6 +109,7 @@ export function classifyVerifyStep(script, w) {
     case "build":
     case "soup:prep:check":
     case "verify:runbooks":
+    case "verify:delta-language":
       return { status: "run", reason: "always scheduled on home verify bar" };
 
     case "verify:passport":
@@ -176,6 +177,9 @@ export function classifyVerifyStep(script, w) {
       if (!w.andromedaGit)
         return { status: "skip", reason: "andromeda/ not a git work tree (cannot enforce mirror commit)" };
       return { status: "run", reason: "sync + git drift check" };
+
+    case "verify:github-org":
+      return { status: "run", reason: "repos-metadata.json + GitHub topic/description rules" };
 
     default:
       return { status: "run", reason: "unknown script — assumed run (update p31-effective-bar.mjs)" };

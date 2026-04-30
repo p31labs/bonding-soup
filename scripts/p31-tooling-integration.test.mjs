@@ -23,12 +23,20 @@ describe("p31-effective-bar", () => {
     expect(classifyVerifyStep("verify:runbooks", w).status).toBe("run");
   });
 
+  it("classifyVerifyStep marks delta-language as run", () => {
+    const w = buildWorkspaceProbe(root);
+    expect(classifyVerifyStep("verify:delta-language", w).status).toBe("run");
+  });
+
   it("buildEffectiveBarReport includes verify:runbooks in order", () => {
     const r = buildEffectiveBarReport(root, {});
     const names = r.verifySteps.map((s) => s.script);
     expect(names).toContain("verify:runbooks");
+    expect(names).toContain("verify:delta-language");
     const iPoets = names.indexOf("verify:poets-room");
     const iRun = names.indexOf("verify:runbooks");
+    const iDelta = names.indexOf("verify:delta-language");
     expect(iRun).toBeGreaterThan(iPoets);
+    expect(iDelta).toBeGreaterThan(iRun);
   });
 });

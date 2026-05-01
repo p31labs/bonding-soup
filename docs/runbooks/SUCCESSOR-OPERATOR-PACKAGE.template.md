@@ -187,6 +187,12 @@ Before activating succession, confirm the situation:
 
 **Cognitive note:** AuDHD (late diagnosis 2025). In acute situations: present information in writing, one item at a time. Verbal rapid-fire is harder to process. The operator is highly capable; the serialization bottleneck is sensory, not cognitive.
 
+**Health insurance:**  
+Carrier / program: _______________________________________________ (e.g. Medicaid, private)  
+Member ID / Medicaid ID: _______________________________________________  
+Insurance card location: _______________________________________________  
+Group number (if applicable): _______________________________________________
+
 **Health care proxy / medical power of attorney (if executed):**  
 Document location: _______________________________________________  
 Proxy name: _______________________________________________

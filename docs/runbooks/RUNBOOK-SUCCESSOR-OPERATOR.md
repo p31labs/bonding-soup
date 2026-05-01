@@ -135,8 +135,12 @@ When the successor operator is activated:
 3. Audit critical Workers: wrangler whoami && wrangler list.
 4. Check CI status: https://github.com/p31labs/andromeda/actions
 5. Check live fleet: npm run verify:ecosystem (or read p31-live-fleet.json).
-6. Contact registered agent to notify of operator change (if >30 days unavailable).
-7. Convene board within 30 days of activation to ratify succession formally.
+6. Check for active legal deadlines in the family court matter (Johnson v. Johnson,
+   Civil Action No. 2025CV936, Camden County Superior Court, Georgia). Contact the
+   attorney or court contact listed in the off-repo package Section 6. Do not ignore
+   this — missed court deadlines have immediate consequences.
+7. Contact registered agent to notify of operator change (if >30 days unavailable).
+8. Convene board within 30 days of activation to ratify succession formally.
 ```
 
 ---

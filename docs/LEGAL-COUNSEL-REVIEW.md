@@ -59,7 +59,7 @@ This document is a structured pre-launch review checklist for the five public le
 - [ ] **Static page localStorage description is accurate.** localStorage/sessionStorage are client-side only, never transmitted. This was verified against actual implementation.
 - [ ] **Cloudflare as separate data controller is correctly disclosed.** Cloudflare logs are attributed to Cloudflare's own policy, not P31 Labs's.
 - [ ] **k4-personal / k4-cage / k4-hubs data description is accurate.** Operator-provided content in Cloudflare KV / Durable Objects, under authenticated operator account. Verify against actual Worker implementation.
-- [ ] **k4-agent-hub session data description is accurate.** Session tokens, Ed25519 key fingerprints, skill usage logs, dock session metadata. 24h operator / 8h family dock expiry. Verify these TTLs against actual Worker code.
+- [x] **k4-agent-hub session data description is accurate.** Session tokens, Ed25519 key fingerprints, skill usage logs, dock session metadata. 24h operator (SESSION_TTL_SECONDS env, default 86400) / 8h family dock (28800s hardcoded in handleFamilyDock). TTLs verified against dock-protocol.js:193 and index.js:378.
 - [ ] **BONDING multiplayer data description is accurate.** Room codes and molecular snapshots in KV with TTL. No account required. Verify against bonding Worker implementation.
 - [ ] **Stripe transaction metadata description is accurate.** P31 Labs receives amount, timestamp, Stripe customer ID. Card numbers never touch P31 Labs. Verify against Stripe dashboard and donate-api Worker code.
 - [ ] **Google Fonts IP disclosure is present.** IP address sent to Google when font loads. Cloudflare CDN may cache. Both conditions stated.
@@ -119,7 +119,7 @@ This document is a structured pre-launch review checklist for the five public le
 - [ ] **EIN is correct.** 42-1888158 — verify against IRS CP575E determination letter.
 - [ ] **Governing law clause specifies Georgia.** Terms of Use, Section 11.
 - [ ] **Nonprofit status disclosure is accurate.** All public pages avoid claiming tax-exempt status. 501(c)(3) application is described as pending.
-- [ ] **Georgia Charitable Solicitations Act.** *Needs counsel/action: Verify whether P31 Labs is required to register with the Georgia Secretary of State under the Georgia Charitable Solicitations Act (Form C-100) before soliciting donations from Georgia residents. As of 2026-05-01 this registration may be required and has not been confirmed as complete.*
+- [ ] **Georgia Charitable Solicitations Act — C-100 registration. ⚠️ ACT BEFORE PROMOTING DONATE LINK WIDELY.** Georgia requires charitable organizations to register before soliciting contributions from Georgia residents (Georgia Charitable Solicitations Act, Form C-100, $35 fee, filed with GA Secretary of State). P31 Labs is currently operating the Stripe payment link and Ko-fi — this registration may be required now. Many states exempt organizations below a gross-receipts threshold (commonly $25K–$50K). *Action: Visit sos.georgia.gov/corporations-divisions/charities, confirm whether a small-org exemption applies to P31 Labs at current donation volume, and either file C-100 or document the exemption basis before any broad donation promotion.*
 - [ ] **Georgia nonprofit dissolution rules.** Confirm that the Articles of Incorporation contain appropriate language regarding distribution of assets upon dissolution consistent with IRS 501(c)(3) requirements (assets must go to another 501(c)(3) or government entity).
 - [ ] **Board of directors disclosure.** Articles name 3 directors. Board has not formally convened as of this review. Confirm that public-facing documents do not make representations about board actions that have not occurred.
 
@@ -158,7 +158,7 @@ This document is a structured pre-launch review checklist for the five public le
 - [ ] **k4-agent-hub is described as a technical operator-side API.** Not a consumer product. Terms and Privacy both describe it as such.
 - [ ] **Ed25519 session authentication is described accurately.** Key fingerprints (not private keys) stored in Durable Objects. Sessions expire. Private keys never leave the user's device.
 - [ ] **Skill usage logs are disclosed.** Privacy Section 2b states skill usage logs are stored per-vertex in Durable Objects SQLite.
-- [ ] **Session expiry is accurate.** 24h operator, 8h family dock. Verify these values against actual Worker code.
+- [x] **Session expiry is accurate.** 24h operator (86400s default, overridable via SESSION_TTL_SECONDS env), 8h family dock (28800s hardcoded). Verified against dock-protocol.js and index.js:378 on 2026-05-01.
 - [x] **LLM routing disclosure.** Privacy Section 2b now describes the Ollama default (locally-operated) and the operator-configurable remote endpoint path. Users of remotely-configured instances are directed to consult the instance operator's configuration. *Action complete 2026-05-01. If a specific third-party LLM API (e.g. Anthropic, OpenAI) is configured in production, add that provider name to the Privacy Policy Third-Party Services section.*
 - [ ] **No "AI advice" claims.** No public-facing page claims that agent outputs constitute professional advice of any kind.
 - [ ] **Automated decision-making.** *Needs counsel: If k4-agent-hub makes automated decisions with legal or significant personal effects (outside the current technical API scope), GDPR Article 22 and analogous laws may apply.*
@@ -170,21 +170,21 @@ This document is a structured pre-launch review checklist for the five public le
 
 The following items are flagged as genuinely uncertain and should be reviewed by a licensed Georgia attorney, preferably with nonprofit and technology practice experience, before launch:
 
-1. **Georgia Charitable Solicitations Act registration (C-100).** It is not confirmed whether P31 Labs has registered or is required to register before soliciting donations. This is a state law compliance item with potential civil penalty exposure if registration is required and not completed.
+1. **Georgia Charitable Solicitations Act registration (C-100). ⚠️ NEAR-TERM ACTION.** P31 Labs is currently operating a Stripe payment link and Ko-fi. Georgia may require registration before soliciting. Check sos.georgia.gov/corporations-divisions/charities for small-org exemption threshold ($25K–$50K gross receipts in many states). File C-100 ($35) or document exemption basis *before* promoting the donate link broadly.
 
-2. **ADA Title III.** Website accessibility obligations for nonprofits under Title III of the Americans with Disabilities Act are fact-specific and have been litigated inconsistently across circuits. Counsel should assess current exposure and a remediation roadmap.
+2. **Initial board meeting. ⚠️ NEAR-TERM ACTION.** Articles name 3 directors (Will Johnson, Joseph Tyler Cisco, Brenda O'Dell). Board has not formally convened. Hold an initial meeting — even by phone — and keep minutes. This documents that the board authorized the 501(c)(3) filing, Stripe setup, and SAM registration. Delays increase the gap between actions taken and board authorization on record.
 
-3. **GDPR.** The current policy takes a minimal good-faith posture. If marketing activities ever target EEA users, a more robust GDPR compliance framework will be required, including potentially a formal EU representative and Standard Contractual Clauses.
+3. **ADA Title III.** Website accessibility obligations for nonprofits under Title III of the Americans with Disabilities Act are fact-specific and have been litigated inconsistently across circuits. Counsel should assess current exposure and a remediation roadmap.
 
-4. **LLM / AI routing data flows.** If k4-agent-hub routes user content to third-party LLM APIs, those data flows must be disclosed in the Privacy Policy before the feature is exposed to users beyond the operator.
+4. **GDPR.** The current policy takes a minimal good-faith posture. If marketing activities ever target EEA users, a more robust GDPR compliance framework will be required, including potentially a formal EU representative and Standard Contractual Clauses.
 
-5. **Forum selection clause enforceability.** The Terms of Use Georgia forum selection clause may not be enforceable against non-Georgia consumers in all jurisdictions. Assess whether a mandatory arbitration clause or class action waiver would be appropriate at scale.
+5. **LLM / AI routing data flows.** Privacy policy updated 2026-05-01 with Ollama/remote-endpoint disclosure. If a named third-party LLM API (Anthropic, OpenAI, etc.) is configured in production, add that provider to the Privacy Policy Third-Party Services section before exposing to non-operator users.
 
-6. **Limitation of liability cap.** The $50 / 12-month payments cap has not been reviewed by counsel. Confirm it is enforceable in Georgia for a nonprofit.
+6. **Forum selection clause enforceability.** The Terms of Use Georgia forum selection clause may not be enforceable against non-Georgia consumers in all jurisdictions. Assess whether mandatory arbitration is appropriate at scale.
 
-7. **501(c)(3) determination letter.** When issued, all public-facing donation-related language in Terms, Privacy, and any donation page must be updated promptly to reflect tax-exempt status and IRS substantiation requirements.
+7. **Limitation of liability cap.** The $50 / 12-month payments cap has not been reviewed by counsel. Confirm it is enforceable in Georgia for a nonprofit.
 
-8. **Board of directors.** Articles name 3 directors; board has not formally convened. Ensure no public-facing document makes representations about board resolutions or authorizations that have not occurred. Convene the initial board meeting and maintain minutes as soon as practicable.
+8. **501(c)(3) determination letter.** When issued: update all public "pending" donation language, register with Candid/GuideStar, begin issuing IRS substantiation language on receipts, confirm retroactive effective date (should be back to April 3, 2026 incorporation).
 
 ---
 

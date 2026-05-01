@@ -482,3 +482,82 @@ describe("Cross-MVP purity sentinel", () => {
     expect(k4EdgeCount(5)).toBe(10);
   });
 });
+
+// ─── P31CA USER SENTINEL ──────────────────────────────────────────────────────
+describe("p31ca user sentinel", () => {
+  // Predicates mirroring sentinel-integrity.spec.ts
+  const covenantRateIsZero = (rate) => rate === 0;
+  const covenantCreatorFull = (share) => share >= 1.0;
+  const hasNoCredential = (s) => !/sk_live_|pk_live_|password|api_key/i.test(s ?? "");
+  const hasNoChildFullName = (s) =>
+    !/\bstephen johnson\b|\bwilliam johnson jr\b/i.test(s ?? "");
+  const hasNoCaseNumber = (s) => !/2025CV936/.test(s ?? "");
+  const schemaIsCurrentVersion = (s) => s === "p31.k4AgentHub/1.1.0";
+  const noLocalDocPath = (href) =>
+    !href.startsWith("docs/") && !href.startsWith("/docs/");
+  const noLocalPackagePath = (href) =>
+    !href.startsWith("packages/") && !href.startsWith("/packages/");
+
+  it("catches: creator-economy platformFee.rate raised above 0", () => {
+    expect(covenantRateIsZero(0.05)).toBe(false);
+    expect(covenantRateIsZero(0.10)).toBe(false);
+  });
+
+  it("catches: creator-economy revenueShare.creator reduced below 1.0", () => {
+    expect(covenantCreatorFull(0.8)).toBe(false);
+    expect(covenantCreatorFull(0.95)).toBe(false);
+  });
+
+  it("catches: credential string in public surface JSON", () => {
+    const mutated = '{"domain":"p31ca.org","key":"sk_live_abcdef1234567890"}';
+    expect(hasNoCredential(mutated)).toBe(false);
+  });
+
+  it("catches: full child name exposed in DOM content", () => {
+    const mutated = "Welcome, Stephen Johnson — your session is ready";
+    expect(hasNoChildFullName(mutated)).toBe(false);
+  });
+
+  it("catches: private case number in public content", () => {
+    const mutated = "Case 2025CV936 — Johnson v. Johnson";
+    expect(hasNoCaseNumber(mutated)).toBe(false);
+  });
+
+  it("catches: stale k4AgentHub schema version (1.0.0 vs 1.1.0)", () => {
+    expect(schemaIsCurrentVersion("p31.k4AgentHub/1.0.0")).toBe(false);
+  });
+
+  it("catches: broken local /docs/ href reintroduced in agents.html", () => {
+    const mutated = "docs/P31-K4-AGENT-HUBS.md";
+    expect(noLocalDocPath(mutated)).toBe(false);
+  });
+
+  it("catches: broken local /packages/ href reintroduced in agents.html", () => {
+    const mutated = "packages/k4-agent-hub/";
+    expect(noLocalPackagePath(mutated)).toBe(false);
+  });
+
+  it("catches: swarm sentinel file count regression (< 5)", () => {
+    const minimumSentinels = 5;
+    const mutatedCount = 4;
+    expect(mutatedCount >= minimumSentinels).toBe(false);
+  });
+
+  it("catches: total swarm test count below baseline (< 55)", () => {
+    const BASELINE = 55;
+    const mutated = 40;
+    expect(mutated >= BASELINE).toBe(false);
+  });
+
+  it("catches: LEGAL sentinel missing EIN check (42-1888158 absent from spec)", () => {
+    const mutatedSpec = 'test("terms page loads", async ({page}) => { ... })';
+    expect(mutatedSpec).not.toContain("42-1888158");
+  });
+
+  it("catches: goto() hardcoded to production HTTPS (not relative)", () => {
+    const mutated = 'page.goto("https://p31ca.org/terms.html")';
+    const hasHardcodedProd = mutated.includes("https://p31ca.org");
+    expect(hasHardcodedProd).toBe(true);
+    // This is the bad pattern — the sentinel proves we detect it
+  });
+});

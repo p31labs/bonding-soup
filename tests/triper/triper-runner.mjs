@@ -27,7 +27,8 @@ const SUITES = [
   { name: "simplex",  label: "SIMPLEX — v7 agent layer" },
   { name: "email",    label: "EMAIL — simplex-email Worker" },
   { name: "epcp",     label: "EPCP — Command center" },
-  { name: "geodesic", label: "GEODESIC — GeodesicRoom WS" },
+  { name: "geodesic",           label: "GEODESIC — GeodesicRoom WS" },
+  { name: "p31ca-user-sentinel", label: "P31CA USER SENTINEL — E2E swarm (visitor · builder · family · legal · integrity)" },
 ];
 
 const args = process.argv.slice(2);

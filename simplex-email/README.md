@@ -39,6 +39,15 @@ wrangler deploy
 
 If the secret is missing at runtime, inbound mail is **rejected** with a clear SMTP diagnostic (forces misconfiguration-visible during bring-up).
 
+## SIMPLEX tomograph fan-out (optional)
+
+When inbound mail arrives, this Worker can **also** POST a signed JSON envelope to **simplex-worker** so HERALD’s tomograph (`tomograph_events`) gets a row before you read mail in the inbox.
+
+1. On **simplex-worker**: `wrangler secret put SIMPLEX_EMAIL_INGEST_SECRET` (long random string).
+2. On **simplex-email** Worker: set the **same** secret — `wrangler secret put SIMPLEX_EMAIL_INGEST_SECRET` — and a **var** (not secret) `SIMPLEX_INGEST_URL` = `https://<your-simplex-host>/api/ingest/email` (no trailing junk).
+
+The Email Worker signs the **exact** JSON body with HMAC-SHA256 (`X-Simplex-Email-Signature`, lowercase hex). If ingest fails, mail **still forwards** to `MAIL_FORWARD_DESTINATION` when configured.
+
 ## OQE
 
 - `npm run typecheck` passes from repo root (`npm run verify:simplex-email`).

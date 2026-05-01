@@ -131,4 +131,13 @@ export interface Env {
   PHOS_WAKE_END?: string;
   /** Max LLM exchanges per garden session before quiet mode (default 10). */
   PHOS_MAX_EXCHANGES?: string;
+  /**
+   * HMAC secret shared with `simplex-email` Worker for `POST /api/ingest/email`
+   * (`X-Simplex-Email-Signature` over raw body). `wrangler secret put SIMPLEX_EMAIL_INGEST_SECRET`
+   */
+  SIMPLEX_EMAIL_INGEST_SECRET?: string;
+  /** Ollama OpenAI-compatible base (e.g. tunnel URL). Optional fallback for skills / crew when Anthropic fails. */
+  OLLAMA_BASE_URL?: string;
+  /** Ollama model id for `/api/chat` (default `qwen2.5:7b-instruct`). */
+  OLLAMA_MODEL?: string;
 }

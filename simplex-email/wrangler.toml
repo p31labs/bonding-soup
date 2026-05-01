@@ -6,5 +6,9 @@ name = "simplex-email"
 main = "src/index.ts"
 compatibility_date = "2025-03-03"
 
+# Optional tomograph fan-out (set in dashboard or `wrangler vars`):
+# SIMPLEX_INGEST_URL = https://<simplex-worker>/api/ingest/email
+# Secret (same on both Workers): wrangler secret put SIMPLEX_EMAIL_INGEST_SECRET
+
 [observability]
 enabled = true

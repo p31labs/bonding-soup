@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { Env } from '../agents/types';
 import { extractJsonObject } from './json-extract';
+import { runOllamaUserMessage } from './ollama-chat';
 
 export const SKILL_MODEL = 'claude-sonnet-4-20250514';
 
@@ -10,20 +11,29 @@ export async function runAnthropicUserMessage(
   user: string,
   maxTokens = 4096
 ): Promise<{ text: string; offline: boolean }> {
-  if (!env.ANTHROPIC_API_KEY) {
+  const tryOllama = () => runOllamaUserMessage(env, system, user, maxTokens);
+
+  if (!env.ANTHROPIC_API_KEY?.trim()) {
+    return tryOllama();
+  }
+
+  try {
+    const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
+    const response = await client.messages.create({
+      model: SKILL_MODEL,
+      max_tokens: maxTokens,
+      system,
+      messages: [{ role: 'user', content: user }],
+    });
+    const text = response.content
+      .map((b) => (b.type === 'text' ? b.text : ''))
+      .join('\n');
+    return { text, offline: false };
+  } catch {
+    const fb = await tryOllama();
+    if (fb.text) return { ...fb, offline: false };
     return { text: '', offline: true };
   }
-  const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
-  const response = await client.messages.create({
-    model: SKILL_MODEL,
-    max_tokens: maxTokens,
-    system,
-    messages: [{ role: 'user', content: user }],
-  });
-  const text = response.content
-    .map((b) => (b.type === 'text' ? b.text : ''))
-    .join('\n');
-  return { text, offline: false };
 }
 
 export async function runAnthropicJson(

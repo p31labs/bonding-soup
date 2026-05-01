@@ -89,7 +89,10 @@ wrangler secret put PHOS_HMAC_SECRET
 | `ANTHROPIC_API_KEY` | Agent crew LLM runs + operator skill routes (`/api/braindump`, `/api/legal/preflight`, …) |
 | `DEVICE_SECRET` | HMAC for `/api/hardware`, optional `/api/biometric`, `/api/device/meshtastic` when signature sent |
 | `OPERATOR_SECRET` | When set, skill routes require `Authorization: Bearer …` or `X-Operator-Token` (omit in local dev only) |
-| `HOSTILE_SENDERS` | Newline-separated emails for hostile-path handling (tomograph); can be minimal until email Worker lands |
+| `HOSTILE_SENDERS` | Newline-separated emails for hostile-path handling (tomograph); pairs with **`simplex-email`** ingest |
+| `SIMPLEX_EMAIL_INGEST_SECRET` | Optional: same value as **`simplex-email`** Worker — HMAC for **`POST /api/ingest/email`** (tomograph row on inbound mail) |
+| `OLLAMA_BASE_URL` | Optional: reachable **`/api/chat`** base (tunnel / LAN proxy). Fallback when Anthropic errors or key empty — **not** localhost from Cloudflare |
+| `OLLAMA_MODEL` | Optional Ollama model id (default `qwen2.5:7b-instruct`) |
 | `HA_TOKEN` | Home Assistant long-lived token (SENTINEL HA REST) |
 | `HA_BASE_URL` | HTTPS URL reachable by the Worker (tunnel tailscale or public hostname) |
 | `PHOS_HMAC_SECRET` | Optional but recommended for **`POST /api/phos/respond`**: HMAC body with **`X-Phos-Signature`** (hex, same algorithm as device routes) |

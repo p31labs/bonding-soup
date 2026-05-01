@@ -12,6 +12,8 @@ import { assertOperatorAuthorized } from './lib/operator-auth';
 import { ALL_BREAKERS, estopAll, getAllBreakerStates, setBreakerState } from './lib/breakers';
 import { SIMPLEX_CRON_EXPRESSIONS, SIMPLEX_QUEUE_NAME } from './runtime-meta';
 import { handleOperatorSkillRequest } from './skills/router';
+import { parseHostileSecret } from './lib/hostile';
+import { assessVoltagePure } from './lib/voltage';
 
 const ALLOWED_AGENTS: AgentId[] = [
   'STEWARD',
@@ -358,6 +360,54 @@ export default {
           .bind(cutoff)
           .all();
         return json({ ok: true, days, count: Number(agg?.n ?? 0), rows: rows.results ?? [] });
+      }
+
+      if (method === 'POST' && url.pathname === '/api/ingest/email') {
+        const bodyText = await request.text();
+        const ingestSecret = env.SIMPLEX_EMAIL_INGEST_SECRET?.trim();
+        if (!ingestSecret) {
+          return json(
+            {
+              error: 'email_ingest_disabled',
+              hint: 'Set wrangler secret SIMPLEX_EMAIL_INGEST_SECRET (same value as simplex-email Worker)',
+            },
+            503
+          );
+        }
+        const sigHeader = request.headers.get('X-Simplex-Email-Signature') ?? '';
+        const okSig = await verifyHmacSha256(bodyText, sigHeader, ingestSecret);
+        if (!okSig) return json({ error: 'invalid_signature' }, 401);
+
+        let parsed: {
+          from?: string;
+          to?: string;
+          subject_snippet?: string;
+          text_preview?: string;
+          ts?: number;
+        };
+        try {
+          parsed = JSON.parse(bodyText) as typeof parsed;
+        } catch {
+          return json({ error: 'invalid_json' }, 400);
+        }
+
+        const from = String(parsed.from ?? 'unknown');
+        const subject = String(parsed.subject_snippet ?? '').slice(0, 500);
+        const preview = String(parsed.text_preview ?? '').slice(0, 2000);
+        const textBlob = `${subject}\n${preview}`;
+        const hostile = parseHostileSecret(env.HOSTILE_SENDERS);
+        const { voltage } = assessVoltagePure(textBlob, from, hostile);
+
+        await TOOL_REGISTRY.log_tomograph_event.handler(
+          {
+            sender: from,
+            subject: subject || '(no subject)',
+            voltage,
+            action: 'email_worker_ingest',
+          },
+          env
+        );
+        return json({ ok: true, voltage, tomograph: true });
       }
 
       if (method === 'POST' && url.pathname === '/api/chaos') {

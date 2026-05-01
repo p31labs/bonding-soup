@@ -180,6 +180,98 @@ export function driftSection(allReports, currentKind, currentReadiness) {
   };
 }
 
+/** @param {string} root */
+export function complianceSection(root) {
+  const registryPath = path.join(root, "p31-protocol-registry.json");
+  const registry = readJson(registryPath);
+  
+  if (!registry || !registry.officeCalendar) {
+    return skipSection("compliance", "Office compliance", "no officeCalendar in p31-protocol-registry.json");
+  }
+  
+  const calendar = registry.officeCalendar;
+  const deadlines = calendar.deadlines || [];
+  const now = new Date();
+  
+  const upcoming = [];
+  const urgent = [];
+  const overdue = [];
+  
+  for (const d of deadlines) {
+    const deadlineDate = new Date(d.date);
+    const daysUntil = Math.ceil((deadlineDate - now) / (1000 * 60 * 60 * 24));
+    
+    if (daysUntil < 0) {
+      overdue.push({ ...d, daysUntil });
+    } else if (d.urgent || d.critical || daysUntil <= 7) {
+      urgent.push({ ...d, daysUntil });
+    } else if (daysUntil <= 30) {
+      upcoming.push({ ...d, daysUntil });
+    }
+  }
+  
+  // Sort by days until deadline
+  upcoming.sort((a, b) => a.daysUntil - b.daysUntil);
+  urgent.sort((a, b) => a.daysUntil - b.daysUntil);
+  overdue.sort((a, b) => a.daysUntil - b.daysUntil);
+  
+  const lines = [];
+  let status = "ok";
+  
+  if (overdue.length) {
+    status = "critical";
+    lines.push(`**OVERDUE (${overdue.length}):**`);
+    for (const d of overdue.slice(0, 3)) {
+      lines.push(`  ✗ ${d.id} — ${Math.abs(d.daysUntil)} days overdue — ${d.action}`);
+    }
+  }
+  
+  if (urgent.length) {
+    if (status === "ok") status = "urgent";
+    if (lines.length) lines.push("");
+    lines.push(`**URGENT (${urgent.length}):**`);
+    for (const d of urgent.slice(0, 5)) {
+      const amount = d.amount ? ` [${d.amount}]` : "";
+      lines.push(`  ! ${d.id} — ${d.daysUntil} days${amount} — ${d.action}`);
+    }
+  }
+  
+  if (upcoming.length) {
+    if (lines.length) lines.push("");
+    lines.push(`**Upcoming (${upcoming.length}):**`);
+    for (const d of upcoming.slice(0, 5)) {
+      const amount = d.amount ? ` [${d.amount}]` : "";
+      lines.push(`  · ${d.id} — ${d.daysUntil} days${amount} — ${d.action}`);
+    }
+  }
+  
+  if (!lines.length) {
+    lines.push("No urgent or upcoming deadlines (next 30 days)");
+  }
+  
+  // Add quick commands
+  lines.push("");
+  lines.push("**Quick commands:**");
+  if (urgent.length || overdue.length) {
+    lines.push("  npm run office:check — Check all deadlines");
+  }
+  lines.push("  npm run office:notice — Generate board notice");
+  lines.push("  npm run office:coi — Generate COI form");
+  
+  return {
+    id: "compliance",
+    title: "Office compliance",
+    status,
+    lines,
+    data: { 
+      overdue: overdue.length, 
+      urgent: urgent.length, 
+      upcoming: upcoming.length,
+      entity: calendar.entity?.legalName 
+    },
+  };
+}
+
 export const STATUS_RANK = { ok: 0, notice: 1, caution: 2, urgent: 3, critical: 4, skip: -1 };
 export function rollupStatus(sections) {
   let max = -1;

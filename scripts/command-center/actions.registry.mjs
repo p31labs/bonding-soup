@@ -699,6 +699,45 @@ export const ACTIONS = {
     cmd: "npm",
     args: ["run", "verify:protocol-registry"],
   },
+  "home-office-check": {
+    title: "office:check — Compliance calendar (deadlines, grants, filings)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "office:check"],
+  },
+  "home-office-check-urgent": {
+    title: "office:check:urgent — Urgent/overdue deadlines only",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "office:check:urgent"],
+  },
+  "home-office-notice": {
+    title: "office:notice — Generate board meeting notice",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "office:notice"],
+    hitl: true,
+  },
+  "home-office-coi": {
+    title: "office:coi — Generate Conflict of Interest form",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "office:coi"],
+  },
+  "home-office-consent": {
+    title: "office:consent — Generate written consent template",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "office:consent"],
+    hitl: true,
+  },
+  "home-office-resolution": {
+    title: "office:resolution — Generate board resolution template",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "office:resolution"],
+    hitl: true,
+  },
 
   // —— CI-shaped
   "home-release-check": {
@@ -1070,6 +1109,28 @@ export const SECTIONS_RAW = [
       "home-check-content",
       "home-check-delta",
       "home-verify-protocol-registry",
+    ],
+  },
+  {
+    id: "office",
+    title: "Office · compliance & governance",
+    ids: [
+      "home-office-check",
+      "home-office-check-urgent",
+      "home-office-notice",
+      "home-office-coi",
+      "home-office-consent",
+      "home-office-resolution",
+    ],
+    links: [
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/docs/board/README.md",
+        label: "Board docs README",
+      },
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/docs/grants/GRANT-CALENDAR-2026.md",
+        label: "Grant calendar 2026",
+      },
     ],
   },
   {

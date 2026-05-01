@@ -104,5 +104,108 @@
     "launchAuto": "npm run launch:auto",
     "polish": "npm run polish",
     "syncAll": "npm run sync:all"
+  },
+  "officeCalendar": {
+    "entity": {
+      "legalName": "P31 Labs, Inc.",
+      "ein": "42-1888158",
+      "incorporated": "2026-04-03",
+      "gaSosControlNumber": "26082141",
+      "stateOfIncorporation": "GA",
+      "status501c3": "filed_pending_irs",
+      "filingPayGovId": "281TLBGO",
+      "filingAgencyId": "77374172589"
+    },
+    "deadlines": [
+      {
+        "id": "ga-sos-annual-2027",
+        "date": "2027-04-01",
+        "warningDays": [60, 30, 7],
+        "action": "File GA SOS annual registration (Control #26082141)",
+        "cost": "$0 (nonprofit)",
+        "url": "https://ecorp.sos.ga.gov",
+        "critical": true
+      },
+      {
+        "id": "irs-determination-followup",
+        "date": "2026-10-31",
+        "warningDays": [30],
+        "action": "Follow up on Form 1023-EZ determination if not received",
+        "contact": "IRS EO Unit, Agency ID 77374172589",
+        "note": "Expected 3-6 months from filing (filed 2026-04-30)"
+      },
+      {
+        "id": "board-meeting-annual-2027",
+        "date": "2027-04-03",
+        "warningDays": [45, 14, 2],
+        "action": "Annual board meeting — schedule, notices, prepare minutes",
+        "template": "docs/board/ANNUAL-MEETING-NOTICE-TEMPLATE.md",
+        "quorum": "2 of 3 directors",
+        "directors": ["William Johnson", "Joseph Tyler Cisco", "Brenda O'Dell"],
+        "critical": true
+      },
+      {
+        "id": "conflict-interest-annual-2026",
+        "date": "2026-12-31",
+        "warningDays": [30, 7],
+        "action": "Collect annual Conflict of Interest disclosures from all directors",
+        "template": "docs/board/CONFLICT-OF-INTEREST-DISCLOSURE-FORM.md",
+        "form": "docs/board/CONFLICT-OF-INTEREST-DISCLOSURE-FORM.md"
+      },
+      {
+        "id": "awesome-foundation-decision",
+        "date": "2026-05-15",
+        "warningDays": [7, 1],
+        "action": "Check Awesome Foundation decision; prepare acceptance or reapplication",
+        "source": "docs/grants/GRANT-CALENDAR-2026.md",
+        "amount": "$1,000",
+        "status": "deliberating"
+      },
+      {
+        "id": "asan-grant-opens",
+        "date": "2026-05-15",
+        "warningDays": [3, 1],
+        "action": "ASAN Teighlor McGee portal opens — submit immediately",
+        "amount": "$6,250",
+        "source": "docs/grants/GRANT-CALENDAR-2026-asan.md",
+        "urgent": true,
+        "critical": true
+      },
+      {
+        "id": "nlnet-deadline",
+        "date": "2026-06-01",
+        "warningDays": [30, 14, 7, 3],
+        "action": "Submit NLnet NGI Zero Commons application (hard deadline)",
+        "amount": "€15,000",
+        "draft": "docs/grants/nlnet-ngi-zero-commons-application.md",
+        "url": "https://nlnet.nl",
+        "hardDeadline": true,
+        "critical": true
+      },
+      {
+        "id": "stimpunks-reopens",
+        "date": "2026-06-01",
+        "warningDays": [7, 1],
+        "action": "Stimpunks Foundation reopens — apply immediately",
+        "amount": "$3,000",
+        "status": "paused_until_june_1"
+      },
+      {
+        "id": "stripe-donor-acknowledgments-2026",
+        "date": "2026-12-31",
+        "warningDays": [30, 7],
+        "action": "Send 501(c)(3) donation acknowledgments to $250+ donors (IRS requirement)",
+        "source": "Stripe checkout records",
+        "note": "Required for tax-deductible donations once 501(c)(3) determination received"
+      }
+    ],
+    "templates": {
+      "boardNotice": "docs/board/ANNUAL-MEETING-NOTICE-TEMPLATE.md",
+      "writtenConsent": "docs/board/WRITTEN-CONSENT-ORGANIZATIONAL-ACTIONS.md",
+      "boardResolution": "docs/board/BOARD-RESOLUTION-TEMPLATES.md",
+      "conflictOfInterest": "docs/board/CONFLICT-OF-INTEREST-DISCLOSURE-FORM.md",
+      "documentRetention": "docs/board/DOCUMENT-RETENTION-POLICY.md",
+      "whistleblower": "docs/board/WHISTLEBLOWER-POLICY.md"
+    }
   }
 }

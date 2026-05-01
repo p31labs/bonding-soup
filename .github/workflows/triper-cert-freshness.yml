@@ -1,0 +1,78 @@
+name: TRIPER Cert Freshness Check
+
+on:
+  workflow_call:
+    inputs:
+      max-age-hours:
+        description: 'Maximum age of cert in hours'
+        required: false
+        default: '24'
+        type: string
+  workflow_dispatch:
+    inputs:
+      max-age-hours:
+        description: 'Maximum age of cert in hours'
+        required: false
+        default: '24'
+        type: string
+
+jobs:
+  check-cert-freshness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Get latest cert timestamp
+        id: get-cert
+        run: |
+          LATEST_CERT=$(ls -t tests/triper/logs/cert-*.json 2>/dev/null | head -1)
+          if [ -n "$LATEST_CERT" ]; then
+            TIMESTAMP=$(jq -r '.timestamp' "$LATEST_CERT")
+            echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
+            echo "found=true" >> $GITHUB_OUTPUT
+            echo "cert_file=$LATEST_CERT" >> $GITHUB_OUTPUT
+            echo "Found cert: $LATEST_CERT"
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+            echo "No cert file found"
+          fi
+      
+      - name: Check cert freshness
+        id: check-freshness
+        if: steps.get-cert.outputs.found == 'true'
+        run: |
+          CERT_TIMESTAMP=$(date -d "${{ steps.get-cert.outputs.timestamp }}" +%s)
+          NOW=$(date +%s)
+          AGE_HOURS=$(( (NOW - CERT_TIMESTAMP) / 3600 ))
+          MAX_AGE=${{ inputs.max-age-hours || '24' }}
+          
+          echo "Cert age: $AGE_HOURS hours (max: $MAX_AGE)"
+          echo "age_hours=$AGE_HOURS" >> $GITHUB_OUTPUT
+          
+          if [ $AGE_HOURS -gt $MAX_AGE ]; then
+            echo "Cert is stale (>$MAX_AGE hours)"
+            echo "fresh=false" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "Cert is fresh (≤$MAX_AGE hours)"
+            echo "fresh=true" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Report freshness
+        if: steps.check-freshness.outputs.fresh == 'true'
+        run: |
+          echo "✓ TRIPER certification is fresh (${{ steps.check-freshness.outputs.age_hours }} hours old)"
+      
+      - name: Report stale
+        if: failure() && steps.get-cert.outputs.found == 'true'
+        run: |
+          echo "❌ TRIPER certification is stale"
+          echo "Run: npm run test:triper:cert"

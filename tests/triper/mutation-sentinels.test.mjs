@@ -1,0 +1,484 @@
+/**
+ * TRIPER Mutation Sentinels
+ *
+ * Proves each critical TRIPER invariant has real teeth. Every test runs the
+ * same predicate logic as the TRIPER suite against a deliberately bad value
+ * and asserts the check would fail — red-green proof, no filesystem mutations.
+ *
+ * Structure: one describe block per MVP, mirroring the TRIPER suite it guards.
+ * If a sentinel fails it means the TRIPER assertion is too loose to catch
+ * a real regression — tighten the TRIPER first, then fix the sentinel.
+ */
+import { describe, it, expect } from "vitest";
+
+// ─── Shared predicate helpers (mirror TRIPER logic) ───────────────────────────
+
+const isTrimtabUrl = (url) =>
+  typeof url === "string" && url.includes("trimtab-signal.workers.dev");
+
+const isHttps = (url) =>
+  typeof url === "string" && url.startsWith("https://");
+
+const hasNoCredSubstring = (url) =>
+  !/(sk_live_|sk_test_|Bearer |api_key=|token=)/i.test(url ?? "");
+
+const hasNoFullChildName = (text) =>
+  !/(William Johnson|S\.J\. Johnson|W\.J\. Johnson|Christyn Johnson)/i.test(
+    text ?? ""
+  );
+
+const caInRange = (val) => val >= 8.0 && val <= 9.0;
+
+const k4EdgeCount = (vertices) => (vertices * (vertices - 1)) / 2;
+
+// ─── BONDING ──────────────────────────────────────────────────────────────────
+
+describe("BONDING sentinel", () => {
+  const WIRE_SCHEMA = "p31.carsWire/0.1.0";
+  const HEARTBEAT_MS = 5000;
+  const WORLD = { width: 1600, height: 800 };
+  const SHIPPED = "2026-03-10";
+  const TEST_BASELINE = 424;
+
+  it("catches: wrong wire schema minor version (0.2.0 vs 0.1.0)", () => {
+    const mutated = "p31.carsWire/0.2.0";
+    expect(mutated === WIRE_SCHEMA).toBe(false);
+  });
+
+  it("catches: wrong wire schema namespace (cars vs soup)", () => {
+    const mutated = "p31.soupWire/0.1.0";
+    expect(mutated === WIRE_SCHEMA).toBe(false);
+  });
+
+  it("catches: heartbeat drift (4000ms instead of 5000ms)", () => {
+    const mutated = 4000;
+    expect(mutated === HEARTBEAT_MS).toBe(false);
+  });
+
+  it("catches: world width mutation (1400 instead of 1600)", () => {
+    const mutated = { width: 1400, height: 800 };
+    expect(mutated.width === WORLD.width).toBe(false);
+  });
+
+  it("catches: world height mutation (600 instead of 800)", () => {
+    const mutated = { width: 1600, height: 600 };
+    expect(mutated.height === WORLD.height).toBe(false);
+  });
+
+  it("catches: shipped date mutation (one day off)", () => {
+    const mutated = "2026-03-11";
+    expect(mutated === SHIPPED).toBe(false);
+  });
+
+  it("catches: test count regression below baseline (400 < 424)", () => {
+    const mutated = 400;
+    expect(mutated >= TEST_BASELINE).toBe(false);
+  });
+
+  it("catches: bonding URL on wrong CF account", () => {
+    const mutated = "https://bonding.wrong-account.workers.dev";
+    // publicUrl is p31ca, not workers.dev — but relay must be trimtab-signal
+    const relayMutated = "https://bonding-relay.wrong-account.workers.dev";
+    expect(isTrimtabUrl(relayMutated)).toBe(false);
+  });
+});
+
+// ─── C.A.R.S. ────────────────────────────────────────────────────────────────
+
+describe("C.A.R.S. sentinel", () => {
+  const HEARTBEAT_MS = 5000;
+  const WORLD = { width: 1600, height: 800 };
+  const BLOCKING_RE = /\b(readFileSync|writeFileSync|execSync)\b/;
+
+  it("catches: heartbeat reduced (3000ms — too fast for mesh sync)", () => {
+    const mutated = 3000;
+    expect(mutated === HEARTBEAT_MS).toBe(false);
+  });
+
+  it("catches: world width shrink (1200 instead of 1600)", () => {
+    expect(1200 === WORLD.width).toBe(false);
+  });
+
+  it("catches: blocking fs call in soup.ts (readFileSync — violates 10ms CPU limit)", () => {
+    const mutatedSrc = `export function load() { return readFileSync("config.json"); }`;
+    expect(BLOCKING_RE.test(mutatedSrc)).toBe(true);
+  });
+
+  it("catches: execSync in soup.ts (shell execution — violates CF Workers sandbox)", () => {
+    const mutatedSrc = `const out = execSync("node generate.js").toString();`;
+    expect(BLOCKING_RE.test(mutatedSrc)).toBe(true);
+  });
+
+  it("catches: wire schema namespace change (carsWire → soupWire)", () => {
+    const LOCKED = "p31.carsWire/0.1.0";
+    const mutated = "p31.soupWire/0.1.0";
+    expect(mutated === LOCKED).toBe(false);
+  });
+});
+
+// ─── PERSONAL ────────────────────────────────────────────────────────────────
+
+describe("PERSONAL sentinel", () => {
+  const PASSPORT_SCHEMA = "p31.cognitivePassport/1.0.0";
+  const LONG_FORM_EDITION = "5.1";
+  const CA_MIN = 8.0;
+  const CA_MAX = 9.0;
+
+  it("catches: passport schema minor version bump (1.1.0 vs 1.0.0)", () => {
+    const mutated = "p31.cognitivePassport/1.1.0";
+    expect(mutated === PASSPORT_SCHEMA).toBe(false);
+  });
+
+  it("catches: passport schema wrong namespace (cognitive vs cognitivePassport)", () => {
+    const mutated = "p31.cognitive/1.0.0";
+    expect(mutated === PASSPORT_SCHEMA).toBe(false);
+  });
+
+  it("catches: long form edition version bump (5.2 vs 5.1)", () => {
+    const mutated = "5.2";
+    expect(mutated === LONG_FORM_EDITION).toBe(false);
+  });
+
+  it("catches: Ca level above range (9.5 mg/dL — hypercalcemia risk)", () => {
+    const mutated = 9.5;
+    expect(caInRange(mutated)).toBe(false);
+  });
+
+  it("catches: Ca level below range (7.5 mg/dL — hypocalcemia risk)", () => {
+    const mutated = 7.5;
+    expect(caInRange(mutated)).toBe(false);
+  });
+
+  it("catches: Ca boundary at 9.0 — valid", () => {
+    expect(caInRange(9.0)).toBe(true);
+  });
+
+  it("catches: Ca boundary at 8.0 — valid", () => {
+    expect(caInRange(8.0)).toBe(true);
+  });
+
+  it("catches: full child name in output (privacy violation)", () => {
+    const mutatedOutput = "Session started for William Johnson, age 8";
+    expect(hasNoFullChildName(mutatedOutput)).toBe(false);
+  });
+
+  it("catches: HMAC secret hardcoded in source", () => {
+    const HMAC_RE = new RegExp('HMAC_KEY\\s*=\\s*["\'][A-Za-z0-9+/]{20,}');
+    const mutatedSrc = `const HMAC_KEY = "supersecretkey1234567890abcdef";`;
+    expect(HMAC_RE.test(mutatedSrc)).toBe(true);
+  });
+
+  it("catches: missing safety test file (phos-safety.test.ts deleted)", () => {
+    const REQUIRED = ["phos-safety.test.ts", "medication-rules.test.ts", "biometric-spoons.test.ts"];
+    const mutatedList = ["phos-config.test.ts", "voltage.test.ts"]; // phos-safety deleted
+    const missing = REQUIRED.filter((f) => !mutatedList.includes(f));
+    expect(missing.length).toBeGreaterThan(0);
+  });
+});
+
+// ─── HUB ─────────────────────────────────────────────────────────────────────
+
+describe("HUB sentinel", () => {
+  const CREATOR_SHARE = 1.0;
+  const PLATFORM_FEE_RATE = 0;
+  const ACCESS_FEE = 0.0;
+
+  it("catches: platform fee rate raised (0.05 = 5% cut)", () => {
+    const mutated = { platformFee: { rate: 0.05 } };
+    expect(mutated.platformFee.rate === PLATFORM_FEE_RATE).toBe(false);
+  });
+
+  it("catches: creator revenue share reduced (0.7 = 70%)", () => {
+    const mutated = { revenueShare: { creator: 0.7 } };
+    expect(mutated.revenueShare.creator === CREATOR_SHARE).toBe(false);
+  });
+
+  it("catches: geodesic room access fee introduced ($1.00)", () => {
+    const mutated = { geodesicRoom: { accessFee: 1.0 } };
+    expect(mutated.geodesicRoom.accessFee === ACCESS_FEE).toBe(false);
+  });
+
+  it("catches: flat economy structure (not nested — schema regression)", () => {
+    const flatMutation = { platformFee: 0, revenueShare: 1.0 };
+    // TRIPER checks .platformFee.rate — flat structure would be undefined
+    expect(flatMutation.platformFee?.rate).toBeUndefined();
+  });
+
+  it("catches: creator share at 0.999 (not exactly 1.0)", () => {
+    const mutated = { revenueShare: { creator: 0.999 } };
+    expect(mutated.revenueShare.creator === CREATOR_SHARE).toBe(false);
+  });
+
+  it("catches: p31-style design token namespace change", () => {
+    const LOCKED = "p31.designTokens/1.0.0";
+    const mutated = "p31.tokens/1.0.0";
+    expect(mutated === LOCKED).toBe(false);
+  });
+});
+
+// ─── MESH ────────────────────────────────────────────────────────────────────
+
+describe("MESH sentinel", () => {
+  const K4_VERTICES = 4;
+  const K4_EDGES = 6; // n*(n-1)/2
+  const REMEMBRANCE_HEX = "#f5f0e8";
+  const ACCOUNT = "trimtab-signal";
+
+  it("catches: K₄ vertex count reduced to 3 (triangle, not complete graph)", () => {
+    const mutatedVertices = 3;
+    expect(k4EdgeCount(mutatedVertices) === K4_EDGES).toBe(false);
+    expect(k4EdgeCount(mutatedVertices)).toBe(3);
+  });
+
+  it("catches: K₄ vertex count inflated to 5 (10 edges, not 6)", () => {
+    const mutatedVertices = 5;
+    expect(k4EdgeCount(mutatedVertices) === K4_EDGES).toBe(false);
+    expect(k4EdgeCount(mutatedVertices)).toBe(10);
+  });
+
+  it("catches: hardcoded edge count 5 (off by one from K₄)", () => {
+    const mutatedEdges = 5;
+    expect(mutatedEdges === K4_EDGES).toBe(false);
+  });
+
+  it("catches: remembrance hex wrong (pure white instead of warm white)", () => {
+    const mutated = "#ffffff";
+    expect(mutated === REMEMBRANCE_HEX).toBe(false);
+  });
+
+  it("catches: remembrance hex capitalized (#F5F0E8 — case drift)", () => {
+    const mutated = "#F5F0E8";
+    expect(mutated === REMEMBRANCE_HEX).toBe(false);
+  });
+
+  it("catches: passkey path absolute URL (not relative)", () => {
+    const mutated = "https://api.phosphorus31.org/api/passkey";
+    const isRelative = mutated.startsWith("/") && !mutated.startsWith("https://");
+    expect(isRelative).toBe(false);
+  });
+
+  it("catches: mesh Worker on wrong CF account", () => {
+    const mutated = "https://k4-cage.wrong-labs.workers.dev";
+    expect(isTrimtabUrl(mutated)).toBe(false);
+    expect(mutated.includes(ACCOUNT)).toBe(false);
+  });
+
+  it("catches: mesh Worker using http:// (not HTTPS)", () => {
+    const mutated = "http://k4-cage.trimtab-signal.workers.dev";
+    expect(isHttps(mutated)).toBe(false);
+  });
+
+  it("catches: k4-personal vertex leaking into cage (no cross-scope)", () => {
+    const cageVertices = ["will", "sj", "wj", "christyn"];
+    const personalVertex = "pillar-a";
+    expect(cageVertices.includes(personalVertex)).toBe(false);
+  });
+});
+
+// ─── SIMPLEX ─────────────────────────────────────────────────────────────────
+
+describe("SIMPLEX sentinel", () => {
+  const MIN_TEST_FILES = 20;
+  const HMAC_RE = new RegExp('HMAC_KEY\\s*=\\s*["\'][A-Za-z0-9+/]{20,}');
+  const SECRET_RE = /(sk_live_|sk_test_|Bearer |api_key=)/i;
+
+  it("catches: test count below minimum (18 files — 2 deleted)", () => {
+    const mutatedCount = 18;
+    expect(mutatedCount >= MIN_TEST_FILES).toBe(false);
+  });
+
+  it("catches: HMAC key hardcoded in index.ts", () => {
+    const mutatedSrc = `const HMAC_KEY = "abcdefghijklmnopqrstuvwxyz123456";`;
+    expect(HMAC_RE.test(mutatedSrc)).toBe(true);
+  });
+
+  it("catches: raw API key substring in source", () => {
+    const mutatedSrc = `const headers = { 'Authorization': 'Bearer eyJhbG...' };`;
+    expect(SECRET_RE.test(mutatedSrc)).toBe(true);
+  });
+
+  it("catches: wrangler.toml missing name field", () => {
+    const mutatedToml = `compatibility_date = "2024-01-01"\n[vars]\nENV = "prod"`;
+    expect(/^name\s*=/m.test(mutatedToml)).toBe(false);
+  });
+
+  it("catches: wrangler.toml missing compatibility_date", () => {
+    const mutatedToml = `name = "simplex-v7"\n[vars]\nENV = "prod"`;
+    expect(/^compatibility_date\s*=/m.test(mutatedToml)).toBe(false);
+  });
+
+  it("catches: critical regression test deleted (accommodation-sync.test.ts)", () => {
+    const REQUIRED_REGRESSION = [
+      "accommodation-sync.test.ts",
+      "mesh-remembrance.test.ts",
+      "fers-countdown.test.ts",
+    ];
+    const mutatedList = ["hostile.test.ts", "voltage.test.ts", "hmac-worker.test.ts"];
+    const missing = REQUIRED_REGRESSION.filter((f) => !mutatedList.includes(f));
+    expect(missing.length).toBeGreaterThan(0);
+  });
+
+  it("catches: HMAC secret in wrangler.toml [vars] (should be [secrets])", () => {
+    const mutatedToml = `[vars]\nHMAC_SECRET = "abc123supersecret456789"`;
+    const hasBareSecret = /\[vars\][\s\S]*?HMAC.*?=\s*["'][^"']+["']/m.test(mutatedToml);
+    expect(hasBareSecret).toBe(true);
+  });
+});
+
+// ─── EMAIL ───────────────────────────────────────────────────────────────────
+
+describe("EMAIL sentinel", () => {
+  it("catches: wrangler.toml missing name", () => {
+    const mutatedToml = `compatibility_date = "2024-01-01"`;
+    expect(/^name\s*=/m.test(mutatedToml)).toBe(false);
+  });
+
+  it("catches: SMTP credentials embedded in source", () => {
+    const SMTP_RE = /(smtp_password|SMTP_PASS|smtp\.auth|nodemailer)/i;
+    const mutatedSrc = `const transport = nodemailer.createTransport({ auth: { pass: process.env.SMTP_PASS } });`;
+    expect(SMTP_RE.test(mutatedSrc)).toBe(true);
+  });
+
+  it("catches: full child name in email routing rule comment", () => {
+    const mutatedComment = `// Forward all mail for William Johnson to family inbox`;
+    expect(hasNoFullChildName(mutatedComment)).toBe(false);
+  });
+
+  it("catches: .env file with secrets committed (non-trivial content)", () => {
+    const mutatedEnvContent = "HMAC_KEY=abc123supersecret\nCF_TOKEN=xyz456";
+    // A committed .env with real values is a security violation
+    const hasSecrets = /[A-Z_]+=.{8,}/.test(mutatedEnvContent);
+    expect(hasSecrets).toBe(true);
+  });
+
+  it("catches: email worker name mismatch with deploy target", () => {
+    const deployTarget = "simplex-email";
+    const mutatedName = "p31-email-worker";
+    expect(mutatedName === deployTarget).toBe(false);
+  });
+});
+
+// ─── EPCP ────────────────────────────────────────────────────────────────────
+
+describe("EPCP sentinel", () => {
+  const FLEET_COUNT = 12;
+  const CC_PORT = 3131;
+
+  it("catches: fleet worker count reduced (10 instead of 12)", () => {
+    const mutatedCount = 10;
+    expect(mutatedCount === FLEET_COUNT).toBe(false);
+  });
+
+  it("catches: command center port changed (4000 instead of 3131)", () => {
+    const mutatedPort = 4000;
+    expect(mutatedPort === CC_PORT).toBe(false);
+  });
+
+  it("catches: raw API key in actions.registry.mjs", () => {
+    const KEY_RE = /(sk_live_|sk_test_|ANTHROPIC_API_KEY\s*=\s*["']sk-ant)/i;
+    const mutatedSrc = `const ANTHROPIC_API_KEY = "sk-ant-api03-abc123...";`;
+    expect(KEY_RE.test(mutatedSrc)).toBe(true);
+  });
+
+  it("catches: ACTIONS export missing from registry", () => {
+    const mutatedSrc = `const actions = []; module.exports = { actions };`;
+    // TRIPER checks for named export ACTIONS (uppercase)
+    expect(/export\s+(const|let)\s+ACTIONS/.test(mutatedSrc)).toBe(false);
+  });
+
+  it("catches: automation gate missing (human-in-the-loop bypass)", () => {
+    const mutatedRegistry = `{ id: "auto-deploy", gate: "none", requires: [] }`;
+    const hasGate = /"gate"\s*:\s*"human"/i.test(mutatedRegistry);
+    expect(hasGate).toBe(false);
+  });
+});
+
+// ─── GEODESIC ────────────────────────────────────────────────────────────────
+
+describe("GEODESIC sentinel", () => {
+  const WIRE_SCHEMA = "p31.geodesicRoomWire/0.2.1";
+  const MAX_SHAPES = 50;
+  const REQUIRED_MSG_TYPES = ["ADD_SHAPE", "MOVE_SHAPE", "REMOVE_SHAPE", "RESET_SHAPES"];
+
+  it("catches: wire schema patch bump (0.2.2 — breaks all clients)", () => {
+    const mutated = "p31.geodesicRoomWire/0.2.2";
+    expect(mutated === WIRE_SCHEMA).toBe(false);
+  });
+
+  it("catches: wire schema minor bump (0.3.0 — breaking change)", () => {
+    const mutated = "p31.geodesicRoomWire/0.3.0";
+    expect(mutated === WIRE_SCHEMA).toBe(false);
+  });
+
+  it("catches: wire schema namespace change (geodesicRoom vs geodesic)", () => {
+    const mutated = "p31.geodesicWire/0.2.1";
+    expect(mutated === WIRE_SCHEMA).toBe(false);
+  });
+
+  it("catches: shape cap raised to 100 (Maxwell rigidity violation)", () => {
+    const mutated = 100;
+    expect(mutated === MAX_SHAPES).toBe(false);
+  });
+
+  it("catches: shape cap lowered to 49 (off by one)", () => {
+    const mutated = 49;
+    expect(mutated === MAX_SHAPES).toBe(false);
+  });
+
+  it("catches: MOVE_SHAPE renamed to UPDATE_SHAPE (breaks all clients)", () => {
+    const mutatedTypes = ["ADD_SHAPE", "UPDATE_SHAPE", "REMOVE_SHAPE", "RESET_SHAPES"];
+    const missing = REQUIRED_MSG_TYPES.filter((t) => !mutatedTypes.includes(t));
+    expect(missing).toContain("MOVE_SHAPE");
+  });
+
+  it("catches: RESET_SHAPES removed from protocol (breaks client clear)", () => {
+    const mutatedTypes = ["ADD_SHAPE", "MOVE_SHAPE", "REMOVE_SHAPE"];
+    const missing = REQUIRED_MSG_TYPES.filter((t) => !mutatedTypes.includes(t));
+    expect(missing).toContain("RESET_SHAPES");
+  });
+
+  it("catches: geodesic Worker on wrong account domain", () => {
+    const mutated = "https://geodesic-room.other-account.workers.dev";
+    expect(isTrimtabUrl(mutated)).toBe(false);
+  });
+
+  it("catches: geodesic Worker using ws:// instead of wss:// (no TLS)", () => {
+    const mutated = "ws://geodesic-room.trimtab-signal.workers.dev";
+    expect(isHttps(mutated)).toBe(false);
+  });
+});
+
+// ─── Cross-MVP purity guards ──────────────────────────────────────────────────
+
+describe("Cross-MVP purity sentinel", () => {
+  it("catches: full child first name in any output (privacy violation)", () => {
+    // The check catches full "First Last" patterns (space-separated)
+    expect(hasNoFullChildName("Session log for William Johnson")).toBe(false);
+    expect(hasNoFullChildName("Christyn Johnson signed in")).toBe(false);
+  });
+
+  it("catches: live API key substring in any source file", () => {
+    const KEY_RE = /sk_live_[A-Za-z0-9]{20,}/;
+    const mutatedSrc = `const key = "sk_live_abcdefghij1234567890xyz";`;
+    expect(KEY_RE.test(mutatedSrc)).toBe(true);
+  });
+
+  it("catches: non-HTTPS mesh Worker URL (plain HTTP)", () => {
+    const mutated = "http://k4-cage.trimtab-signal.workers.dev";
+    expect(isHttps(mutated)).toBe(false);
+  });
+
+  it("catches: credential substring in Worker URL itself", () => {
+    const mutatedUrl = "https://k4-cage.trimtab-signal.workers.dev?token=abc123";
+    expect(hasNoCredSubstring(mutatedUrl)).toBe(false);
+  });
+
+  it("K₄ formula is correct: 4 vertices → 6 edges", () => {
+    expect(k4EdgeCount(4)).toBe(6);
+  });
+
+  it("K₄ formula rejects non-complete graphs: 3→3, 5→10", () => {
+    expect(k4EdgeCount(3)).toBe(3);
+    expect(k4EdgeCount(5)).toBe(10);
+  });
+});

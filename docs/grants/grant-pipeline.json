@@ -1,0 +1,212 @@
+{
+  "schema": "p31.grantPipeline/1.0.0",
+  "version": "1.0.0",
+  "generatedAt": "2026-05-01T10:45:00Z",
+  "entity": {
+    "name": "P31 Labs, Inc.",
+    "ein": "42-1888158",
+    "status": "501(c)(3) pending — Form 1023-EZ filed 2026-04-30"
+  },
+  "grants": [
+    {
+      "id": "nlnet-ngi-zero-commons",
+      "title": "k4 — open family mesh protocol specification",
+      "funder": "NLnet Foundation",
+      "program": "NGI Zero Commons Fund",
+      "amount": {
+        "requested": 15000,
+        "currency": "EUR",
+        "range": "€5,000–€50,000"
+      },
+      "deadline": "2026-06-01",
+      "status": "draft_complete_operator_review_needed",
+      "applicationPath": "docs/grants/nlnet-ngi-zero-commons-application.md",
+      "contentPack": "andromeda/04_SOFTWARE/p31-forge/content/grants/nlnet.json",
+      "notes": "Specification writing grant. k4-agent-hub is live; spec needed so others can implement compatible hubs without our infra. Operator must rewrite 'I built this because I needed it' paragraph in own voice. EU eligibility unconfirmed — verify with NLnet before submit.",
+      "requirements": ["EIN", "SAM UEI NQKVWH6AKB58", "operator narrative finalization", "submission at nlnet.nl"],
+      "createdAt": "2026-04-20",
+      "lastModified": "2026-05-01"
+    },
+    {
+      "id": "asan-teighlor-mcgee",
+      "title": "Phoenix Navigator (Node Zero) beta hardware + accessibility manual",
+      "funder": "Autistic Self Advocacy Network (ASAN)",
+      "program": "Teighlor McGee Disability Justice Mini-Grant",
+      "amount": {
+        "requested": 6250,
+        "currency": "USD"
+      },
+      "deadline": "2026-07-31",
+      "opens": "2026-05-15",
+      "status": "draft_complete_narrative_pending",
+      "contentPack": "andromeda/04_SOFTWARE/p31-forge/content/grants/asan.json",
+      "notes": "Hardware beta distribution grant. Operator is AuDHD + hypoparathyroidism — lived-experience narrative is the core of the application. 500-word narrative must be written in operator's voice (no ghostwriting). Portal opens May 15 — submit day one.",
+      "budgetBreakdown": [
+        { "item": "Provisional patents × 2 (HERALD + Node One)", "cost": 130 },
+        { "item": "Copyright registration (group unpublished works)", "cost": 65 },
+        { "item": "WIPO PROOF timestamps × 5", "cost": 110 },
+        { "item": "DOBE certification (Disability:IN)", "cost": 350 },
+        { "item": "Home Assistant host (Pi 4 Starter)", "cost": 55 },
+        { "item": "Bangle.js 2 wearable (HRV/spoon feed)", "cost": 65 },
+        { "item": "Kids tablets × 2 (S.J., W.J.)", "cost": 200 },
+        { "item": "Domain backup (p31.dev)", "cost": 12 },
+        { "item": "3D print filament / prototyping", "cost": 25 },
+        { "item": "Operator stipend (20 hrs × $25)", "cost": 500 },
+        { "item": "Buffer", "cost": 4738 }
+      ],
+      "requirements": ["501(c)(3) determination or CP575E acceptance confirmation", "operator narrative (500 words)", "proof of autism diagnosis (optional but strengthens)", "submit May 15"],
+      "createdAt": "2026-04-22",
+      "lastModified": "2026-05-01"
+    },
+    {
+      "id": "stimpunks-foundation",
+      "title": "Node One (Totem) prototype + IP protection + DOBE cert",
+      "funder": "Stimpunks Foundation",
+      "program": "Micro-Grant Program",
+      "amount": {
+        "requested": 3000,
+        "currency": "USD"
+      },
+      "deadline": "2026-06-01",
+      "opens": "2026-06-01",
+      "status": "draft_ready",
+      "contentPack": "andromeda/04_SOFTWARE/p31-forge/content/grants/stimpunks.json",
+      "notes": "Explicitly funds IP filings and hardware for neurodivergent builders. Strong fit: Node One is assistive tech for somatic regulation, built by an AuDHD operator. Reopens June 1 — apply same day.",
+      "requirements": ["501(c)(3) pending acceptable (check with Stimpunks)", "IP filing receipts (provisional patents)", "hardware BOM + prototype photos"],
+      "createdAt": "2026-04-25",
+      "lastModified": "2026-05-01"
+    },
+    {
+      "id": "microsoft-ai-accessibility",
+      "title": "Cognitive Passport AI augmentation layer",
+      "funder": "Microsoft Corporation",
+      "program": "AI for Accessibility Grant",
+      "amount": {
+        "requested": 75000,
+        "currency": "USD"
+      },
+      "deadline": "rolling",
+      "status": "draft_ready_submit_after_501c3",
+      "contentPack": "andromeda/04_SOFTWARE/p31-forge/content/grants/microsoft.json",
+      "notes": "75K grant for AI augmentation of Cognitive Passport (multi-modal capture: speech-to-text, vision-to-text, reasoning-over-context). Requires 501(c)(3) determination letter but pending status with CP575E is typically accepted. Wait for IRS determination before submitting to be safe.",
+      "requirements": ["501(c)(3) determination letter (pending)", "demo video (working prototype)", "accessibility test plan (WCAG 2.1 AA)", "open source publication plan"],
+      "createdAt": "2026-04-28",
+      "lastModified": "2026-05-01"
+    },
+    {
+      "id": "awesome-foundation",
+      "title": "Physical layer completion for sentinel system",
+      "funder": "Awesome Foundation",
+      "program": "Standard Micro-Grant",
+      "amount": {
+        "requested": 1000,
+        "currency": "USD"
+      },
+      "deadline": "2026-04-30",
+      "status": "submitted_awaiting_decision",
+      "notes": "Applied April 2026. Decision by ~May 15. If awarded, funds will purchase Home Assistant host ($55), Bangle.js 2 ($63), and two kids tablets ($200 each) — sentinel physical layer enabling LAN HA + biometric feed + mesh device identity.",
+      "requirements": [],
+      "createdAt": "2026-04-10",
+      "lastModified": "2026-05-01",
+      "submissionConfirmed": true
+    },
+    {
+      "id": "nidilrr-switzer-fellowship",
+      "title": "NIDILRR Switzer Fellowship (early-career research training)",
+      "funder": "National Institute on Disability, Independent Living, and Rehabilitation Research",
+      "program": "Switzer Fellowship",
+      "amount": {
+        "requested": 80000,
+        "currency": "USD",
+        "note": "annual stipend + research support"
+      },
+      "deadline": "2027-02-01",
+      "status": "contact_initiated_track_fy2027",
+      "notes": "FY2027 cycle (applications open ~Fall 2026). Requires university partnership as host institution. Potential host: Georgia Tech Center for Assistive Technology. Investigate eligibility and partnership pathway.",
+      "requirements": ["University host institution commitment", "career development plan", "disability researcher eligibility verification"],
+      "createdAt": "2026-04-15",
+      "lastModified": "2026-05-01"
+    },
+    {
+      "id": "nidilrr-fip-development",
+      "title": "Field Initiated Projects (FIP) — three-year research program",
+      "funder": "NIDILRR",
+      "program": "Field Initiated Projects (FIP)",
+      "amount": {
+        "requested": 250000,
+        "currency": "USD",
+        "note": "per year × 3 years"
+      },
+      "deadline": "2027-03-15",
+      "status": "contact_initiated_track_fy2027",
+      "notes": "Major federal disability research grant (~$750K over 3 years). Requires university partnership as prime applicant with P31 Labs as sub-awardee. Investigate sub-contract pathways through Georgia Tech or UGA.",
+      "requirements": ["University prime applicant partnership", "3-year research plan + methodology", "substantial matching funds or in-kind contribution", "advisory committee of disabled self-advocates"],
+      "createdAt": "2026-04-15",
+      "lastModified": "2026-05-01"
+    }
+  ],
+  "archived": [
+    {
+      "id": "esg-housing-grant",
+      "title": "ESG Housing Grant",
+      "funder": "Unknown / ESG funder",
+      "status": "deadline_passed_not_submitted",
+      "deadline": "2026-05-08",
+      "notes": "Draft existed but was not submitted. Deadline passed. Remove from active pipeline.",
+      "lastModified": "2026-05-01"
+    },
+    {
+      "id": "gates-grand-challenges-ai",
+      "title": "Gates Grand Challenges — AI to Accelerate Charitable Giving",
+      "funder": "Bill & Melinda Gates Foundation",
+      "amount": {
+        "requested": 150000,
+        "currency": "USD"
+      },
+      "deadline": "2026-04-28",
+      "status": "deadline_passed_incomplete",
+      "notes": "Draft received but required 40% budget cut + citation verification. Deadline passed before edits completed. Likely closed for this cycle. Archive and prepare for next annual cycle.",
+      "lastModified": "2026-05-01"
+    },
+    {
+      "id": "shuttleworth-fellowship",
+      "title": "Shuttleworth Foundation Fellowship",
+      "funder": "Shuttleworth Foundation",
+      "status": "permanently_closed",
+      "notes": "Shuttleworth Fellowship program closed permanently in 2024. Removed from pipeline.",
+      "lastModified": "2026-04-14"
+    },
+    {
+      "id": "simons-foundation-autism",
+      "title": "Simons Foundation Autism Research Initiative",
+      "funder": "Simons Foundation",
+      "status": "not_eligible",
+      "notes": "Requires 501(c)(3) determination before application. Not eligible until IRS determination received.",
+      "lastModified": "2026-04-14"
+    }
+  ],
+  "pipelineStats": {
+    "activeCount": 7,
+    "totalRequestedUSD": 168250,
+    "totalRequestedEUR": 15000,
+    "nextDeadline": "2026-06-01",
+    "statusBreakdown": {
+      "draft_complete_operator_review_needed": 1,
+      "draft_complete_narrative_pending": 1,
+      "draft_ready": 1,
+      "draft_ready_submit_after_501c3": 1,
+      "submitted_awaiting_decision": 1,
+      "contact_initiated_track_fy2027": 2
+    }
+  },
+  "recommendedImmediateActions": [
+    "Submit NLnet NGI Zero Commons (€15K) before June 1 — operator voice review is the ONLY blocker",
+    "Write ASAN 500-word narrative (opens May 15) — due within 14 days of portal open",
+    "Deploy p31-cortex Worker if not already live; verify /api/grant/run returns seeded data",
+    "Fix grant-radar.yml syntax error (already done in this session)",
+    "Submit Stimpunks June 1 — content pack ready, just submit when portal opens",
+    "Monitor Awesome Foundation decision (due ~May 15) — prepare to allocate funds if awarded"
+  ],
+  "generatedBy": "Kilo grant pipeline deep-dive — 2026-05-01",
+  "canonicalSource": "docs/grants/GRANT-CALENDAR-2026.md"
+}

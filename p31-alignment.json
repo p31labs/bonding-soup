@@ -4,6 +4,11 @@
   "ephemeralization": "One canonical source per concern; generate or verify downstream artefacts. No parallel lore. A change in a source is intentionally coupled to its sinks: CI and this file tell you which command heals or proves alignment.",
   "sources": [
     {
+      "id": "p31-protocol-registry",
+      "path": "p31-protocol-registry.json",
+      "role": "p31.protocolRegistry/1.0.0 — unified source for TRIPER, launch readiness, verification tiers; verify:protocol-registry"
+    },
+    {
       "id": "p31-constants",
       "path": "p31-constants.json",
       "role": "Operator-locked numbers, mission snippet, ground-truth version/schema pins, mesh URLs"
@@ -1666,6 +1671,7 @@
     "prelude": "verify:alignment",
     "preludeNote": "Fast guard (verify-alignment.mjs): JSON + required sources. Skipped in the `--verify` loop (prelude already satisfied).",
     "scripts": [
+      "verify:protocol-registry",
       "build:contract-registry",
       "verify:contract-registry",
       "verify:sovereign-chain",

@@ -1,0 +1,108 @@
+{
+  "schema": "p31.protocolRegistry/1.0.0",
+  "version": "1.0.0",
+  "updated": "2026-05-01",
+  "description": "Single source of truth for all P31 protocols — TRIPER, Launch Readiness, and Verification Tiers",
+  "triper": {
+    "suites": [
+      { "id": "bonding", "tier": 1, "baselineTests": 41, "critical": true, "file": "tests/mvp/bonding/bonding.triper.test.mjs" },
+      { "id": "cars", "tier": 1, "baselineTests": 36, "critical": true, "file": "tests/mvp/cars/cars.triper.test.mjs" },
+      { "id": "personal", "tier": 1, "baselineTests": 42, "critical": true, "file": "tests/mvp/personal/personal.triper.test.mjs" },
+      { "id": "hub", "tier": 1, "baselineTests": 45, "critical": true, "file": "tests/mvp/hub/hub.triper.test.mjs" },
+      { "id": "mesh", "tier": 1, "baselineTests": 48, "critical": true, "file": "tests/mvp/mesh/mesh.triper.test.mjs" },
+      { "id": "simplex", "tier": 1, "baselineTests": 37, "critical": true, "file": "tests/mvp/simplex/simplex.triper.test.mjs" },
+      { "id": "email", "tier": 1, "baselineTests": 22, "critical": false, "file": "tests/mvp/email/email.triper.test.mjs" },
+      { "id": "epcp", "tier": 1, "baselineTests": 28, "critical": true, "file": "tests/mvp/epcp/epcp.triper.test.mjs" },
+      { "id": "geodesic", "tier": 1, "baselineTests": 30, "critical": false, "file": "tests/mvp/geodesic/geodesic.triper.test.mjs" },
+      { "id": "p31ca-user-sentinel", "tier": 2, "baselineTests": 55, "critical": true, "file": "tests/mvp/p31ca-user-sentinel/p31ca-user-sentinel.triper.test.mjs" },
+      { "id": "mesh-integrity", "tier": 2, "baselineTests": 60, "critical": true, "file": "tests/mvp/mesh-integrity/mesh-integrity.triper.test.mjs" },
+      { "id": "systems-integrity", "tier": 2, "baselineTests": 50, "critical": true, "file": "tests/mvp/systems-integrity/systems-integrity.triper.test.mjs" }
+    ],
+    "combinedSuite": "tests/combined/combined.suite.test.mjs",
+    "mutationSentinels": "tests/triper/mutation-sentinels.test.mjs",
+    "certMaxAge": "24h",
+    "logsDir": "tests/triper/logs"
+  },
+  "launch": {
+    "thresholds": {
+      "ready": 92,
+      "go": 96,
+      "warnSlowMs": 8000
+    },
+    "lanes": [
+      { "id": "alignment", "weight": 10, "critical": true, "checks": ["verify:alignment", "verify:contract-registry", "verify:sovereign-layers"] },
+      { "id": "integrity", "weight": 10, "critical": true, "checks": ["verify:facts", "verify:constants", "verify:p31-env", "verify:shipbox"] },
+      { "id": "governance", "weight": 10, "critical": true, "checks": ["verify:production-readiness", "verify:launch-lane-sync"] },
+      { "id": "identity", "weight": 10, "critical": false, "checks": ["verify:cognitive-passport-schema", "verify:passport"] },
+      { "id": "mesh", "weight": 10, "critical": true, "checks": ["verify:mesh-canon", "verify:ecosystem", "verify:k4-agent-hub"] },
+      { "id": "payments", "weight": 10, "critical": true, "checks": ["verify:monetary"] },
+      { "id": "security", "weight": 10, "critical": true, "checks": ["security:check", "no-committed-env"] },
+      { "id": "on-chain", "weight": 10, "critical": false, "checks": ["verify:sovereign-chain"] },
+      { "id": "content", "weight": 10, "critical": false, "checks": ["verify:doc-index", "verify:fleet-portal", "verify:runbooks"] },
+      { "id": "human-gate", "weight": 10, "critical": true, "checks": ["p31-launch-checklist.json"] }
+    ]
+  },
+  "verification": {
+    "tiers": [
+      {
+        "id": "core",
+        "description": "12 essential gates (30 seconds)",
+        "command": "npm run check:core",
+        "steps": ["verify:alignment", "verify:contract-registry", "verify:facts", "verify:constants", "verify:shipbox", "verify:passport", "verify:subscriptions", "verify:p31-env", "verify:cognitive-passport-schema", "verify:cognitive-passport-profiles", "verify:cars-wire", "verify:triper"]
+      },
+      {
+        "id": "mesh",
+        "description": "8 mesh-related gates (15 seconds)",
+        "command": "npm run check:mesh",
+        "steps": ["verify:mesh-canon", "verify:ecosystem", "verify:k4-agent-hub", "verify:agents-mirror", "verify:live-fleet:p31ca-mirror", "verify:production-readiness", "verify:launch-lane-sync", "verify:mesh-offline"]
+      },
+      {
+        "id": "content",
+        "description": "9 content gates (10 seconds)",
+        "command": "npm run check:content",
+        "steps": ["build:doc-index", "verify:doc-index", "verify:fleet-portal", "verify:poets-room", "verify:runbooks", "verify:delta-language", "verify:public-voice", "verify:public-sanitization", "verify:doc-library:p31ca-mirror", "verify:github-org"]
+      },
+      {
+        "id": "full",
+        "description": "All 70+ verification steps",
+        "command": "npm run verify",
+        "parallel": false
+      },
+      {
+        "id": "delta",
+        "description": "Only changed areas (git diff)",
+        "command": "npm run check:delta",
+        "smart": true
+      }
+    ]
+  },
+  "marketTiers": {
+    "tier1": {
+      "label": "LIVE and production-verified",
+      "items": ["BONDING", "p31ca technical hub", "Cognitive Passport", "Spaceship Earth PWA", "Zenodo publication series", "Quantum branding kit"],
+      "count": 6
+    },
+    "tier2": {
+      "label": "LIVE infrastructure (edge fleet)",
+      "workerCount": 13,
+      "items": ["EPCP", "k4-cage", "bonding-relay", "telemetry-worker", "donate-api", "donate-api.phosphorus31.org", "genesis-gate", "bouncer", "p31-agent-hub", "p31-cortex", "k4-agent-hub", "tetra-hub"]
+    },
+    "tier3": {
+      "label": "Production-adjacent (focused sprint)",
+      "count": 6
+    },
+    "tier4": {
+      "label": "Active development",
+      "count": 4
+    }
+  },
+  "commands": {
+    "dashboard": "npm run protocol:status",
+    "triperCert": "npm run test:triper:cert",
+    "triperStatus": "npm run triper:status",
+    "launchAudit": "npm run launch:audit",
+    "launchAuto": "npm run launch:auto",
+    "polish": "npm run polish",
+    "syncAll": "npm run sync:all"
+  }
+}

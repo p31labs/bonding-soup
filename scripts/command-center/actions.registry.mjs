@@ -658,6 +658,47 @@ export const ACTIONS = {
   "home-triper-email": { title: "TRIPER: email", cwd: repoRoot, cmd: "npm", args: ["run", "test:triper:email"] },
   "home-triper-epcp": { title: "TRIPER: EPCP", cwd: repoRoot, cmd: "npm", args: ["run", "test:triper:epcp"] },
   "home-triper-geodesic": { title: "TRIPER: geodesic", cwd: repoRoot, cmd: "npm", args: ["run", "test:triper:geodesic"] },
+  "home-triper-p31ca-user-sentinel": { title: "TRIPER: p31ca-user-sentinel", cwd: repoRoot, cmd: "npm", args: ["run", "test:triper:p31ca-user-sentinel"] },
+  "home-triper-mesh-integrity": { title: "TRIPER: mesh-integrity", cwd: repoRoot, cmd: "npm", args: ["run", "test:triper:mesh-integrity"] },
+  "home-triper-systems-integrity": { title: "TRIPER: systems-integrity", cwd: repoRoot, cmd: "npm", args: ["run", "test:triper:systems-integrity"] },
+
+  // —— Protocol dashboard (unified view)
+  "home-protocol-status": {
+    title: "protocol:status (unified dashboard — TRIPER + launch + verification + tiers)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "protocol:status"],
+  },
+  "home-check-core": {
+    title: "check:core (12 essential gates — 30s)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "check:core"],
+  },
+  "home-check-mesh": {
+    title: "check:mesh (8 mesh gates — 15s)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "check:mesh"],
+  },
+  "home-check-content": {
+    title: "check:content (9 content gates — 10s)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "check:content"],
+  },
+  "home-check-delta": {
+    title: "check:delta (only changed files — git diff)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "check:delta"],
+  },
+  "home-verify-protocol-registry": {
+    title: "verify:protocol-registry (validate p31-protocol-registry.json)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "verify:protocol-registry"],
+  },
 
   // —— CI-shaped
   "home-release-check": {
@@ -1017,6 +1058,21 @@ export const SECTIONS_RAW = [
     ],
   },
   {
+    id: "protocol",
+    title: "Protocol · unified dashboard",
+    ids: [
+      "home-protocol-status",
+      "home-triper-status",
+      "home-triper-cert",
+      "home-triper-full",
+      "home-check-core",
+      "home-check-mesh",
+      "home-check-content",
+      "home-check-delta",
+      "home-verify-protocol-registry",
+    ],
+  },
+  {
     id: "ci",
     title: "CI & full gates",
     ids: [
@@ -1100,7 +1156,7 @@ export const SECTIONS_RAW = [
 ];
 
 /** Calm lane — essentials only when the UI is locked down. */
-export const ESSENTIAL_ACTION_IDS = ["home-doctor", "home-verify", "home-connection"];
+export const ESSENTIAL_ACTION_IDS = ["home-doctor", "home-verify", "home-connection", "home-protocol-status"];
 
 export function filterSections(hasA, hasP) {
   return SECTIONS_RAW.map((sec) => {

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "kilo-precommit",
+  "version": "1.0.0",
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run alignment:pre-commit"
+    }
+  }
+}

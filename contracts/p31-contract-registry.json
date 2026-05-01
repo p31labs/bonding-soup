@@ -1,7 +1,7 @@
 {
   "schema": "p31.contractRegistry/1.0.0",
   "version": "1.0.0",
-  "generatedAt": "2026-05-01T12:56:14.315Z",
+  "generatedAt": "2026-05-01T15:35:50.343Z",
   "builder": {
     "uiPath": "/contract-builder.html",
     "shortPath": "/contracts",
@@ -10,7 +10,7 @@
     "smartSuite": "SMART",
     "smartSuiteExpanded": "Sovereign · Manifest · Access · Root · Treasury"
   },
-  "count": 42,
+  "count": 43,
   "contracts": [
     {
       "id": "p31-passport-anchor-pact-fingerprint",
@@ -356,6 +356,17 @@
       "optional": false
     },
     {
+      "id": "p31-protocol-registry",
+      "path": "p31-protocol-registry.json",
+      "role": "p31.protocolRegistry/1.0.0 — unified source for TRIPER, launch readiness, verification tiers; verify:protocol-registry",
+      "schemas": [
+        "p31.protocolRegistry/1.0.0"
+      ],
+      "primarySchema": "p31.protocolRegistry/1.0.0",
+      "verifyHints": [],
+      "optional": false
+    },
+    {
       "id": "p31-public-voice-guardrails-json",
       "path": "docs/p31-public-voice-guardrails.json",
       "role": "p31.publicVoiceGuardrails/1.0.0 — watched paths + regex guardrails for verify:public-voice (pairs docs/PUBLIC-VOICE.md)",
@@ -548,7 +559,7 @@
     "solidity": "0.8.24",
     "package": "packages/p31-sovereign-chain",
     "verifyScript": "verify:sovereign-chain",
-    "generatedAt": "2026-05-01T12:56:14.284Z",
+    "generatedAt": "2026-05-01T15:35:50.302Z",
     "contracts": [
       {
         "letter": "S",

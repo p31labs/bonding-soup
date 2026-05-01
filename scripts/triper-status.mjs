@@ -18,7 +18,7 @@ const suiteFilter = (() => {
   return idx !== -1 ? process.argv[idx + 1] : null;
 })();
 
-const SUITES = ["bonding", "cars", "personal", "hub", "mesh", "simplex", "email", "epcp", "geodesic"];
+const SUITES = ["bonding", "cars", "personal", "hub", "mesh", "simplex", "email", "epcp", "geodesic", "p31ca-user-sentinel", "mesh-integrity", "systems-integrity"];
 
 const ANSI = {
   green: "\x1b[32m",

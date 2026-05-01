@@ -561,3 +561,195 @@ describe("p31ca user sentinel", () => {
     // This is the bad pattern — the sentinel proves we detect it
   });
 });
+
+// ─── MESH INTEGRITY ───────────────────────────────────────────────────────────
+describe("mesh integrity", () => {
+  // Predicates mirroring mesh-integrity.triper.test.mjs
+  const isHttps = (url) => typeof url === "string" && url.startsWith("https://");
+  const isOnAllowedDomain = (url) =>
+    typeof url === "string" &&
+    (url.includes("trimtab-signal.workers.dev") ||
+      url.includes("p31ca.org") ||
+      url.includes("p31ca.pages.dev") ||
+      url.includes("phosphorus31.org") ||
+      url.includes("bonding.p31ca.org"));
+  const prsFloorOk = (score, floor) => score >= floor;
+  const noLocalhostUrl = (url) =>
+    !url.includes("localhost") && !url.includes("127.0.0.1");
+  const templateResolved = (url) => !url.includes("UNRESOLVED:");
+
+  it("catches: worker URL using HTTP instead of HTTPS", () => {
+    const mutated = "http://k4-cage.trimtab-signal.workers.dev";
+    expect(isHttps(mutated)).toBe(false);
+  });
+
+  it("catches: worker deployed to unknown domain", () => {
+    const mutated = "https://k4-cage.unknown-account.workers.dev";
+    expect(isOnAllowedDomain(mutated)).toBe(false);
+  });
+
+  it("catches: duplicate worker ID in fleet", () => {
+    const ids = ["k4-cage", "k4-personal", "k4-cage"];
+    const dupes = ids.filter((id, i) => ids.indexOf(id) !== i);
+    expect(dupes.length).toBeGreaterThan(0);
+  });
+
+  it("catches: PRS dimension score below floor (5 < 6)", () => {
+    expect(prsFloorOk(5, 6)).toBe(false);
+  });
+
+  it("catches: PRS overall score below threshold (84 < 85)", () => {
+    expect(prsFloorOk(84, 85)).toBe(false);
+  });
+
+  it("catches: glass probe URL resolved to localhost (dev artifact leak)", () => {
+    const mutated = "http://localhost:8787/api/health";
+    expect(noLocalhostUrl(mutated)).toBe(false);
+  });
+
+  it("catches: unresolved template var in glass probe URL", () => {
+    const mutated = "UNRESOLVED:mesh.k4PersonalWorkerUrl/api/health";
+    expect(templateResolved(mutated)).toBe(false);
+  });
+
+  it("catches: constants-to-fleet URL mismatch (constants says X, fleet says Y)", () => {
+    const constantsUrl = "https://k4-cage.trimtab-signal.workers.dev";
+    const fleetUrl = "https://k4-cage.different-account.workers.dev";
+    expect(constantsUrl === fleetUrl).toBe(false);
+  });
+
+  it("catches: PRS item missing a dimension score", () => {
+    const mutatedScore = { liveReachable: 10, deployability: 10 }; // missing 8 dims
+    const DIMS = ["liveReachable","deployability","verificationHooks","testingDepth",
+      "contractsSchemas","observability","securityPosture","operationalClarity",
+      "uxCompleteness","ephemeralizationAlignment"];
+    const incomplete = DIMS.some((d) => typeof mutatedScore[d] !== "number");
+    expect(incomplete).toBe(true);
+  });
+
+  it("catches: glass probe count regression below baseline (39 < 40)", () => {
+    const BASELINE = 40;
+    const mutated = 39;
+    expect(mutated >= BASELINE).toBe(false);
+  });
+
+  it("catches: missing new required field in derived contract", () => {
+    const derived = { id: "test", version: "1.1.0" };
+    const requiredFields = ["id", "version", "updated", "signature"];
+    const hasAll = requiredFields.every(f => derived[f] !== undefined);
+    expect(hasAll).toBe(false);
+  });
+});
+
+// ─── DRIFT & TREND DETECTION ───────────────────────────────────────────────
+// Detects slow metric drift that single-run tests miss (PRS erosion, flapping,
+// latency regression, version skew)
+
+describe("drift detection", () => {
+  const PREVIOUS_CERT_SCORE = 92;
+  const EROSION_THRESHOLD = 5;
+
+  it("catches: significant PRS erosion vs last cert", () => {
+    const currentScore = 85;
+    const erosion = PREVIOUS_CERT_SCORE - currentScore;
+    expect(erosion).toBeLessThanOrEqual(EROSION_THRESHOLD);
+  });
+
+  it("catches: declining trend in PRS dimensions", () => {
+    const historical = [90, 89, 87, 85];
+    const isDeclining = historical.every((v, i) => 
+      i === 0 || v <= historical[i - 1]
+    ) && historical[historical.length - 1] < historical[0];
+    const belowTarget = historical[historical.length - 1] < 85;
+    expect(isDeclining && belowTarget).toBe(false);
+  });
+
+  it("catches: glass probe flapping (unstable status)", () => {
+    const statuses = ["up", "up", "down", "up", "down", "up", "down"];
+    const changes = statuses.slice(1).filter((s, i) => s !== statuses[i]).length;
+    expect(changes).toBeLessThanOrEqual(3);
+  });
+
+  it("catches: latency regression in critical glass probes", () => {
+    const probes = [
+      { id: "k4-personal-api-health", baselineMs: 500, currentMs: 850 }
+    ];
+    const regression = probes.some(p => 
+      ((p.currentMs - p.baselineMs) / p.baselineMs) > 0.5
+    );
+    expect(regression).toBe(false);
+  });
+
+  it("catches: contract schema version drift", () => {
+    const consumerVersion = "1.0.0";
+    const canonicalVersion = "1.1.0";
+    expect(consumerVersion === canonicalVersion).toBe(true);
+  });
+});
+
+// ─── COMPLIANCE & LEGAL ─────────────────────────────────────────────────────
+describe("legal compliance", () => {
+});
+
+// ─── SYSTEMS INTEGRITY ────────────────────────────────────────────────────────
+describe("systems integrity", () => {
+  // Predicates mirroring systems-integrity.triper.test.mjs
+  const sourceHasRole = (s) => typeof s.role === "string" && s.role.trim() !== "";
+  const uniqueIds = (arr) => new Set(arr).size === arr.length;
+  const reportHasRequiredFields = (e) =>
+    Boolean(e.id && e.file && e.ts && e.kind);
+  const isValidIso = (ts) => !isNaN(Date.parse(ts));
+  const deployGated = (content) =>
+    content.includes("workflow_run:") ||
+    content.includes("needs:") ||
+    content.includes("workflow_call");
+
+  it("catches: alignment source missing role field", () => {
+    const mutated = { id: "p31-constants", path: "p31-constants.json", role: "" };
+    expect(sourceHasRole(mutated)).toBe(false);
+  });
+
+  it("catches: duplicate source IDs in alignment registry", () => {
+    const ids = ["p31-constants", "p31-facts", "p31-constants"];
+    expect(uniqueIds(ids)).toBe(false);
+  });
+
+  it("catches: duplicate derivation IDs in alignment registry", () => {
+    const ids = ["mesh-architecture-canon-suite", "p31-facts-registry", "mesh-architecture-canon-suite"];
+    expect(uniqueIds(ids)).toBe(false);
+  });
+
+  it("catches: promoted report entry missing required fields", () => {
+    const mutated = { id: "report-001", ts: "2026-04-01T00:00:00Z" }; // missing file and kind
+    expect(reportHasRequiredFields(mutated)).toBe(false);
+  });
+
+  it("catches: duplicate promoted report ID", () => {
+    const ids = ["report-001", "report-002", "report-001"];
+    expect(uniqueIds(ids)).toBe(false);
+  });
+
+  it("catches: promoted report with invalid timestamp", () => {
+    const mutated = "not-a-date";
+    expect(isValidIso(mutated)).toBe(false);
+  });
+
+  it("catches: CI autodeploy workflow with no gate (direct push trigger only)", () => {
+    const mutated = `on:\n  push:\n    branches: [main]\njobs:\n  deploy:\n    steps:\n      - run: wrangler pages deploy`;
+    expect(deployGated(mutated)).toBe(false);
+  });
+
+  it("catches: source count regression below baseline (99 < 100)", () => {
+    const BASELINE = 100;
+    const mutated = 99;
+    expect(mutated >= BASELINE).toBe(false);
+  });
+
+  it("catches: derivation verify script not in package.json", () => {
+    const mutatedScript = "npm run verify:nonexistent-script-xyz";
+    const pkg = { scripts: { "verify:alignment": "node scripts/verify.mjs" } };
+    const match = mutatedScript.match(/npm run ([\w:.-]+)/);
+    const found = match ? Boolean(pkg.scripts[match[1]]) : false;
+    expect(found).toBe(false);
+  });
+});

@@ -1,0 +1,139 @@
+{
+  "schema": "p31.convergence/1.0.0",
+  "version": "1.0.0",
+  "updated": "2026-05-01",
+  "description": "Parallel work tracks converging toward market launch. Each path advances independently with defined synchronization milestones.",
+  "target": {
+    "name": "P31 Market Launch",
+    "date": "2026-06-15",
+    "hardDeadline": false,
+    "note": "NLnet deadline June 1 creates effective hard constraint"
+  },
+  "paths": [
+    {
+      "id": "grants",
+      "name": "Grants & Funding",
+      "description": "Capital acquisition for sustainability",
+      "owner": "operator",
+      "convergesAt": ["M1", "M3"],
+      "workItems": [
+        {"id": "nlnet-draft", "title": "NLnet NGI Zero application", "status": "in_progress", "blocking": false, "due": "2026-05-25"},
+        {"id": "nlnet-submit", "title": "Submit NLnet application", "status": "pending", "blocking": true, "due": "2026-06-01"},
+        {"id": "asan-prep", "title": "ASAN Disability Justice prep", "status": "ready", "blocking": false, "due": "2026-05-14"},
+        {"id": "asan-submit", "title": "Submit ASAN application", "status": "pending", "blocking": false, "due": "2026-05-20"},
+        {"id": "stimpunks-blockers", "title": "Resolve Stimpunks blockers (patent/proto)", "status": "blocked", "blocking": false, "dependsOn": ["provisional-patent-filed", "hardware-prototype"], "due": "2026-06-01"}
+      ],
+      "commands": {
+        "status": "npm run grant:status",
+        "draft": "npm run grant:draft -- --target nlnet-ngi-zero-commons",
+        "check": "npm run office:check"
+      }
+    },
+    {
+      "id": "technical",
+      "name": "Technical & Mesh",
+      "description": "Infrastructure certification and readiness",
+      "owner": "p31-mechanic + CI",
+      "convergesAt": ["M2", "M3"],
+      "workItems": [
+        {"id": "triper-cert", "title": "TRIPER full certification", "status": "in_progress", "blocking": true, "due": "2026-05-10"},
+        {"id": "mesh-live", "title": "K4 mesh live verification", "status": "ready", "blocking": true, "due": "2026-05-15"},
+        {"id": "mutation-sentinels", "title": "Mutation sentinels passing", "status": "in_progress", "blocking": false, "due": "2026-05-08"},
+        {"id": "security-check", "title": "p31ca security:check", "status": "ready", "blocking": true, "due": "2026-05-20"},
+        {"id": "worker-allowlist", "title": "Worker allowlist verified", "status": "ready", "blocking": false, "due": "2026-05-15"},
+        {"id": "github-org-sync", "title": "GitHub org metadata in sync", "status": "in_progress", "blocking": false, "auto": true, "due": "2026-05-10"},
+        {"id": "foundry-rag-index", "title": "Document Foundry RAG indexed", "status": "ready", "blocking": false, "auto": true, "due": "2026-05-15"}
+      ],
+      "commands": {
+        "triper": "npm run triper:full",
+        "mesh": "npm run verify:mesh",
+        "status": "npm run protocol:status",
+        "github-diff": "npm run github:org:diff:summary",
+        "rag-index": "npm run foundry:rag:index"
+      }
+    },
+    {
+      "id": "org",
+      "name": "Org & Compliance",
+      "description": "Legal entity maintenance and filings",
+      "owner": "operator + p31-scribe",
+      "convergesAt": ["M1", "M3"],
+      "workItems": [
+        {"id": "ga-sos-2027", "title": "GA SOS annual registration", "status": "pending", "blocking": false, "due": "2027-04-01", "warning": "2027-02-01"},
+        {"id": "irs-990-prep", "title": "IRS Form 990 prep (first filing)", "status": "pending", "blocking": false, "due": "2027-05-15"},
+        {"id": "board-notice", "title": "Annual board meeting notice", "status": "ready", "blocking": false, "due": "2026-05-30"},
+        {"id": "coi-forms", "title": "Conflict of Interest forms", "status": "ready", "blocking": false, "due": "2026-06-01"},
+        {"id": "501c3-approval", "title": "501(c)(3) determination received", "status": "pending", "blocking": false, "note": " IRS timeline 3-6 months from April 2026 filing", "due": "2026-10-01"},
+        {"id": "sentinel-active", "title": "Compliance sentinel active (SIMPLEX alerts)", "status": "ready", "blocking": false, "auto": true, "due": "2026-05-01"}
+      ],
+      "commands": {
+        "check": "npm run office:check",
+        "notice": "npm run office:notice",
+        "coi": "npm run office:coi",
+        "sentinel": "npm run compliance:sentinel"
+      }
+    },
+    {
+      "id": "launch",
+      "name": "Launch & Market",
+      "description": "Public readiness and go-to-market",
+      "owner": "operator",
+      "convergesAt": ["M3"],
+      "workItems": [
+        {"id": "launch-gates", "title": "10/10 launch gates MET", "status": "in_progress", "blocking": true, "current": "8/10", "due": "2026-06-10"},
+        {"id": "public-voice", "title": "Public voice verification", "status": "ready", "blocking": false, "due": "2026-05-20"},
+        {"id": "glass-box", "title": "Glass box transparency live", "status": "ready", "blocking": false, "due": "2026-05-25"},
+        {"id": "initial-build", "title": "Initial Build campaign ready", "status": "ready", "blocking": true, "due": "2026-06-01"},
+        {"id": "family-pack", "title": "Family Sovereign Pack printed", "status": "met", "blocking": false, "auto": true}
+      ],
+      "commands": {
+        "gates": "npm run launch:check",
+        "auto": "npm run launch:auto-gates",
+        "voice": "npm run verify:public-voice"
+      }
+    }
+  ],
+  "milestones": [
+    {
+      "id": "M1",
+      "name": "Pre-Submission Ready",
+      "date": "2026-05-25",
+      "description": "Grants and org docs ready for submission. NLnet application complete.",
+      "requires": [
+        {"path": "grants", "items": ["nlnet-draft"]},
+        {"path": "org", "items": ["board-notice", "coi-forms"]}
+      ],
+      "gateCommand": "npm run converge:m1"
+    },
+    {
+      "id": "M2",
+      "name": "Technical Certification",
+      "date": "2026-05-15",
+      "description": "All MVP TRIPER certified, mesh live, security verified.",
+      "requires": [
+        {"path": "technical", "items": ["triper-cert", "mesh-live"]}
+      ],
+      "gateCommand": "npm run converge:m2"
+    },
+    {
+      "id": "M3",
+      "name": "Public Launch",
+      "date": "2026-06-15",
+      "description": "All paths converge. Market launch executed with full readiness.",
+      "requires": [
+        {"path": "grants", "items": ["nlnet-submit"]},
+        {"path": "technical", "items": ["security-check"]},
+        {"path": "org", "items": []},
+        {"path": "launch", "items": ["launch-gates", "initial-build"]}
+      ],
+      "gateCommand": "npm run converge:m3",
+      "celebration": "🎉 P31 Labs market launch complete"
+    }
+  ],
+  "convergenceRules": [
+    "Paths advance independently between milestones",
+    "Blocking items must resolve before convergence",
+    "Auto-gates run daily via CI; human gates need operator review",
+    "Spoon deficit protocol: if operator health critical, org/launch paths pause, grants/technical continue via automation"
+  ]
+}

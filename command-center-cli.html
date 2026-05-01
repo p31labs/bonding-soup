@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P31 Command Center CLI</title>
+  <link rel="icon" type="image/png" href="/favicon.png" sizes="192x192">
+  <link rel="shortcut icon" href="/favicon.png">
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a25;
+      --accent-primary: #6366f1;
+      --accent-success: #22c55e;
+      --accent-warning: #f59e0b;
+      --accent-danger: #ef4444;
+      --accent-info: #3b82f6;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border: #2d2d3d;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
+      --font-sans: system-ui, -apple-system, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent-primary), #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-left: auto;
+    }
+
+    .nav-tab {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .nav-tab:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+    .nav-tab.active { color: var(--accent-primary); background: rgba(99, 102, 241, 0.1); }
+
+    /* Main Layout */
+    .main {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 1px;
+      background: var(--border);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: var(--bg-secondary);
+      padding: 1rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .quick-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .stat-box {
+      background: var(--bg-tertiary);
+      padding: 0.75rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .convergence-mini {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .path-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .path-item:last-child { border-bottom: none; }
+
+    .path-name { font-size: 0.875rem; }
+
+    .path-progress {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      background: var(--bg-primary);
+    }
+
+    .path-complete { color: var(--accent-success); }
+    .path-progressing { color: var(--accent-warning); }
+    .path-blocked { color: var(--accent-danger); }
+
+    /* Command Panel */
+    .command-panel {
+      background: var(--bg-secondary);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .command-categories {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+
+    .category-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .category-btn:hover {
+      border-color: var(--accent-primary);
+      color: var(--text-primary);
+    }
+
+    .category-btn.active {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: white;
+    }
+
+    .command-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 0.75rem;
+      padding: 1rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .command-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .command-card:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+    }
+
+    .command-card.running {
+      border-color: var(--accent-warning);
+      animation: pulse 2s infinite;
+    }
+
+    .command-card.success { border-color: var(--accent-success); }
+    .command-card.error { border-color: var(--accent-danger); }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+      50% { box-shadow: 0 0 0 4px rgba(245, 158, 11, 0); }
+    }
+
+    .command-title {
+      font-weight: 600;
+      font-size: 0.9375rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .command-desc {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .command-meta {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      font-size: 0.75rem;
+    }
+
+    .tag {
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      background: var(--bg-primary);
+      color: var(--text-muted);
+    }
+
+    .tag.slow { color: var(--accent-warning); }
+    .tag.network { color: var(--accent-info); }
+    .tag.hitl { color: var(--accent-primary); }
+
+    .status-indicator {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+    }
+
+    .status-indicator.running { background: var(--accent-warning); animation: blink 1s infinite; }
+    .status-indicator.success { background: var(--accent-success); }
+    .status-indicator.error { background: var(--accent-danger); }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Terminal Output */
+    .terminal-panel {
+      background: var(--bg-primary);
+      border-top: 1px solid var(--border);
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .terminal-title {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .terminal-actions {
+      margin-left: auto;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .terminal-btn {
+      padding: 0.25rem 0.75rem;
+      border: 1px solid var(--border);
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .terminal-btn:hover { color: var(--text-primary); }
+
+    .terminal-output {
+      flex: 1;
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      color: var(--text-secondary);
+    }
+
+    .terminal-line { margin: 0.125rem 0; }
+    .terminal-line.stdout { color: var(--text-primary); }
+    .terminal-line.stderr { color: var(--accent-danger); }
+    .terminal-line.info { color: var(--accent-info); }
+    .terminal-line.success { color: var(--accent-success); }
+    .terminal-line.warning { color: var(--accent-warning); }
+
+    .terminal-input-line {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .terminal-prompt {
+      font-family: var(--font-mono);
+      color: var(--accent-success);
+      font-weight: 600;
+    }
+
+    .terminal-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      outline: none;
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .fab {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: none;
+      background: var(--accent-primary);
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fab:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4); }
+    .fab.success { background: var(--accent-success); }
+    .fab.warning { background: var(--accent-warning); }
+
+    /* Toast Notifications */
+    .toast-container {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 200;
+    }
+
+    .toast {
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 300px;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .toast.success { border-color: var(--accent-success); }
+    .toast.error { border-color: var(--accent-danger); }
+    .toast.warning { border-color: var(--accent-warning); }
+
+    .toast-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .toast.success .toast-icon { background: var(--accent-success); color: white; }
+    .toast.error .toast-icon { background: var(--accent-danger); color: white; }
+    .toast.warning .toast-icon { background: var(--accent-warning); color: black; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .main { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .command-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">P31 ▲ COMMAND</div>
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-view="commands">Commands</button>
+      <button class="nav-tab" data-view="convergence">Convergence</button>
+      <button class="nav-tab" data-view="dashboard">Dashboard</button>
+      <button class="nav-tab" data-view="logs">Logs</button>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <div class="main">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div>
+        <div class="section-title">System Status</div>
+        <div class="quick-stats">
+          <div class="stat-box">
+            <div class="stat-value" id="stat-grants">3</div>
+            <div class="stat-label">Grants</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="stat-days">45</div>
+            <div class="stat-label">Days to M3</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Convergence Paths</div>
+        <div class="convergence-mini" id="convergence-mini">
+          <div class="path-item">
+            <span class="path-name">Grants</span>
+            <span class="path-progress path-progressing">20%</span>
+          </div>
+          <div class="path-item">
+            <span class="path-name">Technical</span>
+            <span class="path-progress path-progressing">60%</span>
+          </div>
+          <div class="path-item">
+            <span class="path-name">Org</span>
+            <span class="path-progress path-progressing">40%</span>
+          </div>
+          <div class="path-item">
+            <span class="path-name">Launch</span>
+            <span class="path-progress path-complete">80%</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Quick Links</div>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <a href="#" style="color: var(--accent-primary); text-decoration: none; font-size: 0.875rem;">📄 Grant Status</a>
+          <a href="#" style="color: var(--accent-primary); text-decoration: none; font-size: 0.875rem;">🔧 Protocol Status</a>
+          <a href="#" style="color: var(--accent-primary); text-decoration: none; font-size: 0.875rem;">📋 Office Check</a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Command Panel -->
+    <section class="command-panel">
+      <div class="command-categories" id="command-categories">
+        <button class="category-btn active" data-category="orchestrator">Orchestrator</button>
+        <button class="category-btn" data-category="grants">Grants</button>
+        <button class="category-btn" data-category="protocol">Protocol</button>
+        <button class="category-btn" data-category="office">Office</button>
+        <button class="category-btn" data-category="technical">Technical</button>
+        <button class="category-btn" data-category="convergence">Convergence</button>
+      </div>
+
+      <div class="command-grid" id="command-grid">
+        <!-- Commands populated by JS -->
+      </div>
+    </section>
+  </div>
+
+  <!-- Terminal Output -->
+  <section class="terminal-panel" id="terminal-panel">
+    <div class="terminal-header">
+      <span class="terminal-title">▲ Terminal Output</span>
+      <div class="terminal-actions">
+        <button class="terminal-btn" onclick="clearTerminal()">Clear</button>
+        <button class="terminal-btn" onclick="copyTerminal()">Copy</button>
+        <button class="terminal-btn" onclick="toggleTerminal()">Hide</button>
+      </div>
+    </div>
+    <div class="terminal-output" id="terminal-output">
+      <div class="terminal-line info">P31 Command Center CLI initialized</div>
+      <div class="terminal-line info">Type 'help' for available commands or click a command card above</div>
+    </div>
+    <div class="terminal-input-line">
+      <span class="terminal-prompt">p31@cmd:~$</span>
+      <input type="text" class="terminal-input" id="terminal-input" placeholder="Enter command..." autocomplete="off">
+    </div>
+  </section>
+
+  <!-- Quick Actions FAB -->
+  <div class="quick-actions">
+    <button class="fab" onclick="runQuickCommand('npm run morning:quick')" title="Morning Quick">☀️</button>
+    <button class="fab success" onclick="runQuickCommand('npm run converge')" title="Convergence">🎯</button>
+    <button class="fab warning" onclick="runQuickCommand('npm run dashboard')" title="Dashboard">📊</button>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script>
+    // Command definitions
+    const commands = {
+      orchestrator: [
+        { id: 'morning', title: '🌅 Morning Orchestrator', desc: 'Full daily automation (health → office → tech → grants → convergence)', cmd: 'npm run morning', slow: true, network: true },
+        { id: 'morning-quick', title: '⚡ Morning Quick', desc: 'Light health check + convergence (2 min)', cmd: 'npm run morning:quick' },
+        { id: 'morning-spoons', title: '🥄 Spoon-Deficit Mode', desc: 'Health-first minimal automation', cmd: 'npm run morning:spoons' },
+        { id: 'launch-rehearsal', title: '🎭 Launch Rehearsal', desc: 'Full M3 convergence dry-run', cmd: 'npm run launch:rehearsal', slow: true },
+      ],
+      grants: [
+        { id: 'grant-status', title: '📊 Grant Status', desc: 'View active opportunities + deadlines', cmd: 'npm run grant:status' },
+        { id: 'grant-draft-nlnet', title: '📝 Draft NLnet (€15K)', desc: 'Auto-draft NLnet application from corpus', cmd: 'npm run grant:draft -- --target nlnet-ngi-zero-commons', hitl: true },
+        { id: 'grant-draft-asan', title: '📝 Draft ASAN ($6.25K)', desc: 'Auto-draft ASAN with personal voice', cmd: 'npm run grant:draft -- --target asan-disability-justice --voice personal', hitl: true },
+        { id: 'grant-scaffold', title: '📋 Grant Scaffold', desc: 'Create new grant skeleton from template', cmd: 'npm run grant:scaffold', hitl: true },
+      ],
+      protocol: [
+        { id: 'protocol-status', title: '📈 Protocol Status', desc: 'Unified dashboard (TRIPER + launch + verification)', cmd: 'npm run protocol:status' },
+        { id: 'check-core', title: '🔍 Check Core', desc: '12 essential gates (30s)', cmd: 'npm run check:core' },
+        { id: 'check-mesh', title: '🔍 Check Mesh', desc: '8 mesh gates (15s)', cmd: 'npm run check:mesh' },
+        { id: 'triper-status', title: '✓ TRIPER Status', desc: 'Certification dashboard', cmd: 'npm run triper:status' },
+        { id: 'triper-full', title: '🏁 TRIPER Full', desc: 'Structural + execution certification', cmd: 'npm run triper:full', slow: true },
+      ],
+      office: [
+        { id: 'office-check', title: '📅 Office Check', desc: 'Compliance calendar (deadlines, grants, filings)', cmd: 'npm run office:check' },
+        { id: 'office-check-urgent', title: '🚨 Office Urgent', desc: 'Urgent/overdue deadlines only', cmd: 'npm run office:check:urgent' },
+        { id: 'compliance-sentinel', title: '🔔 Compliance Sentinel', desc: 'Check + dispatch SIMPLEX alerts', cmd: 'npm run compliance:sentinel' },
+        { id: 'office-notice', title: '📄 Board Notice', desc: 'Generate meeting notice', cmd: 'npm run office:notice' },
+        { id: 'office-coi', title: '📄 COI Form', desc: 'Generate Conflict of Interest form', cmd: 'npm run office:coi' },
+      ],
+      technical: [
+        { id: 'verify', title: '✅ Full Verify', desc: 'Complete verification bar', cmd: 'npm run verify', slow: true },
+        { id: 'github-org-diff', title: '📊 GitHub Org Diff', desc: 'Show metadata drift', cmd: 'npm run github:org:diff:summary', network: true },
+        { id: 'github-org-plan', title: '📋 GitHub Org Plan', desc: 'Full dry-run with API', cmd: 'npm run github:org:plan', network: true },
+        { id: 'foundry-rag-index', title: '📚 Foundry RAG Index', desc: 'Build searchable document index', cmd: 'npm run foundry:rag:index' },
+        { id: 'foundry-rag-search', title: '🔎 Foundry Search', desc: 'Search indexed documents', cmd: 'npm run foundry:rag:search', hitl: true },
+      ],
+      convergence: [
+        { id: 'converge', title: '🎯 Full Convergence', desc: 'All paths + milestones', cmd: 'npm run converge' },
+        { id: 'converge-grants', title: '💰 Converge Grants', desc: 'Funding path only', cmd: 'npm run converge:grants' },
+        { id: 'converge-technical', title: '🔧 Converge Technical', desc: 'TRIPER + mesh path', cmd: 'npm run converge:technical' },
+        { id: 'converge-org', title: '📋 Converge Org', desc: 'Compliance path', cmd: 'npm run converge:org' },
+        { id: 'converge-m3', title: '🚀 Converge M3', desc: 'Public launch gate check', cmd: 'npm run converge:m3', hitl: true },
+      ],
+    };
+
+    let activeCategory = 'orchestrator';
+    let runningCommands = new Set();
+
+    // Render commands
+    function renderCommands(category) {
+      const grid = document.getElementById('command-grid');
+      const cmds = commands[category] || [];
+      
+      grid.innerHTML = cmds.map(cmd => `
+        <div class="command-card ${runningCommands.has(cmd.id) ? 'running' : ''}" 
+             data-cmd="${cmd.id}"
+             onclick="runCommand('${cmd.id}')">
+          <div class="status-indicator ${runningCommands.has(cmd.id) ? 'running' : ''}"></div>
+          <div class="command-title">${cmd.title}</div>
+          <div class="command-desc">${cmd.desc}</div>
+          <div class="command-meta">
+            ${cmd.slow ? '<span class="tag slow">SLOW</span>' : ''}
+            ${cmd.network ? '<span class="tag network">NETWORK</span>' : ''}
+            ${cmd.hitl ? '<span class="tag hitl">HITL</span>' : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Category switching
+    document.querySelectorAll('.category-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCategory = btn.dataset.category;
+        renderCommands(activeCategory);
+      });
+    });
+
+    // Run command
+    async function runCommand(cmdId) {
+      const allCmds = Object.values(commands).flat();
+      const cmd = allCmds.find(c => c.id === cmdId);
+      if (!cmd) return;
+
+      // Confirm if HITL
+      if (cmd.hitl && !confirm(`${cmd.title}\n\n${cmd.desc}\n\nContinue?`)) return;
+
+      // Mark as running
+      runningCommands.add(cmdId);
+      renderCommands(activeCategory);
+      
+      // Add to terminal
+      addTerminalLine(`$ ${cmd.cmd}`, 'info');
+      addTerminalLine('Running...', 'info');
+      showToast('Running: ' + cmd.title, 'warning');
+
+      // Simulate execution (in real implementation, this would call the backend)
+      setTimeout(() => {
+        runningCommands.delete(cmdId);
+        renderCommands(activeCategory);
+        addTerminalLine(`✓ ${cmd.title} completed`, 'success');
+        showToast(`${cmd.title} completed`, 'success');
+      }, cmd.slow ? 5000 : 2000);
+    }
+
+    function runQuickCommand(cmd) {
+      addTerminalLine(`$ ${cmd}`, 'info');
+      addTerminalLine('Running quick command...', 'info');
+      
+      setTimeout(() => {
+        addTerminalLine('✓ Command completed', 'success');
+        showToast('Command completed', 'success');
+      }, 1500);
+    }
+
+    // Terminal functions
+    function addTerminalLine(text, type = 'stdout') {
+      const output = document.getElementById('terminal-output');
+      const line = document.createElement('div');
+      line.className = `terminal-line ${type}`;
+      line.textContent = text;
+      output.appendChild(line);
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function clearTerminal() {
+      document.getElementById('terminal-output').innerHTML = 
+        '<div class="terminal-line info">Terminal cleared</div>';
+    }
+
+    function copyTerminal() {
+      const output = document.getElementById('terminal-output').innerText;
+      navigator.clipboard.writeText(output);
+      showToast('Terminal output copied', 'success');
+    }
+
+    function toggleTerminal() {
+      const panel = document.getElementById('terminal-panel');
+      panel.style.display = panel.style.display === 'none' ? 'flex' : 'none';
+    }
+
+    // Terminal input
+    document.getElementById('terminal-input').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const input = e.target.value.trim();
+        if (input) {
+          addTerminalLine(`$ ${input}`, 'info');
+          handleCommand(input);
+          e.target.value = '';
+        }
+      }
+    });
+
+    function handleCommand(input) {
+      const parts = input.split(' ');
+      const cmd = parts[0].toLowerCase();
+      
+      switch(cmd) {
+        case 'help':
+          addTerminalLine('Available commands:', 'info');
+          addTerminalLine('  help        Show this help', 'stdout');
+          addTerminalLine('  clear       Clear terminal', 'stdout');
+          addTerminalLine('  status      Show system status', 'stdout');
+          addTerminalLine('  converge    Run convergence check', 'stdout');
+          addTerminalLine('  morning     Run morning orchestrator', 'stdout');
+          break;
+        case 'clear':
+          clearTerminal();
+          break;
+        case 'status':
+          addTerminalLine('System Status:', 'info');
+          addTerminalLine('  Grants: 3 active (NLnet, ASAN, Stimpunks)', 'stdout');
+          addTerminalLine('  TRIPER: 60% complete', 'stdout');
+          addTerminalLine('  M3 Launch: 45 days', 'stdout');
+          break;
+        default:
+          addTerminalLine(`Command not found: ${cmd}. Type 'help' for available commands.`, 'stderr');
+      }
+    }
+
+    // Toast notifications
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `
+        <div class="toast-icon">${type === 'success' ? '✓' : type === 'error' ? '✗' : '!'}</div>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'slideIn 0.3s ease reverse';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    // Nav tabs
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    // Initialize
+    renderCommands('orchestrator');
+    showToast('P31 Command Center ready', 'success');
+  </script>
+</body>
+</html>

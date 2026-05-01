@@ -738,6 +738,241 @@ export const ACTIONS = {
     args: ["run", "office:resolution"],
     hitl: true,
   },
+  "home-compliance-sentinel": {
+    title: "compliance:sentinel — Check deadlines + dispatch SIMPLEX alerts",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "compliance:sentinel"],
+    network: true,
+  },
+  "home-compliance-sentinel-dry": {
+    title: "compliance:sentinel:dry — Check only, no SIMPLEX dispatch",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "compliance:sentinel:dry"],
+  },
+
+  // —— Grant automation (auto-drafter)
+  "home-grant-status": {
+    title: "grant:status — View active opportunities + deadlines",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "grant:status"],
+  },
+  "home-grant-draft-nlnet": {
+    title: "grant:draft — NLnet NGI Zero Commons (€15K, due June 1)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "grant:draft", "--", "--target", "nlnet-ngi-zero-commons"],
+    hitl: true,
+    confirm: "Auto-drafts grant from P31 corpus (Zenodo papers + tech docs + constants). Output: docs/grants/auto-drafts/. Requires operator review before submit. Continue?",
+  },
+  "home-grant-draft-asan": {
+    title: "grant:draft — ASAN Disability Justice ($6,250, opens May 15)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "grant:draft", "--", "--target", "asan-disability-justice", "--voice", "personal"],
+    hitl: true,
+    confirm: "Auto-drafts grant with personal voice (AuDHD narrative). Output: docs/grants/auto-drafts/. Requires operator review. Continue?",
+  },
+  "home-grant-draft-stimpunks": {
+    title: "grant:draft — Stimpunks Foundation ($3K, opens June 1)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "grant:draft", "--", "--target", "stimpunks-foundation", "--focus", "hardware"],
+    hitl: true,
+    confirm: "Auto-drafts hardware-focused grant. Checks funding-gated items. Output: docs/grants/auto-drafts/. Continue?",
+  },
+  "home-grant-draft-dry": {
+    title: "grant:draft:dry — Simulate draft generation (no files)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "grant:draft:dry", "--", "--target", "nlnet-ngi-zero-commons"],
+  },
+  "home-grant-scaffold": {
+    title: "grant:scaffold — Create new grant skeleton from template",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "grant:scaffold"],
+    hitl: true,
+  },
+
+  // —— Convergence (parallel paths)
+  "home-converge": {
+    title: "converge — Parallel paths dashboard (grants · technical · org · launch)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "converge"],
+  },
+  "home-converge-grants": {
+    title: "converge:grants — Funding path only",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "converge:grants"],
+  },
+  "home-converge-technical": {
+    title: "converge:technical — TRIPER + mesh certification path",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "converge:technical"],
+  },
+  "home-converge-org": {
+    title: "converge:org — Compliance + filings path",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "converge:org"],
+  },
+  "home-converge-launch": {
+    title: "converge:launch — Market readiness gates path",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "converge:launch"],
+  },
+  "home-converge-m1": {
+    title: "converge:m1 — Pre-submission milestone gate check",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "converge:m1"],
+  },
+  "home-converge-m2": {
+    title: "converge:m2 — Technical certification gate check",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "converge:m2"],
+  },
+  "home-converge-m3": {
+    title: "converge:m3 — Public launch gate check",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "converge:m3"],
+    hitl: true,
+    confirm: "M3 is public launch convergence. All paths must align. Continue?",
+  },
+
+  // —— GitHub org metadata (Tier 3 GOLD)
+  "home-github-org-diff": {
+    title: "github:org:diff — Show metadata drift (repos-metadata.json vs live)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "github:org:diff"],
+    network: true,
+  },
+  "home-github-org-diff-summary": {
+    title: "github:org:diff:summary — Quick drift count only",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "github:org:diff:summary"],
+    network: true,
+  },
+  "home-github-org-plan": {
+    title: "github:org:plan — Full dry-run with API",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "github:org:plan"],
+    network: true,
+  },
+  "home-github-org-valve": {
+    title: "github:org:valve — Check safety valve status",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "github:org:valve"],
+  },
+
+  // —— Document Foundry RAG (Tier 4 GOLD)
+  "home-foundry-rag-index": {
+    title: "foundry:rag:index — Build RAG index from foundry corpus",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "foundry:rag:index"],
+  },
+  "home-foundry-rag-search": {
+    title: "foundry:rag:search — Search indexed documents",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "foundry:rag:search", "--", "K4 mesh architecture"],
+    hitl: true,
+  },
+  "home-foundry-rag-context": {
+    title: "foundry:rag:context — Get context for grant target",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "foundry:rag:context", "--", "--grant", "nlnet-ngi-zero-commons"],
+  },
+
+  // —— Unified Orchestration (ALL AT ONCE)
+  "home-morning": {
+    title: "morning — Full orchestration (health → office → tech → grants → convergence)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "morning"],
+    slow: true,
+    network: true,
+    confirm: "Runs full morning automation across all GOLD tiers. May take 5-10 minutes. Continue?",
+  },
+  "home-morning-quick": {
+    title: "morning:quick — Light check (health + convergence only, 2 min)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "morning:quick"],
+  },
+  "home-morning-spoons": {
+    title: "morning:spoons — Spoon-deficit mode (health-first, minimal load)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "morning:spoons"],
+  },
+  "home-launch-rehearsal": {
+    title: "launch:dryrun — Market launch dry-run (all phases)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "launch:dryrun"],
+    slow: true,
+    network: true,
+    confirm: "Full M3 convergence rehearsal. May take 10-15 minutes. Continue?",
+  },
+  "home-dashboard": {
+    title: "dashboard — Real-time master view (interactive)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "dashboard"],
+  },
+  "home-dashboard-json": {
+    title: "dashboard:json — API output for scripts",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "dashboard:json"],
+  },
+  "home-dashboard-web": {
+    title: "dashboard:web — Generate HTML dashboard",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "dashboard:web"],
+  },
+  "home-green-board": {
+    title: "green-board — All systems status check (45 days to launch)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "green-board"],
+  },
+  "home-green-board-strict": {
+    title: "green-board:strict — Fail if any system not green (CI use)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "green-board:strict"],
+  },
+  "home-launch-rehearsal-grants": {
+    title: "launch:dryrun:grants — Rehearse grants phase only",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "launch:dryrun:grants"],
+  },
+  "home-launch-rehearsal-technical": {
+    title: "launch:dryrun:technical — Rehearse technical phase only",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "launch:dryrun:technical"],
+    slow: true,
+  },
 
   // —— CI-shaped
   "home-release-check": {
@@ -1134,6 +1369,130 @@ export const SECTIONS_RAW = [
     ],
   },
   {
+    id: "grants",
+    title: "Grants · auto-drafter (RAG over P31 corpus)",
+    ids: [
+      "home-grant-status",
+      "home-grant-draft-nlnet",
+      "home-grant-draft-asan",
+      "home-grant-draft-stimpunks",
+      "home-grant-draft-dry",
+      "home-grant-scaffold",
+    ],
+    links: [
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/docs/grants/GRANT-CALENDAR-2026.md",
+        label: "Grant calendar 2026",
+      },
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/docs/FUNDING-GATED-ACTION-ITEMS.md",
+        label: "Funding-gated items",
+      },
+    ],
+  },
+  {
+    id: "github-org",
+    title: "GitHub Org · metadata sync (repos-metadata.json)",
+    ids: [
+      "home-github-org-diff-summary",
+      "home-github-org-diff",
+      "home-github-org-plan",
+      "home-github-org-valve",
+    ],
+    links: [
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/docs/P31-GITHUB-ORG-REPOS.md",
+        label: "GitHub org runbook",
+      },
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/docs/github-org-bundle/repos-metadata.json",
+        label: "repos-metadata.json",
+      },
+    ],
+  },
+  {
+    id: "foundry-rag",
+    title: "Document Foundry · RAG indexing",
+    ids: [
+      "home-foundry-rag-index",
+      "home-foundry-rag-search",
+      "home-foundry-rag-context",
+    ],
+    links: [
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/docs/P31-DOCUMENT-FOUNDRY.md",
+        label: "Document Foundry spec",
+      },
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/packages/p31-foundry/README.md",
+        label: "p31-foundry README",
+      },
+    ],
+  },
+  {
+    id: "orchestrator",
+    title: "Orchestrator · ALL AT ONCE",
+    ids: [
+      "home-morning-quick",
+      "home-morning",
+      "home-morning-spoons",
+      "home-launch-rehearsal-grants",
+      "home-launch-rehearsal-technical",
+      "home-launch-rehearsal",
+    ],
+    links: [
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/.github/workflows/p31-morning-orchestrator.yml",
+        label: "CI: Morning orchestrator",
+      },
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/.github/workflows/p31-launch-rehearsal.yml",
+        label: "CI: Launch rehearsal",
+      },
+    ],
+  },
+  {
+    id: "dashboard",
+    title: "Dashboard · Master View",
+    ids: [
+      "home-green-board",
+      "home-dashboard",
+      "home-green-board-strict",
+      "home-dashboard-json",
+      "home-dashboard-web",
+    ],
+    links: [
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/p31-master-dashboard.html",
+        label: "Web dashboard (generated)",
+      },
+    ],
+  },
+  {
+    id: "convergence",
+    title: "Convergence · parallel paths to market launch",
+    ids: [
+      "home-converge",
+      "home-converge-grants",
+      "home-converge-technical",
+      "home-converge-org",
+      "home-converge-launch",
+      "home-converge-m1",
+      "home-converge-m2",
+      "home-converge-m3",
+    ],
+    links: [
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/docs/P31-PARALLEL-WORK-TRACKS.md",
+        label: "Parallel work tracks doc",
+      },
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/p31-convergence.json",
+        label: "Convergence config",
+      },
+    ],
+  },
+  {
     id: "ci",
     title: "CI & full gates",
     ids: [
@@ -1217,7 +1576,7 @@ export const SECTIONS_RAW = [
 ];
 
 /** Calm lane — essentials only when the UI is locked down. */
-export const ESSENTIAL_ACTION_IDS = ["home-doctor", "home-verify", "home-connection", "home-protocol-status"];
+export const ESSENTIAL_ACTION_IDS = ["home-doctor", "home-verify", "home-connection", "home-green-board"];
 
 export function filterSections(hasA, hasP) {
   return SECTIONS_RAW.map((sec) => {

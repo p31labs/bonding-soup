@@ -91,6 +91,12 @@ const TARGETS = {
     href: `http://${LOCAL.host}:${LOCAL.port.demo}/p31-slicer.html`,
     desc: "browser slicer (Kiri shell + K₄ STL); :8080 if free",
   },
+  cli: {
+    kind: "http",
+    href: `http://${LOCAL.host}:${LOCAL.port.cc}/cli`,
+    desc: "interactive CLI dashboard; :3131 if free",
+  },
+  "cli-dashboard": { alias: "cli" },
 };
 
 /**
@@ -231,7 +237,9 @@ function isCcTarget(name) {
     k === "command-center" ||
     k === "desk" ||
     k === "operator-desk" ||
-    k === "cc-desk"
+    k === "cc-desk" ||
+    k === "cli" ||
+    k === "cli-dashboard"
   );
 }
 

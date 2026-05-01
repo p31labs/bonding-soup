@@ -1,0 +1,82 @@
+name: P31 / Launch Rehearsal
+
+on:
+  schedule:
+    # Run weekly on Sundays (dry-run for upcoming week)
+    - cron: '0 10 * * 0'
+  workflow_dispatch:
+    inputs:
+      phase:
+        description: 'Rehearsal phase'
+        required: false
+        default: ''
+        type: choice
+        options:
+          - ''
+          - grants
+          - technical
+          - org
+          - launch
+          - convergence
+
+jobs:
+  launch-rehearsal:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Launch Rehearsal
+        id: rehearsal
+        run: |
+          PHASE="${{ github.event.inputs.phase }}"
+          if [ -n "$PHASE" ]; then
+            npm run launch:rehearsal -- --phase $PHASE --json > /tmp/rehearsal-report.json
+          else
+            npm run launch:rehearsal -- --json > /tmp/rehearsal-report.json
+          fi
+          cat /tmp/rehearsal-report.json
+        continue-on-error: true
+
+      - name: Evaluate readiness
+        run: |
+          if [ -f /tmp/rehearsal-report.json ]; then
+            STATUS=$(cat /tmp/rehearsal-report.json | jq -r '.overall.status // "UNKNOWN"')
+            echo "Launch rehearsal status: $STATUS"
+            
+            if [ "$STATUS" = "READY" ]; then
+              echo "✅ Market launch is READY"
+            elif [ "$STATUS" = "READY_WITH_MANUAL" ]; then
+              echo "⚠️  READY with manual items - review report"
+            elif [ "$STATUS" = "BLOCKED" ]; then
+              echo "::error::Launch rehearsal BLOCKED - see report for details"
+              exit 2
+            fi
+          fi
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: launch-rehearsal-report
+          path: /tmp/rehearsal-report.json
+          retention-days: 90
+
+      - name: Update convergence dashboard
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          # Could push report to a dashboard location
+          echo "Rehearsal complete - report available in artifacts"

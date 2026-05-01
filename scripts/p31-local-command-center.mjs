@@ -292,6 +292,8 @@ function buildPageHtml(portForUi) {
   <link rel="manifest" href="/manifest.webmanifest" />
   ${hasBondingAppleTouch() ? '<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />' : ""}
   ${fs.existsSync(bondingIcon192) ? '<link rel="icon" type="image/png" sizes="192x192" href="/p31-bonding-icon-192.png" />' : ""}
+  <link rel="icon" type="image/png" href="/favicon.png" sizes="192x192" />
+  <link rel="shortcut icon" href="/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:ital,wght@0,400;0,500&display=swap" rel="stylesheet" />
@@ -342,6 +344,7 @@ function buildPageHtml(portForUi) {
         </div>
         <nav class="cc-header__nav" aria-label="Operator views">
           <a class="cc-header__link" href="/desk">Operator desk</a>
+          <a class="cc-header__link" href="/cli">CLI Dashboard</a>
         </nav>
       </div>
     </div>
@@ -779,6 +782,17 @@ const server = http.createServer((req, res) => {
     res.end(buildPageHtml(boundPort));
     return;
   }
+  if (req.method === "GET" && req.url === "/cli") {
+    const cliPath = path.join(repoRoot, "command-center-cli.html");
+    if (fs.existsSync(cliPath)) {
+      res.writeHead(200, CC_HDR.html);
+      res.end(fs.readFileSync(cliPath, "utf8"));
+    } else {
+      res.writeHead(404, CC_HDR.text);
+      res.end("CLI dashboard not found — run npm run dashboard");
+    }
+    return;
+  }
   const assetBase = req.url && req.url.split("?")[0];
   if (req.method === "GET" && (assetBase === "/desk" || assetBase === "/operator-desk")) {
     res.writeHead(200, CC_HDR.html);
@@ -1045,6 +1059,20 @@ const server = http.createServer((req, res) => {
       return;
     }
     sendAsset(res, req, bondingIcon192, "image/png");
+    return;
+  }
+  if (req.method === "GET" && (assetBase === "/favicon.ico" || assetBase === "/favicon.png")) {
+    const faviconPath = fs.existsSync(path.join(repoRoot, "favicon.ico"))
+      ? path.join(repoRoot, "favicon.ico")
+      : fs.existsSync(path.join(repoRoot, "favicon.png"))
+        ? path.join(repoRoot, "favicon.png")
+        : bondingIcon192;
+    if (!fs.existsSync(faviconPath)) {
+      res.writeHead(204, CC_HDR.noContent);
+      res.end();
+      return;
+    }
+    sendAsset(res, req, faviconPath, "image/png");
     return;
   }
   if (req.method === "GET" && assetBase === "/p31-bonding-icon-512.png") {

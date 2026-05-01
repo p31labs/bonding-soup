@@ -88,6 +88,7 @@ function printHelp() {
       "  " + cyan("hub-diff") + "      p31ca " + dim("hub:diff") + " · needs " + dim("andromeda/"),
       "  " + cyan("command-center") + "  local operator UI (:3131)",
       "  " + cyan("cc") + "            alias for " + cyan("command-center"),
+      "  " + cyan("cli") + "           interactive CLI dashboard — " + dim("p31 open cli"),
       "  " + cyan("open") + "         local demos / passport / lab / cc / desk — " + dim("p31 open -h"),
       "  " + cyan("bookmark") + "      save URL + pulse mesh chime (needs local command center :3131)",
       "  " +

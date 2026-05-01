@@ -1,0 +1,77 @@
+name: P31 / Morning Orchestrator
+
+on:
+  schedule:
+    # Run daily at 08:00 UTC (morning check)
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Orchestrator mode'
+        required: true
+        default: 'quick'
+        type: choice
+        options:
+          - quick
+          - full
+          - spoon-deficit
+
+jobs:
+  morning-orchestrator:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Morning Orchestrator
+        id: orchestrator
+        run: |
+          MODE="${{ github.event.inputs.mode || 'quick' }}"
+          echo "Running orchestrator in $MODE mode"
+          npm run morning -- --$MODE --json > /tmp/orchestrator-report.json
+          cat /tmp/orchestrator-report.json
+        env:
+          P31_MORNING_QUICK: ${{ github.event.inputs.mode == 'quick' && '1' || '' }}
+          P31_SPOON_DEFICIT: ${{ github.event.inputs.mode == 'spoon-deficit' && '1' || '' }}
+        continue-on-error: true
+
+      - name: Check for critical issues
+        run: |
+          EXIT_CODE=${{ steps.orchestrator.outcome == 'success' && '0' || '2' }}
+          if [ -f /tmp/orchestrator-report.json ]; then
+            OVERALL=$(cat /tmp/orchestrator-report.json | jq -r '.overall // "unknown"')
+            if [ "$OVERALL" = "critical" ]; then
+              echo "::error::Morning orchestrator detected CRITICAL issues"
+              exit 2
+            elif [ "$OVERALL" = "attention" ]; then
+              echo "::warning::Morning orchestrator detected ATTENTION items"
+            fi
+          fi
+        continue-on-error: true
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: morning-orchestrator-report
+          path: /tmp/orchestrator-report.json
+          retention-days: 30
+
+      - name: Notify on failure (optional)
+        if: failure()
+        run: |
+          echo "Morning orchestrator failed - check logs"
+          # Could dispatch to SIMPLEX here if webhook configured

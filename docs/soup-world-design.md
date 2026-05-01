@@ -124,7 +124,7 @@ Total JavaScript heap usage must remain under 150MB. Molecule data structures us
 
 ## 9. Era Progression
 
-The Soup is not static; the entire world state evolves through six distinct "Eras" based on cumulative player achievement. The transition between Eras is triggered automatically based on the total historical count of molecules successfully built by the player network, creating a sense of progression and unlocking new atmospheric qualities.
+The Soup is not static; the entire world state evolves through six distinct "Eras" based on cumulative player achievement. The transition between Eras is triggered automatically based on the total historical count of molecules successfully built by the player network, creating a sense of progression and activating new atmospheric qualities.
 
 ### 9.1 Primordial Era (0-5 Molecules)
 The screen is mostly an empty, dark void. Only ambient dust is visible, drifting slowly without purpose. The audio is stark and minimal—just the faintest room tone and occasional electronic clicks. No zones are visually distinct; the world feels unborn, pregnant with possibility but devoid of content. Players experience a sense of potential, where every creation fundamentally alters the emptiness.

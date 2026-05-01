@@ -335,7 +335,7 @@ Success:   Dismiss card, show full-bleed calm confirmation: "You're in. Welcome.
 "One last step — secure the lock."                     [card title, coral]
 
 • Your identity lives on your device, not our servers.
-• Unlocking uses your fingerprint, face, or PIN — nothing you have to remember.
+• Your fingerprint, face, or PIN is all you need — nothing to remember.
 • You can always update this in settings.
 
 [primary button]  "Secure my lock →"

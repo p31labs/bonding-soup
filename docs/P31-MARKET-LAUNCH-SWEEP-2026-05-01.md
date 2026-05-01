@@ -70,7 +70,7 @@ Score: 95/100  ·  Mode: audit  ·  9/10 lanes green
 ```
 Scanned: 127 files across 7 scopes
 Tier-A leaks: 0 (release-clear)
-Tier-B findings: 5 (all deliberate technical vocabulary — "unlock" for child-mesh-unlock gate)
+Tier-B findings: 0 (CWP API-spec docs exempted; prose instances resolved)
 Tier-C: 0
 ```
 
@@ -110,7 +110,7 @@ These require operator action — no script can close them.
 
 Current active sources: Awesome Foundation ($1,000, deliberating) · Stimpunks ($3,000, opens June 1) · Ko-fi (ongoing, target $863 Larmor)
 
-**Highest-value unlocks per dollar:**
+**Highest-value items per dollar:**
 - `p31.dev` backup domain — $12/yr (Ko-fi, low friction)
 - 3D print filament — $5–10 (Ko-fi)
 - Provisional patent #1 (HERALD) — $65 micro-entity (Stimpunks, June)

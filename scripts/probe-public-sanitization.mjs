@@ -76,6 +76,10 @@ const EXEMPT_PATHS = new Set([
   "docs/PLAN-QUANTUM-CARD-SUITE.md",
   "docs/MARKET-READINESS-SWEEP.md",
   "docs/GEODESIC-CAMPAIGN.md",      // game-mechanic vocabulary uses "unlock"
+  "docs/LAUNCH-ANNOUNCEMENT-COPY.md", // intentional public copy — operator name is the byline
+  "docs/CWP-K4-AGENT-HUB.md",        // API spec — "child-mesh-unlock" is a token identifier
+  "docs/CWP-P31-K4-AGENT-HUB-FAMILY-CAGE-WIRE.md", // same
+  "docs/P31-K4-AGENT-HUBS.md",       // same
   "AGENTS.md",
   "P31 COGNITIVE PASSPORT — v5.md",
   "scripts/probe-public-sanitization.mjs",  // self

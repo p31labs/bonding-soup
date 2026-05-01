@@ -249,11 +249,11 @@
       "id": "k4-agent-hub",
       "kind": "worker",
       "label": "k4-agent-hub (K₄ agent worker tetrahedron)",
-      "prsTotal": 89,
+      "prsTotal": 92,
       "tier": "governed-ok",
       "tierPrsUi": "P0",
       "score": {
-        "liveReachable": 7,
+        "liveReachable": 10,
         "deployability": 9,
         "verificationHooks": 10,
         "testingDepth": 9,

@@ -1,215 +1,146 @@
-# P31 Labs — Grant Calendar & Application Guide 2026
-
-**Entity:** P31 Labs, Inc. · EIN 42-1888158 · Georgia nonprofit  
-**501(c)(3) status:** Filed 2026-04-30 (pending IRS determination — language below reflects this)  
-**Last updated:** 2026-04-30  
+# P31 Labs — Grant Pipeline
+## Entity: P31 Labs, Inc. · EIN 42-1888158 · Georgia nonprofit · 501(c)(3) pending
 
 ---
 
-## Immediate priority: send the FERS email today
+## Pipeline at a glance
 
-**File:** `docs/501c3-filing/emails/01-fers-disability-followup.md`  
-**To:** Eric Violette, OCHR Norfolk  
-**Why now:** Separation ~2025-09-30. Filing deadline under 5 CFR §844.201 is ~2026-09-30. Agency processing (SF-3112D + SF-3112E) takes 90+ days. Effective margin expires ~2026-07-01 if email not sent. **154 days remain. Send today.**
+| Grant | Amount | Status |
+|-------|--------|--------|
+| Awesome Foundation | $1,000 | Deliberating — decision imminent |
+| ASAN Teighlor McGee | $6,250 | Portal opens May 15 — apply immediately |
+| Stimpunks Foundation | $3,000 | Opens June 1 — apply immediately on open |
+| NLnet NGI Zero Commons | €15,000 | **Draft ready** (`nlnet-ngi-zero-commons-application.md`) — submit before June 1 |
+| Georgia Tools for Life | Partnership | Follow-up sent — await reply from Hunter McFeron |
 
-```bash
-# draft is ready — copy and send from will@p31ca.org
-cat docs/501c3-filing/emails/01-fers-disability-followup.md
+**Total reachable: ~$10,250 + €15,000**
+
+---
+
+## Operator actions (no code required)
+
+**Send now (before anything else):**
+```
+docs/501c3-filing/emails/01-fers-disability-followup.md  → Eric Violette, OCHR Norfolk
+docs/501c3-filing/emails/02-hcb-fiscal-sponsorship-withdrawal.md  → HCB
+docs/501c3-filing/emails/03-grant-april-2026-followup.md  → Awesome Foundation
+docs/501c3-filing/emails/04-georgia-tools-for-life-followup.md    → Hunter McFeron
 ```
 
----
+**NLnet — one thing needed before submitting:**
+The draft at `docs/grants/nlnet-ngi-zero-commons-application.md` is structurally complete. The "Motivation" section is written from the operator's perspective but I wrote it — read it and change anything that doesn't sound like you. NLnet reviewers can tell. Especially the paragraph starting "I built this because I needed it." If that's not your voice, rewrite it.
 
-## Grant pipeline at a glance
+**ASAN (opens May 15):**
+Read `docs/grants/GRANT-CALENDAR-2026-asan.md` when the portal goes live. The talking points are in this doc. The 500-word narrative needs to come from you — the AuDHD + hypoparathyroidism angle only works if it's your words.
 
-| Grant | Amount | Opens | Deadline | Status |
-|-------|--------|-------|----------|--------|
-| Awesome Foundation | $1,000 | Active | April 2026 deliberation | **Pending decision** |
-| ASAN Teighlor McGee | $6,250 | May 15, 2026 | July 31, 2026 | Apply May 15 |
-| Stimpunks Foundation | $3,000 | June 1, 2026 | TBD (rolling) | Apply June 1 |
-| NLnet NGI Zero Commons | €5K–€50K | Rolling | **June 1, 2026** | Draft exists — needs rewrite |
-
-Total reachable this window: **~$10,250 + €5K–€50K**
+**Board meeting (this weekend):**
+`docs/board/BOARD-MEETING-001-AGENDA.md` — run through it. After signatures:
+```bash
+npm run launch:check -- legal-counsel-review met --note "Board #001, [date]"
+npm run launch:check -- successor-operator-named met --note "Package stored [method], [date]"
+npm run launch:gate   # should reach 100/100
+```
 
 ---
 
 ## 1. Awesome Foundation — $1,000
 
-**Status:** Application submitted; April 2026 chapter deliberating.
+**Status:** April 2026 deliberation in progress.
 
-**Action:** Wait for decision. If rejected, address reviewer feedback and reapply to a different chapter (chapters are independent; Boston chapter liked accessible-tech projects in 2025).
+**If accepted:** Unrestricted. Priority:
+1. Home Assistant host (~$55) → SENTINEL physical layer
+2. Bangle.js 2 wearable (~$63) → HRV/spoon feed
+3. Kids tablets × 2 ($100 each) → mesh device identity
 
-**If accepted:** Funds are unrestricted. Priority use:
-1. Home Assistant host (~$55, Pi 4 Starter Kit) → enables SENTINEL physical layer
-2. Bangle.js 2 wearable (~$63) → live HRV/spoon feed
-3. Kids tablets for S.J. + W.J. (~$100 each) → mesh device identity, CogPass kids gate
-
-**If rejected before May 15:** Reapply to NYC or Chicago chapter using updated ASAN framing (see Section 2 talking points — the disability-tech angle is stronger now that P31 Labs is a 501(c)(3) filer).
+**If rejected:** Reapply to a different chapter (chapters are fully independent). Use the ASAN framing — the disability-tech angle is stronger now with incorporated nonprofit status.
 
 ---
 
-## 2. ASAN Teighlor McGee Disability Justice Mini-Grant — $6,250
+## 2. NLnet NGI Zero Commons — €15,000
 
-**Opens:** May 15, 2026  
-**Deadline:** July 31, 2026  
-**Org:** Autistic Self Advocacy Network (ASAN)  
-**Focus:** Disability justice, led by/for autistic and disabled people  
-**Amount:** $6,250 (single award, competitive)
+**Hard deadline: June 1.** No extensions.
 
-### Why P31 Labs is a strong fit
+**Draft:** `docs/grants/nlnet-ngi-zero-commons-application.md` — complete and ready except for operator voice review.
 
-- Operator is AuDHD (late diagnosis 2025) — autistic-led organization, not just disability-adjacent
-- Hypoparathyroidism + AuDHD creates a real, documented spoon-management need
-- BONDING / Cognitive Passport tools are built *for* the operator's lived experience, not for a hypothetical user
-- Family cage wire provides communication access for neurodivergent family members
-- Open source, edge-native (no surveillance capitalism data model), accessible by design
-- Mission statement ("Build, Create, Connect") is inherently anti-isolation / anti-institutionalization
+**What the draft funds:** Writing the open k4 protocol specification (wire format, signing vectors, federation handshake, guardian-token gate) so other developers can implement compatible hubs. The code is live at `k4-agent-hub.trimtab-signal.workers.dev`. The spec is what transforms it from running code into commons infrastructure.
 
-### Key talking points
+**Eligibility note:** P31 Labs is a US entity. NGI Zero Commons has funded non-EU applicants before when the work produces commons benefit. Confirm at nlnet.nl/contact before submitting.
 
-1. **Autistic-led:** Operator is late-diagnosed AuDHD. The tools exist because he needed them.
-2. **Assistive by default:** Cognitive Passport is a structured self-advocacy tool. The spoon tracker is not wellness-ware — it's energy management for a person with a chronic calcium disorder + executive dysfunction.
-3. **Anti-surveillance:** No behavioral data leaves the mesh. Cloudflare Workers + Durable Objects, not a third-party SaaS that monetizes disability data.
-4. **Family justice angle:** Case 2025CV936, Camden County. S.J. + W.J. are in the mesh. Communication tools for separated neurodivergent families are not served by existing market.
-5. **Income:** FERS disability retirement pending ($0 income until determination). P31 Labs is currently operating at $0 cost. Grant funds hardware + IP protection that operator cannot self-fund.
-
-### Draft budget ($6,250)
-
-| Line item | Amount | Notes |
-|-----------|--------|-------|
-| Provisional patent × 2 (HERALD + Node One) | $130 | Micro-entity rate, $65 each |
-| Copyright registration (group unpublished) | $65 | Collective works option |
-| WIPO PROOF timestamps (5×) | $110 | Evidence-chain anchoring |
-| DOBE certification (Disability:IN) | $350 | Supplier diversity access |
-| Home Assistant host (Pi 4 Starter) | $55 | SENTINEL physical layer |
-| Bangle.js 2 wearable | $65 | HRV/spoon data feed |
-| Kids tablets × 2 (S.J., W.J.) | $200 | Mesh device identity |
-| Domain backup (p31.dev) | $12 | Redundancy |
-| 3D print filament / prototyping materials | $25 | Node One enclosure |
-| Operator stipend (20 hrs @ $25/hr) | $500 | Time-value of grant writeup + IP filings |
-| Emergency buffer / unforeseen | $4,738 | Larger items if permitted (server, travel) |
-| **Total** | **$6,250** | |
-
-> Note: If ASAN allows stipends, the operator stipend is the most important line — the organization's only cost currently is operator time.
-
-### Application checklist
-
-- [ ] Read ASAN Teighlor McGee 2026 guidelines when they post May 15
-- [ ] Confirm: does it require 501(c)(3) determination letter or will "pending" suffice?
-- [ ] Write 500-word narrative: autistic-led, what BONDING does, why mesh architecture protects disabled users
-- [ ] Attach: IRS CP575E (EIN letter), 1023-EZ filing confirmation (Pay.gov 281TLBGO)
-- [ ] Attach: Articles of Incorporation (GA SOS Control #26082141)
-- [ ] Submit by July 31, 2026
+**Submit at:** nlnet.nl (look for "NGI Zero Commons" on the grants page)
 
 ---
 
-## 3. Stimpunks Foundation — $3,000
+## 3. ASAN Teighlor McGee Disability Justice Mini-Grant — $6,250
 
-**Opens:** June 1, 2026  
-**Amount:** $3,000  
-**Focus:** Neurodivergent-led projects; accessible tech; IP protection; hardware  
-**Website:** stimpunks.org
+**Opens May 15.** Submit immediately.
 
-### Why P31 Labs is a strong fit
+**Why this fits:** Autistic-led org (operator is AuDHD late-diagnosed). Hypoparathyroidism + AuDHD creates a real, documented spoon-management constraint — not a theoretical one. The tools exist because the operator needed them. No surveillance-capitalism data model.
 
-Stimpunks explicitly funds IP filings and hardware BOMs for neurodivergent builders. The `docs/FUNDING-GATED-ACTION-ITEMS.md` checklist maps almost exactly to Stimpunks' stated priorities.
+**Key talking points:**
+- Autistic-led — not adjacent, led
+- BONDING lets separated parents play chemistry with their kids without giving Meta or Google behavioral data on those children
+- Cognitive Passport is a structured self-advocacy tool for interactions with doctors, teachers, courts
+- Guardian-gated minor vertex: kids are in the mesh without holding commercial accounts anywhere
+- Operator is currently at $0 income (FERS pending) — grant funds IP filings + hardware that can't be self-funded
 
-### Targeted line items ($3,000)
+**Budget ($6,250):**
 
-| Line item | Amount |
-|-----------|--------|
-| Provisional patent × 2 (if not covered by ASAN) | $130 |
-| Node One BOM — ESP32-S3 + DRV2605L + LoRa SX1262 + NXP SE050 | ~$80–$120 |
-| Home Assistant host (if not covered by Awesome) | $55 |
-| Kids tablets (if not covered by Awesome) | $200 |
-| Remaining IP + certification costs | ~$500 |
-| Operator development stipend | ~$1,000 |
-| Hardware prototyping + enclosure | ~$200 |
-| **Buffer / specifics TBD on open date** | remaining |
+| Line | Amount |
+|------|--------|
+| Provisional patent × 2 (HERALD + Node One, $65 each) | $130 |
+| Copyright registration (group unpublished works) | $65 |
+| WIPO PROOF timestamps × 5 | $110 |
+| DOBE certification (Disability:IN) | $350 |
+| Home Assistant host (Pi 4 Starter) | $55 |
+| Bangle.js 2 wearable (HRV/spoon feed) | $65 |
+| Kids tablets × 2 (S.J., W.J.) | $200 |
+| Domain backup (p31.dev) | $12 |
+| 3D print filament / prototyping | $25 |
+| Operator stipend (20 hrs × $25) | $500 |
+| Buffer | $4,738 |
+| **Total** | **$6,250** |
 
-> Note: Stimpunks may require an IRS determination letter. If still pending June 1, ask if they accept "pending" status + CP575E. If not, apply and explain timeline; ask to hold the application until determination arrives.
-
-### Application checklist
-
-- [ ] June 1: read 2026 guidelines on stimpunks.org
-- [ ] Confirm 501(c)(3) determination requirement
-- [ ] Prepare: 300–500 word narrative (neurodivergent-led, IP/hardware pipeline)
-- [ ] Prepare: itemized budget
-- [ ] Apply rolling — do not wait for deadline if portal opens June 1
-
----
-
-## 4. NLnet NGI Zero Commons Fund — €5,000–€50,000
-
-**Deadline:** June 1, 2026 (hard cutoff)  
-**Focus:** Open internet infrastructure; commons-based tech; privacy; decentralization  
-**Amount:** €5K–€50K (grants vary; typical first-timer ~€10K–€20K)
-
-### Why P31 Labs is a strong fit
-
-NLnet funds *infrastructure*, not apps. k4-agent-hub is a Cloudflare Workers-native, open-source, decentralized family mesh protocol — exactly the kind of commons infrastructure NLnet supports. The federation dispatch layer + anchor-pact wire protocol could be presented as an open-protocol contribution to decentralized family communication.
-
-### Critical rewrite needed
-
-A draft exists but needs the **operator's voice** — NLnet reviewers can tell when an application was written by an AI assistant without a human's authentic motivation behind it. The narrative must:
-
-1. Say why *you* built this (AuDHD + hypoparathyroidism + separated family — real stakes)
-2. Describe the commons contribution (open Ed25519 dock protocol, open K₄ topology, open family mesh spec — not just a product)
-3. Specify what the grant funds (time to write the open spec document, test vectors, reference implementation hardening)
-4. Not oversell — NLnet reviews technically. The federation dispatch code must be real and visible.
-
-### Rewrite checklist (do this week — deadline June 1)
-
-- [ ] Read existing draft (if saved in `docs/grants/nlnet-draft.md` — if not, write from scratch)
-- [ ] Operator: write 3 paragraphs in your own voice: what you built, why, and what the grant enables
-- [ ] Technical summary: describe k4-agent-hub open protocol surface (anchor-pact, federation dispatch, K₄ topology spec)
-- [ ] Budget: hours × rate for protocol spec documentation + reference implementation + test vectors
-- [ ] Confirm: NLnet requires an EU-reachable entity or co-applicant? (P31 Labs is US; check if acceptable or if partner needed)
-- [ ] Submit via nlnet.nl before June 1 (hard deadline — no late submissions)
+**Before submitting:**
+- [ ] Read 2026 guidelines on asan.org when portal opens
+- [ ] Confirm: "pending" 501(c)(3) acceptable, or determination letter required?
+- [ ] Write 500-word narrative in your voice (talking points above are the skeleton)
+- [ ] Attach: IRS CP575E, Pay.gov confirmation 281TLBGO, GA SOS filing
 
 ---
 
-## 5. After IRS determination (ETA: ~Q4 2026)
+## 4. Stimpunks Foundation — $3,000
 
-When the 501(c)(3) determination letter arrives:
+**Opens June 1.** Apply same day.
 
-- [ ] Update all "pending" language in terms.html, privacy.html, and all grant materials
-- [ ] Register on Candid / GuideStar (free nonprofit transparency profile — required by many grantmakers)
-- [ ] Begin issuing tax-deductible donation receipts (update Stripe receipt language)
-- [ ] Register with Georgia C-100 if cumulative donations exceed exemption threshold
-- [ ] Re-apply to any grants that required a determination letter
-- [ ] Consider: Ford Foundation, Mozilla Foundation, Open Technology Fund (larger, post-determination)
+Stimpunks explicitly funds IP filings and hardware BOMs for neurodivergent builders. `docs/FUNDING-GATED-ACTION-ITEMS.md` maps directly to their priorities: Node One BOM (ESP32-S3 + DRV2605L + LoRa SX1262 + NXP SE050), provisional patents, DOBE cert.
+
+**Note:** If 501(c)(3) determination is still pending when June 1 arrives, ask Stimpunks if they accept a pending-status application with CP575E proof. Many do.
 
 ---
 
-## 6. Immediate action queue
+## 5. Post-IRS-determination pipeline
 
-```
-TODAY:
-  1. Send FERS email (Eric Violette, OCHR Norfolk) — docs/501c3-filing/emails/01-fers-disability-followup.md
-  2. Send email 02 (HCB fiscal sponsorship withdrawal) — docs/501c3-filing/emails/02-hcb-fiscal-sponsorship-withdrawal.md
-  3. Send email 03 (grant April 2026 followup) — docs/501c3-filing/emails/03-grant-april-2026-followup.md
-  4. Send email 04 (Georgia Tools for Life) — docs/501c3-filing/emails/04-georgia-tools-for-life-followup.md
+When the determination letter arrives:
 
-THIS WEEK:
-  5. Check Georgia C-100 small-org exemption threshold at sos.georgia.gov
-  6. SAM.gov full registration (UEI NQKVWH6AKB58 assigned — full reg not complete)
-  7. Start NLnet draft / operator voice rewrite (deadline June 1 = 32 days)
-
-THIS WEEKEND (board meeting):
-  8. Hold Board Meeting #001 — docs/board/BOARD-MEETING-001-AGENDA.md
-  9. Flip launch gates after meeting (legal-counsel-review + successor-operator-named)
-
-MAY 15:
-  10. ASAN Teighlor McGee portal opens — check guidelines, start application
-
-JUNE 1:
-  11. Stimpunks opens — apply immediately
-  12. NLnet NGI Zero Commons hard deadline — submit or miss it
-
-JULY 31:
-  13. ASAN deadline
-```
+- Update "pending" language: `terms.html` L133-136, `privacy.html`, all grant materials
+- Register on Candid / GuideStar (free; required by most mid-size grantmakers)
+- Begin issuing tax-deductible receipts (update Stripe payment link description)
+- Register Georgia C-100 if donations exceed exemption threshold (check sos.georgia.gov)
+- Pursue larger grants: Ford Foundation, Mozilla Foundation, Open Technology Fund
 
 ---
 
-*For funded action items unlocked by each grant, see `docs/FUNDING-GATED-ACTION-ITEMS.md`.*
+## Completed / confirmed
+
+- [x] Georgia SOS registration (Control #26082141, active)
+- [x] EIN obtained (42-1888158, IRS CP575E)
+- [x] 501(c)(3) filed (Form 1023-EZ, Pay.gov 281TLBGO)
+- [x] SAM.gov full registration complete (UEI NQKVWH6AKB58)
+- [x] Stripe Payment Link live
+- [x] Ko-fi live
+- [x] k4-agent-hub deployed (live endpoint; NLnet can verify at /v1/manifest)
+- [x] NLnet draft written (`nlnet-ngi-zero-commons-application.md`)
+
+---
+
+*Hardware BOM and IP filing checklist: `docs/FUNDING-GATED-ACTION-ITEMS.md`*

@@ -72,7 +72,7 @@ You don't have to spell out which hub you want. The dock protocol picks the righ
 
 ---
 
-## Dock protocol — `p31.k4AgentHub/1.0.0`
+## Dock protocol — `p31.k4AgentHub/1.1.0`
 
 A **personal tetrahedron** docks to the agent hub by hitting one endpoint:
 
@@ -175,7 +175,7 @@ npm run verify:k4-agent-hub
 
 Asserts:
 
-1. Manifest has schema `p31.k4AgentHub/1.0.0`, four vertices, six edges, K₄ invariant `|E| = n*(n-1)/2`.
+1. Manifest has schema `p31.k4AgentHub/1.1.0`, four vertices, six edges, K₄ invariant `|E| = n*(n-1)/2`.
 2. Each vertex has at least one skill, a personal-dock pairing, and an anchor color from the K₄ palette.
 3. Each edge connects two distinct vertices and the edge set is the full set of `C(4,2) = 6` pairs.
 4. The bipartite cover lists all four `personal → agent` pairs and matches the personal-tetra dock keys.

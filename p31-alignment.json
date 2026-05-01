@@ -292,7 +292,7 @@
     {
       "id": "p31-k4-agent-hub-manifest",
       "path": "p31-k4-agent-hub.json",
-      "role": "p31.k4AgentHub/1.0.0 \u2014 K\u2084 agent worker tetrahedron canon (4 vertices, 6 edges, dock protocol, skill registry); source for packages/k4-agent-hub/, agents.html, verify:k4-agent-hub"
+      "role": "p31.k4AgentHub/1.1.0 \u2014 K\u2084 agent worker tetrahedron canon (4 vertices, 6 edges, dock protocol, skill registry, federation, family-cage-wire); source for packages/k4-agent-hub/, agents.html, verify:k4-agent-hub"
     },
     {
       "id": "p31-k4-agent-hub-spec",

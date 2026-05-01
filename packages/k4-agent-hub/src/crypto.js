@@ -101,3 +101,11 @@ export const PEER_DISPATCH_SCHEMA = "p31.peerDispatch/1.0.0";
 export function canonicalPeerDispatchString({ peerId, hubId, skillId, ts }) {
   return `${PEER_DISPATCH_SCHEMA}|${peerId}|${hubId}|${skillId}|${ts}`;
 }
+
+/** Schema for operator-signed family vertex dock. */
+export const FAMILY_DOCK_SCHEMA = "p31.familyDock/1.0.0";
+
+/** Build the canonical family dock string (cage operator signs this). */
+export function canonicalFamilyDockString({ operatorClientId, vertexId, ts }) {
+  return `${FAMILY_DOCK_SCHEMA}|${operatorClientId}|${vertexId}|${ts}`;
+}

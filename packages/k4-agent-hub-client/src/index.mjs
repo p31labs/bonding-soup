@@ -242,6 +242,27 @@ export class K4AgentHubClient {
     return res.json();
   }
 
+  /** POST /v1/family/dock — operator signs a family vertex dock. */
+  async familyDock(vertexId, { childMeshToken = null } = {}) {
+    const ts = Date.now();
+    const canonical = `p31.familyDock/1.0.0|${this.keyPair.clientId}|${vertexId}|${ts}`;
+    const sig = await signMessage(this.keyPair.keyPair.privateKey, canonical);
+    const body = {
+      operatorClientId: this.keyPair.clientId,
+      publicKeyB64u: this.keyPair.publicKeyB64u,
+      vertexId,
+      ts,
+      sig,
+      ...(childMeshToken ? { childMeshToken } : {}),
+    };
+    const res = await fetch(`${this.baseUrl}/v1/family/dock`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    return res.json();
+  }
+
   /** POST /v1/federation/dispatch — signed peer→peer skill dispatch. */
   async peerDispatch(peerBaseUrl, hubId, skillId, input = {}) {
     const ts = Date.now();

@@ -16,6 +16,7 @@
  *   POST   /v1/federation/peer                         — register a peer hub (signed Ed25519 required)
  *   DELETE /v1/federation/peer/{instanceId}            — unregister a peer
  *   POST   /v1/federation/dispatch                     — peer→peer signed skill dispatch (p31.peerDispatch/1.0.0)
+ *   POST   /v1/family/dock                             — operator signs family vertex dock (p31.familyDock/1.0.0)
  *   GET    /                                           — JSON manifest snapshot (canon source for agents.html)
  *   GET    /v1/manifest                                — the same JSON, stable URL
  */
@@ -28,7 +29,7 @@ import {
   buildDockResponse, methodNotAllowed, newUuid, notFound, ok, parseDockRequest, writeSession,
   resolveAllowedSkills, verifyDockEnvelope, badRequest, forbidden,
 } from "./dock-protocol.js";
-import { canonicalDockString, canonicalPeerDispatchString, importPublicKey, PEER_DISPATCH_SCHEMA, verifyEd25519 } from "./crypto.js";
+import { canonicalDockString, canonicalFamilyDockString, canonicalPeerDispatchString, FAMILY_DOCK_SCHEMA, importPublicKey, PEER_DISPATCH_SCHEMA, verifyEd25519 } from "./crypto.js";
 
 export { ForgeHub, CounselHub, ScholarHub, ScribeHub } from "./hubs.js";
 
@@ -70,6 +71,10 @@ export default {
     const peerDel = path.match(/^\/v1\/federation\/peer\/([\w-]+)\/?$/);
     if (peerDel) {
       return request.method === "DELETE" ? handleFederationUnregister(peerDel[1], env) : methodNotAllowed("DELETE");
+    }
+
+    if (path === "/v1/family/dock") {
+      return request.method === "POST" ? handleFamilyDock(request, env) : methodNotAllowed("POST");
     }
 
     if (path === "/v1/anchor/register") {
@@ -340,6 +345,61 @@ async function handleFederationDispatch(request, env) {
   const { dispatch } = await import("./dispatcher.js");
   const result = await dispatch({ env, hubId, skill, input: input ?? {} });
   return ok({ ...result, federation: { peerId, schema: PEER_DISPATCH_SCHEMA } });
+}
+
+async function handleFamilyDock(request, env) {
+  let body;
+  try { body = await request.json(); } catch { return badRequest("body must be JSON"); }
+  const { operatorClientId, publicKeyB64u, vertexId, ts, sig, childMeshToken } = body ?? {};
+
+  if (typeof operatorClientId !== "string" || operatorClientId.length < 4) return badRequest("operatorClientId required");
+  if (typeof publicKeyB64u !== "string") return badRequest("publicKeyB64u required");
+  if (typeof vertexId !== "string") return badRequest("vertexId required");
+  if (typeof ts !== "number" || typeof sig !== "string") return badRequest("ts+sig required");
+
+  const skew = Math.abs(Date.now() - ts);
+  if (skew > 5 * 60 * 1000) return badRequest(`ts skew ${skew}ms exceeds 5min`);
+
+  const vertex = FAMILY_VERTICES.find((v) => v.id === vertexId);
+  if (!vertex) return badRequest(`unknown family vertex ${vertexId}; must be one of ${FAMILY_VERTICES.map((v) => v.id).join("|")}`);
+
+  if (vertex.gate === "child-mesh-unlock") {
+    if (!childMeshToken) return forbidden("child-mesh-unlock required — supply childMeshToken");
+  }
+
+  let pub;
+  try { pub = await importPublicKey(publicKeyB64u); } catch (e) { return badRequest(`invalid publicKeyB64u: ${e.message}`); }
+  const canonical = canonicalFamilyDockString({ operatorClientId, vertexId, ts });
+  const valid = await verifyEd25519({ publicKey: pub, message: canonical, signatureB64u: sig });
+  if (!valid) return forbidden("family dock signature did not verify");
+
+  const guardianAgent = vertex.guardianAgent;
+  const sessionId = newUuid();
+  const ttlSeconds = 8 * 60 * 60; // 8h family session
+  const allowedSkills = (SKILLS[guardianAgent] ?? []).filter((s) => s.gate !== "child-mesh-unlock").map((s) => s.id);
+  const expiresAt = Date.now() + ttlSeconds * 1000;
+
+  await writeSession(env, {
+    sessionId,
+    clientId: `family:${vertexId}:${operatorClientId}`,
+    signed: true,
+    publicKey: publicKeyB64u,
+    allowedSkills,
+    ttlSeconds,
+  });
+
+  return ok({
+    ok: true,
+    schema: FAMILY_DOCK_SCHEMA,
+    vertexId,
+    role: vertex.role,
+    ageBand: vertex.ageBand,
+    personalDock: vertex.personalDock,
+    guardianAgent,
+    sessionId,
+    allowedSkills,
+    expiresAt,
+  });
 }
 
 async function forwardToHub(hubId, request, env) {

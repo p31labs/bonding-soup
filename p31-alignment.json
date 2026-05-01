@@ -446,6 +446,16 @@
       "role": "CWP for WebSocket fanout — hibernatable WS API; call-event broadcast to all docked clients; schema p31.k4HubStream/1.0.0; 4 new tests"
     },
     {
+      "id": "p31-cwp-k4-agent-hub-family-cage-wire",
+      "path": "docs/CWP-P31-K4-AGENT-HUB-FAMILY-CAGE-WIRE.md",
+      "role": "CWP for family cage wire — operator-signed family vertex dock; POST /v1/family/dock; FAMILY_DOCK_SCHEMA; guardian assignment; child-mesh-unlock gate; 6 new tests"
+    },
+    {
+      "id": "p31-k4-agent-hub-family-cage-wire-test",
+      "path": "packages/k4-agent-hub/test/family-cage-wire.test.mjs",
+      "role": "Family cage wire tests — canonical family dock string (1), Ed25519 round-trip (2), guardian assignment (3); 6 tests"
+    },
+    {
       "id": "sync-atmosphere-hub-routes-script",
       "path": "scripts/sync-atmosphere-hub-routes.mjs",
       "role": "Merge hub-app-ids into docs/p31-atmosphere-routes.json — runs at verify:atmosphere-ramp prelude; npm run sync:atmosphere-hub-routes"
@@ -1595,11 +1605,13 @@
         "docs/CWP-P31-K4-AGENT-HUB-FEDERATION-P2P.md",
         "packages/k4-agent-hub/src/ws-events.js",
         "packages/k4-agent-hub/test/ws-fanout.test.mjs",
-        "docs/CWP-P31-K4-AGENT-HUB-WS-FANOUT.md"
+        "docs/CWP-P31-K4-AGENT-HUB-WS-FANOUT.md",
+        "packages/k4-agent-hub/test/family-cage-wire.test.mjs",
+        "docs/CWP-P31-K4-AGENT-HUB-FAMILY-CAGE-WIRE.md"
       ],
       "apply": "Edit p31-k4-agent-hub.json (the canon manifest), then mirror vertex ids / personal-dock pairings / skill registry into src/topology.js, declare DO bindings in wrangler.toml, and ensure agents.html references the four hub ids + family triadic cover + federation panel. The Worker validates the K₄ invariant at module load via validateTopology(). After agents.html edits, copy to andromeda/04_SOFTWARE/p31ca/public/agents.html (manual mirror until sync:agents lands).",
       "verify": "npm run verify:k4-agent-hub (manifest + wrangler + topology.js + crypto + dispatcher + smoke + agents.html + p31ca mirror parity); npm run test:k4-agent-hub (K₄ invariant + skill registry + family triadic cover + Ed25519 sign/verify + dispatcher priority chain + federation P2P); npm run k4-agent-hub:client:test (anchor pact unit + Worker anchor route tests); npm run k4-agent-hub:smoke against a running hub (signed dock, signed call envelope, cross-edge, federation)",
-      "note": "v1.5.0: WebSocket fanout (CWP-P31-K4-AGENT-HUB-WS-FANOUT) — hibernatable WS API; call-event broadcast to all docked clients; ws-events.js pure module; schema p31.k4HubStream/1.0.0; 4 new tests. v1.4.0: Federation P2P signed skill dispatch (CWP-P31-K4-AGENT-HUB-FEDERATION-P2P) — POST /v1/federation/dispatch; canonicalPeerDispatchString in crypto.js; peerDispatch() client method; schema p31.peerDispatch/1.0.0; 5 new tests. v1.3.0: Ed25519 anchor pact (CWP-P31-K4-AGENT-HUB-ANCHOR-PACT) — self-signed operator↔personal-tetra binding; CLI create/show/verify/register/status; Worker POST /v1/anchor/register + GET /v1/anchor/status + GET /v1/anchor/{clientId}; 13 new tests; public fingerprint stub at p31-passport-anchor-pact.json. v1.2.0: Ollama → simplex-v7 cloud → echo dispatch chain (CWP-P31-K4-AGENT-HUB-WIRE-SIMPLEX-LANE). v1.1.0: signed Ed25519 dock + per-call envelope, K₄,₄,₄ family triadic cover (will/sj/wj/christyn), federation peer registry, real Ollama dispatcher (env OLLAMA_BASE_URL) with structured-echo fallback. Bipartite K₄,₄ cover: structure↔forge, connection↔counsel, rhythm↔scholar, creation↔scribe."
+      "note": "v1.6.0: Family cage wire (CWP-P31-K4-AGENT-HUB-FAMILY-CAGE-WIRE) — operator-signed family vertex dock; POST /v1/family/dock; schema p31.familyDock/1.0.0; child-mesh-unlock gate; 6 new tests; familyDock() client method. v1.5.0: WebSocket fanout (CWP-P31-K4-AGENT-HUB-WS-FANOUT) — hibernatable WS API; call-event broadcast to all docked clients; ws-events.js pure module; schema p31.k4HubStream/1.0.0; 4 new tests. v1.4.0: Federation P2P signed skill dispatch (CWP-P31-K4-AGENT-HUB-FEDERATION-P2P) — POST /v1/federation/dispatch; canonicalPeerDispatchString in crypto.js; peerDispatch() client method; schema p31.peerDispatch/1.0.0; 5 new tests. v1.3.0: Ed25519 anchor pact (CWP-P31-K4-AGENT-HUB-ANCHOR-PACT) — self-signed operator↔personal-tetra binding; CLI create/show/verify/register/status; Worker POST /v1/anchor/register + GET /v1/anchor/status + GET /v1/anchor/{clientId}; 13 new tests; public fingerprint stub at p31-passport-anchor-pact.json. v1.2.0: Ollama → simplex-v7 cloud → echo dispatch chain (CWP-P31-K4-AGENT-HUB-WIRE-SIMPLEX-LANE). v1.1.0: signed Ed25519 dock + per-call envelope, K₄,₄,₄ family triadic cover (will/sj/wj/christyn), federation peer registry, real Ollama dispatcher (env OLLAMA_BASE_URL) with structured-echo fallback. Bipartite K₄,₄ cover: structure↔forge, connection↔counsel, rhythm↔scholar, creation↔scribe."
     },
     {
       "id": "p31-contract-registry-from-alignment",

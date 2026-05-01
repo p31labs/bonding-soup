@@ -19,7 +19,7 @@ RATE_LIMIT_RPM = "30"
 # Allow inter-hub /v1/cross/{from}/{to} calls (K4 edges). "0" disables.
 ALLOW_CROSS_EDGES = "1"
 # When "1", /v1/dock REQUIRES { publicKey, ts, nonce, sig } — Ed25519 signed envelope.
-REQUIRE_SIGNED_DOCK = "0"
+REQUIRE_SIGNED_DOCK = "1"
 # Optional: HTTP base URL to a local Ollama (e.g., http://127.0.0.1:11434).
 # When set, hubs route skills to the matching persona via /api/generate; otherwise structured echo.
 OLLAMA_BASE_URL = ""
@@ -48,7 +48,7 @@ new_sqlite_classes = ["ForgeHub", "CounselHub", "ScholarHub", "ScribeHub"]
 # Operator: `wrangler kv:namespace create K4_AGENT_HUB` — paste id below before deploy.
 [[kv_namespaces]]
 binding = "K4_AGENT_HUB"
-id = "REPLACE_BEFORE_DEPLOY_ZX0001"
+id = "7201e9818f344a92b87305dcd632d8d1"
 
 [observability]
 enabled = true

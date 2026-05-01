@@ -217,7 +217,7 @@
       "kind": "worker",
       "label": "k4-agent-hub (K₄ agent worker tetrahedron)",
       "score": {
-        "liveReachable": 7,
+        "liveReachable": 10,
         "deployability": 9,
         "verificationHooks": 10,
         "testingDepth": 9,

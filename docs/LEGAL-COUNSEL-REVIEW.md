@@ -172,7 +172,7 @@ The following items are flagged as genuinely uncertain and should be reviewed by
 
 1. **Georgia Charitable Solicitations Act registration (C-100). ⚠️ NEAR-TERM ACTION.** P31 Labs is currently operating a Stripe payment link and Ko-fi. Georgia may require registration before soliciting. Check sos.georgia.gov/corporations-divisions/charities for small-org exemption threshold ($25K–$50K gross receipts in many states). File C-100 ($35) or document exemption basis *before* promoting the donate link broadly.
 
-2. **Initial board meeting. ⚠️ NEAR-TERM ACTION.** Articles name 3 directors (Will Johnson, Joseph Tyler Cisco, Brenda O'Dell). Board has not formally convened. Hold an initial meeting — even by phone — and keep minutes. This documents that the board authorized the 501(c)(3) filing, Stripe setup, and SAM registration. Delays increase the gap between actions taken and board authorization on record.
+2. **Initial board meeting. ⚠️ NEAR-TERM ACTION.** Articles name 3 directors (W.Johnson-001, Joseph Tyler Cisco, Brenda O'Dell). Board has not formally convened. Hold an initial meeting — even by phone — and keep minutes. This documents that the board authorized the 501(c)(3) filing, Stripe setup, and SAM registration. Delays increase the gap between actions taken and board authorization on record.
 
 3. **ADA Title III.** Website accessibility obligations for nonprofits under Title III of the Americans with Disabilities Act are fact-specific and have been litigated inconsistently across circuits. Counsel should assess current exposure and a remediation roadmap.
 

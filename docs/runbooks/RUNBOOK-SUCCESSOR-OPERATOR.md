@@ -139,8 +139,13 @@ When the successor operator is activated:
    Civil Action No. 2025CV936, Camden County Superior Court, Georgia). Contact the
    attorney or court contact listed in the off-repo package Section 6. Do not ignore
    this — missed court deadlines have immediate consequences.
-7. Contact registered agent to notify of operator change (if >30 days unavailable).
-8. Convene board within 30 days of activation to ratify succession formally.
+7. ⚠️ REGISTERED AGENT IS THE OPERATOR. The GA SOS registered agent for P31 Labs, Inc.
+   (Control #26082141) is William Johnson, 401 Powder Horn Rd, Saint Marys, GA 31558. If
+   the operator is incapacitated or deceased, the registered agent must be changed at
+   sos.georgia.gov before the next annual registration. File a registered agent change form
+   with the GA SOS. Until changed, all legal notices go to the operator's physical address.
+8. Convene board within 30 days of activation to ratify succession formally and appoint
+   a new registered agent.
 ```
 
 ---

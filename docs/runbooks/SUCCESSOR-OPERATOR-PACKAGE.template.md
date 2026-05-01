@@ -123,13 +123,20 @@ Before activating succession, confirm the situation:
 
 **Registered agent**
 
+> ⚠️ **The current registered agent IS the operator.** P31 Labs Control #26082141 lists
+> William Johnson, 401 Powder Horn Rd, Saint Marys, GA 31558 as registered agent. Changing
+> the registered agent at sos.georgia.gov is a **first-week action** upon succession
+> activation — all legal notices will otherwise go to the operator's personal address.
+
 | Field | Value |
 |-------|-------|
-| Name / firm | _______________________________________________ |
-| Phone | _______________________________________________ |
-| Email | _______________________________________________ |
-| GA SOS filing number | _______________________________________________ |
-| Note | Notify of operator change if >30 days unavailable |
+| Current agent | William Johnson (operator — change immediately upon succession) |
+| GA SOS Control # | 26082141 |
+| GA SOS portal | ecorp.sos.ga.gov |
+| Successor's new agent name | _______________________________________________ |
+| New agent phone | _______________________________________________ |
+| New agent email | _______________________________________________ |
+| Note | File agent change form at GA SOS before next annual registration |
 
 **Board member / director 1**
 

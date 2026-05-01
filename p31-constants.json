@@ -36,8 +36,10 @@
     "uei": "NQKVWH6AKB58",
     "registrationDate": "2026-04-30",
     "ueiConfirmedDate": "2026-05-01",
-    "status": "uei_active",
-    "note": "UEI does not expire; full SAM entity registration (bank + CAGE) required before federal grant draw"
+    "entityRegistrationSubmittedDate": "2026-05-01",
+    "status": "entity_registration_submitted",
+    "activationEstimate": "7–10 business days from submission",
+    "note": "Full entity registration submitted. CAGE code assigned after activation. Annual renewal required. Mercury bank ACH on file."
   },
   "bonding": {
     "shippedDate": "2026-03-10",

@@ -280,6 +280,8 @@
     "launch:gate": "node scripts/p31-launch-readiness.mjs --mode gate",
     "launch:next": "node scripts/p31-launch-readiness.mjs --mode audit --brief --no-log",
     "launch:check": "node scripts/p31-launch-checklist.mjs",
+    "launch:auto-gates": "node scripts/launch-auto-gates.mjs",
+    "launch:auto-gates:dry": "node scripts/launch-auto-gates.mjs --dry-run",
     "launch:sync": "npm run apply:constants && npm run build:contract-registry && npm run sync:chain-anchor:p31ca && npm run build:fleet-portal && npm run build:doc-index",
     "launch:smoke:net": "node scripts/launch-smoke-net.mjs",
     "launch:auto": "node scripts/p31-launch-auto.mjs",

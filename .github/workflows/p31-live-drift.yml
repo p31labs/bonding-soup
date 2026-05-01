@@ -1,0 +1,75 @@
+# Daily live-drift check — fail loudly if production diverged from repo overnight.
+#
+# Runs:
+#   - npm run verify:ecosystem (constants ↔ live-fleet ↔ ecosystem JSON)
+#   - launch-smoke-net (MAP /donate, donate-api /health, creator-economy.json)
+#   - ecosystem-glass strict (every probe in p31-ecosystem.json)
+#
+# No deploy, read-only. Failure is the signal — operator runs auto-pilot or fixes manually.
+# Disable with repo Variable P31_DISABLE_LIVE_DRIFT = 1.
+name: P31 live drift (daily)
+
+on:
+  schedule:
+    # 09:30 UTC every day (≈ 05:30 ET). Adjust to operator preference.
+    - cron: "30 9 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: p31-live-drift
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    name: P31 / live drift probe
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Gate (var)
+        id: gate
+        run: |
+          if [ "${{ vars.P31_DISABLE_LIVE_DRIFT }}" = "1" ] || [ "${{ vars.P31_DISABLE_LIVE_DRIFT }}" = "true" ]; then
+            echo "skip=var" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "ok=1" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.ok == '1'
+
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.ok == '1'
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install root dependencies
+        if: steps.gate.outputs.ok == '1'
+        run: npm ci
+
+      - name: verify:ecosystem (manifest sanity)
+        if: steps.gate.outputs.ok == '1'
+        run: npm run verify:ecosystem
+
+      - name: launch-smoke-net (public endpoints)
+        if: steps.gate.outputs.ok == '1'
+        run: node scripts/launch-smoke-net.mjs
+
+      - name: ecosystem-glass STRICT (all probes)
+        if: steps.gate.outputs.ok == '1'
+        env:
+          P31_GLASS_STRICT: "1"
+        run: node scripts/ecosystem-glass.mjs
+
+      - name: Upload glass report
+        if: steps.gate.outputs.ok == '1' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p31-glass-report
+          path: /tmp/p31_glass_report.json
+          if-no-files-found: ignore
+          retention-days: 14

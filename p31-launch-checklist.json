@@ -1,0 +1,80 @@
+{
+  "schema": "p31.launchChecklist/0.1.0",
+  "version": "1.0.0",
+  "updated": "2026-04-30",
+  "note": "Human-gate sign-off for market launch. Edit status with: npm run launch:check -- <id> met|pending|blocked [--note '…']. Each transition appends to ~/.p31/launch-log.jsonl.",
+  "gates": [
+    {
+      "id": "legal-counsel-review",
+      "title": "Pro se / counsel: terms, privacy, security, copy reviewed",
+      "kind": "legal",
+      "critical": true,
+      "status": "pending"
+    },
+    {
+      "id": "registered-agent-current",
+      "title": "GA registered agent + EIN 42-1888158 records current",
+      "kind": "legal",
+      "critical": true,
+      "status": "pending"
+    },
+    {
+      "id": "stripe-account-live",
+      "title": "Stripe Payment Link verified (donate-api healthy)",
+      "kind": "payments",
+      "critical": true,
+      "status": "pending"
+    },
+    {
+      "id": "secrets-rotation-plan",
+      "title": "Cloudflare API token + GH PAT rotation cadence written",
+      "kind": "security",
+      "critical": true,
+      "status": "pending"
+    },
+    {
+      "id": "successor-operator-named",
+      "title": "Named successor operator + break-glass contacts (off-repo)",
+      "kind": "governance",
+      "critical": true,
+      "status": "pending"
+    },
+    {
+      "id": "smart-suite-deployed-testnet",
+      "title": "SMART suite deployed to Base Sepolia; addresses in p31-chain-anchor.json",
+      "kind": "on-chain",
+      "critical": false,
+      "status": "pending"
+    },
+    {
+      "id": "smart-suite-deployed-mainnet",
+      "title": "SMART suite deployed to Base mainnet; addresses in p31-chain-anchor.json",
+      "kind": "on-chain",
+      "critical": false,
+      "status": "pending"
+    },
+    {
+      "id": "treasury-multisig-owner",
+      "title": "Safe multisig owns P31ContentRoot + receives P31TreasuryConfig",
+      "kind": "on-chain",
+      "critical": false,
+      "status": "pending"
+    },
+    {
+      "id": "household-pack-printed",
+      "title": "Family Sovereign Pack printed / sent to household",
+      "kind": "people",
+      "critical": false,
+      "status": "pending"
+    },
+    {
+      "id": "operator-rest-window",
+      "title": "Operator has a planned rest window after launch (≥ 48h)",
+      "kind": "people",
+      "critical": true,
+      "status": "met",
+      "updatedAt": "2026-04-30T20:47:13.165Z",
+      "note": "48h Fri-Sun planned"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+<!--
+  P31 static product shell — paste into new p31ca public/*.html (hub apps).
+  See: docs/P31-DESIGN-DOCTRINE.md, docs/P31-HUB-CARD-ECOSYSTEM.md, docs/p31-atmosphere-routes.json
+-->
+<!DOCTYPE html>
+<html lang="en" data-p31-appearance="hub">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title><!-- product title --></title>
+  <link rel="stylesheet" href="/p31-style.css" />
+  <!-- Atmosphere: resolve ramp via surfaceId = registry id → bootAtmosphereHints / starfield when needed -->
+</head>
+<body>
+  <!-- content -->
+  <script type="module">
+    import { startGrandfatherPhaseVar } from "/lib/p31-quantum-grandfather-boot.mjs";
+    startGrandfatherPhaseVar();
+  </script>
+  <script src="/lib/p31-return-ribbon.js" defer></script>
+</body>
+</html>

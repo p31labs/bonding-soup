@@ -1,0 +1,71 @@
+# Weekly simulation sweep — render social waves, preview launch:auto, dry-run hub mirrors,
+# generate a synthetic reports cadence. No external POSTs, no deploys, read-only.
+#
+# Failure signal:
+#   - any wave exceeds platform char limit (silent truncation risk)
+#   - simulator crash (extractor regression, schema drift)
+#   - hub mirror byte-divergence
+#
+# Disable with repo Variable P31_DISABLE_SIM_WEEKLY = 1.
+name: P31 simulation sweep (weekly)
+
+on:
+  schedule:
+    # Sundays 14:00 UTC — well clear of social-engine cron windows.
+    - cron: "0 14 * * 0"
+  workflow_dispatch:
+
+concurrency:
+  group: p31-sim-weekly
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  sim:
+    name: P31 / simulation sweep
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Gate (var)
+        id: gate
+        run: |
+          if [ "${{ vars.P31_DISABLE_SIM_WEEKLY }}" = "1" ] || [ "${{ vars.P31_DISABLE_SIM_WEEKLY }}" = "true" ]; then
+            echo "skip=var" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "ok=1" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.ok == '1'
+        with:
+          submodules: false
+
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.ok == '1'
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install root dependencies
+        if: steps.gate.outputs.ok == '1'
+        run: npm ci
+
+      - name: verify:simulations (static gate)
+        if: steps.gate.outputs.ok == '1'
+        run: npm run verify:simulations
+
+      - name: sim:all (omnibus simulator)
+        if: steps.gate.outputs.ok == '1'
+        run: npm run sim:all -- --skip-doc --skip-delta
+
+      - name: Upload simulation sandbox
+        if: steps.gate.outputs.ok == '1' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p31-simulation-sandbox
+          path: ~/.p31/simulations
+          if-no-files-found: ignore
+          retention-days: 14

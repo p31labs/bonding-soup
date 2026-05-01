@@ -1,0 +1,489 @@
+{
+  "schema": "p31.launchLane/0.1.0",
+  "updated": "2026-04-30T12:00:00.000Z",
+  "governance": {
+    "minGovernedScore": 85,
+    "minGovernedFloorPerDimension": 6,
+    "governedPagesIds": [
+      "p31ca"
+    ]
+  },
+  "sites": {
+    "technicalHub": {
+      "url": "https://p31ca.org/",
+      "kind": "cloudflare-pages",
+      "note": "Astro hub + static public/"
+    },
+    "operatorShell": {
+      "url": "https://p31ca.org/ops/",
+      "kind": "pages-route",
+      "note": "Glass probes, density dial; CWP-P31-UI"
+    },
+    "integrationsBridge": {
+      "url": "https://p31ca.org/integrations",
+      "kind": "pages-route",
+      "note": "OSS catalog + endpoint slots; driven by p31-constants.json integrations → p31-integrations.json"
+    },
+    "orgMarketing": {
+      "url": "https://phosphorus31.org/",
+      "kind": "separate-repo-deploy",
+      "note": "Not p31ca; parallel site"
+    },
+    "bondingVertical": {
+      "url": "https://bonding.p31ca.org/",
+      "kind": "pages-or-worker-front",
+      "note": "p31-constants bonding.publicUrl"
+    },
+    "publicMachineIndexes": {
+      "publicSurface": "https://p31ca.org/p31-public-surface.json",
+      "creatorEconomy": "https://p31ca.org/creator-economy.json",
+      "contractRegistry": "https://p31ca.org/p31-contract-registry.json",
+      "meshConstants": "https://p31ca.org/p31-mesh-constants.json",
+      "note": "Hub ships JSON contracts; schema p31.publicSurface/1.0.0"
+    },
+    "featuredPublicPaths": [
+      {
+        "path": "/demos",
+        "note": "Demo labs index (static demos)"
+      },
+      {
+        "path": "/visuals",
+        "note": "Mind-bending visual demos — K₄ mesh · alignment graph · Larmor pulse · glass box (p31.demosIndex)"
+      },
+      {
+        "path": "/glass-box",
+        "note": "Public transparency terminal — synthetic CLI playbacks + verify pulse + promoted reports (p31.glassBox)"
+      },
+      {
+        "path": "/contracts",
+        "note": "Contract builder UI + alignment-derived registry (p31.contractRegistry)"
+      },
+      {
+        "path": "/composer",
+        "note": "Quantum composer — K₄ Web Audio partials on Larmor ladder (p31.quantumComposerPage)"
+      },
+      {
+        "path": "/cars",
+        "note": "Social Molecules · C.A.R.S. operator shell (boot, load, settings, field chat, edge ribbon)"
+      },
+      {
+        "path": "/fleet",
+        "note": "Live fleet map (sites + Workers)"
+      },
+      {
+        "path": "/agents",
+        "note": "Fleet agents room — each Worker · bot · Cortex sub-agent interactive + probes (/fleet-agents)"
+      },
+      {
+        "path": "/delta",
+        "note": "Wye→Delta narrative"
+      },
+      {
+        "path": "/why",
+        "note": "short redirect"
+      },
+      {
+        "path": "/connect.html",
+        "note": "K₄ Three.js navigator"
+      },
+      {
+        "path": "/passport",
+        "note": "301 → passport generator"
+      },
+      {
+        "path": "/build",
+        "note": "Initial Build CWP"
+      },
+      {
+        "path": "/family-pack",
+        "note": "family sovereign pack"
+      },
+      {
+        "path": "/mesh-start.html",
+        "note": "PAR landing"
+      },
+      {
+        "path": "/integrations",
+        "note": "OSS integrations catalog + LAN endpoint slots"
+      }
+    ]
+  },
+  "governed": [
+    {
+      "id": "bonding-relay",
+      "kind": "worker",
+      "label": "bonding-relay (BONDING multiplayer + telemetry)",
+      "prsTotal": 85,
+      "tier": "governed-ok",
+      "tierPrsUi": "P0",
+      "score": {
+        "liveReachable": 10,
+        "deployability": 9,
+        "verificationHooks": 8,
+        "testingDepth": 6,
+        "contractsSchemas": 8,
+        "observability": 9,
+        "securityPosture": 9,
+        "operationalClarity": 9,
+        "uxCompleteness": 8,
+        "ephemeralizationAlignment": 9
+      },
+      "fleet": {
+        "workersDev": "https://bonding-relay.trimtab-signal.workers.dev",
+        "healthPaths": [
+          "/health"
+        ],
+        "customDomain": null,
+        "deploy": "04_SOFTWARE/bonding"
+      }
+    },
+    {
+      "id": "cf-edge-lab",
+      "kind": "worker",
+      "label": "cf-edge-lab (edge introspection + Workers AI playground)",
+      "prsTotal": 86,
+      "tier": "governed-ok",
+      "tierPrsUi": "P0",
+      "score": {
+        "liveReachable": 8,
+        "deployability": 10,
+        "verificationHooks": 10,
+        "testingDepth": 6,
+        "contractsSchemas": 7,
+        "observability": 10,
+        "securityPosture": 7,
+        "operationalClarity": 10,
+        "uxCompleteness": 9,
+        "ephemeralizationAlignment": 9
+      },
+      "fleet": {
+        "workersDev": "https://cf-edge-lab.trimtab-signal.workers.dev",
+        "healthPaths": null,
+        "customDomain": null,
+        "deploy": "packages/cf-edge-lab"
+      }
+    },
+    {
+      "id": "command-center",
+      "kind": "worker",
+      "label": "command-center (EPCP operator Worker)",
+      "prsTotal": 85,
+      "tier": "governed-ok",
+      "tierPrsUi": "P0",
+      "score": {
+        "liveReachable": 10,
+        "deployability": 10,
+        "verificationHooks": 8,
+        "testingDepth": 6,
+        "contractsSchemas": 7,
+        "observability": 9,
+        "securityPosture": 9,
+        "operationalClarity": 9,
+        "uxCompleteness": 9,
+        "ephemeralizationAlignment": 8
+      },
+      "fleet": {
+        "workersDev": "https://command-center.trimtab-signal.workers.dev",
+        "healthPaths": [
+          "/api/health"
+        ],
+        "customDomain": null,
+        "deploy": "04_SOFTWARE/cloudflare-worker/command-center"
+      }
+    },
+    {
+      "id": "donate-api",
+      "kind": "worker",
+      "label": "donate-api (Stripe checkout Worker)",
+      "prsTotal": 86,
+      "tier": "governed-ok",
+      "tierPrsUi": "P0",
+      "score": {
+        "liveReachable": 10,
+        "deployability": 10,
+        "verificationHooks": 7,
+        "testingDepth": 6,
+        "contractsSchemas": 8,
+        "observability": 10,
+        "securityPosture": 9,
+        "operationalClarity": 9,
+        "uxCompleteness": 9,
+        "ephemeralizationAlignment": 8
+      },
+      "fleet": {
+        "workersDev": "https://donate-api.trimtab-signal.workers.dev",
+        "healthPaths": [
+          "/health"
+        ],
+        "customDomain": "https://donate-api.phosphorus31.org",
+        "deploy": "04_SOFTWARE/donate-api"
+      }
+    },
+    {
+      "id": "geodesic-room",
+      "kind": "worker",
+      "label": "geodesic-room (GeodesicRoom DO)",
+      "prsTotal": 85,
+      "tier": "governed-ok",
+      "tierPrsUi": "P0",
+      "score": {
+        "liveReachable": 10,
+        "deployability": 10,
+        "verificationHooks": 8,
+        "testingDepth": 6,
+        "contractsSchemas": 8,
+        "observability": 9,
+        "securityPosture": 9,
+        "operationalClarity": 8,
+        "uxCompleteness": 9,
+        "ephemeralizationAlignment": 8
+      },
+      "fleet": {
+        "workersDev": "https://geodesic-room.trimtab-signal.workers.dev",
+        "healthPaths": null,
+        "customDomain": null,
+        "deploy": "04_SOFTWARE/geodesic-room"
+      }
+    },
+    {
+      "id": "k4-cage",
+      "kind": "worker",
+      "label": "k4-cage (Family cage Worker)",
+      "prsTotal": 85,
+      "tier": "governed-ok",
+      "tierPrsUi": "P0",
+      "score": {
+        "liveReachable": 10,
+        "deployability": 9,
+        "verificationHooks": 9,
+        "testingDepth": 6,
+        "contractsSchemas": 8,
+        "observability": 9,
+        "securityPosture": 8,
+        "operationalClarity": 8,
+        "uxCompleteness": 8,
+        "ephemeralizationAlignment": 10
+      },
+      "fleet": {
+        "workersDev": "https://k4-cage.trimtab-signal.workers.dev",
+        "healthPaths": [
+          "/api/health"
+        ],
+        "customDomain": null,
+        "deploy": "04_SOFTWARE/k4-cage"
+      }
+    },
+    {
+      "id": "k4-hubs",
+      "kind": "worker",
+      "label": "k4-hubs (Hub fusion Worker)",
+      "prsTotal": 85,
+      "tier": "governed-ok",
+      "tierPrsUi": "P0",
+      "score": {
+        "liveReachable": 10,
+        "deployability": 9,
+        "verificationHooks": 9,
+        "testingDepth": 6,
+        "contractsSchemas": 7,
+        "observability": 9,
+        "securityPosture": 9,
+        "operationalClarity": 9,
+        "uxCompleteness": 8,
+        "ephemeralizationAlignment": 9
+      },
+      "fleet": {
+        "workersDev": "https://k4-hubs.trimtab-signal.workers.dev",
+        "healthPaths": [
+          "/health"
+        ],
+        "customDomain": null,
+        "deploy": "04_SOFTWARE/k4-hubs"
+      }
+    },
+    {
+      "id": "k4-personal",
+      "kind": "worker",
+      "label": "k4-personal (Personal K₄ Worker)",
+      "prsTotal": 87,
+      "tier": "governed-ok",
+      "tierPrsUi": "P0",
+      "score": {
+        "liveReachable": 10,
+        "deployability": 10,
+        "verificationHooks": 9,
+        "testingDepth": 6,
+        "contractsSchemas": 8,
+        "observability": 10,
+        "securityPosture": 8,
+        "operationalClarity": 9,
+        "uxCompleteness": 7,
+        "ephemeralizationAlignment": 10
+      },
+      "fleet": {
+        "workersDev": "https://k4-personal.trimtab-signal.workers.dev",
+        "healthPaths": [
+          "/api/health"
+        ],
+        "customDomain": null,
+        "deploy": "pnpm --filter k4-personal deploy (04_SOFTWARE)"
+      }
+    },
+    {
+      "id": "p31-agent-hub",
+      "kind": "worker",
+      "label": "p31-agent-hub (Agent hub Worker)",
+      "prsTotal": 85,
+      "tier": "governed-ok",
+      "tierPrsUi": "P0",
+      "score": {
+        "liveReachable": 10,
+        "deployability": 10,
+        "verificationHooks": 8,
+        "testingDepth": 6,
+        "contractsSchemas": 7,
+        "observability": 10,
+        "securityPosture": 9,
+        "operationalClarity": 9,
+        "uxCompleteness": 7,
+        "ephemeralizationAlignment": 9
+      },
+      "fleet": {
+        "workersDev": "https://p31-agent-hub.trimtab-signal.workers.dev",
+        "healthPaths": [
+          "/api/health"
+        ],
+        "customDomain": null,
+        "deploy": "04_SOFTWARE/p31-agent-hub"
+      }
+    },
+    {
+      "id": "p31-google-bridge",
+      "kind": "worker",
+      "label": "p31-google-bridge (Google OAuth + Calendar read)",
+      "prsTotal": 86,
+      "tier": "governed-ok",
+      "tierPrsUi": "P0",
+      "score": {
+        "liveReachable": 10,
+        "deployability": 9,
+        "verificationHooks": 9,
+        "testingDepth": 6,
+        "contractsSchemas": 8,
+        "observability": 9,
+        "securityPosture": 9,
+        "operationalClarity": 9,
+        "uxCompleteness": 8,
+        "ephemeralizationAlignment": 9
+      },
+      "fleet": {
+        "workersDev": "https://p31-google-bridge.trimtab-signal.workers.dev",
+        "healthPaths": [
+          "/health"
+        ],
+        "customDomain": null,
+        "deploy": "04_SOFTWARE/p31-google-bridge"
+      }
+    },
+    {
+      "id": "p31-orchestrator",
+      "kind": "worker",
+      "label": "p31-orchestrator (Orchestrator Worker; may be Access-gated)",
+      "prsTotal": 85,
+      "tier": "governed-ok",
+      "tierPrsUi": "P0",
+      "score": {
+        "liveReachable": 10,
+        "deployability": 10,
+        "verificationHooks": 7,
+        "testingDepth": 6,
+        "contractsSchemas": 7,
+        "observability": 10,
+        "securityPosture": 10,
+        "operationalClarity": 9,
+        "uxCompleteness": 7,
+        "ephemeralizationAlignment": 9
+      },
+      "fleet": {
+        "workersDev": "https://p31-orchestrator.trimtab-signal.workers.dev",
+        "healthPaths": null,
+        "customDomain": null,
+        "deploy": "workers/wrangler-orchestrator.toml"
+      }
+    },
+    {
+      "id": "p31-passkey",
+      "kind": "worker",
+      "label": "p31-passkey (WebAuthn passkey API Worker; zone-routed on p31ca.org)",
+      "prsTotal": 86,
+      "tier": "governed-ok",
+      "tierPrsUi": "P0",
+      "score": {
+        "liveReachable": 10,
+        "deployability": 10,
+        "verificationHooks": 7,
+        "testingDepth": 6,
+        "contractsSchemas": 9,
+        "observability": 8,
+        "securityPosture": 10,
+        "operationalClarity": 9,
+        "uxCompleteness": 8,
+        "ephemeralizationAlignment": 9
+      },
+      "fleet": {
+        "workersDev": "https://p31-passkey.trimtab-signal.workers.dev",
+        "healthPaths": null,
+        "customDomain": null,
+        "deploy": "p31ca/workers/passkey"
+      }
+    },
+    {
+      "id": "p31ca",
+      "kind": "pages",
+      "label": "p31ca.org hub (Cloudflare Pages + ground-truth)",
+      "prsTotal": 90,
+      "tier": "governed-ok",
+      "tierPrsUi": "P0",
+      "score": {
+        "liveReachable": 10,
+        "deployability": 9,
+        "verificationHooks": 10,
+        "testingDepth": 6,
+        "contractsSchemas": 10,
+        "observability": 8,
+        "securityPosture": 9,
+        "operationalClarity": 9,
+        "uxCompleteness": 9,
+        "ephemeralizationAlignment": 10
+      }
+    },
+    {
+      "id": "tetra-hub",
+      "kind": "worker",
+      "label": "tetra-hub (K₄ trio read model)",
+      "prsTotal": 85,
+      "tier": "governed-ok",
+      "tierPrsUi": "P0",
+      "score": {
+        "liveReachable": 10,
+        "deployability": 9,
+        "verificationHooks": 8,
+        "testingDepth": 7,
+        "contractsSchemas": 8,
+        "observability": 9,
+        "securityPosture": 9,
+        "operationalClarity": 8,
+        "uxCompleteness": 7,
+        "ephemeralizationAlignment": 10
+      },
+      "fleet": {
+        "workersDev": "https://tetra-hub.trimtab-signal.workers.dev",
+        "healthPaths": [
+          "/api/health"
+        ],
+        "customDomain": null,
+        "deploy": "workers/tetra-hub (bonding-soup home root)"
+      }
+    }
+  ]
+}

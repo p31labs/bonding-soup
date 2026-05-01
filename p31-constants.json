@@ -35,7 +35,9 @@
   "sam": {
     "uei": "NQKVWH6AKB58",
     "registrationDate": "2026-04-30",
-    "status": "uei_assigned"
+    "ueiConfirmedDate": "2026-05-01",
+    "status": "uei_active",
+    "note": "UEI does not expire; full SAM entity registration (bank + CAGE) required before federal grant draw"
   },
   "bonding": {
     "shippedDate": "2026-03-10",

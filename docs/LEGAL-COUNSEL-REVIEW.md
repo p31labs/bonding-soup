@@ -119,7 +119,14 @@ This document is a structured pre-launch review checklist for the five public le
 - [ ] **EIN is correct.** 42-1888158 — verify against IRS CP575E determination letter.
 - [ ] **Governing law clause specifies Georgia.** Terms of Use, Section 11.
 - [ ] **Nonprofit status disclosure is accurate.** All public pages avoid claiming tax-exempt status. 501(c)(3) application is described as pending.
-- [ ] **Georgia Charitable Solicitations Act — C-100 registration. ⚠️ ACT BEFORE PROMOTING DONATE LINK WIDELY.** Georgia requires charitable organizations to register before soliciting contributions from Georgia residents (Georgia Charitable Solicitations Act, Form C-100, $35 fee, filed with GA Secretary of State). P31 Labs is currently operating the Stripe payment link and Ko-fi — this registration may be required now. Many states exempt organizations below a gross-receipts threshold (commonly $25K–$50K). *Action: Visit sos.georgia.gov/corporations-divisions/charities, confirm whether a small-org exemption applies to P31 Labs at current donation volume, and either file C-100 or document the exemption basis before any broad donation promotion.*
+- [ ] **Georgia Charitable Solicitations Act — C-100 registration. ⚠️ ACT BEFORE PROMOTING DONATE LINK WIDELY.**
+  - **Statute:** O.C.G.A. § 43-17-1 et seq. Requires registration before soliciting charitable contributions from Georgia residents.
+  - **Exemption (O.C.G.A. § 43-17-9):** Organizations that received less than **$25,000** in total contributions during the immediately preceding fiscal year AND do not compensate any person primarily to conduct solicitations are exempt from registration.
+  - **P31 Labs basis for exemption (2026):** Incorporated 2026-04-03. First fiscal year ends 2026-12-31. Prior fiscal year contributions = $0 (no prior year). No professional fundraiser employed. P31 Labs likely qualifies for the small-org exemption **for the current fiscal year.**
+  - **Required action (choose one):**
+    1. **Document exemption:** Write a one-page internal memo stating the exemption basis (prior-year contributions < $25K; no compensated solicitor), keep it in entity records. Re-assess at 2026-12-31 — if total 2026 contributions approach $25K, file C-100 before January 1, 2027.
+    2. **File C-100 preemptively:** $35 fee at sos.georgia.gov/corporations-divisions/charities. Eliminates ambiguity; valid if 501(c)(3) is pending (file as "pending exemption").
+  - **Verify current threshold** at sos.georgia.gov/corporations-divisions/charities — confirm $25K figure has not changed since this review (2026-05-01).
 - [ ] **Georgia nonprofit dissolution rules.** Confirm that the Articles of Incorporation contain appropriate language regarding distribution of assets upon dissolution consistent with IRS 501(c)(3) requirements (assets must go to another 501(c)(3) or government entity).
 - [ ] **Board of directors disclosure.** Articles name 3 directors. Board has not formally convened as of this review. Confirm that public-facing documents do not make representations about board actions that have not occurred.
 
@@ -170,9 +177,9 @@ This document is a structured pre-launch review checklist for the five public le
 
 The following items are flagged as genuinely uncertain and should be reviewed by a licensed Georgia attorney, preferably with nonprofit and technology practice experience, before launch:
 
-1. **Georgia Charitable Solicitations Act registration (C-100). ⚠️ NEAR-TERM ACTION.** P31 Labs is currently operating a Stripe payment link and Ko-fi. Georgia may require registration before soliciting. Check sos.georgia.gov/corporations-divisions/charities for small-org exemption threshold ($25K–$50K gross receipts in many states). File C-100 ($35) or document exemption basis *before* promoting the donate link broadly.
+1. **Georgia Charitable Solicitations Act registration (C-100). ⚠️ NEAR-TERM ACTION.** P31 Labs appears to qualify for the O.C.G.A. § 43-17-9 small-org exemption (prior-year contributions < $25K; no compensated solicitor) — but exemption must be documented in entity records. Choose: (a) write a one-page exemption memo and re-assess at 2026-12-31, or (b) file C-100 preemptively ($35). Do not promote the donate link in a paid/broad campaign until one of these is complete. See Georgia-Specific Items section above for full analysis.
 
-2. **Initial board meeting. ⚠️ NEAR-TERM ACTION.** Articles name 3 directors (W.Johnson-001, Joseph Tyler Cisco, Brenda O'Dell). Board has not formally convened. Hold an initial meeting — even by phone — and keep minutes. This documents that the board authorized the 501(c)(3) filing, Stripe setup, and SAM registration. Delays increase the gap between actions taken and board authorization on record.
+2. **Initial board meeting. ⚠️ NEAR-TERM ACTION.** Articles name 3 directors (W.Johnson-001, Joseph Tyler Cisco, Brenda O'Dell). Board has not formally convened. Hold the meeting using `docs/board/BOARD-MEETING-001-AGENDA.md` — it covers officer election, 501(c)(3) and SAM ratification, C-100 authorization, successor designation, and legal-counsel-review gate flip. Minutes must be kept. This is what closes the gap between actions taken and board authorization on record.
 
 3. **ADA Title III.** Website accessibility obligations for nonprofits under Title III of the Americans with Disabilities Act are fact-specific and have been litigated inconsistently across circuits. Counsel should assess current exposure and a remediation roadmap.
 

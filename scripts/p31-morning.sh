@@ -24,6 +24,27 @@ else
   echo "→ andromeda/ absent — skip monorepo pull"
 fi
 
+echo "→ TRIPER cert status…"
+set +e
+node "$ROOT/scripts/triper-status.mjs" --json 2>/dev/null | node -e "
+  let d='';
+  process.stdin.on('data',c=>d+=c);
+  process.stdin.on('end',()=>{
+    try {
+      const j = JSON.parse(d);
+      const gate = j.gateStatus ?? 'UNKNOWN';
+      const color = gate === 'AUTHORIZED' ? '\x1b[32m' : '\x1b[31m';
+      const ageMs = Date.now() - new Date(j.certTimestamp ?? 0).getTime();
+      const ageMin = Math.round(ageMs / 60000);
+      const ageStr = ageMin < 60 ? ageMin+'m' : (ageMin/60).toFixed(1)+'h';
+      const passed = (j.suites ?? []).filter(s=>s.passed).length;
+      const total = (j.suites ?? []).length || 9;
+      console.log('  ' + color + gate + '\x1b[0m — cert ' + ageStr + ' ago — ' + passed + '/' + total + ' suites');
+    } catch { console.log('  (no cert — run: npm run test:triper:cert)'); }
+  });
+" 2>/dev/null || echo "  (triper-status unavailable)"
+set -e
+
 echo "→ Morning report (mandatory; soft if already filed today)…"
 set +e
 P31_REPORTS_NUDGE=1 npm run reports:auto -- --brief 2>&1 | sed 's/^/  /'

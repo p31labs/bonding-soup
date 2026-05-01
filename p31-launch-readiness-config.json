@@ -1,0 +1,124 @@
+{
+  "schema": "p31.launchReadinessConfig/0.1.0",
+  "version": "1.0.0",
+  "updated": "2026-04-30",
+  "thresholds": {
+    "ready": 92,
+    "go": 96,
+    "warnSlowMs": 8000
+  },
+  "modes": {
+    "audit": {
+      "description": "Read-only, fast. Uses cached glass report if present.",
+      "allowSkip": ["security:check", "ecosystem:glass-strict", "verify:simplex"]
+    },
+    "rehearsal": {
+      "description": "Strict mesh + glass + full verify + (when present) hub e2e.",
+      "allowSkip": []
+    },
+    "gate": {
+      "description": "Audit + ALL human gates must be 'met'. Use right before deploy.",
+      "allowSkip": []
+    }
+  },
+  "lanes": [
+    {
+      "id": "alignment",
+      "title": "Alignment + contract registry",
+      "weight": 10,
+      "checks": [
+        { "id": "verify-alignment", "kind": "cmd", "command": "npm run verify:alignment", "critical": true },
+        { "id": "verify-contract-registry", "kind": "cmd", "command": "npm run verify:contract-registry", "critical": true },
+        { "id": "verify-sovereign-layers", "kind": "cmd", "command": "npm run verify:sovereign-layers", "critical": false }
+      ]
+    },
+    {
+      "id": "integrity",
+      "title": "Operator-locked truth (constants · facts · env · shipbox)",
+      "weight": 10,
+      "checks": [
+        { "id": "verify-facts", "kind": "cmd", "command": "npm run verify:facts", "critical": true },
+        { "id": "verify-constants", "kind": "cmd", "command": "npm run verify:constants", "critical": true },
+        { "id": "verify-p31-env", "kind": "cmd", "command": "npm run verify:p31-env", "critical": false },
+        { "id": "verify-shipbox", "kind": "cmd", "command": "npm run verify:shipbox", "critical": false }
+      ]
+    },
+    {
+      "id": "governance",
+      "title": "PRS launch governance + lane manifest",
+      "weight": 10,
+      "checks": [
+        { "id": "verify-production-readiness", "kind": "cmd", "command": "npm run verify:production-readiness", "critical": true },
+        { "id": "verify-launch-lane-sync", "kind": "cmd", "command": "npm run verify:launch-lane-sync", "critical": true },
+        { "id": "launch-lane-manifest", "kind": "file-exists", "path": "p31-launch-lane.json", "critical": true }
+      ]
+    },
+    {
+      "id": "identity",
+      "title": "Passkey + Cognitive Passport identity surface",
+      "weight": 10,
+      "checks": [
+        { "id": "verify-cognitive-passport-schema", "kind": "cmd", "command": "npm run verify:cognitive-passport-schema", "critical": false },
+        { "id": "passkey-worker-source", "kind": "file-exists", "path": "andromeda/04_SOFTWARE/p31ca/workers/passkey/README.md", "optional": true },
+        { "id": "subject-id-derivation", "kind": "json-key", "path": "p31-constants.json", "key": "mesh.passkeyApiBasePath", "critical": true }
+      ]
+    },
+    {
+      "id": "mesh",
+      "title": "K₄ mesh + canon",
+      "weight": 10,
+      "checks": [
+        { "id": "verify-mesh-canon", "kind": "cmd", "command": "npm run verify:mesh-canon", "critical": true },
+        { "id": "verify-ecosystem", "kind": "cmd", "command": "npm run verify:ecosystem", "critical": true },
+        { "id": "verify-k4-personal", "kind": "cmd", "command": "npm run verify:k4-personal", "critical": false }
+      ]
+    },
+    {
+      "id": "payments",
+      "title": "Ethical monetization (creator economy + donate)",
+      "weight": 10,
+      "checks": [
+        { "id": "verify-monetary", "kind": "cmd", "command": "npm run verify:monetary", "critical": true },
+        { "id": "creator-economy-mirror", "kind": "file-exists", "path": "andromeda/04_SOFTWARE/p31ca/public/creator-economy.json", "optional": true },
+        { "id": "donate-api-health", "kind": "glass-probe", "probeId": "donate-api-health", "critical": false }
+      ]
+    },
+    {
+      "id": "security",
+      "title": "Security suite (SAST + workers + crypto surface)",
+      "weight": 10,
+      "checks": [
+        { "id": "p31ca-security-check", "kind": "cmd", "command": "npm --prefix andromeda/04_SOFTWARE/p31ca run security:check", "critical": true, "optional": true },
+        { "id": "no-committed-env", "kind": "no-glob", "glob": ".env", "critical": true }
+      ]
+    },
+    {
+      "id": "on-chain",
+      "title": "SMART suite (S/M/A/R/T) + chain anchor",
+      "weight": 10,
+      "checks": [
+        { "id": "smart-evm-manifest", "kind": "file-exists", "path": "contracts/p31-smart-evm.json", "critical": true },
+        { "id": "chain-anchor-manifest", "kind": "file-exists", "path": "p31-chain-anchor.json", "critical": true },
+        { "id": "verify-sovereign-chain", "kind": "cmd", "command": "npm run verify:sovereign-chain", "critical": false }
+      ]
+    },
+    {
+      "id": "content",
+      "title": "Public surfaces (doc-index · fleet-portal · public-surface)",
+      "weight": 10,
+      "checks": [
+        { "id": "verify-doc-index", "kind": "cmd", "command": "npm run verify:doc-index", "critical": false },
+        { "id": "verify-fleet-portal", "kind": "cmd", "command": "npm run verify:fleet-portal", "critical": false },
+        { "id": "verify-runbooks", "kind": "cmd", "command": "npm run verify:runbooks", "critical": false }
+      ]
+    },
+    {
+      "id": "human-gate",
+      "title": "Human-in-the-loop checkpoints (operator sign-off)",
+      "weight": 10,
+      "checks": [
+        { "id": "checklist", "kind": "human-checklist", "path": "p31-launch-checklist.json", "critical": true }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+{
+  "_comment": "Single source of truth for the P31 social engine — schedule, waves, platforms. Worker (andromeda/04_SOFTWARE/cloudflare-worker/social-drop-automation/worker.js) loads this contract from the hub mirror at https://p31ca.org/p31-social-engine.json or has it baked in at deploy. Edit here, run npm run verify:social-engine + npm run sync:social-engine, then redeploy the Worker. PUBLIC-VOICE applies — Tier B/C surfaces. Templates expand from p31-constants.json: {{c.bonding.publicUrl}}, {{c.contact.kofiUrl}}, {{c.bonding.testBaseline.tests}}, {{c.contact.githubOrg}} etc.",
+  "schema": "p31.socialEngine/1.0.0",
+  "version": "1.0.0",
+  "updated": "2026-04-30",
+  "active": true,
+  "voice": {
+    "guardrails": "docs/p31-public-voice-guardrails.json",
+    "manualTierAReadAloudRequired": true,
+    "note": "Verifier runs PUBLIC-VOICE Tier B/C regex on every payload after template expansion; Tier A is human pair check before publish."
+  },
+  "worker": {
+    "id": "p31-social-worker",
+    "codePath": "andromeda/04_SOFTWARE/cloudflare-worker/social-drop-automation",
+    "publicHost": "social.p31ca.org",
+    "workersDevUrl": "https://p31-social-worker.trimtab-signal.workers.dev",
+    "endpoints": {
+      "health": "/",
+      "status": "/status",
+      "waves": "/waves",
+      "broadcast": "/broadcast",
+      "trigger": "/trigger",
+      "preflight": "/preflight"
+    },
+    "manifestUrl": "https://p31ca.org/p31-social-engine.json"
+  },
+  "platforms": {
+    "twitter": {
+      "limitChars": 280,
+      "secrets": [
+        "TWITTER_API_KEY",
+        "TWITTER_API_SECRET",
+        "TWITTER_ACCESS_TOKEN",
+        "TWITTER_ACCESS_TOKEN_SECRET"
+      ]
+    },
+    "bluesky": {
+      "limitChars": 300,
+      "secrets": ["BLUESKY_HANDLE", "BLUESKY_APP_PASSWORD"]
+    },
+    "mastodon": {
+      "limitChars": 500,
+      "secrets": ["MASTODON_INSTANCE", "MASTODON_ACCESS_TOKEN"]
+    },
+    "linkedin": {
+      "limitChars": 3000,
+      "secrets": ["LINKEDIN_ACCESS_TOKEN"],
+      "note": "Worker poster not implemented in v2.0.0; manual paste from /trigger output until LinkedIn API path lands"
+    },
+    "reddit": {
+      "limitChars": 40000,
+      "secrets": [
+        "REDDIT_CLIENT_ID",
+        "REDDIT_CLIENT_SECRET",
+        "REDDIT_USERNAME",
+        "REDDIT_PASSWORD"
+      ]
+    },
+    "ko-fi": {
+      "limitChars": 1500,
+      "secrets": [],
+      "note": "No public posting API; payload reproduced for manual paste in Ko-fi feed"
+    },
+    "discord": {
+      "limitChars": 4000,
+      "secrets": ["DISCORD_WEBHOOK_URL"]
+    }
+  },
+  "schedule": [
+    {
+      "id": "weekly-update-monday",
+      "wave": "weekly_update",
+      "cronUtc": "0 17 * * 1",
+      "human": "Monday 17:00 UTC (≈ 1:00 PM EDT)",
+      "active": true
+    },
+    {
+      "id": "midweek-update-wednesday",
+      "wave": "midweek",
+      "cronUtc": "0 17 * * 3",
+      "human": "Wednesday 17:00 UTC",
+      "active": true
+    },
+    {
+      "id": "weekend-recap-friday",
+      "wave": "weekend_recap",
+      "cronUtc": "0 17 * * 5",
+      "human": "Friday 17:00 UTC",
+      "active": true
+    },
+    {
+      "id": "kofi-digest-daily",
+      "wave": "kofi_digest",
+      "cronUtc": "20 17 * * *",
+      "human": "Daily 17:20 UTC",
+      "active": true
+    },
+    {
+      "id": "zenodo-reminder-monthly",
+      "wave": "zenodo_reminder",
+      "cronUtc": "0 13 1 * *",
+      "human": "First of month 13:00 UTC",
+      "active": true
+    }
+  ],
+  "waves": {
+    "weekly_update": {
+      "title": "Weekly P31 Labs Update",
+      "color": "0x00FF88",
+      "platforms": ["twitter", "mastodon", "bluesky"],
+      "content": "P31 Labs weekly update. Open repo, open verify bar — github.com/{{c.contact.githubOrg}}. Hub: {{c.bonding.publicUrl}} parent · p31ca.org",
+      "discordOnly": false
+    },
+    "midweek": {
+      "title": "Mid-Week P31 Labs",
+      "color": "0x1DA1F2",
+      "platforms": ["twitter", "mastodon"],
+      "content": "Building open-source assistive tools — first-party need first. Hub: p31ca.org · BONDING: {{c.bonding.publicUrl}}",
+      "discordOnly": false
+    },
+    "weekend_recap": {
+      "title": "Weekend Recap",
+      "color": "0x7A27FF",
+      "platforms": ["twitter", "mastodon", "bluesky"],
+      "content": "Weekend build recap. Open code, repeatable verify bar. p31ca.org · github.com/{{c.contact.githubOrg}}",
+      "discordOnly": false
+    },
+    "kofi_digest": {
+      "title": "Ko-fi Node Count Digest",
+      "color": "0x00D4FF",
+      "platforms": [],
+      "content": "Daily node count digest — see {{c.contact.kofiUrl}} for current count.",
+      "discordOnly": true
+    },
+    "zenodo_reminder": {
+      "title": "Monthly Zenodo Upload Reminder",
+      "color": "0xF59E0B",
+      "platforms": [],
+      "content": "Monthly Zenodo deposit window — check pending paper queue and tag a release with commit SHA in metadata.",
+      "discordOnly": true
+    },
+    "preflight": {
+      "title": "PRE-FLIGHT LINK CHECK",
+      "color": "0x00D4FF",
+      "platforms": [],
+      "links": [
+        { "name": "BONDING", "urlTemplate": "{{c.bonding.publicUrl}}" },
+        { "name": "P31 Labs hub", "urlTemplate": "https://p31ca.org" },
+        { "name": "Ko-fi", "urlTemplate": "{{c.contact.kofiUrl}}" },
+        { "name": "GitHub org", "urlTemplate": "https://github.com/{{c.contact.githubOrg}}" },
+        { "name": "phosphorus31.org", "urlTemplate": "https://phosphorus31.org" }
+      ],
+      "discordOnly": true
+    },
+    "wave1_kofi": {
+      "title": "WAVE 1 — Ko-fi long-form",
+      "color": "0x00FF88",
+      "platforms": ["ko-fi"],
+      "content": "BONDING is live.\n\nI shipped an open-source chemistry game on my son's 10th birthday. I'm an autistic engineer; late diagnosis at 39. When the family-court window changed, I built BONDING — a multiplayer molecular builder where every atom placed is a timestamped engagement log.\n\n{{c.bonding.testBaseline.tests}} automated tests across {{c.bonding.testBaseline.suites}} suites. Works offline. Runs on the Android tablets the kids already use. No accounts. No ads. No data collection.\n\nPlay: {{c.bonding.publicUrl}}\n\nP31 Labs is a Georgia nonprofit (EIN {{c.organization.ein}}; 501(c)(3) determination pending). The code is MIT and will outlive any single deploy. Support keeps me building.\n\n{{c.contact.kofiUrl}}",
+      "manualOnly": true
+    },
+    "wave2_twitter": {
+      "title": "WAVE 2 — Twitter/X thread",
+      "color": "0x1DA1F2",
+      "platforms": ["twitter"],
+      "tweets": [
+        "I built a chemistry game so my kids could see me.\n\nI'm autistic — late diagnosed at 39. When the family-court window changed, I built BONDING: a multiplayer molecular builder where every atom is a timestamped engagement log.\n\n{{c.bonding.publicUrl}}",
+        "{{c.bonding.testBaseline.tests}} tests / {{c.bonding.testBaseline.suites}} suites. PWA. Works offline on tablets. Touch-first. No accounts. No ads. No data collection.\n\n11 elements + 2 secret elements named after my kids. Quest chains to the Posner molecule.",
+        "Two secret elements unlock when you finish quest chains. Names mean something to one family. Code on GitHub: github.com/{{c.contact.githubOrg}}",
+        "P31 Labs — Georgia nonprofit (EIN {{c.organization.ein}}; 501(c)(3) determination pending). MIT licensed. The code outlives this housing situation; support keeps me at a desk.\n\n{{c.contact.kofiUrl}}",
+        "Stack: TypeScript strict · React + Three.js + Zustand + Vite · Cloudflare Pages + Workers + KV · Web Audio API · IndexedDB · PWA · COPPA-aligned, zero data collection.\n\ngithub.com/{{c.contact.githubOrg}}"
+      ],
+      "manualOnly": true
+    },
+    "wave3_linkedin": {
+      "title": "WAVE 3 — LinkedIn long-form",
+      "color": "0x0A66C2",
+      "platforms": ["linkedin"],
+      "content": "I shipped a multiplayer chemistry education game on my son's 10th birthday: BONDING. Players drag atoms, form bonds following VSEPR geometry, and build molecules from hydrogen up to the Posner molecule. {{c.bonding.testBaseline.tests}} automated tests across {{c.bonding.testBaseline.suites}} suites. Offline-first PWA targeting tablet devices.\n\nEvery interaction is timestamped for evidence-grade export — designed for contexts where proof of engagement matters.\n\nTypeScript strict, React + Three.js, deployed on Cloudflare. MIT licensed.\n\nP31 Labs is a Georgia nonprofit building open-source assistive technology (EIN {{c.organization.ein}}; 501(c)(3) determination pending).\n\n{{c.bonding.publicUrl}} · p31ca.org · github.com/{{c.contact.githubOrg}}",
+      "manualOnly": true
+    }
+  }
+}

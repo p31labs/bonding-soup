@@ -1,0 +1,27 @@
+# Tetra Hub — read-only K₄ trio aggregator (personal + cage + hubs in one GET).
+# Deploy: npm run tetra-hub:deploy (from repo root) after k4-personal, k4-cage, k4-hubs.
+# Canonical URL: p31-constants.json mesh.tetraHubWorkerUrl
+
+name = "tetra-hub"
+main = "src/index.js"
+compatibility_date = "2025-10-01"
+
+[vars]
+ENVIRONMENT = "production"
+WORKER_VERSION = "1.0.0"
+
+# Same-account Worker-to-Worker (no public HTTP hop for mesh reads).
+[[services]]
+binding = "K4_CAGE"
+service = "k4-cage"
+
+[[services]]
+binding = "K4_PERSONAL"
+service = "k4-personal"
+
+[[services]]
+binding = "K4_HUBS"
+service = "k4-hubs"
+
+[observability]
+enabled = true

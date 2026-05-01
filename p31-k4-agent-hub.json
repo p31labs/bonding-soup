@@ -1,0 +1,366 @@
+{
+  "schema": "p31.k4AgentHub/1.1.0",
+  "version": "1.1.0",
+  "comment": "K₄ agent worker tetrahedron — four hub vertices the personal tetrahedron docks to. v1.1.0 adds: signed Ed25519 dock + per-call envelope, K₄,₄,₄ triadic cover with the family cage (will/sj/wj/christyn), federation peer registry, and a real skill dispatcher (local Ollama HTTP with structured-echo fallback). Pairs with k4-personal/personal-tetra.js (structure/connection/rhythm/creation) and the k4-cage/family vertices. Source of truth for agents.html, packages/k4-agent-hub/, verify:k4-agent-hub, and any future hub-product card.",
+  "topology": {
+    "kind": "K4",
+    "vertices": 4,
+    "edges": 6,
+    "edgeCountInvariant": "n*(n-1)/2",
+    "bipartiteCoverWith": "p31.personalTetra/1.0.0",
+    "bipartiteEdges": 4,
+    "triadicCoverWith": "p31.familyCage/1.0.0",
+    "triadicEdges": 4,
+    "shapeStack": "K₄,₄,₄ — three layers (family, personal, agent), four edges each, twelve cross-stack edges total"
+  },
+  "appearance": {
+    "anchorColors": {
+      "forge": "teal",
+      "counsel": "coral",
+      "scholar": "phosphorus",
+      "scribe": "lavender",
+      "operator": "butter"
+    },
+    "operatorPillar": "butter",
+    "comment": "Four K₄ anchors (teal/coral/phosphorus/lavender) used in agents.html and any future hub card. Butter is reserved for the operator's central pillar (not a vertex; the inscribed pyramid apex)."
+  },
+  "vertices": [
+    {
+      "id": "forge",
+      "name": "FORGE",
+      "verb": "make",
+      "anchor": "teal",
+      "personalDock": "structure",
+      "title": "Make — code, deploy, scaffold",
+      "subtitle": "Where personal structure meets the anvil.",
+      "skills": [
+        {
+          "id": "ts-worker",
+          "label": "TypeScript / Workers / Pages / D1",
+          "ollamaPersona": "p31-mechanic",
+          "simplexLane": "FORGE"
+        },
+        {
+          "id": "esp-firmware",
+          "label": "ESP-IDF / Node Zero firmware",
+          "ollamaPersona": "p31-firmware",
+          "simplexLane": null
+        },
+        {
+          "id": "one-liner",
+          "label": "Commit messages and one-liners",
+          "ollamaPersona": "p31-quick",
+          "simplexLane": null
+        }
+      ],
+      "callsAccepted": ["build", "deploy", "scaffold", "patch"]
+    },
+    {
+      "id": "counsel",
+      "name": "COUNSEL",
+      "verb": "protect",
+      "anchor": "coral",
+      "personalDock": "connection",
+      "title": "Protect — legal, triage, after-incident",
+      "subtitle": "Where personal connection meets the shield.",
+      "skills": [
+        {
+          "id": "pro-se-georgia",
+          "label": "Pro se Georgia drafting",
+          "ollamaPersona": "p31-counsel",
+          "simplexLane": "COUNSEL"
+        },
+        {
+          "id": "voltage-triage",
+          "label": "Hostile-mail voltage classification (4-tier strict JSON)",
+          "ollamaPersona": "p31-triage",
+          "simplexLane": "HERALD"
+        },
+        {
+          "id": "post-incident",
+          "label": "Post-incident debrief",
+          "ollamaPersona": "p31-debrief",
+          "simplexLane": null
+        }
+      ],
+      "callsAccepted": ["draft", "triage", "debrief", "shield"]
+    },
+    {
+      "id": "scholar",
+      "name": "SCHOLAR",
+      "verb": "understand",
+      "anchor": "phosphorus",
+      "personalDock": "rhythm",
+      "title": "Understand — research, grants, pattern-finding",
+      "subtitle": "Where personal rhythm meets the long view.",
+      "skills": [
+        {
+          "id": "grants-synthesis",
+          "label": "Grants and research synthesis (22-paper canon)",
+          "ollamaPersona": "p31-narrator",
+          "simplexLane": "SCHOLAR"
+        },
+        {
+          "id": "q-factor-patterns",
+          "label": "Q-factor / trimtab pattern detection",
+          "ollamaPersona": "p31-oracle",
+          "simplexLane": "ORACLE"
+        }
+      ],
+      "callsAccepted": ["research", "synthesize", "pattern", "brief"]
+    },
+    {
+      "id": "scribe",
+      "name": "SCRIBE",
+      "verb": "remember",
+      "anchor": "lavender",
+      "personalDock": "creation",
+      "title": "Remember — passport, accommodation log, foundry",
+      "subtitle": "Where personal creation meets the archive.",
+      "skills": [
+        {
+          "id": "passport-mirror",
+          "label": "Cognitive Passport assembly (p31.cognitivePassport/1.0.0)",
+          "ollamaPersona": "p31-scribe",
+          "simplexLane": "SCRIBE"
+        },
+        {
+          "id": "phos-companion",
+          "label": "Phos children companion-as-memory",
+          "ollamaPersona": "p31-phos",
+          "simplexLane": null,
+          "gate": "child-mesh-unlock"
+        }
+      ],
+      "callsAccepted": ["log", "assemble", "archive", "remember"]
+    }
+  ],
+  "edges": [
+    {
+      "from": "forge",
+      "to": "counsel",
+      "label": "safe to ship",
+      "verb": "make·protect"
+    },
+    {
+      "from": "forge",
+      "to": "scholar",
+      "label": "design from research",
+      "verb": "make·understand"
+    },
+    {
+      "from": "forge",
+      "to": "scribe",
+      "label": "write what you build",
+      "verb": "make·remember"
+    },
+    {
+      "from": "counsel",
+      "to": "scholar",
+      "label": "brief the brief",
+      "verb": "protect·understand"
+    },
+    {
+      "from": "counsel",
+      "to": "scribe",
+      "label": "file the protect",
+      "verb": "protect·remember"
+    },
+    {
+      "from": "scholar",
+      "to": "scribe",
+      "label": "publish the understanding",
+      "verb": "understand·remember"
+    }
+  ],
+  "bipartiteCover": {
+    "comment": "Each personal-tetrahedron vertex docks to one agent hub. Together they form K₄,₄ — eight nodes, sixteen edges (six personal + six agent + four bipartite docks).",
+    "pairs": [
+      { "personal": "structure",  "agent": "forge",   "edge": "you build · forge tools" },
+      { "personal": "connection", "agent": "counsel", "edge": "you reach · counsel keeps" },
+      { "personal": "rhythm",     "agent": "scholar", "edge": "you pace · scholar charts" },
+      { "personal": "creation",   "agent": "scribe",  "edge": "you make · scribe records" }
+    ]
+  },
+  "triadicCover": {
+    "comment": "Family-cage K₄ adds a third layer below the personal tetrahedron. Each family vertex pairs with a personal dock and (transitively) with an agent hub. Children's vertices route to SCRIBE through the child-mesh-unlock gate.",
+    "schema": "p31.familyCage/1.0.0",
+    "vertices": [
+      { "id": "will",     "role": "operator",   "personalDock": "structure",  "guardianAgent": "forge",   "ageBand": "adult",     "displayInitial": "W"  },
+      { "id": "sj",       "role": "child",      "personalDock": "rhythm",     "guardianAgent": "scholar", "ageBand": "minor",     "displayInitial": "S.J.", "gate": "child-mesh-unlock" },
+      { "id": "wj",       "role": "child",      "personalDock": "creation",   "guardianAgent": "scribe",  "ageBand": "minor",     "displayInitial": "W.J.", "gate": "child-mesh-unlock" },
+      { "id": "christyn", "role": "co-parent",  "personalDock": "connection", "guardianAgent": "counsel", "ageBand": "adult",     "displayInitial": "C"  }
+    ],
+    "pairs": [
+      { "family": "will",     "personal": "structure",  "agent": "forge"   },
+      { "family": "sj",       "personal": "rhythm",     "agent": "scholar" },
+      { "family": "wj",       "personal": "creation",   "agent": "scribe"  },
+      { "family": "christyn", "personal": "connection", "agent": "counsel" }
+    ],
+    "totalEdges": 16,
+    "edgeBreakdown": {
+      "agentK4": 6,
+      "personalK4": 6,
+      "familyK4": 6,
+      "agentToPersonalDocks": 4,
+      "personalToFamilyDocks": 4,
+      "familyToOperatorPillar": 4,
+      "note": "Agent K₄ + Personal K₄ + Family K₄ = 18 graph edges; the K₄,₄,₄ cover layer adds 12 cross-stack edges (4+4+4). Total connection map = 30."
+    }
+  },
+  "dockProtocol": {
+    "version": "1.0.0",
+    "endpoints": [
+      {
+        "method": "POST",
+        "path": "/v1/dock",
+        "purpose": "Personal tetrahedron requests a session at one or all hubs.",
+        "request": {
+          "clientId": "string (UUID; the personal tetrahedron's stable identity)",
+          "personalTetra": "p31.personalTetra/1.0.0 snapshot (docks)",
+          "capabilities": "array of skill ids the client wants",
+          "publicKey": "optional Ed25519 public key (future: signed dock)"
+        },
+        "response": {
+          "sessionId": "string (UUID; valid for 24h, renewable)",
+          "hubs": "array of { id, baseUrl, expires }",
+          "allowedSkills": "array of skill ids granted",
+          "policies": "rate limit, max body size, child-gate hints"
+        }
+      },
+      {
+        "method": "POST",
+        "path": "/v1/{hub}/call",
+        "purpose": "Invoke a skill on the named hub. {hub} ∈ forge|counsel|scholar|scribe.",
+        "request": {
+          "sessionId": "string",
+          "skillId": "string",
+          "input": "object (per-skill input shape)",
+          "stream": "boolean (default false)"
+        },
+        "response": "object (per-skill output) or text/event-stream if stream=true"
+      },
+      {
+        "method": "GET",
+        "path": "/v1/{hub}/health",
+        "purpose": "Liveness + load.",
+        "response": {
+          "ok": "boolean",
+          "hub": "id",
+          "load": "0..1",
+          "skills": "array of skill ids ready"
+        }
+      },
+      {
+        "method": "GET",
+        "path": "/v1/topology",
+        "purpose": "Returns the K₄ adjacency, hub statuses, and the bipartite cover with the calling personal tetrahedron.",
+        "response": {
+          "schema": "p31.k4AgentHub/1.0.0",
+          "vertices": "array of {id, anchor, status, load}",
+          "edges": "array of {from, to, label}",
+          "bipartite": "array of {personal, agent}"
+        }
+      },
+      {
+        "method": "GET",
+        "path": "/v1/cross/{from}/{to}",
+        "purpose": "Inter-hub edge call (e.g., FORGE asks SCHOLAR to brief). Routes through the K₄ adjacency map; may aggregate.",
+        "response": "object (per-edge skill output)"
+      }
+    ],
+    "auth": {
+      "kind": "session-cookie + Bearer header (sessionId)",
+      "rotation": "refresh after 23h or on policy change",
+      "signedDock": {
+        "since": "1.1.0",
+        "alg": "Ed25519",
+        "format": "raw 32-byte public key, base64url",
+        "signedFields": ["clientId", "personalTetra.schema", "capabilities", "ts", "nonce"],
+        "required": "when env REQUIRE_SIGNED_DOCK=1; otherwise advisory",
+        "envelope": "{ body, ts, nonce, sig } where sig = Ed25519(clientId | personalTetra.schema | sortedCaps | ts | nonce)"
+      },
+      "signedCallEnvelope": {
+        "since": "1.1.0",
+        "alg": "Ed25519",
+        "shape": "{ skillId, input, ts, nonce, sig }",
+        "required": "when session was signed-dock",
+        "replayProtection": "nonce stored in KV with 90s TTL"
+      }
+    },
+    "rateLimits": {
+      "perClient": { "rpm": 30, "burst": 8 },
+      "perHub":    { "rps": 50, "burst": 20 },
+      "child-gated": { "rpm": 10, "burst": 4 }
+    },
+    "maxBody": "256 KiB",
+    "websocket": {
+      "path": "/v1/{hub}/stream",
+      "purpose": "Optional duplex stream for long-running skill invocations (build/research/triage)."
+    }
+  },
+  "skillDispatcher": {
+    "since": "1.1.0",
+    "comment": "Each hub's runSkill(skill, input) tries the local Ollama HTTP API first when env OLLAMA_BASE_URL is set, otherwise returns a structured echo. Wiring to simplex-v7 cloud lanes is queued under CWP-P31-K4-AGENT-HUB-WIRE-SIMPLEX-LANE for v1.2.0.",
+    "ollama": {
+      "envVar": "OLLAMA_BASE_URL",
+      "defaultLocal": "http://127.0.0.1:11434",
+      "endpoint": "/api/generate",
+      "timeoutMs": 8000,
+      "fallback": "structured echo with skill metadata + dispatcherUsed='echo'"
+    },
+    "crossEdge": {
+      "comment": "Inter-hub edge calls use Cloudflare Durable Object service-binding stubs (not HTTP). The Worker entry routes /v1/cross/{from}/{to} to env[HUB_BINDINGS[to]].get(...).fetch() — sub-millisecond, no public network hop.",
+      "edges": "all 6 K₄ pairs"
+    }
+  },
+  "federation": {
+    "since": "1.1.0",
+    "schema": "p31.k4AgentHubFederation/1.0.0",
+    "comment": "Multiple operator instances of the K₄ agent tetrahedron can register as peers. Each peer presents its dock manifest URL and a signed instanceId; /v1/federation aggregates topologies. v1.1.0 ships the registry and aggregator; peer-to-peer signed messaging lands in v1.2.0.",
+    "endpoints": [
+      { "method": "POST", "path": "/v1/federation/peer", "purpose": "Register a peer hub. Body: { instanceId, manifestUrl, publicKey, ts, sig }." },
+      { "method": "GET",  "path": "/v1/federation",      "purpose": "Aggregated topology — local + cached peer manifests." },
+      { "method": "DELETE","path": "/v1/federation/peer/{instanceId}", "purpose": "Unregister a peer." }
+    ],
+    "policy": {
+      "maxPeers": 16,
+      "peerTtlSeconds": 86400,
+      "rejectUnsignedPeers": true
+    }
+  },
+  "metrics": {
+    "since": "1.1.0",
+    "endpoint": "/v1/metrics",
+    "format": "JSON (per-hub counters: calls_total, errors_total, avg_ms, last_call_at, dispatcher_used)",
+    "comment": "Light footprint — pulled from per-DO calls table; aggregated by the Worker entry."
+  },
+  "deployment": {
+    "preferred": "single Cloudflare Worker with four Durable Object classes (one per hub) + KV for cross-hub session pinning",
+    "package": "packages/k4-agent-hub",
+    "wranglerName": "k4-agent-hub",
+    "publicFace": "andromeda/04_SOFTWARE/p31ca/public/agents.html (auto-mirrored from agents.html when sync runs)",
+    "shortRoute": "/agents",
+    "homeFace": "agents.html",
+    "live": {
+      "production": "https://k4-agent-hub.trimtab-signal.workers.dev",
+      "alias": "https://agents.p31ca.org",
+      "comment": "Both URLs are placeholders until wrangler deploy runs with a CF token. Operator may switch to a custom domain once registered."
+    }
+  },
+  "verifyHooks": [
+    "verify:k4-agent-hub"
+  ],
+  "ethicsAndGuards": {
+    "noChildExposureWithoutGate": "SCRIBE.phos-companion is gated on child-mesh-unlock (mirror of cognitive-passport audience-matrix row 8).",
+    "noOperatorImpersonation": "FORGE / COUNSEL / SCHOLAR / SCRIBE are agents; they do not represent themselves as the operator.",
+    "noCredentialPassThrough": "Hubs never pass through user credentials to model providers. The local Ollama lane is preferred for confidential work (per .cursor/rules/p31-ollama-fleet.mdc).",
+    "noSubmarineMetaphors": "Inherits operator constraints from CLAUDE.md / .cursorrules.",
+    "allHubsRespectSpoonState": "If session.executiveSpoonState is 'low' or 'crisis', hubs reduce branching and prefer one-step replies."
+  },
+  "publicMessaging": {
+    "tagline": "Four hubs. One mesh. Your tetrahedron, their anvil-shield-book-quill.",
+    "elevator": "P31's K₄ agent tetrahedron is four cooperating workers — Forge, Counsel, Scholar, Scribe — that your personal tetrahedron docks to. Each hub speaks one verb (make, protect, understand, remember). The six K₄ edges let them brief each other so a single ask reaches the right pair without the operator having to route it.",
+    "pairs": "P31-K4-AGENT-HUBS.md · agents.html · packages/k4-agent-hub/ · verify:k4-agent-hub"
+  }
+}

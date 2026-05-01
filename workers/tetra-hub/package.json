@@ -1,0 +1,15 @@
+{
+  "name": "tetra-hub",
+  "private": true,
+  "version": "1.0.0",
+  "description": "P31 tetra-hub — read-only K₄ trio aggregator Worker",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "check": "wrangler deploy --dry-run"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250401.0",
+    "wrangler": "^4.0.0"
+  }
+}

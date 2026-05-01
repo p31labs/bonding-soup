@@ -451,6 +451,9 @@ openSection("P31 home, hub, and source links", "local", "h-local");
     { href: "https://p31ca.org/lab", label: "Sovereign Lab (hub /lab)", note: "npm run sync:sovereign-p31ca — dome · labTelemetry bridge" },
     { href: "https://p31ca.org/slicer", label: "Browser slicer (hub /slicer)", note: "Kiri embed + K₄ STL — same sync" },
     { href: "https://p31ca.org/doc-library/", label: "Doc library (hub)", note: "Search home docs" },
+    { href: "https://p31ca.org/visuals", label: "Visual demos (hub /visuals)", note: "K₄ mesh · alignment graph · Larmor pulse · glass box gallery" },
+    { href: "https://p31ca.org/glass-box", label: "Glass box (hub /glass-box)", note: "Public transparency terminal — synthetic playbacks + verify pulse + promoted reports" },
+    { href: `${ghMain}/docs/P31-DEEP-DIVE.md`, label: "P31 deep dive (source)", note: "Curator's walk through the codebase's mind-bending primitives" },
     { href: `${ghMain}/docs/physics-learn/index.html`, label: "Physics learn (source)", note: "Labs shell in repo" },
     { href: "http://127.0.0.1:3131/", label: "Command center (local only)", note: "npm run command-center" },
     { href: "http://127.0.0.1:5174/", label: "Geodesic state preview (local)", note: "npm run demo:geodesic-preview — GET /state via Vite proxy" },
@@ -646,14 +649,14 @@ const html = `<!DOCTYPE html>
       </section>
 
       <ul class="p31-doc-toc" role="list">
-        <li><a href="#hub-org">Hub &amp; org</a></li>
-        <li><a href="#contracts">Contracts</a></li>
-        <li><a href="#p31ca-paths">p31ca paths</a></li>
-        <li><a href="#mesh-workers">Mesh</a></li>
-        <li><a href="#monetary">Monetary</a></li>
-        <li><a href="#workers-more">More Workers</a></li>
-        <li><a href="#glass">Glass</a></li>
-        <li><a href="#local">Home &amp; source</a></li>
+        <li><a class="p31-q-chip p31-q-chip--filter" href="#hub-org">Hub &amp; org</a></li>
+        <li><a class="p31-q-chip p31-q-chip--filter" href="#contracts">Contracts</a></li>
+        <li><a class="p31-q-chip p31-q-chip--filter" href="#p31ca-paths">p31ca paths</a></li>
+        <li><a class="p31-q-chip p31-q-chip--filter" href="#mesh-workers">Mesh</a></li>
+        <li><a class="p31-q-chip p31-q-chip--filter" href="#monetary">Monetary</a></li>
+        <li><a class="p31-q-chip p31-q-chip--filter" href="#workers-more">More Workers</a></li>
+        <li><a class="p31-q-chip p31-q-chip--filter" href="#glass">Glass</a></li>
+        <li><a class="p31-q-chip p31-q-chip--filter" href="#local">Home &amp; source</a></li>
       </ul>
     </header>
 
@@ -661,11 +664,14 @@ const html = `<!DOCTYPE html>
 ${sections.join("\n")}
 
       <div class="p31-doc-links" style="margin-bottom: var(--p31-space-10)">
-        <a href="${bondingBase}/soup">C.A.R.S.</a>
-        <a href="${ghMain}/p31-personal-howto.html">How-to source</a>
-        <a href="${ghMain}/docs/P31-DEPLOY-CANON.md">CONNECTION</a>
-        <a href="${ghMain}/docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">When-scale plan</a>
-        <a href="https://p31ca.org/">p31ca.org</a>
+        <a class="p31-q-chip p31-q-chip--assist" href="${bondingBase}/soup">C.A.R.S.</a>
+        <a class="p31-q-chip p31-q-chip--assist" href="https://p31ca.org/agents">K₄ agent hubs</a>
+        <a class="p31-q-chip p31-q-chip--assist" href="${ghMain}/p31-personal-howto.html">How-to source</a>
+        <a class="p31-q-chip p31-q-chip--assist" href="${ghMain}/docs/P31-DEPLOY-CANON.md">CONNECTION</a>
+        <a class="p31-q-chip p31-q-chip--assist" href="${ghMain}/docs/PLAN-BONDING-SOUP-WHEN-SCALE.md">When-scale plan</a>
+        <a class="p31-q-chip p31-q-chip--assist" href="https://p31ca.org/visuals">Visual demos</a>
+        <a class="p31-q-chip p31-q-chip--assist" href="https://p31ca.org/glass-box">Glass box</a>
+        <a class="p31-q-chip p31-q-chip--assist" href="https://p31ca.org/">p31ca.org</a>
       </div>
 
       <footer class="p31-doc-foot">

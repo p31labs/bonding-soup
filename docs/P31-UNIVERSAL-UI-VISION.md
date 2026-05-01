@@ -5,8 +5,9 @@
 **Pairs with (normative layout / tokens / ethics):**
 
 - **`docs/P31-DESIGN-DOCTRINE.md`** — Gray Rock → Alive, components  
+- **`docs/P31-QUANTUM-MATERIAL-U.md`** — additive Material 3 grammar refracted through K₄ anchors (`.p31-q-*` components, `--p31-tone/elev/state/shape/q-motion-*` tokens). **Showcase:** `p31-quantum-material-u.html` (open via `npm run demo`).  
 - **`docs/ETHICAL-STYLE-MAP.md`** — motion, voice, no dark patterns  
-- **`andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json`** — typography, palette, ring appearances  
+- **`andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json`** — typography, palette, ring appearances, `quantum` block  
 - **`design-assets/starfield/`** — ambient mesh (`p31-starfield.js`), **`docs/P31-STARFIELD-MESH-TOUCHES.md`**  
 - **`p31-alignment.json`** — source id **`p31-universal-ui-vision-md`**
 - **`docs/P31-DELTA-LANGUAGE.md`** + **`docs/p31-delta-language.json`** — speakable vocabulary (anchors, terms, forbidden phrases); glossary **`docs/p31-delta-glossary.html`** / hub **`/delta-language.html`**; **`verify:delta-language`**

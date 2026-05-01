@@ -19,6 +19,13 @@ function sameJson(a, b) {
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
+/** Hub file p31-integrations.json adds edgeMesh + sovereignWorkerSpas; strip before comparing to p31-constants.integrations. */
+function integrationsBaseShape(ing) {
+  if (!ing || typeof ing !== "object") return ing;
+  const { edgeMesh, sovereignWorkerSpas, ...rest } = ing;
+  return rest;
+}
+
 function main() {
   if (!fs.existsSync(constantsPath)) {
     console.log("verify-constants: skip — no p31-constants.json (partial clone?)");
@@ -166,6 +173,13 @@ function main() {
     if (mvp && !ts.includes(mvp)) {
       console.error(
         "verify-constants: generated TS missing documentation.mvpInventory path — run: npm run apply:constants"
+      );
+      fail = 1;
+    }
+    const mlp = c.documentation?.marketLaunchPackage;
+    if (mlp && !ts.includes(mlp)) {
+      console.error(
+        "verify-constants: generated TS missing documentation.marketLaunchPackage path — run: npm run apply:constants"
       );
       fail = 1;
     }
@@ -319,7 +333,7 @@ function main() {
     const integSrc = path.join(root, "andromeda/04_SOFTWARE/p31ca/src/data/p31-integrations.json");
     if (fs.existsSync(integSrc)) {
       const ing = JSON.parse(fs.readFileSync(integSrc, "utf8"));
-      if (JSON.stringify(ing) !== JSON.stringify(c.integrations)) {
+      if (JSON.stringify(integrationsBaseShape(ing)) !== JSON.stringify(c.integrations)) {
         console.error("verify-constants: p31ca/src/data/p31-integrations.json out of date — run: npm run apply:constants");
         fail = 1;
       }

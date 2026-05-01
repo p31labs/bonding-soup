@@ -14,6 +14,8 @@
 | **P1** | Release-capable — mesh strict + hub build when tree present | `MESH_LIVE_STRICT=1 npm run p31:ci` | Job **P31 / full stack** (`p31-all.mjs`, preflight) | Needs **`andromeda/04_SOFTWARE/p31ca`** in checkout for hub build + strict mesh; home-only clone skips heavy steps but **P0 still passes**. |
 | **P2** | Full operator bar — scorecard, e2e, glass, SAST (soft) | `npm run p31:all` | Same as **P31 / full stack** | Includes `validate:full`, Playwright smokes, ecosystem glass (soft), Semgrep (soft). |
 | **P3** | Pre-Pages / manual deploy rehearsal | `npm run release:public` or `node scripts/p31-release-public.mjs` | **P31 Pages deploy + prod smoke** (`workflow_dispatch`) | Runs `p31-ci.mjs` then `wrangler pages deploy`; see deploy canon. |
+| **P3a** | **Atomic pre-deploy auto-pilot** — release:public + strict glass + readiness rehearsal | `npm run launch:auto` | **P31 autodeploy hub (main)** then **post-deploy:verify** auto-step | Single command; non-zero on first red; wires to live edge after wrangler push. **`scripts/p31-launch-auto.mjs`** + **`scripts/p31-post-deploy-verify.mjs`**. |
+| **P4** | **Live drift watch** — daily read-only strict glass + smoke | `npm run launch:smoke:net && P31_GLASS_STRICT=1 npm run ecosystem:glass` | **P31 live drift (daily)** scheduled workflow | **`.github/workflows/p31-live-drift.yml`** uploads `p31-glass-report.json` artifact on red. |
 
 **Security suite (p31ca):** **`security:check`** (B+C+E) runs inside **`p31-ci.mjs`** when `CI=true` and p31ca exists — i.e. bundled in **P1** on full checkouts, not a separate home proof when the subtree is absent.
 

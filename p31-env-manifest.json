@@ -290,6 +290,41 @@
       "refs": [".githooks/pre-commit", "docs/P31-ENGINEERING-STANDARD.md"]
     },
     {
+      "name": "P31_SKIP_SMART_EVM_BUILD",
+      "tier": "verify",
+      "risk": "low",
+      "description": "Skip regenerating contracts/p31-smart-evm.json inside build:contract-registry.",
+      "refs": ["scripts/build-smart-evm-manifest.mjs", "scripts/build-contract-registry.mjs"]
+    },
+    {
+      "name": "P31_LAUNCH_REPORT",
+      "tier": "verify",
+      "risk": "low",
+      "description": "Override JSON output path for launch:audit / launch:gate (default /tmp/p31_launch_readiness.json).",
+      "refs": ["scripts/p31-launch-readiness.mjs"]
+    },
+    {
+      "name": "P31_REPORTS_HOME",
+      "tier": "ops",
+      "risk": "low",
+      "description": "Override reports archive root (default ~/.p31/reports/). Used by reports:simulate to sandbox a scenario; daemon and inbox watcher honor it as well.",
+      "refs": ["scripts/lib/reports/filing.mjs", "scripts/p31-reports-simulate.mjs", "scripts/p31-reports-daemon.mjs"]
+    },
+    {
+      "name": "P31_SKIP_SOVEREIGN_CHAIN",
+      "tier": "verify",
+      "risk": "low",
+      "description": "Skip verify:sovereign-chain (Foundry build/test for P31TransparencyAnchor).",
+      "refs": ["scripts/verify-sovereign-chain.mjs"]
+    },
+    {
+      "name": "P31_SOVEREIGN_CHAIN_STRICT",
+      "tier": "verify",
+      "risk": "low",
+      "description": "If set, verify:sovereign-chain fails when forge is missing (default: skip).",
+      "refs": ["scripts/verify-sovereign-chain.mjs"]
+    },
+    {
       "name": "P31_STYLE_ALIGN_GLOB",
       "tier": "dx",
       "risk": "low",

@@ -67,6 +67,7 @@ function printHelp() {
         dim("npm run fun:shower / fun:bowl") +
         "",
       "  " + cyan("connect") + "       CONNECTION spine — " + dim("npm run connection"),
+      "  " + cyan("triper") + "        MVP certification system — " + cyan("triper cert") + " · " + cyan("triper status") + " · " + cyan("triper exec") + " · " + cyan("triper <suite>"),
       "  " + cyan("verify") + "        " + dim("npm run verify"),
       "  " + cyan("facts") + "         " + dim("npm run verify:facts"),
       "  " + cyan("budgets") + "       mesh + glass SLOs (no network)",
@@ -470,6 +471,57 @@ async function main() {
       process.exit(code);
     }
     console.error("p31 github-org: unknown subcommand " + JSON.stringify(sub) + " (try github-org --help)");
+    process.exit(1);
+  }
+
+  if (cmd === "triper") {
+    const sub = fwd[0];
+    const rest = fwd.slice(1);
+    const SUITES = ["bonding", "cars", "personal", "hub", "mesh", "simplex", "email", "epcp", "geodesic"];
+    if (!sub || sub === "-h" || sub === "--help") {
+      console.log(
+        [
+          bold("p31 triper") + " — TRIPER MVP certification system (docs/P31-TRIPER-SYSTEM.md)",
+          "",
+          dim("Usage:"),
+          "  " + cyan("npm run p31 -- triper cert") + "         structural cert (9 suites + combined gate + cert log)",
+          "  " + cyan("npm run p31 -- triper status") + "       show latest cert status",
+          "  " + cyan("npm run p31 -- triper status --json") + " machine-readable JSON",
+          "  " + cyan("npm run p31 -- triper exec") + "         execution runner (actual test suites)",
+          "  " + cyan("npm run p31 -- triper exec --soft") + "  non-blocking execution run",
+          "  " + cyan("npm run p31 -- triper exec --skip-network") + "  skip network steps",
+          "  " + cyan("npm run p31 -- triper full") + "         cert + exec (full certification)",
+          "  " + cyan("npm run p31 -- triper <suite>") + "      single-suite structural check",
+          "",
+          dim("Suites:") + " " + SUITES.join(" · "),
+          "",
+          dim("Release gate:") + " " + dim("release:public") + " requires cert age <24h",
+          "",
+        ].join("\n")
+      );
+      process.exit(0);
+    }
+    if (sub === "cert") {
+      const code = await runNpmScript("test:triper:cert", rest);
+      process.exit(code);
+    }
+    if (sub === "status") {
+      const code = await runNodeScript("scripts/triper-status.mjs", rest);
+      process.exit(code);
+    }
+    if (sub === "exec") {
+      const code = await runNodeScript("scripts/triper-exec.mjs", rest);
+      process.exit(code);
+    }
+    if (sub === "full") {
+      const code = await runNpmScript("triper:full", rest);
+      process.exit(code);
+    }
+    if (SUITES.includes(sub)) {
+      const code = await runNpmScript(`test:triper:${sub}`, rest);
+      process.exit(code);
+    }
+    console.error("p31 triper: unknown subcommand " + JSON.stringify(sub) + " (try triper --help)");
     process.exit(1);
   }
 

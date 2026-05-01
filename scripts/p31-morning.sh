@@ -24,6 +24,11 @@ else
   echo "→ andromeda/ absent — skip monorepo pull"
 fi
 
+echo "→ Morning report (mandatory; soft if already filed today)…"
+set +e
+P31_REPORTS_NUDGE=1 npm run reports:auto -- --brief 2>&1 | sed 's/^/  /'
+set -e
+
 echo "→ Converge gate (P31_CONVERGE_SKIP_PASSKEY=1)…"
 set +e
 P31_CONVERGE_SKIP_PASSKEY=1 npm run p31:converge

@@ -1,6 +1,6 @@
 # Review documentation for Gemini / Opus (and humans)
 
-**Last updated:** 2026-04-27 — **`P31-ENGINEERING-STANDARD.md`** ship bar; **`GEMINI-OPUS-REVIEW-BUNDLE.md`** §5 automation matches root **`verify`**, **`p31-ci.yml`**, and **`p31-ci.mjs`**. MVP inventory reflects Zenodo V–XX batch.
+**Last updated:** 2026-04-30 — **`P31-ENGINEERING-STANDARD.md`** ship bar; **`GEMINI-OPUS-REVIEW-BUNDLE.md`** §5 automation matches root **`verify`**, **`p31-ci.yml`**, and **`p31-ci.mjs`**. MVP inventory reflects Zenodo V–XX batch. **`P31-MARKET-LAUNCH-PACKAGE.md`** is the consolidated GTM + launch checklist spine.
 
 This folder contains **handoff-quality** documentation for external model review of the P31 workspace.
 
@@ -19,6 +19,7 @@ Read in this order:
 | 5 | **`MVP-DELIVERABLES-INVENTORY.md`** | Tiered MVP list — LIVE hub/products, 10-worker fleet, adjacent sprint items, active dev, concepts; grant-ready five-bullet summary |
 | 5b | **`DELIVERABLE-BONDING-HOME-SCALE-PACK.md`** | **Home repo drop** — PWA + when-scale + room runbook + fleet portal + entry parity; proof: **`verify`** + **`soup:room-scale`** |
 | 6 | **`ENTERPRISE-LAUNCH-PREP.md`** | **Launch** — verify gates, secret rotation, Andromeda merge/deploy path, Zenodo/constants alignment vs Genesis SOPs |
+| 6a | **`P31-MARKET-LAUNCH-PACKAGE.md`** | **Market launch** — positioning, ICPs, phased GTM checklist, readiness lanes, monetization map, risk register; indexes MVP inventory + voice + ecosystem docs |
 
 **Also authoritative (pre-existing, not duplicated in full here):**
 

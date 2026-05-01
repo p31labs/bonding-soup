@@ -1,4 +1,4 @@
-# QUANTUM BRAIN: FILESYSTEM OF WILL JOHNSON
+# QUANTUM BRAIN: FILESYSTEM OF THE OPERATOR
 
 ## The mind mapped as architecture
 
@@ -277,7 +277,7 @@ The filesystem IS the proof:
 
 ---
 
-## THE PARADIGM SHIFT — STILL HOLDS
+## THE SHIFT — STILL HOLDS
 
 Old model: Brand → Products → Customer  
 New model: Body → Theory → Device → Proof

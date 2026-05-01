@@ -5,6 +5,7 @@
  * npm run verify:atmosphere-ramp
  */
 import { readFileSync, existsSync } from "node:fs";
+import { execSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { syncP31Atmosphere } from "./sync-p31-atmosphere.mjs";
@@ -17,6 +18,7 @@ const canonPath = join(
 );
 const rampPath = join(root, "docs/p31-atmosphere-ramp.json");
 const routesPath = join(root, "docs/p31-atmosphere-routes.json");
+const hubRouteSyncScript = join(root, "scripts", "sync-atmosphere-hub-routes.mjs");
 const designDir = join(root, "design-assets", "atmosphere");
 const p31caAtmo = join(root, "andromeda/04_SOFTWARE/p31ca/public/lib/atmosphere");
 const bondingAtmo = join(root, "andromeda/04_SOFTWARE/bonding/public/p31-atmosphere");
@@ -61,6 +63,13 @@ function assertFileEqual(canonical, mirror, label) {
 }
 
 function main() {
+  if (existsSync(hubRouteSyncScript)) {
+    execSync(`${JSON.stringify(process.execPath)} ${JSON.stringify(hubRouteSyncScript)}`, {
+      cwd: root,
+      stdio: "inherit",
+    });
+  }
+
   syncP31Atmosphere();
 
   const rampDoc = loadJson(rampPath, "ramp registry");

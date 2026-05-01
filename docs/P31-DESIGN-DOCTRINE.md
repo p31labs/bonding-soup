@@ -1,8 +1,8 @@
 # P31 design doctrine — Gray Rock → Alive
 
 **Schema:** `p31.designDoctrine/1.0.0`  
-**Companion:** `p31-universal-canon.json` (tokens), `ETHICAL-STYLE-MAP.md` (psychology), `DESIGN-TOKENS-REFERENCE.md` (variables)  
-**Verify:** `npm run verify:style-alignment` (about pages); visual inspection on Chromebook + iPhone
+**Companion:** `p31-universal-canon.json` (tokens), `ETHICAL-STYLE-MAP.md` (psychology), `DESIGN-TOKENS-REFERENCE.md` (variables), **`P31-QUANTUM-MATERIAL-U.md`** (additive Material 3 grammar — `.p31-q-*` opt-in components, `--p31-tone/elev/state/shape/q-motion-*` tokens; refraction, not replacement)  
+**Verify:** `npm run verify:style-alignment` (about pages); `npm run verify:quantum-material-u` (Material U layer); visual inspection on Chromebook + iPhone
 
 ---
 

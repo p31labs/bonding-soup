@@ -476,6 +476,18 @@ export const ACTIONS = {
     cmd: "npm",
     args: ["run", "verify:doc-library:p31ca-mirror"],
   },
+  "home-sync-live-fleet-p31ca": {
+    title: "sync:live-fleet:p31ca (canonical p31-live-fleet.json → hub public + build:fleet-entities)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "sync:live-fleet:p31ca"],
+  },
+  "home-verify-live-fleet-p31ca-mirror": {
+    title: "verify:live-fleet:p31ca-mirror (sync + fail if hub live-fleet / entities / agent stubs uncommitted)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "verify:live-fleet:p31ca-mirror"],
+  },
   "home-docs-hub-simulate": {
     title: "docs:hub:simulate (build + verify index + temp mirror diff vs p31ca/public — no Andromeda writes)",
     cwd: repoRoot,
@@ -505,6 +517,18 @@ export const ACTIONS = {
     cwd: repoRoot,
     cmd: "npm",
     args: ["run", "verify:geodesic-wire-fixtures"],
+  },
+  "home-verify-quantum-deck": {
+    title: "verify:quantum-deck (@p31/quantum-deck — deck, CSPRNG shuffle, save schema stub)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "verify:quantum-deck"],
+  },
+  "home-sync-atmosphere-hub-routes": {
+    title: "sync:atmosphere-hub-routes (registry ids → atmosphere routes JSON)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "sync:atmosphere-hub-routes"],
   },
   "home-github-org-check": {
     title: "github:org:check (strict — same as CI: repos-metadata + REPOS.md cross-check)",
@@ -592,6 +616,48 @@ export const ACTIONS = {
     args: ["run", "test:k4market:smoke"],
     slow: true,
   },
+
+  // —— TRIPER (MVP certification system)
+  "home-triper-status": {
+    title: "triper:status — TRIPER dashboard (last cert, gate, per-suite)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "triper:status"],
+  },
+  "home-triper-cert": {
+    title: "test:triper:cert — 9 MVP suites + combined gate (structural)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "test:triper:cert"],
+    slow: true,
+    confirm: "Runs all 9 TRIPER suites + combined cross-MVP gate (~45s). Continue?",
+  },
+  "home-triper-exec": {
+    title: "triper:exec — execution phase (actual MVP test suites)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "triper:exec"],
+    slow: true,
+    confirm: "Runs underlying test suites for each MVP (SIMPLEX-v7, soup build, WS probes…). Continue?",
+  },
+  "home-triper-full": {
+    title: "triper:full — structural + execution (complete certification)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "triper:full"],
+    slow: true,
+    confirm:
+      "Full TRIPER certification: structural (403 tests) then execution (actual MVP suites). Takes 2–5 min. Continue?",
+  },
+  "home-triper-bonding": { title: "TRIPER: bonding", cwd: repoRoot, cmd: "npm", args: ["run", "test:triper:bonding"] },
+  "home-triper-cars": { title: "TRIPER: C.A.R.S.", cwd: repoRoot, cmd: "npm", args: ["run", "test:triper:cars"] },
+  "home-triper-personal": { title: "TRIPER: personal", cwd: repoRoot, cmd: "npm", args: ["run", "test:triper:personal"] },
+  "home-triper-hub": { title: "TRIPER: hub", cwd: repoRoot, cmd: "npm", args: ["run", "test:triper:hub"] },
+  "home-triper-mesh": { title: "TRIPER: mesh", cwd: repoRoot, cmd: "npm", args: ["run", "test:triper:mesh"] },
+  "home-triper-simplex": { title: "TRIPER: simplex", cwd: repoRoot, cmd: "npm", args: ["run", "test:triper:simplex"] },
+  "home-triper-email": { title: "TRIPER: email", cwd: repoRoot, cmd: "npm", args: ["run", "test:triper:email"] },
+  "home-triper-epcp": { title: "TRIPER: EPCP", cwd: repoRoot, cmd: "npm", args: ["run", "test:triper:epcp"] },
+  "home-triper-geodesic": { title: "TRIPER: geodesic", cwd: repoRoot, cmd: "npm", args: ["run", "test:triper:geodesic"] },
 
   // —— CI-shaped
   "home-release-check": {
@@ -970,6 +1036,8 @@ export const SECTIONS_RAW = [
       "home-verify-mesh-offline",
       "home-verify-mesh",
       "home-verify-ecosystem",
+      "home-sync-live-fleet-p31ca",
+      "home-verify-live-fleet-p31ca-mirror",
       "home-build-doc-index",
       "home-verify-doc-index",
       "home-docs-prep-hub",
@@ -978,6 +1046,8 @@ export const SECTIONS_RAW = [
       "home-docs-hub-automate",
       "home-test-simulations",
       "home-verify-geodesic-wire-fixtures",
+      "home-verify-quantum-deck",
+      "home-sync-atmosphere-hub-routes",
       "home-mirror-fixer",
       "home-mirror-fixer-apply",
       "home-verify-runbooks",

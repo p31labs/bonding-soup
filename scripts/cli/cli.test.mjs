@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach, beforeAll } from "vitest";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { existsSync } from "node:fs";
@@ -48,6 +48,23 @@ describe("tty", () => {
 });
 
 describe("cli entry", () => {
+  const p31caRoot = path.join(cliRoot, "andromeda", "04_SOFTWARE", "p31ca");
+  const p31caPkg = path.join(p31caRoot, "package.json");
+
+  beforeAll(() => {
+    if (!existsSync(p31caPkg)) return;
+    const r = spawnSync("npm run hub:build", {
+      cwd: p31caRoot,
+      encoding: "utf8",
+      shell: true,
+      env: { ...process.env },
+    });
+    if (r.status !== 0) {
+      const out = (r.stdout || "") + (r.stderr || "");
+      throw new Error(`p31ca hub:build failed (${r.status}): ${out.slice(0, 2000)}`);
+    }
+  });
+
   it("connect --help reaches connection script (not top-level p31 help)", () => {
     const r = spawnSync(process.execPath, [cliEntry, "connect", "--help"], {
       cwd: cliRoot,
@@ -123,7 +140,6 @@ describe("cli entry", () => {
   });
 
   it("hub-diff exits 0 when p31ca tree present", () => {
-    const p31caPkg = path.join(cliRoot, "andromeda", "04_SOFTWARE", "p31ca", "package.json");
     if (!existsSync(p31caPkg)) return;
     const r = spawnSync(process.execPath, [cliEntry, "hub-diff"], {
       cwd: cliRoot,

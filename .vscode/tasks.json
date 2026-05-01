@@ -600,6 +600,78 @@
       "options": { "cwd": "${workspaceFolder}" },
       "group": "build",
       "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: TRIPER — full cert (9 suites + combined gate + log)",
+      "type": "shell",
+      "command": "npm run test:triper:cert",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true }
+    },
+    {
+      "label": "P31: TRIPER — status (latest cert)",
+      "type": "shell",
+      "command": "npm run triper:status",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared", "focus": false }
+    },
+    {
+      "label": "P31: TRIPER — exec runner (all MVPs, soft + skip-network)",
+      "type": "shell",
+      "command": "npm run triper:exec:soft -- --skip-network",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true }
+    },
+    {
+      "label": "P31: TRIPER — full offline (cert + exec --skip-network)",
+      "type": "shell",
+      "command": "npm run triper:full:offline",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true }
+    },
+    {
+      "label": "P31: TRIPER — watch mode (all suites)",
+      "type": "shell",
+      "command": "npm run test:triper:watch",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true }
+    },
+    {
+      "label": "P31: TRIPER — suite: bonding",
+      "type": "shell",
+      "command": "npm run test:triper:bonding",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: TRIPER — suite: mesh",
+      "type": "shell",
+      "command": "npm run test:triper:mesh",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: TRIPER — suite: simplex",
+      "type": "shell",
+      "command": "npm run test:triper:simplex",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: TRIPER — suite: geodesic",
+      "type": "shell",
+      "command": "npm run test:triper:geodesic",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "presentation": { "reveal": "always", "panel": "shared" }
     }
   ]
 }

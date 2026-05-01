@@ -1,8 +1,9 @@
-# P31 home: two-stage automation — fast root `verify`, then `p31:all` (no duplicate root verify when preflight=1).
+# P31 home: three-stage automation — root `verify`, TRIPER cert, then `p31:all`.
 # Andromeda/ often absent from checkout — first job still enforces the home bar; second job is best-effort.
 # No path filters: every push/PR to main or master runs (cannot miss CI by file path).
-# Branch protection: require check "P31 / root verify" (required) and "P31 / full stack" (recommended).
+# Branch protection: require "P31 / root verify" (required), "P31 / TRIPER cert" (required), "P31 / full stack" (recommended).
 # Apex proof mapping + deploy order: docs/P31-RELEASE-LADDER-CI.md
+# TRIPER system: docs/P31-TRIPER-SYSTEM.md — 9 MVP suites + combined gate.
 # workflow_dispatch: manual.
 name: P31 CI
 
@@ -26,8 +27,13 @@ jobs:
     name: P31 / root verify
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      NPM_CONFIG_PREFER_OFFLINE: "true"
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
 
       - uses: actions/setup-node@v4
         with:
@@ -43,12 +49,43 @@ jobs:
         env:
           CI: "true"
 
+  triper-cert:
+    name: P31 / TRIPER cert
+    needs: root-verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      NPM_CONFIG_PREFER_OFFLINE: "true"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: TRIPER — 9 MVP suites (gate check)
+        run: npm run test:triper
+        env:
+          CI: "true"
+
+      - name: TRIPER — combined suite (cross-MVP integration)
+        run: npm run test:triper:combined
+        env:
+          CI: "true"
+
   p31-all:
     name: P31 / full stack
-    needs: root-verify
+    needs: [root-verify, triper-cert]
     runs-on: ubuntu-latest
     # p31-all = validate:full + home doc-library Playwright + p31ca e2e (when present) + glass + SAST, etc.
     timeout-minutes: 60
+    env:
+      NPM_CONFIG_PREFER_OFFLINE: "true"
     steps:
       - uses: actions/checkout@v4
 
@@ -75,9 +112,10 @@ jobs:
           python3 -m pip install --user semgrep || python3 -m pip install --user --break-system-packages semgrep
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
-      - name: P31 all (validate, mesh, hub, e2e, glass; root verify skipped — preflight passed)
+      - name: P31 all (validate, mesh, hub, e2e, glass; root verify + TRIPER skipped — prior jobs passed)
         env:
           CI: "true"
           MESH_LIVE_STRICT: "1"
           P31_CI_USE_PREFLIGHT: "1"
+          P31_SKIP_TRIPER: "1"
         run: node scripts/p31-all.mjs

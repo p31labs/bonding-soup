@@ -22,6 +22,7 @@
  *   --install, -i     (local) Force `npm install` in p31ca even if node_modules exists
  *   --skip-root-verify   Skip `npm run verify` (split CI: a prior job already passed it)
  *   --skip-npm-ci        Skip root `npm ci` (split CI: a prior step already ran it)
+ *   --skip-triper        Skip TRIPER cert (split CI: triper-cert job already passed; or fast local iteration)
  *
  * In **CI** (GITHUB_ACTIONS/CI), when p31ca is present, the security suite runs after hub verify unless
  * `--no-security` is set.
@@ -35,6 +36,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const p31ca = path.join(root, "andromeda/04_SOFTWARE/p31ca");
 const k4Personal = path.join(root, "andromeda/04_SOFTWARE/k4-personal");
+const discordBot = path.join(root, "andromeda/04_SOFTWARE/discord/p31-bot");
 
 const args = new Set(process.argv.slice(2));
 const withContent = args.has("--content") || args.has("-c");
@@ -44,6 +46,7 @@ const withSecurity =
 const skipRootTsc = args.has("--skip-soup-tsc");
 const skipRootVerify = args.has("--skip-root-verify");
 const skipRootNpmCi = args.has("--skip-npm-ci");
+const skipTriper = args.has("--skip-triper") || process.env.P31_SKIP_TRIPER === "1";
 const skipInstall = args.has("--skip-install");
 const forceInstall = args.has("--install") || args.has("-i");
 const isCI = process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
@@ -108,7 +111,33 @@ function main() {
     );
   }
 
+  if (skipTriper) {
+    console.log(
+      "\n\x1b[36m▶\x1b[0m p31-ci: TRIPER cert skipped (--skip-triper / P31_SKIP_TRIPER=1; split CI job already passed it)\n"
+    );
+  } else {
+    run(
+      "TRIPER cert — 9 MVP suites + combined gate (docs/P31-TRIPER-SYSTEM.md)",
+      "npm run test:triper:cert",
+      root
+    );
+  }
+
   maybeK4Personal();
+
+  if (fs.existsSync(path.join(discordBot, "package.json"))) {
+    run(
+      "discord bot swarm (vitest + QA + manifest + p31-discord-bot-swarm.json)",
+      "npm run verify:discord-bot",
+      root
+    );
+  } else {
+    console.log(
+      "\n\x1b[33m▶\x1b[0m p31-ci: no discord bot at " +
+        path.relative(root, discordBot) +
+        " — skipped\n"
+    );
+  }
 
   if (!hasP31ca) {
     console.log(

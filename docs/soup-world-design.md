@@ -68,7 +68,7 @@ The auditory landscape of The Soup is handled by the `soundtrack.ts` module, des
 
 Every molecule acts as a localized audio emitter, humming its assigned chord quietly at -30dB. The chord is determined by the molecule's elemental composition and geometric structure: triangles produce major chords, squares produce minor chords, and complex shapes produce seventh or ninth chords. Each molecule's audio node pans based on its screen position, creating a 3D audio field even in 2D space.
 
-The audio engine scales dynamically based on camera state. Zooming in close to a specific molecule (camera zoom > 2.0) isolates its chord, raising its gain to -10dB while applying a low-pass filter to distant molecules. Zooming out (camera zoom < 0.5) seamlessly blends all localized emitters into a massive, ambient, generative wash of sound, with individual chords becoming indistinguishable from the harmonic texture.
+The audio engine scales dynamically based on camera state. Zooming in close to a specific molecule (camera zoom > 2.0) isolates its chord, raising its gain to -10dB while applying a low-pass filter to distant molecules. Zooming out (camera zoom < 0.5) smoothly blends all localized emitters into a massive, ambient, generative wash of sound, with individual chords becoming indistinguishable from the harmonic texture.
 
 Specific zones carry audio overrides. The Calm Zone features a deeply embedded, rhythmic undertone mathematically locked to the 4-4-6 breathing rhythm at 60 BPM. This creates a subliminal metronome that entrains player breathing without conscious awareness. The Deep overrides local chords with a sustained, resonant 863 Hz tone—the exact Larmor frequency—mixed at -20dB beneath the ambient wash. This frequency is felt as much as heard, creating a sense of profound depth and connection to quantum-scale processes.
 
@@ -95,7 +95,7 @@ Any molecule that the player has assigned a custom, user-generated name possesse
 
 ## 7. Multiplayer in The Soup
 
-The Soup is a shared, asynchronous multiplayer space where each player's emotional journey exists in parallel with others, creating a tapestry of interconnected experiences.
+The Soup is a shared, asynchronous multiplayer space where each player's emotional journey exists in parallel with others, weaving a network of shared moments.
 
 Each player is assigned a unique hex color code derived from their user ID hash, ensuring consistent identification across sessions. Their localized molecules inherit this color scheme as a vertex color overlay, tinting the molecular visualization while preserving the underlying chemistry-based appearance. Through lightweight WebSocket syncing (update rate = 2 Hz), players can see the "ghosts" of other players' molecules drifting through their version of The Soup in real-time, with position interpolation smoothing between updates.
 

@@ -27,6 +27,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      NPM_CONFIG_PREFER_OFFLINE: "true"
     permissions:
       contents: read
     steps:
@@ -34,7 +36,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version-file: .nvmrc
           cache: npm
           cache-dependency-path: package-lock.json
 

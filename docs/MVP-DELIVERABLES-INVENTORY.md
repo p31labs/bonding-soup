@@ -105,7 +105,7 @@ For a funder who needs **what exists today** (facts aligned with **`p31-constant
 - **WCD Batch 3 (26–32)** — closed; root `tsc` clean per review snapshot.
 - **Extended local audit:** **`npm run validate:full`** — same root checks as **`npm run verify`** plus live edge probes and JSON report (needs network).
 - **CI (home root):** **`npm run p31:ci`** → `scripts/p31-ci.mjs`: **`npm run verify`** (passport, **`verify:constants`**, **`verify:p31ca-contracts`**, **`tsc`**) → p31ca **`npm run verify`** (includes **`prebuild`**: ground-truth, **synergetic**, hub, Astro build). GitHub **`p31-ci.yml`** also triggers on **`p31-constants.json`**, **`tsconfig.json`**, **`src/**/*.ts`**, and constants scripts.
-- **Review set:** **`docs/README-REVIEW-DOCS.md`** → bundle + supplements A–C + **this inventory**.
+- **Review set:** **`docs/README-REVIEW-DOCS.md`** → bundle + supplements A–C + **this inventory**. **Market / launch spine:** **`docs/P31-MARKET-LAUNCH-PACKAGE.md`** (positioning, channels, phased checklist, `launch:audit` lanes).
 - **Agent coordination:** Triad / lanes per **`GEMINI-OPUS-REVIEW-BUNDLE.md`** and **`AGENTS.md`**.
 
 ---

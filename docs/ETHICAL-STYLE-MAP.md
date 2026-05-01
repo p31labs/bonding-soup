@@ -108,6 +108,7 @@ Style with attribute selectors in **`soup-quantum.css`**; extend in **that** fil
 **Related docs**
 
 - **`docs/P31-DESIGN-DOCTRINE.md`** — **Gray Rock → Alive → Personal** as the normative interaction model (psychology, physics shorthand, agent norms, IRWE language, `?alive=1` contract); layout templates; how tokens become surfaces (pair with this map for motion ethics)
+- **`docs/P31-QUANTUM-MATERIAL-U.md`** — Material 3 grammar refracted through K₄ anchors (additive `.p31-q-*` vocabulary; tonal scale, elevation, state layers, shape, motion budget); honours every guard in this map; verifier `npm run verify:quantum-material-u`
 - **`docs/P31-CREATE-CONNECT-ETHICAL-MONETIZATION.md`** — create / connect, ephemeralization, and ethical monetization (contracts + verify hooks)
 - **`docs/P31-ALIGNMENT-SYSTEM.md`**, **`p31-alignment.json`** — canonical sources vs derived artefacts; **`npm run verify:alignment`**
 - **`docs/P31-ENGINEERING-STANDARD.md`** — verify / release bar

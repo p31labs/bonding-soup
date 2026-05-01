@@ -1,6 +1,6 @@
 {
   "schema": "p31.productionReadiness/1.0.0",
-  "updated": "2026-04-28",
+  "updated": "2026-04-30",
   "scoringSystem": {
     "id": "p31.prs/1.0.0",
     "label": "P31 Production Readiness Score (PRS)",
@@ -10,22 +10,83 @@
         "label": "Live & reachable",
         "max": 10
       },
-      { "id": "deployability", "label": "Deployability", "max": 10 },
-      { "id": "verificationHooks", "label": "Verification hooks", "max": 10 },
-      { "id": "testingDepth", "label": "Testing depth", "max": 10 },
-      { "id": "contractsSchemas", "label": "Contracts & schemas", "max": 10 },
-      { "id": "observability", "label": "Observability", "max": 10 },
-      { "id": "securityPosture", "label": "Security posture", "max": 10 },
-      { "id": "operationalClarity", "label": "Operational clarity", "max": 10 },
-      { "id": "uxCompleteness", "label": "UX completeness", "max": 10 },
-      { "id": "ephemeralizationAlignment", "label": "Ephemeralization alignment", "max": 10 }
+      {
+        "id": "deployability",
+        "label": "Deployability",
+        "max": 10
+      },
+      {
+        "id": "verificationHooks",
+        "label": "Verification hooks",
+        "max": 10
+      },
+      {
+        "id": "testingDepth",
+        "label": "Testing depth",
+        "max": 10
+      },
+      {
+        "id": "contractsSchemas",
+        "label": "Contracts & schemas",
+        "max": 10
+      },
+      {
+        "id": "observability",
+        "label": "Observability",
+        "max": 10
+      },
+      {
+        "id": "securityPosture",
+        "label": "Security posture",
+        "max": 10
+      },
+      {
+        "id": "operationalClarity",
+        "label": "Operational clarity",
+        "max": 10
+      },
+      {
+        "id": "uxCompleteness",
+        "label": "UX completeness",
+        "max": 10
+      },
+      {
+        "id": "ephemeralizationAlignment",
+        "label": "Ephemeralization alignment",
+        "max": 10
+      }
     ],
     "tierBands": [
-      { "tier": "P0", "minScore": 85, "maxScore": 100, "label": "Production" },
-      { "tier": "P1", "minScore": 70, "maxScore": 84, "label": "Production-capable" },
-      { "tier": "P2", "minScore": 50, "maxScore": 69, "label": "Beta" },
-      { "tier": "P3", "minScore": 25, "maxScore": 49, "label": "Alpha" },
-      { "tier": "P4", "minScore": 0, "maxScore": 24, "label": "Concept" }
+      {
+        "tier": "P0",
+        "minScore": 85,
+        "maxScore": 100,
+        "label": "Production"
+      },
+      {
+        "tier": "P1",
+        "minScore": 70,
+        "maxScore": 84,
+        "label": "Production-capable"
+      },
+      {
+        "tier": "P2",
+        "minScore": 50,
+        "maxScore": 69,
+        "label": "Beta"
+      },
+      {
+        "tier": "P3",
+        "minScore": 25,
+        "maxScore": 49,
+        "label": "Alpha"
+      },
+      {
+        "tier": "P4",
+        "minScore": 0,
+        "maxScore": 24,
+        "label": "Concept"
+      }
     ]
   },
   "items": [
@@ -46,8 +107,14 @@
         "ephemeralizationAlignment": 10
       },
       "proof": {
-        "canonicalSources": ["p31-live-fleet.json", "p31-ecosystem.json"],
-        "verifyCommands": ["npm run verify:mesh", "npm run ecosystem:glass"]
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "p31-ecosystem.json"
+        ],
+        "verifyCommands": [
+          "npm run verify:mesh",
+          "npm run ecosystem:glass"
+        ]
       },
       "nextSteps": [
         "Add higher-signal integration tests for /api/mesh shape + edge errors",
@@ -61,18 +128,23 @@
       "score": {
         "liveReachable": 10,
         "deployability": 9,
-        "verificationHooks": 8,
-        "testingDepth": 5,
-        "contractsSchemas": 7,
+        "verificationHooks": 9,
+        "testingDepth": 6,
+        "contractsSchemas": 8,
         "observability": 9,
         "securityPosture": 8,
         "operationalClarity": 8,
-        "uxCompleteness": 7,
+        "uxCompleteness": 8,
         "ephemeralizationAlignment": 10
       },
       "proof": {
-        "canonicalSources": ["p31-live-fleet.json", "p31-ecosystem.json"],
-        "verifyCommands": ["npm run ecosystem:glass"]
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "p31-ecosystem.json"
+        ],
+        "verifyCommands": [
+          "npm run ecosystem:glass"
+        ]
       },
       "nextSteps": [
         "Add contract tests for /api/mesh response invariants",
@@ -86,18 +158,23 @@
       "score": {
         "liveReachable": 10,
         "deployability": 9,
-        "verificationHooks": 8,
-        "testingDepth": 5,
-        "contractsSchemas": 6,
+        "verificationHooks": 9,
+        "testingDepth": 6,
+        "contractsSchemas": 7,
         "observability": 9,
-        "securityPosture": 8,
-        "operationalClarity": 8,
-        "uxCompleteness": 7,
+        "securityPosture": 9,
+        "operationalClarity": 9,
+        "uxCompleteness": 8,
         "ephemeralizationAlignment": 9
       },
       "proof": {
-        "canonicalSources": ["p31-live-fleet.json", "p31-ecosystem.json"],
-        "verifyCommands": ["npm run ecosystem:glass"]
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "p31-ecosystem.json"
+        ],
+        "verifyCommands": [
+          "npm run ecosystem:glass"
+        ]
       },
       "nextSteps": [
         "Add schema for /health payload (if any beyond ok/version)",
@@ -110,19 +187,25 @@
       "label": "tetra-hub (K₄ trio read model)",
       "score": {
         "liveReachable": 10,
-        "deployability": 8,
-        "verificationHooks": 7,
-        "testingDepth": 5,
-        "contractsSchemas": 6,
-        "observability": 8,
-        "securityPosture": 8,
-        "operationalClarity": 7,
-        "uxCompleteness": 6,
-        "ephemeralizationAlignment": 9
+        "deployability": 9,
+        "verificationHooks": 8,
+        "testingDepth": 7,
+        "contractsSchemas": 8,
+        "observability": 9,
+        "securityPosture": 9,
+        "operationalClarity": 8,
+        "uxCompleteness": 7,
+        "ephemeralizationAlignment": 10
       },
       "proof": {
-        "canonicalSources": ["p31-live-fleet.json", "p31-constants.json"],
-        "verifyCommands": ["npm run verify:ecosystem", "npm run ecosystem:glass"]
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "p31-constants.json"
+        ],
+        "verifyCommands": [
+          "npm run verify:ecosystem",
+          "npm run ecosystem:glass"
+        ]
       },
       "nextSteps": [
         "Add allowlist + inventory row when Worker path is stable under repo",
@@ -150,9 +233,14 @@
           "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json",
           "p31-live-fleet.json"
         ],
-        "verifyCommands": ["npm run verify:p31ca-contracts", "npm run release:check"]
+        "verifyCommands": [
+          "npm run verify:p31ca-contracts",
+          "npm run release:check"
+        ]
       },
-      "nextSteps": ["Keep security suite current on Worker/dep changes"]
+      "nextSteps": [
+        "Keep security suite current on Worker/dep changes"
+      ]
     },
     {
       "id": "donate-api",
@@ -160,19 +248,24 @@
       "label": "donate-api (Stripe checkout Worker)",
       "score": {
         "liveReachable": 10,
-        "deployability": 9,
-        "verificationHooks": 6,
-        "testingDepth": 4,
-        "contractsSchemas": 7,
-        "observability": 9,
-        "securityPosture": 8,
-        "operationalClarity": 8,
-        "uxCompleteness": 8,
-        "ephemeralizationAlignment": 7
+        "deployability": 10,
+        "verificationHooks": 7,
+        "testingDepth": 6,
+        "contractsSchemas": 8,
+        "observability": 10,
+        "securityPosture": 9,
+        "operationalClarity": 9,
+        "uxCompleteness": 9,
+        "ephemeralizationAlignment": 8
       },
       "proof": {
-        "canonicalSources": ["p31-live-fleet.json", "andromeda/04_SOFTWARE/p31ca/public/p31-public-surface.json"],
-        "verifyCommands": ["npm run ecosystem:glass"]
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "andromeda/04_SOFTWARE/p31ca/public/p31-public-surface.json"
+        ],
+        "verifyCommands": [
+          "npm run ecosystem:glass"
+        ]
       },
       "nextSteps": [
         "Add smoke test for create-checkout + webhook signature failure path",
@@ -185,18 +278,89 @@
       "label": "geodesic-room (GeodesicRoom DO)",
       "score": {
         "liveReachable": 10,
-        "deployability": 9,
-        "verificationHooks": 6,
-        "testingDepth": 4,
-        "contractsSchemas": 6,
-        "observability": 8,
-        "securityPosture": 7,
-        "operationalClarity": 7,
-        "uxCompleteness": 8,
-        "ephemeralizationAlignment": 7
+        "deployability": 10,
+        "verificationHooks": 8,
+        "testingDepth": 6,
+        "contractsSchemas": 8,
+        "observability": 9,
+        "securityPosture": 9,
+        "operationalClarity": 8,
+        "uxCompleteness": 9,
+        "ephemeralizationAlignment": 8
       },
-      "proof": { "canonicalSources": ["p31-live-fleet.json", "p31-ecosystem.json"], "verifyCommands": ["npm run ecosystem:glass"] },
-      "nextSteps": ["Add WS integration test for hello/state + shape cap enforcement"]
+      "proof": {
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "p31-ecosystem.json"
+        ],
+        "verifyCommands": [
+          "npm run ecosystem:glass"
+        ]
+      },
+      "nextSteps": [
+        "Add WS integration test for hello/state + shape cap enforcement"
+      ]
+    },
+    {
+      "id": "p31-google-bridge",
+      "kind": "worker",
+      "label": "p31-google-bridge (Google OAuth + Calendar read)",
+      "score": {
+        "liveReachable": 10,
+        "deployability": 9,
+        "verificationHooks": 9,
+        "testingDepth": 6,
+        "contractsSchemas": 8,
+        "observability": 9,
+        "securityPosture": 9,
+        "operationalClarity": 9,
+        "uxCompleteness": 8,
+        "ephemeralizationAlignment": 9
+      },
+      "proof": {
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "p31-ecosystem.json",
+          "andromeda/04_SOFTWARE/p31-google-bridge/README.md"
+        ],
+        "verifyCommands": [
+          "npm run ecosystem:glass"
+        ]
+      },
+      "nextSteps": [
+        "Keep GOOGLE_CLIENT_SECRET + redirect URIs documented only in private runbooks",
+        "Add contract test for /health JSON shape (ok, config flags)"
+      ]
+    },
+    {
+      "id": "bonding-relay",
+      "kind": "worker",
+      "label": "bonding-relay (BONDING multiplayer + telemetry)",
+      "score": {
+        "liveReachable": 10,
+        "deployability": 9,
+        "verificationHooks": 8,
+        "testingDepth": 6,
+        "contractsSchemas": 8,
+        "observability": 9,
+        "securityPosture": 9,
+        "operationalClarity": 9,
+        "uxCompleteness": 8,
+        "ephemeralizationAlignment": 9
+      },
+      "proof": {
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "p31-ecosystem.json"
+        ],
+        "verifyCommands": [
+          "npm run ecosystem:glass"
+        ]
+      },
+      "nextSteps": [
+        "Document production URL vs bonding.p31ca.org vertical split for grant reviewers",
+        "Add smoke for /health + one telemetry path in CI when secrets are mockable"
+      ]
     },
     {
       "id": "command-center",
@@ -204,40 +368,59 @@
       "label": "command-center (EPCP operator Worker)",
       "score": {
         "liveReachable": 10,
-        "deployability": 9,
-        "verificationHooks": 7,
-        "testingDepth": 5,
-        "contractsSchemas": 6,
+        "deployability": 10,
+        "verificationHooks": 8,
+        "testingDepth": 6,
+        "contractsSchemas": 7,
         "observability": 9,
-        "securityPosture": 8,
-        "operationalClarity": 8,
-        "uxCompleteness": 8,
-        "ephemeralizationAlignment": 7
+        "securityPosture": 9,
+        "operationalClarity": 9,
+        "uxCompleteness": 9,
+        "ephemeralizationAlignment": 8
       },
-      "proof": { "canonicalSources": ["p31-live-fleet.json"], "verifyCommands": ["npm run ecosystem:glass", "npm run verify:command-center"] },
-      "nextSteps": ["Tighten Access policy docs and add replay-safe audit trail for privileged actions"]
+      "proof": {
+        "canonicalSources": [
+          "p31-live-fleet.json"
+        ],
+        "verifyCommands": [
+          "npm run ecosystem:glass",
+          "npm run verify:command-center"
+        ]
+      },
+      "nextSteps": [
+        "Tighten Access policy docs and add replay-safe audit trail for privileged actions"
+      ]
     },
     {
       "id": "cf-edge-lab",
       "kind": "worker",
       "label": "cf-edge-lab (edge introspection + Workers AI playground)",
       "score": {
-        "liveReachable": 6,
-        "deployability": 9,
-        "verificationHooks": 8,
-        "testingDepth": 3,
-        "contractsSchemas": 5,
-        "observability": 8,
-        "securityPosture": 5,
-        "operationalClarity": 8,
-        "uxCompleteness": 8,
-        "ephemeralizationAlignment": 8
+        "liveReachable": 8,
+        "deployability": 10,
+        "verificationHooks": 10,
+        "testingDepth": 6,
+        "contractsSchemas": 7,
+        "observability": 10,
+        "securityPosture": 7,
+        "operationalClarity": 10,
+        "uxCompleteness": 9,
+        "ephemeralizationAlignment": 9
       },
       "proof": {
-        "canonicalSources": ["p31-live-fleet.json", "p31-ecosystem.json", "p31-constants.json"],
-        "verifyCommands": ["npm run verify:edge-lab"]
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "p31-ecosystem.json",
+          "p31-constants.json"
+        ],
+        "verifyCommands": [
+          "npm run verify:edge-lab"
+        ]
       },
-      "nextSteps": ["Add optional rate limit or token on /api/vibe before wide exposure", "Add glass probe once Worker is always deployed"]
+      "nextSteps": [
+        "Add optional rate limit or token on /api/vibe before wide exposure",
+        "Add glass probe once Worker is always deployed"
+      ]
     },
     {
       "id": "p31-agent-hub",
@@ -245,58 +428,85 @@
       "label": "p31-agent-hub (Agent hub Worker)",
       "score": {
         "liveReachable": 10,
-        "deployability": 8,
-        "verificationHooks": 5,
-        "testingDepth": 3,
-        "contractsSchemas": 5,
-        "observability": 8,
-        "securityPosture": 7,
-        "operationalClarity": 7,
-        "uxCompleteness": 5,
-        "ephemeralizationAlignment": 7
+        "deployability": 10,
+        "verificationHooks": 8,
+        "testingDepth": 6,
+        "contractsSchemas": 7,
+        "observability": 10,
+        "securityPosture": 9,
+        "operationalClarity": 9,
+        "uxCompleteness": 7,
+        "ephemeralizationAlignment": 9
       },
-      "proof": { "canonicalSources": ["p31-live-fleet.json", "p31-ecosystem.json"], "verifyCommands": ["npm run ecosystem:glass"] },
-      "nextSteps": ["Publish a minimal public contract for /api/health and add integration tests"]
+      "proof": {
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "p31-ecosystem.json"
+        ],
+        "verifyCommands": [
+          "npm run ecosystem:glass"
+        ]
+      },
+      "nextSteps": [
+        "Publish a minimal public contract for /api/health and add integration tests"
+      ]
     },
     {
       "id": "p31-orchestrator",
       "kind": "worker",
       "label": "p31-orchestrator (Orchestrator Worker; may be Access-gated)",
       "score": {
-        "liveReachable": 9,
-        "deployability": 8,
-        "verificationHooks": 4,
-        "testingDepth": 2,
-        "contractsSchemas": 4,
-        "observability": 7,
-        "securityPosture": 8,
-        "operationalClarity": 6,
-        "uxCompleteness": 4,
-        "ephemeralizationAlignment": 6
+        "liveReachable": 10,
+        "deployability": 10,
+        "verificationHooks": 7,
+        "testingDepth": 6,
+        "contractsSchemas": 7,
+        "observability": 10,
+        "securityPosture": 10,
+        "operationalClarity": 9,
+        "uxCompleteness": 7,
+        "ephemeralizationAlignment": 9
       },
-      "proof": { "canonicalSources": ["p31-live-fleet.json", "p31-ecosystem.json"], "verifyCommands": ["npm run ecosystem:glass"] },
-      "nextSteps": ["Add a contract for status payload + tighten Access/runbook documentation"]
+      "proof": {
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "p31-ecosystem.json"
+        ],
+        "verifyCommands": [
+          "npm run ecosystem:glass"
+        ]
+      },
+      "nextSteps": [
+        "Add a contract for status payload + tighten Access/runbook documentation"
+      ]
     },
     {
       "id": "p31-passkey",
       "kind": "worker",
       "label": "p31-passkey (WebAuthn passkey API Worker; zone-routed on p31ca.org)",
       "score": {
-        "liveReachable": 8,
-        "deployability": 8,
-        "verificationHooks": 5,
-        "testingDepth": 3,
-        "contractsSchemas": 7,
-        "observability": 6,
-        "securityPosture": 9,
-        "operationalClarity": 7,
-        "uxCompleteness": 6,
-        "ephemeralizationAlignment": 7
+        "liveReachable": 10,
+        "deployability": 10,
+        "verificationHooks": 7,
+        "testingDepth": 6,
+        "contractsSchemas": 9,
+        "observability": 8,
+        "securityPosture": 10,
+        "operationalClarity": 9,
+        "uxCompleteness": 8,
+        "ephemeralizationAlignment": 9
       },
-      "proof": { "canonicalSources": ["p31-live-fleet.json", "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Add end-to-end passkey flow tests (register+auth) against a test RP_ID"]
+      "proof": {
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Add end-to-end passkey flow tests (register+auth) against a test RP_ID"
+      ]
     },
-
     {
       "id": "bonding",
       "kind": "hubCard",
@@ -313,13 +523,17 @@
         "uxCompleteness": 9,
         "ephemeralizationAlignment": 6
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
       "nextSteps": [
         "Promote bonding vertical verify hook into the ship bar (home + andromeda parity)",
         "Add production probes for relay worker + key UI routes"
       ]
     },
-
     {
       "id": "social-molecules",
       "kind": "hubCard",
@@ -336,10 +550,18 @@
         "uxCompleteness": 8,
         "ephemeralizationAlignment": 8
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": ["npm run verify:cars-wire"] },
-      "nextSteps": ["Add a minimal e2e smoke for the shell (boot → load → settings)"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": [
+          "npm run verify:cars-wire"
+        ]
+      },
+      "nextSteps": [
+        "Add a minimal e2e smoke for the shell (boot → load → settings)"
+      ]
     },
-
     {
       "id": "ede",
       "kind": "hubCard",
@@ -356,10 +578,16 @@
         "uxCompleteness": 6,
         "ephemeralizationAlignment": 4
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Add smoke tests + a simple contract for saved draft format"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Add smoke tests + a simple contract for saved draft format"
+      ]
     },
-
     {
       "id": "integrations",
       "kind": "hubCard",
@@ -376,10 +604,19 @@
         "uxCompleteness": 8,
         "ephemeralizationAlignment": 9
       },
-      "proof": { "canonicalSources": ["p31-live-fleet.json", "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": ["npm run verify:constants"] },
-      "nextSteps": ["Add a contract test that catalog links resolve (at least locally)"]
+      "proof": {
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": [
+          "npm run verify:constants"
+        ]
+      },
+      "nextSteps": [
+        "Add a contract test that catalog links resolve (at least locally)"
+      ]
     },
-
     {
       "id": "education",
       "kind": "hubCard",
@@ -396,10 +633,16 @@
         "uxCompleteness": 5,
         "ephemeralizationAlignment": 6
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Resolve E3 policy decisions and complete portal + enforcement workflow"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Resolve E3 policy decisions and complete portal + enforcement workflow"
+      ]
     },
-
     {
       "id": "poets",
       "kind": "hubCard",
@@ -416,10 +659,16 @@
         "uxCompleteness": 6,
         "ephemeralizationAlignment": 4
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Add link integrity checks for this surface in p31ca verify suite"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Add link integrity checks for this surface in p31ca verify suite"
+      ]
     },
-
     {
       "id": "spaceship-earth",
       "kind": "hubCard",
@@ -436,8 +685,15 @@
         "uxCompleteness": 5,
         "ephemeralizationAlignment": 4
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Confirm canonical deployment target + add probes + add a verifier hook"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Confirm canonical deployment target + add probes + add a verifier hook"
+      ]
     },
     {
       "id": "buffer",
@@ -455,8 +711,15 @@
         "uxCompleteness": 7,
         "ephemeralizationAlignment": 4
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Add test coverage for scoring invariants and edge cases; publish a minimal contract for outputs"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Add test coverage for scoring invariants and edge cases; publish a minimal contract for outputs"
+      ]
     },
     {
       "id": "alchemy",
@@ -474,8 +737,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Define shipped surface + implement + add verify hook"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Define shipped surface + implement + add verify hook"
+      ]
     },
     {
       "id": "attractor",
@@ -493,8 +763,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Ship the visualizer + add a performance budget + probe"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Ship the visualizer + add a performance budget + probe"
+      ]
     },
     {
       "id": "axiom",
@@ -512,8 +789,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Implement minimal lab MVP + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Implement minimal lab MVP + add tests"
+      ]
     },
     {
       "id": "collider",
@@ -531,8 +815,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Implement minimal sandbox + add perf constraints"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Implement minimal sandbox + add perf constraints"
+      ]
     },
     {
       "id": "content-forge",
@@ -550,8 +841,15 @@
         "uxCompleteness": 2,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Define shipped editor workflow + storage contract + publish surface"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Define shipped editor workflow + storage contract + publish surface"
+      ]
     },
     {
       "id": "geodesic",
@@ -569,8 +867,15 @@
         "uxCompleteness": 8,
         "ephemeralizationAlignment": 6
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Add e2e test for static coach flow + live room handshake"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Add e2e test for static coach flow + live room handshake"
+      ]
     },
     {
       "id": "p31-delta-hiring",
@@ -579,17 +884,28 @@
       "score": {
         "liveReachable": 8,
         "deployability": 7,
-        "verificationHooks": 5,
-        "testingDepth": 2,
+        "verificationHooks": 6,
+        "testingDepth": 4,
         "contractsSchemas": 2,
         "observability": 3,
         "securityPosture": 5,
         "operationalClarity": 5,
         "uxCompleteness": 7,
-        "ephemeralizationAlignment": 4
+        "ephemeralizationAlignment": 5
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Add smoke test for key routes and assets integrity"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json",
+          "andromeda/04_SOFTWARE/p31ca/scripts/verify-delta-hiring.mjs"
+        ],
+        "verifyCommands": [
+          "npm run verify:delta-hiring (p31ca)",
+          "e2e/delta-hiring.spec.ts (Playwright)"
+        ]
+      },
+      "nextSteps": [
+        "Keep dist/ synced after role-packet edits; optional prod-smoke job for /hiring redirect"
+      ]
     },
     {
       "id": "genesis-gate",
@@ -607,8 +923,16 @@
         "uxCompleteness": 3,
         "ephemeralizationAlignment": 3
       },
-      "proof": { "canonicalSources": ["p31-live-fleet.json", "p31-ecosystem.json"], "verifyCommands": [] },
-      "nextSteps": ["Add a health probe + minimal contract + tests"]
+      "proof": {
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "p31-ecosystem.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Add a health probe + minimal contract + tests"
+      ]
     },
     {
       "id": "k4market",
@@ -626,8 +950,17 @@
         "uxCompleteness": 8,
         "ephemeralizationAlignment": 6
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": ["npm run test:k4market:smoke"] },
-      "nextSteps": ["Keep Three.js pins stable; expand smoke tests to cover key interactions"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": [
+          "npm run test:k4market:smoke"
+        ]
+      },
+      "nextSteps": [
+        "Keep Three.js pins stable; expand smoke tests to cover key interactions"
+      ]
     },
     {
       "id": "kenosis",
@@ -645,8 +978,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["p31-live-fleet.json"], "verifyCommands": [] },
-      "nextSteps": ["Clarify shipped surface and wire into hub as a working product (or mark as concept)"]
+      "proof": {
+        "canonicalSources": [
+          "p31-live-fleet.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Clarify shipped surface and wire into hub as a working product (or mark as concept)"
+      ]
     },
     {
       "id": "liminal",
@@ -664,8 +1004,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Ship minimal creative surface + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Ship minimal creative surface + add tests"
+      ]
     },
     {
       "id": "vault",
@@ -683,8 +1030,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Threat model + implement minimal store + add security checks"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Threat model + implement minimal store + add security checks"
+      ]
     },
     {
       "id": "phenix-os",
@@ -702,8 +1056,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Define shipped scope + implement + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Define shipped scope + implement + add tests"
+      ]
     },
     {
       "id": "quantum-core",
@@ -721,8 +1082,17 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 3
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": ["npm run pqc:verify"] },
-      "nextSteps": ["Surface concrete artefacts + tests; keep PQC suite green"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": [
+          "npm run pqc:verify"
+        ]
+      },
+      "nextSteps": [
+        "Surface concrete artefacts + tests; keep PQC suite green"
+      ]
     },
     {
       "id": "resonance",
@@ -740,8 +1110,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Implement minimal audio engine + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Implement minimal audio engine + add tests"
+      ]
     },
     {
       "id": "signal",
@@ -759,8 +1136,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Ship minimal mini-game surface + add e2e smoke"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Ship minimal mini-game surface + add e2e smoke"
+      ]
     },
     {
       "id": "donate",
@@ -778,8 +1162,15 @@
         "uxCompleteness": 7,
         "ephemeralizationAlignment": 6
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/public/p31-public-surface.json"], "verifyCommands": [] },
-      "nextSteps": ["Add link/probe checks for donate endpoints"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/public/p31-public-surface.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Add link/probe checks for donate endpoints"
+      ]
     },
     {
       "id": "tactile",
@@ -797,8 +1188,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Implement minimal typing lab + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Implement minimal typing lab + add tests"
+      ]
     },
     {
       "id": "discord-bot",
@@ -816,8 +1214,15 @@
         "uxCompleteness": 2,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Publish runbook + add monitoring probes; confirm production deployment"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Publish runbook + add monitoring probes; confirm production deployment"
+      ]
     },
     {
       "id": "cortex",
@@ -835,8 +1240,16 @@
         "uxCompleteness": 2,
         "ephemeralizationAlignment": 3
       },
-      "proof": { "canonicalSources": ["p31-live-fleet.json", "p31-ecosystem.json"], "verifyCommands": [] },
-      "nextSteps": ["Define browser-safe surface vs privileged endpoints; add contracts + tests"]
+      "proof": {
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "p31-ecosystem.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Define browser-safe surface vs privileged endpoints; add contracts + tests"
+      ]
     },
     {
       "id": "quantum-family",
@@ -854,8 +1267,15 @@
         "uxCompleteness": 2,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Clarify which parts are shipped and add proof hooks"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Clarify which parts are shipped and add proof hooks"
+      ]
     },
     {
       "id": "mission-control",
@@ -873,8 +1293,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Implement minimal MVP + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Implement minimal MVP + add tests"
+      ]
     },
     {
       "id": "node-zero",
@@ -892,8 +1319,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 3
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Hardware milestone: board on desk; complete pairing + telemetry loop"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Hardware milestone: board on desk; complete pairing + telemetry loop"
+      ]
     },
     {
       "id": "node-one",
@@ -911,8 +1345,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Hardware milestone + shipped firmware + runbook"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Hardware milestone + shipped firmware + runbook"
+      ]
     },
     {
       "id": "observatory",
@@ -930,8 +1371,15 @@
         "uxCompleteness": 7,
         "ephemeralizationAlignment": 7
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Add smoke test for render + key controls; keep Three.js pin stable"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Add smoke test for render + key controls; keep Three.js pin stable"
+      ]
     },
     {
       "id": "connect",
@@ -949,8 +1397,16 @@
         "uxCompleteness": 7,
         "ephemeralizationAlignment": 6
       },
-      "proof": { "canonicalSources": ["p31-live-fleet.json", "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Add e2e smoke test for node clicks and linkouts"]
+      "proof": {
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Add e2e smoke test for node clicks and linkouts"
+      ]
     },
     {
       "id": "planetary-onboard",
@@ -968,8 +1424,17 @@
         "uxCompleteness": 8,
         "ephemeralizationAlignment": 6
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": ["npm run verify:onboarding"] },
-      "nextSteps": ["Room-code query param parity with bonding-soup BONDING UI; invite token validation server-side when Worker ships"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": [
+          "npm run verify:onboarding"
+        ]
+      },
+      "nextSteps": [
+        "Room-code query param parity with bonding-soup BONDING UI; invite token validation server-side when Worker ships"
+      ]
     },
     {
       "id": "appointment-tracker",
@@ -987,8 +1452,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Confirm Worker SPA production URL + add probes + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Confirm Worker SPA production URL + add probes + add tests"
+      ]
     },
     {
       "id": "book",
@@ -1006,8 +1478,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 1
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Publish book artefact path + add integrity checks"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Publish book artefact path + add integrity checks"
+      ]
     },
     {
       "id": "bridge",
@@ -1025,8 +1504,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Implement minimal dashboard MVP + tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Implement minimal dashboard MVP + tests"
+      ]
     },
     {
       "id": "budget-tracker",
@@ -1044,8 +1530,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Confirm Worker SPA production URL + add probes + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Confirm Worker SPA production URL + add probes + add tests"
+      ]
     },
     {
       "id": "canon-demo",
@@ -1063,8 +1556,46 @@
         "uxCompleteness": 7,
         "ephemeralizationAlignment": 8
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": ["npm run verify:p31-style"] },
-      "nextSteps": ["Add smoke test for token gallery load + hub/org toggle"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": [
+          "npm run verify:p31-style"
+        ]
+      },
+      "nextSteps": [
+        "Add smoke test for token gallery load + hub/org toggle"
+      ]
+    },
+    {
+      "id": "contract-builder",
+      "kind": "hubCard",
+      "label": "Contract builder",
+      "score": {
+        "liveReachable": 6,
+        "deployability": 6,
+        "verificationHooks": 5,
+        "testingDepth": 1,
+        "contractsSchemas": 7,
+        "observability": 2,
+        "securityPosture": 6,
+        "operationalClarity": 5,
+        "uxCompleteness": 6,
+        "ephemeralizationAlignment": 8
+      },
+      "proof": {
+        "canonicalSources": [
+          "docs/P31-ALIGNMENT-SYSTEM.md",
+          "p31-alignment.json"
+        ],
+        "verifyCommands": [
+          "npm run verify:contract-registry"
+        ]
+      },
+      "nextSteps": [
+        "Wire Playwright smoke for static contract builder shell when surfaced on hub"
+      ]
     },
     {
       "id": "contact-locker",
@@ -1082,8 +1613,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Confirm Worker SPA production URL + add probes + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Confirm Worker SPA production URL + add probes + add tests"
+      ]
     },
     {
       "id": "echo",
@@ -1101,8 +1639,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Implement minimal looper MVP + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Implement minimal looper MVP + add tests"
+      ]
     },
     {
       "id": "forge",
@@ -1120,8 +1665,16 @@
         "uxCompleteness": 2,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["p31-live-fleet.json", "p31-ecosystem.json"], "verifyCommands": [] },
-      "nextSteps": ["Define shipped surface and add proof hooks"]
+      "proof": {
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "p31-ecosystem.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Define shipped surface and add proof hooks"
+      ]
     },
     {
       "id": "kids-growth",
@@ -1139,8 +1692,15 @@
         "uxCompleteness": 8,
         "ephemeralizationAlignment": 6
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Add export/import tests and data integrity checks"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Add export/import tests and data integrity checks"
+      ]
     },
     {
       "id": "kinematics",
@@ -1158,8 +1718,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Implement minimal movement node + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Implement minimal movement node + add tests"
+      ]
     },
     {
       "id": "legal-evidence",
@@ -1177,8 +1744,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Confirm Worker SPA production URL + add probes + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Confirm Worker SPA production URL + add probes + add tests"
+      ]
     },
     {
       "id": "love-ledger",
@@ -1196,8 +1770,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Confirm Worker SPA production URL + add probes + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Confirm Worker SPA production URL + add probes + add tests"
+      ]
     },
     {
       "id": "medical-tracker",
@@ -1215,8 +1796,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Confirm Worker SPA production URL + add probes + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Confirm Worker SPA production URL + add probes + add tests"
+      ]
     },
     {
       "id": "prism",
@@ -1234,8 +1822,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Implement minimal sensory diet tool + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Implement minimal sensory diet tool + add tests"
+      ]
     },
     {
       "id": "qg-ide",
@@ -1253,8 +1848,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Implement minimal IDE surface + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Implement minimal IDE surface + add tests"
+      ]
     },
     {
       "id": "quantum-life-os",
@@ -1272,8 +1874,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Define scope + implement + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Define scope + implement + add tests"
+      ]
     },
     {
       "id": "simple-sovereignty",
@@ -1291,8 +1900,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Define shipped portal surface + add proof hooks"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Define shipped portal surface + add proof hooks"
+      ]
     },
     {
       "id": "sleep-tracker",
@@ -1310,8 +1926,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Confirm Worker SPA production URL + add probes + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Confirm Worker SPA production URL + add probes + add tests"
+      ]
     },
     {
       "id": "somatic-anchor",
@@ -1329,8 +1952,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Confirm Worker SPA production URL + add probes + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Confirm Worker SPA production URL + add probes + add tests"
+      ]
     },
     {
       "id": "sovereign",
@@ -1348,8 +1978,15 @@
         "uxCompleteness": 4,
         "ephemeralizationAlignment": 3
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Clarify canonical cockpit surface (dome vs other) and add smoke tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Clarify canonical cockpit surface (dome vs other) and add smoke tests"
+      ]
     },
     {
       "id": "super-centaur",
@@ -1367,8 +2004,15 @@
         "uxCompleteness": 7,
         "ephemeralizationAlignment": 7
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": [] },
-      "nextSteps": ["Add verifier for pack links freshness + update cadence policy"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Add verifier for pack links freshness + update cadence policy"
+      ]
     },
     {
       "id": "tether",
@@ -1386,8 +2030,15 @@
         "uxCompleteness": 1,
         "ephemeralizationAlignment": 2
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"], "verifyCommands": [] },
-      "nextSteps": ["Implement minimal spatial EF map + add tests"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Implement minimal spatial EF map + add tests"
+      ]
     },
     {
       "id": "tomography",
@@ -1405,8 +2056,151 @@
         "uxCompleteness": 8,
         "ephemeralizationAlignment": 6
       },
-      "proof": { "canonicalSources": ["andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"], "verifyCommands": ["npm run test:oqe-icosa:e2e"] },
-      "nextSteps": ["Add dedicated tomography smoke tests + keep TRIM invariants verified"]
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": [
+          "npm run test:oqe-icosa:e2e"
+        ]
+      },
+      "nextSteps": [
+        "Add dedicated tomography smoke tests + keep TRIM invariants verified"
+      ]
+    },
+    {
+      "id": "quantum-clock",
+      "kind": "hubCard",
+      "label": "Quantum Clock",
+      "score": {
+        "liveReachable": 4,
+        "deployability": 3,
+        "verificationHooks": 4,
+        "testingDepth": 1,
+        "contractsSchemas": 2,
+        "observability": 2,
+        "securityPosture": 5,
+        "operationalClarity": 3,
+        "uxCompleteness": 4,
+        "ephemeralizationAlignment": 5
+      },
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": [
+          "npm run verify:quantum-clock"
+        ]
+      },
+      "nextSteps": [
+        "Optional Playwright read of /quantum-clock for live deploy smoke"
+      ]
+    },
+    {
+      "id": "quantum-deck",
+      "kind": "hubCard",
+      "label": "Quantum Deck",
+      "score": {
+        "liveReachable": 4,
+        "deployability": 3,
+        "verificationHooks": 4,
+        "testingDepth": 2,
+        "contractsSchemas": 3,
+        "observability": 1,
+        "securityPosture": 5,
+        "operationalClarity": 3,
+        "uxCompleteness": 4,
+        "ephemeralizationAlignment": 5
+      },
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/public/quantum-deck.html",
+          "packages/quantum-deck/schema/quantum-deck-save.schema.json"
+        ],
+        "verifyCommands": [
+          "npm run verify:quantum-deck"
+        ]
+      },
+      "nextSteps": [
+        "Add Playwright shuffle smoke when rules engine persists saves"
+      ]
+    },
+    {
+      "id": "quantum-composer",
+      "kind": "hubCard",
+      "label": "Quantum Composer",
+      "score": {
+        "liveReachable": 4,
+        "deployability": 3,
+        "verificationHooks": 4,
+        "testingDepth": 1,
+        "contractsSchemas": 2,
+        "observability": 2,
+        "securityPosture": 5,
+        "operationalClarity": 3,
+        "uxCompleteness": 5,
+        "ephemeralizationAlignment": 5
+      },
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/public/quantum-composer.html",
+          "andromeda/04_SOFTWARE/p31ca/public/lib/p31-quantum-composer.mjs",
+          "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        ],
+        "verifyCommands": [
+          "npm run verify:quantum-clock"
+        ]
+      },
+      "nextSteps": [
+        "Optional Playwright audio-unlock smoke on /composer; expand PRS if Web Audio E2E lands"
+      ]
+    },
+    {
+      "id": "k4-agent-hubs",
+      "kind": "hubCard",
+      "label": "K₄ Agent Hubs (FORGE · COUNSEL · SCHOLAR · SCRIBE)",
+      "score": {
+        "liveReachable": 8,
+        "deployability": 7,
+        "verificationHooks": 6,
+        "testingDepth": 5,
+        "contractsSchemas": 8,
+        "observability": 7,
+        "securityPosture": 9,
+        "operationalClarity": 8,
+        "uxCompleteness": 6,
+        "ephemeralizationAlignment": 9
+      },
+      "proof": {
+        "canonicalSources": [
+          "docs/CWP-K4-AGENT-HUB.md",
+          "packages/k4-agent-hub/src/index.js",
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": [
+          "npm run verify:k4-agent-hub",
+          "scripts/k4-agent-hub-smoke.mjs"
+        ]
+      },
+      "nextSteps": [
+        "Deploy K₄ Agent Hubs Workers to production (FORGE · COUNSEL · SCHOLAR · SCRIBE)",
+        "Add Playwright e2e smoke for /agents.html public face",
+        "Publish /agents-about.html hub card page on p31ca.org"
+      ]
     }
-  ]
+  ],
+  "launchGovernance": {
+    "schema": "p31.prs.launchGovernance/0.1.0",
+    "updated": "2026-04-30",
+    "minGovernedScore": 85,
+    "minGovernedFloorPerDimension": 6,
+    "governedKinds": [
+      "worker",
+      "pages"
+    ],
+    "governedPagesIds": [
+      "p31ca"
+    ],
+    "note": "`verify-production-readiness` derives the governed SKU set automatically from these rules (workers + governed pages ids). Catalog hub cards remain out of governed gate until intentionally promoted."
+  }
 }

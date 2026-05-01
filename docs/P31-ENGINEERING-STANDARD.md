@@ -65,6 +65,7 @@ When that tree is present, it has its **own** git remote and **production bar** 
 - **`docs/ECOSYSTEM-PRODUCTION-11.md`** — full-fleet “everything connected” matrix: glass probes, deploy order, 11/10 Definition of Done across hub + K₄ + operator + monetary.
 - **`docs/ENTERPRISE-LAUNCH-PREP.md`** — secrets rotation, CI merge path, deploy surfaces, post-Zenodo housekeeping.
 - **`docs/MVP-DELIVERABLES-INVENTORY.md`** — what is LIVE vs adjacent vs concept (grant-facing).
+- **`docs/P31-MARKET-LAUNCH-PACKAGE.md`** — consolidated market launch + GTM spine (indexes voice, monetization, ecosystem 11/10, release ladder, phased checklist).
 - **`docs/FUNDING-GATED-ACTION-ITEMS.md`** — canonical list of action items blocked on funding (hardware / IP / domains).
 
 ---

@@ -1,8 +1,8 @@
 {
   "_comment": "Deploy targets + glass-box URLs. Templates: {{mesh.*}}, {{bonding.*}}, {{payment.*}} from p31-constants.json. Consolidated live sites + Workers: p31-live-fleet.json. After edits: npm run verify:ecosystem",
   "schema": "p31.ecosystem/1.0.0",
-  "updated": "2026-04-29",
-  "_deployNote": "Order matches docs/ECOSYSTEM-PRODUCTION-11.md §4: constants + pnpm, K₄ trio, geodesic, agent/orchestrator/love-ledger, Google bridge, satellite Workers, passkey, EPCP command-center, donate-api, cf-edge-lab (home packages/), wcd33, p31ca Pages last. unified-k4-cage/ omitted (same worker name as k4-cage). p31-pwa + sovereign-command-center are Cloudflare Pages (build + pages deploy). Each deployable uses steps[][] argv arrays (no shell — scripts/ecosystem-deploy.mjs). Holistic edge audit: npm run quantum:cloud",
+  "updated": "2026-04-30",
+  "_deployNote": "Order matches docs/ECOSYSTEM-PRODUCTION-11.md §4: constants + pnpm, K₄ trio, geodesic, agent/orchestrator/love-ledger, Google bridge, satellite Workers, passkey, EPCP command-center, donate-api, cf-edge-lab (home packages/), wcd33, p31-discord-bot-swarm (verify-only, operator host), p31ca Pages last. unified-k4-cage/ omitted (same worker name as k4-cage). p31-pwa + sovereign-command-center are Cloudflare Pages (build + pages deploy). Each deployable uses steps[][] argv arrays (no shell — scripts/ecosystem-deploy.mjs). Holistic edge audit: npm run quantum:cloud",
   "glassProbes": [
     {
       "id": "k4-personal-api-health",
@@ -135,6 +135,20 @@
       "note": "p31.publicSurface/1.0.0 — trust/legal index + machine endpoints"
     },
     {
+      "id": "social-worker-health",
+      "url": "https://social.p31ca.org/",
+      "group": "social",
+      "expectJsonKey": "service",
+      "note": "p31-social-worker root — { service, status, endpoints, schedule } JSON. Falls back to https://p31-social-worker.trimtab-signal.workers.dev when zone route is down (operator CLI: npm run social:health)."
+    },
+    {
+      "id": "social-worker-status",
+      "url": "https://social.p31ca.org/status",
+      "group": "social",
+      "expectJsonKey": "platforms",
+      "note": "Per-platform secret presence (no values). P31_GLASS_STRICT=1 fails when route is down — surfaces silent broken cron."
+    },
+    {
       "id": "p31ca-fleet-entities-json",
       "url": "https://p31ca.org/p31-fleet-entities.json",
       "group": "contracts",
@@ -237,6 +251,20 @@
       "url": "https://genesis-gate.trimtab-signal.workers.dev/health",
       "group": "worker-spa",
       "note": "genesis-gate API Worker — GET /health (root / is 404 by design)"
+    },
+    {
+      "id": "p31-google-bridge-health",
+      "url": "{{mesh.googleBridgeWorkerUrl}}/health",
+      "group": "mesh",
+      "expectJsonKey": "ok",
+      "note": "Google Workspace OAuth bridge; JSON readiness + config flags"
+    },
+    {
+      "id": "bonding-relay-health",
+      "url": "{{mesh.bondingRelayWorkerUrl}}/health",
+      "group": "mesh",
+      "expectJsonKey": "status",
+      "note": "BONDING telemetry Worker (telemetry.ts); body.status === ok"
     }
   ],
   "deployables": [
@@ -425,6 +453,12 @@
       "cwd": "wcd33-global-archive",
       "description": "WCD-33 global archive Worker",
       "steps": [["npm", "run", "deploy"]]
+    },
+    {
+      "id": "p31-discord-bot-swarm",
+      "cwd": ".",
+      "description": "Discord bot swarm — verify:bot + QA manifest + p31-discord-bot-swarm.json (Railway/host process; not wrangler)",
+      "steps": [["npm", "run", "verify:discord-bot"]]
     },
     {
       "id": "p31ca-pages",

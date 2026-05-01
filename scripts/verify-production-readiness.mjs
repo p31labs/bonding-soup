@@ -122,6 +122,43 @@ const workerIds = new Set(prs.items.filter((it) => it.kind === "worker").map((it
 const missingWorkers = liveWorkerIds.filter((id) => !workerIds.has(id));
 if (missingWorkers.length) fail(`Missing worker rows for live-fleet workersVerified ids: ${missingWorkers.join(", ")}`);
 
+/** @type {typeof prs.launchGovernance | null} */
+const lg = prs.launchGovernance && isObject(prs.launchGovernance) ? prs.launchGovernance : null;
+if (lg) {
+  if (typeof lg.minGovernedScore !== "number" || !Number.isFinite(lg.minGovernedScore)) {
+    fail("launchGovernance.minGovernedScore missing or invalid");
+  }
+  if (typeof lg.minGovernedFloorPerDimension !== "number" || !Number.isFinite(lg.minGovernedFloorPerDimension)) {
+    fail("launchGovernance.minGovernedFloorPerDimension missing or invalid");
+  }
+  const pagesIds = Array.isArray(lg.governedPagesIds) ? lg.governedPagesIds : [];
+  const governedIds = new Set();
+  for (const it of prs.items) {
+    if (it.kind === "worker") governedIds.add(it.id);
+    if (it.kind === "pages" && pagesIds.includes(it.id)) governedIds.add(it.id);
+  }
+  const breaches = [];
+  for (const id of governedIds) {
+    const row = prs.items.find((it) => it.id === id);
+    if (!row) breaches.push(`${id}: missing row`);
+    else {
+      const t = sumScore(row.score, requiredDims);
+      if (t < lg.minGovernedScore) {
+        breaches.push(`${id}: total ${t} < minGovernedScore ${lg.minGovernedScore}`);
+      }
+      for (const k of requiredDims) {
+        const v = row.score[k];
+        if (v < lg.minGovernedFloorPerDimension) {
+          breaches.push(`${id}: dimension ${k}=${v} < floor ${lg.minGovernedFloorPerDimension}`);
+        }
+      }
+    }
+  }
+  if (breaches.length) {
+    fail(`launchGovernance breached:\n- ${breaches.join("\n- ")}`);
+  }
+}
+
 const totals = prs.items.map((it) => ({
   id: it.id,
   kind: it.kind,
@@ -134,6 +171,11 @@ const top = totals.slice(0, 10);
 console.log(`verify-production-readiness: OK — ${prs.items.length} items`);
 console.log(`verify-production-readiness: hub cards covered — ${hubIds.length}`);
 console.log(`verify-production-readiness: live workers covered — ${liveWorkerIds.length}`);
+if (lg) {
+  console.log(
+    `verify-production-readiness: governed lane — workers + pages (${lg.governedPagesIds.join(", ")}) meet ≥${lg.minGovernedScore} and floor ≥${lg.minGovernedFloorPerDimension} per dimension`,
+  );
+}
 console.log("verify-production-readiness: top 10 by score:");
 for (const t of top) console.log(`- ${t.id} (${t.kind}) ${t.total}/100 ${t.tier}`);
 

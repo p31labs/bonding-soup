@@ -5,14 +5,18 @@
  * Cross-artefact map: p31-alignment.json (p31.alignment/1.0.0) — docs/P31-ALIGNMENT-SYSTEM.md
  */
 export const P31_CONSTANTS = {
-  "updated": "2026-04-29",
+  "updated": "2026-04-30",
   "organization": {
     "legalName": "P31 Labs, Inc.",
     "ein": "42-1888158",
     "stateOfIncorporation": "GA",
     "incorporationDate": "2026-04-03",
     "einAssignedDate": "2026-04-13",
-    "status501c3": "pending"
+    "status501c3": "filed_pending_irs",
+    "filedDate": "2026-04-30",
+    "payGovTrackingId": "281TLBGO",
+    "agencyTrackingId": "77374172589",
+    "applicationFee": 275
   },
   "contact": {
     "primaryEmail": "will@p31ca.org",
@@ -227,6 +231,9 @@ export const P31_CONSTANTS = {
     "passkeyApiBasePath": "/api/passkey",
     "edgeLabWorkerUrl": "https://cf-edge-lab.trimtab-signal.workers.dev",
     "tetraHubWorkerUrl": "https://tetra-hub.trimtab-signal.workers.dev",
+    "geodesicRoomWorkerUrl": "https://geodesic-room.trimtab-signal.workers.dev",
+    "googleBridgeWorkerUrl": "https://p31-google-bridge.trimtab-signal.workers.dev",
+    "bondingRelayWorkerUrl": "https://bonding-relay.trimtab-signal.workers.dev",
     "remembranceWarmWhite": "#f5f0e8",
     "remembranceBereavementKvKey": "mesh_bereavement_until",
     "vertexStateRemembered": "remembered"
@@ -246,7 +253,8 @@ export const P31_CONSTANTS = {
   "documentation": {
     "canonicalNumbering": "docs/CANONICAL-NUMBERING.md",
     "reviewBundle": "docs/GEMINI-OPUS-REVIEW-BUNDLE.md",
-    "mvpInventory": "docs/MVP-DELIVERABLES-INVENTORY.md"
+    "mvpInventory": "docs/MVP-DELIVERABLES-INVENTORY.md",
+    "marketLaunchPackage": "docs/P31-MARKET-LAUNCH-PACKAGE.md"
   },
   "integrations": {
     "schema": "p31.integrationsBridge/1.0.0",

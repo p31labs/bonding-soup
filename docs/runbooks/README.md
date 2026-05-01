@@ -4,11 +4,13 @@
 
 | Class | Runbook |
 |-------|---------|
+| **Launch-governed Workers + p31ca Pages (PRS lane)** | [RUNBOOK-WORKER-GOVERNED-LANE.md](./RUNBOOK-WORKER-GOVERNED-LANE.md) |
 | Mesh (k4-personal / cage / hubs red) | [RUNBOOK-MESH-RED.md](./RUNBOOK-MESH-RED.md) |
 | Hub (p31ca Pages / build red) | [RUNBOOK-HUB-RED.md](./RUNBOOK-HUB-RED.md) |
 | Payments (donate-api / monetary gate red) | [RUNBOOK-PAYMENTS-RED.md](./RUNBOOK-PAYMENTS-RED.md) |
 | Passkeys (p31-passkey / register-begin red) | [RUNBOOK-PASSKEYS-RED.md](./RUNBOOK-PASSKEYS-RED.md) |
 | Glass strict (ecosystem probes failing or slow) | [RUNBOOK-GLASS-STRICT-FAILING.md](./RUNBOOK-GLASS-STRICT-FAILING.md) |
+| Worker runbook stub (clone per SKU) | [WORKER-SKELETON.md](./WORKER-SKELETON.md) |
 
 **Canonical spine:** [P31 deploy canon](../P31-DEPLOY-CANON.md) · [Engineering standard](../P31-ENGINEERING-STANDARD.md) · **`npm run connection`** (prints hub, ops, mesh URL, and doc paths).
 

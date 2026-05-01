@@ -4,7 +4,7 @@
 **Not:** Legal advice, medical advice, or guaranteed production URLs — see §11.  
 **Last updated:** 2026-04-27
 
-**Companion files:** `REVIEW-SUPPLEMENT-A-WORKFLOWS.md`, `REVIEW-SUPPLEMENT-B-WORKERS-AND-PACKAGES.md`, `REVIEW-SUPPLEMENT-C-ECO-CWP-AND-INTEGRATIONS.md`, `MVP-DELIVERABLES-INVENTORY.md` (tiered LIVE/MVP list + grant bullets), `README-REVIEW-DOCS.md` (reading order).
+**Companion files:** `REVIEW-SUPPLEMENT-A-WORKFLOWS.md`, `REVIEW-SUPPLEMENT-B-WORKERS-AND-PACKAGES.md`, `REVIEW-SUPPLEMENT-C-ECO-CWP-AND-INTEGRATIONS.md`, `MVP-DELIVERABLES-INVENTORY.md` (tiered LIVE/MVP list + grant bullets), `P31-MARKET-LAUNCH-PACKAGE.md` (GTM + launch readiness index), `README-REVIEW-DOCS.md` (reading order).
 
 **Architecture spine (same as `AGENTS.md`):** `SIC-POVM-K4-ARCHITECTURE.md`, `SIC-POVM-MATHEMATICAL-APPENDIX.md`, `AGENTIC-VIBE-INFRASTRUCTURE.md`, `PLAN-KIDS-VIBE-CODING.md`, `EGG-HUNT.md`.
 

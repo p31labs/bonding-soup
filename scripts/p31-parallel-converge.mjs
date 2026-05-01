@@ -1,12 +1,16 @@
 #!/usr/bin/env node
 /**
  * Parallel tracks → one convergence (exit + JSON report).
- * A=ECO/parity, B=passkey bundle, C=education surface, D=node-zero package, + stack links.
+ * A=ECO/parity, B=passkey, C=education, D=node-zero, E=independent verify batch (facts/env/…/edge-lab),
+ *   optional F=BONDING typecheck, G=spaceship-earth test, + stack links + constants.
  * Optional serial cap: P31_CONVERGE_VERIFY=1 runs root `npm run verify` after parallel wave.
  *
- * P31_CONVERGE_SKIP_PASSKEY=1  — skip passkey wrangler --dry-run (slow / offline).
- * P31_CONVERGE_STACK=1         — run andromeda verify-stack-links (network; many 15s probes; default off).
+ * P31_CONVERGE_SKIP_PASSKEY=1   — skip passkey wrangler --dry-run (slow / offline).
+ * P31_CONVERGE_STACK=1          — run andromeda verify-stack-links (network; many 15s probes; default off).
  * P31_CONVERGE_SKIP_CONSTANTS=1 — skip verify-constants.
+ * P31_CONVERGE_SKIP_HOME_BATCH=1 — skip verify-independent-batch (6 parallel home checks).
+ * P31_CONVERGE_BONDING=1        — npm run typecheck in 04_SOFTWARE/bonding (needs workspace install).
+ * P31_CONVERGE_SPACESHIP=1     — npm run test in @p31/spaceship-earth (needs workspace install).
  * P31_CONVERGE_VERIFY=1        — after parallel wave, run full root `npm run verify` (serial cap).
  */
 import { execFileSync } from "node:child_process";
@@ -23,6 +27,10 @@ const passkey = path.join(p31ca, "workers", "passkey");
 const nodeZeroPkg = path.join(andromeda, "04_SOFTWARE", "packages", "node-zero", "package.json");
 const educationDir = path.join(p31ca, "public", "education");
 const eduPlan = path.join(root, "docs", "PLAN-P31-LABS-EDUCATION-SITE.md");
+const softwareRoot = path.join(andromeda, "04_SOFTWARE");
+const bondingPkg = path.join(softwareRoot, "bonding", "package.json");
+const spaceshipPkg = path.join(softwareRoot, "spaceship-earth", "package.json");
+const homeBatch = path.join(root, "scripts", "verify-independent-batch.mjs");
 const isWin = process.platform === "win32";
 const npmCmd = isWin ? "npm.cmd" : "npm";
 const npxCmd = isWin ? "npx.cmd" : "npx";
@@ -159,15 +167,72 @@ function trackConstants() {
   );
 }
 
+/** E — parallel batch: facts, subscriptions, p31-env, mesh-canon, runbooks, edge-lab */
+function trackHomeBatch() {
+  if (process.env.P31_CONVERGE_SKIP_HOME_BATCH === "1") {
+    return Promise.resolve({
+      track: "E home parallel batch",
+      ok: true,
+      skipped: true,
+      out: "P31_CONVERGE_SKIP_HOME_BATCH=1",
+    });
+  }
+  if (!exists(homeBatch)) {
+    return Promise.resolve({ track: "E home parallel batch", ok: false, err: "missing verify-independent-batch.mjs" });
+  }
+  return Promise.resolve(runSync("E home parallel batch", process.execPath, [homeBatch], root, false));
+}
+
+/** F — BONDING package typecheck (pnpm workspace) */
+function trackBonding() {
+  if (process.env.P31_CONVERGE_BONDING !== "1") {
+    return Promise.resolve({
+      track: "F BONDING typecheck",
+      ok: true,
+      skipped: true,
+      out: "set P31_CONVERGE_BONDING=1 (needs 04_SOFTWARE deps)",
+    });
+  }
+  if (!exists(bondingPkg)) {
+    return Promise.resolve({ track: "F BONDING typecheck", ok: true, skipped: true, out: "no bonding package" });
+  }
+  return Promise.resolve(
+    runSync("F BONDING typecheck", npmCmd, ["run", "typecheck"], path.dirname(bondingPkg), false),
+  );
+}
+
+/** G — spaceship-earth unit tests */
+function trackSpaceship() {
+  if (process.env.P31_CONVERGE_SPACESHIP !== "1") {
+    return Promise.resolve({
+      track: "G spaceship-earth test",
+      ok: true,
+      skipped: true,
+      out: "set P31_CONVERGE_SPACESHIP=1 (needs 04_SOFTWARE deps)",
+    });
+  }
+  if (!exists(spaceshipPkg)) {
+    return Promise.resolve({ track: "G spaceship-earth test", ok: true, skipped: true, out: "no spaceship package" });
+  }
+  return Promise.resolve(
+    runSync("G spaceship-earth test", npmCmd, ["run", "test"], path.dirname(spaceshipPkg), false),
+  );
+}
+
 async function main() {
   const t0 = Date.now();
-  console.log("P31 parallel converge — A/B/C/D + stack + constants (then optional verify)\n");
+  console.log(
+    "P31 parallel converge — A/B/C/D/E + optional F/G + stack + constants (then optional verify)\n",
+  );
 
   const parallel = await Promise.all([
     trackA_Eco(),
     trackB_Passkey(),
     trackC_Education(),
     trackD_NodeZero(),
+    trackHomeBatch(),
+    trackBonding(),
+    trackSpaceship(),
     trackStack(),
     trackConstants(),
   ]);

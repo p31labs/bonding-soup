@@ -5,7 +5,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { buildCanonicalNumbering, buildMissionSnippet } from "./lib/p31-constants-fragment.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -15,7 +15,42 @@ const gtPath = path.join(root, "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.gro
 const passportHtml = path.join(root, "cognitive-passport", "index.html");
 const genTs = path.join(root, "src", "p31-constants-generated.ts");
 
-function main() {
+/**
+ * Hub-only fields (edgeMesh, sovereignWorkerSpas) derived for integrations.astro;
+ * not part of p31-constants.json — verify-constants strips before compare.
+ * @param {object} base from p31-constants integrations
+ * @param {string} p31caRoot
+ * @param {object} [mesh]
+ */
+async function enrichHubIntegrations(base, p31caRoot, mesh) {
+  const out = JSON.parse(JSON.stringify(base));
+  if (mesh && typeof mesh === "object") {
+    const edgeMesh = { schema: "p31.edgeMesh/0.1.0" };
+    for (const [k, v] of Object.entries(mesh)) {
+      if (k.startsWith("_")) continue;
+      if (typeof v !== "string") continue;
+      if (k.endsWith("WorkerUrl") || k === "passkeyApiBasePath") {
+        edgeMesh[k] = v;
+      }
+    }
+    if (mesh.passkeyApiBasePath) {
+      edgeMesh.passkeyHubApiRoot = `https://p31ca.org${mesh.passkeyApiBasePath}`;
+    }
+    out.edgeMesh = edgeMesh;
+  }
+  const launchesPath = path.join(p31caRoot, "scripts/hub/worker-spa-launches.mjs");
+  if (fs.existsSync(launchesPath)) {
+    const { WORKER_SPA_LAUNCHES, CANONICAL_LAUNCH_ORIGIN } = await import(pathToFileURL(launchesPath).href);
+    out.sovereignWorkerSpas = WORKER_SPA_LAUNCHES.map((e) => ({
+      id: e.id,
+      hubLaunchUrl: CANONICAL_LAUNCH_ORIGIN + e.pathname,
+      workersDevUrl: e.workersDevUrl,
+    }));
+  }
+  return out;
+}
+
+async function main() {
   if (!fs.existsSync(constantsPath)) {
     console.error("apply-constants: missing", constantsPath);
     process.exit(1);
@@ -55,7 +90,8 @@ function main() {
   }
 
   if (c.integrations && fs.existsSync(p31caRoot)) {
-    const integBody = JSON.stringify(c.integrations, null, 2) + "\n";
+    const integMerged = await enrichHubIntegrations(c.integrations, p31caRoot, c.mesh);
+    const integBody = JSON.stringify(integMerged, null, 2) + "\n";
     const integSrc = path.join(p31caRoot, "src/data/p31-integrations.json");
     const integPub = path.join(p31caRoot, "public/p31-integrations.json");
     fs.mkdirSync(path.dirname(integSrc), { recursive: true });
@@ -77,6 +113,9 @@ function main() {
     ["orchestrator", "orchestratorWorkerUrl"],
     ["edgeLab", "edgeLabWorkerUrl"],
     ["tetraHub", "tetraHubWorkerUrl"],
+    ["geodesicRoom", "geodesicRoomWorkerUrl"],
+    ["googleBridge", "googleBridgeWorkerUrl"],
+    ["bondingRelay", "bondingRelayWorkerUrl"],
   ];
   const devWorkbench = path.join(root, "andromeda/04_SOFTWARE/p31ca/public/dev-workbench.html");
   if (fs.existsSync(devWorkbench) && c.mesh) {
@@ -153,4 +192,7 @@ export const P31_CONSTANTS = ${JSON.stringify(exportObj, null, 2)} as const;
   console.log("\nNext: npm run verify:constants && (optional) npm run sync:passport\n");
 }
 
-main();
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

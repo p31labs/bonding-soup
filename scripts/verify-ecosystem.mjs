@@ -201,6 +201,65 @@ if (fs.existsSync(liveFleetPath)) {
       );
     }
   }
+
+  const dbs = fleet.discordBotSwarm;
+  if (dbs && typeof dbs === "object") {
+    const dsId = dbs.ecosystemDeployableId;
+    if (dsId) {
+      const deployIds = new Set((manifest.deployables || []).map((d) => d.id));
+      if (!deployIds.has(dsId)) {
+        fail(
+          `p31-live-fleet discordBotSwarm.ecosystemDeployableId ${JSON.stringify(dsId)} not found in p31-ecosystem deployables`,
+        );
+      }
+    }
+    const rel = dbs.summaryPath;
+    if (typeof rel === "string" && rel.length > 0) {
+      const botDiscordPkg = path.join(
+        root,
+        "andromeda/04_SOFTWARE/discord/p31-bot/package.json",
+      );
+      if (fs.existsSync(botDiscordPkg)) {
+        const swarmAbs = path.join(root, rel);
+        if (!fs.existsSync(swarmAbs)) {
+          fail(
+            `p31-live-fleet discordBotSwarm.summaryPath ${JSON.stringify(rel)} missing — run npm run verify:discord-bot`,
+          );
+        }
+        try {
+          const swarm = JSON.parse(fs.readFileSync(swarmAbs, "utf8"));
+          if (swarm.ecosystemDeployableId && dsId && swarm.ecosystemDeployableId !== dsId) {
+            fail(
+              `p31-discord-bot-swarm.json ecosystemDeployableId ${JSON.stringify(swarm.ecosystemDeployableId)} !== live-fleet ${JSON.stringify(dsId)}`,
+            );
+          }
+          const manPath = path.join(
+            root,
+            "andromeda/04_SOFTWARE/discord/p31-bot/generated/p31-bot.manifest.json",
+          );
+          if (fs.existsSync(manPath)) {
+            const man = JSON.parse(fs.readFileSync(manPath, "utf8"));
+            const mf = man.registryFingerprint;
+            const sf = swarm.registryFingerprint;
+            if (mf !== sf) {
+              fail(
+                `p31-discord-bot-swarm.json stale (fingerprint ${JSON.stringify(sf)} vs manifest ${JSON.stringify(mf)}) — run npm run verify:discord-bot`,
+              );
+            }
+            const mc = Array.isArray(man.commands) ? man.commands.length : 0;
+            const sc = Number(swarm.commandCount);
+            if (sc !== mc) {
+              fail(
+                `p31-discord-bot-swarm.json stale (commandCount ${sc} vs manifest ${mc}) — run npm run verify:discord-bot`,
+              );
+            }
+          }
+        } catch (e) {
+          fail(`p31-discord-bot-swarm.json invalid: ${e.message || e}`);
+        }
+      }
+    }
+  }
 }
 
 console.log("verify-ecosystem: OK");

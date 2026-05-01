@@ -17,7 +17,7 @@
     "./browser": "./src/browser.mjs"
   },
   "scripts": {
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test --test-reporter=spec test/*.test.mjs"
   },
   "engines": {
     "node": ">=20"

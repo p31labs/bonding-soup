@@ -73,3 +73,9 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         working-directory: andromeda/04_SOFTWARE/p31ca
         run: npx wrangler pages deploy dist --project-name p31ca --branch=main --commit-dirty=true
+
+      - name: Post-deploy verify (smoke + strict glass + freshness)
+        if: steps.gate.outputs.ok == '1' && env.HAS_DIST == '1'
+        env:
+          P31_POST_DEPLOY_WAIT: "60"
+        run: node scripts/p31-post-deploy-verify.mjs

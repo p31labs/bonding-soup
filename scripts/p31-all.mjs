@@ -65,8 +65,10 @@ function run(title, command, opts = {}) {
 
 function buildP31CiCommand() {
   const usePreflight = process.env.P31_CI_USE_PREFLIGHT === "1";
+  // --skip-triper: TRIPER ran as its own CI job (triper-cert); skip in p31-all to avoid double-run.
+  // P31_SKIP_TRIPER=1 is also set in the p31-all CI step environment.
   if (usePreflight) {
-    return "node scripts/p31-ci.mjs --security --skip-root-verify --skip-npm-ci";
+    return "node scripts/p31-ci.mjs --security --skip-root-verify --skip-npm-ci --skip-triper";
   }
   return "node scripts/p31-ci.mjs --security";
 }
@@ -95,8 +97,14 @@ function main() {
   if (!skipE2e) {
     const homeE2e = fs.existsSync(path.join(root, "scripts", "doc-library-e2e.mjs"));
     const p31caE2e = hasP31ca && fs.existsSync(path.join(p31ca, "playwright.config.ts"));
+    if (homeE2e || p31caE2e) {
+      run(
+        "Playwright Chromium (once — shared ~/.cache for home + p31ca e2e)",
+        "npx playwright install --with-deps chromium",
+        { cwd: root }
+      );
+    }
     if (homeE2e) {
-      run("Playwright install (chromium) — home static e2e", "npx playwright install --with-deps chromium", { cwd: root });
       run("Doc library E2E (static server + /docs/doc-library/)", "npm run test:doc-library:e2e", {
         cwd: root,
         env: { ...process.env, CI: "true" },
@@ -131,7 +139,6 @@ function main() {
       }
     }
     if (p31caE2e) {
-      run("Playwright install (chromium) — p31ca (test:e2e:install)", "npm run test:e2e:install", { cwd: p31ca });
       run("Playwright E2E (p31ca preview + tests)", "npm run test:e2e", {
         cwd: p31ca,
         env: { ...process.env, CI: "true" },

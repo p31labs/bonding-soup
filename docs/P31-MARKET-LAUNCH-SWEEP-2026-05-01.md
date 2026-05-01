@@ -2,7 +2,7 @@
 
 **Date:** 2026-05-01  
 **Operator:** W.JOHNSON-001  
-**Launch score (offline):** 91.67/100 · 8/10 lanes green — 4 critical human gates pending; monetization lane reflects network-dependent donate-api probe (runs green in live environment)  
+**Launch score (offline):** 95/100 · 9/10 lanes green — **2 critical human gates pending** (legal-counsel-review, successor-operator-named); 3 gates closed post-sweep (registered-agent, stripe, secrets-rotation)  
 **Sweep scope:** engineering readiness, legal status, documentation accuracy, trust signals, public surfaces, funding gates, punch list
 
 ---
@@ -43,7 +43,7 @@ Score: 95/100  ·  Mode: audit  ·  9/10 lanes green
 ✅ Security suite                         10/10
 ✅ SMART suite + chain anchor             10/10
 ✅ Public surfaces                        10/10
-⚠️ Human-in-the-loop checkpoints          5/10  ← 5 critical gates pending
+⚠️ Human-in-the-loop checkpoints          7/10  ← 2 critical gates pending (legal-counsel-review, successor-operator-named)
 ```
 
 ### 2.2 TRIPER certification (NEW — built this session)
@@ -86,26 +86,23 @@ Only 2 modified files: `contracts/p31-contract-registry.json` and `contracts/p31
 
 These require operator action — no script can close them.
 
-| Gate ID | Title | Priority |
-|---------|-------|----------|
-| `legal-counsel-review` | Pro se / counsel: terms, privacy, security, copy reviewed | **CRITICAL** |
-| `registered-agent-current` | GA registered agent + EIN 42-1888158 records current | **CRITICAL** |
-| `stripe-account-live` | Stripe Payment Link verified (donate-api healthy) | **CRITICAL** |
-| `secrets-rotation-plan` | CF API token + GH PAT rotation cadence written | **CRITICAL** |
-| `successor-operator-named` | Named successor operator + break-glass contacts (off-repo) | **CRITICAL** |
+| Gate ID | Title | Status |
+|---------|-------|--------|
+| ~~`registered-agent-current`~~ | GA registered agent + EIN 42-1888158 records current | ✅ **MET** — GA SOS Active/Compliance, Control #26082141 |
+| ~~`stripe-account-live`~~ | Stripe Payment Link verified (donate-api healthy) | ✅ **MET** — buy.stripe.com/5kQ14g827gmpcHFb0W8Ra00 active |
+| ~~`secrets-rotation-plan`~~ | CF API token + GH PAT rotation cadence written | ✅ **MET** — RUNBOOK-SECRETS-ROTATION.md committed |
+| `legal-counsel-review` | Pro se / counsel: terms, privacy, security, copy reviewed | **CRITICAL — PENDING** |
+| `successor-operator-named` | Named successor operator + break-glass contacts (off-repo) | **CRITICAL — PENDING** |
 | `smart-suite-deployed-testnet` | SMART suite to Base Sepolia + addresses in chain-anchor | non-critical |
 | `smart-suite-deployed-mainnet` | SMART suite to Base mainnet | non-critical |
 | `treasury-multisig-owner` | Safe multisig owns P31ContentRoot | non-critical |
 | `household-pack-printed` | Family Sovereign Pack printed / sent | non-critical |
 | ~~`operator-rest-window`~~ | ~~48h rest planned~~ | ✅ met |
 
-**Fastest path to closing the 5 critical gates:**
+**Remaining path to 100/100:**
 
-1. **`registered-agent-current`** — log into GA SOS, confirm entity is in good standing, then: `npm run launch:check -- registered-agent-current met --note "GA SOS confirmed good standing $(date)"`
-2. **`stripe-account-live`** — `curl -s https://donate-api.phosphorus31.org/health` → should return 200. Then flip gate.
-3. **`secrets-rotation-plan`** — write a 1-page rotation cadence doc (off-repo), then flip.
-4. **`legal-counsel-review`** — review privacy/terms copy on hub; flip when satisfied.
-5. **`successor-operator-named`** — name someone, store off-repo, flip.
+1. **`legal-counsel-review`** — read `docs/LEGAL-COUNSEL-REVIEW.md` end-to-end (60+ line checklist; 8 items flagged for counsel); flip when satisfied: `npm run launch:check -- legal-counsel-review met --note "reviewed $(date)"`
+2. **`successor-operator-named`** — fill `docs/runbooks/SUCCESSOR-OPERATOR-PACKAGE.template.md`, store off-repo (encrypted + sealed envelope), confirm with Tier 1 contact: `npm run launch:check -- successor-operator-named met --note "Package v1.0 stored $(date)"`
 
 ---
 
@@ -164,16 +161,20 @@ Current active sources: Awesome Foundation ($1,000, deliberating) · Stimpunks (
 ## 8. Market launch punch list (prioritized)
 
 ### Pre-launch (blocking)
-- [ ] **Commit TRIPER system** — all files created this session need a commit (`git add tests/ scripts/triper* scripts/verify-triper.mjs scripts/p31-release-public.mjs vitest.triper.config.mjs docs/P31-TRIPER-SYSTEM.md AGENTS.md package.json .vscode/tasks.json`)
-- [ ] **Close the Stripe gate** — `curl https://donate-api.phosphorus31.org/health` → flip `stripe-account-live` if 200
-- [ ] **Registered agent** — confirm GA SOS good standing → flip `registered-agent-current`
-- [ ] **Secrets rotation plan** — write rotation cadence (off-repo) → flip gate
+- [x] **Commit TRIPER system** — done 2026-05-01
+- [x] **Close the Stripe gate** — buy.stripe.com/5kQ14g827gmpcHFb0W8Ra00 confirmed active; donate-api 200 OK; gate met
+- [x] **Registered agent** — GA SOS Active/Compliance, Control #26082141; gate met
+- [x] **Secrets rotation plan** — RUNBOOK-SECRETS-ROTATION.md committed; gate met
+- [x] **Market sweep** — glass probe bug fixed (row.level), fleet 13 workers, k4-agent-hub PRS 89/100, doc-library 202 docs
 
-### Pre-launch (non-blocking but strongly recommended)
-- [ ] **Legal review** — privacy/terms pass your read → flip `legal-counsel-review`
-- [ ] **Successor operator** — name someone, store off-repo → flip gate
-- [ ] **`npm run launch:rehearsal`** — full glass refresh before deploy
-- [ ] **`npm run launch:gate`** — confirm critical gates; target 100/100
+### Pre-launch (2 remaining)
+- [ ] **Legal review** — read `docs/LEGAL-COUNSEL-REVIEW.md`; 60+ line checklist with 8 counsel-flagged items → flip `legal-counsel-review`
+- [ ] **Successor operator** — fill `docs/runbooks/SUCCESSOR-OPERATOR-PACKAGE.template.md`; store off-repo; confirm Tier 1 → flip `successor-operator-named`
+
+### Final deploy sequence (when both gates are met)
+- [ ] `npm run launch:gate` — confirm all 5 critical gates met, score 100/100
+- [ ] `npm run test:triper:cert` — fresh cert (must be < 24h old)
+- [ ] `npm run release:public` — full pre-deploy gate with TRIPER cert check
 
 ### Launch day
 - [ ] Run `npm run test:triper:cert` (ensure cert is fresh)

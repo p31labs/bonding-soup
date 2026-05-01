@@ -16,14 +16,18 @@
       "title": "GA registered agent + EIN 42-1888158 records current",
       "kind": "legal",
       "critical": true,
-      "status": "pending"
+      "status": "met",
+      "updatedAt": "2026-05-01T01:49:56.052Z",
+      "note": "GA SOS ecorp.sos.ga.gov: Active/Compliance, Control #26082141, Domestic Nonprofit Corp, Formation 4/3/2026, Registered Agent: William Johnson, 401 Powder Horn Rd, Camden County"
     },
     {
       "id": "stripe-account-live",
       "title": "Stripe Payment Link verified (donate-api healthy)",
       "kind": "payments",
       "critical": true,
-      "status": "pending"
+      "status": "met",
+      "updatedAt": "2026-05-01T01:49:56.109Z",
+      "note": "Stripe Payment Link buy.stripe.com/5kQ14g827gmpcHFb0W8Ra00 active — product P31 Labs Donation,  USD min, card/Apple Pay/Link; donate-api.phosphorus31.org/health 200 OK"
     },
     {
       "id": "secrets-rotation-plan",

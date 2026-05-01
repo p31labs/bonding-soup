@@ -10,7 +10,7 @@
  *   GET    /v1/{hub}/skills                            — list skills on the named hub
  *   GET    /v1/{hub}/metrics                           — per-hub metrics
  *   POST   /v1/{hub}/edge                              — inter-hub edge brief (called by sibling hubs)
- *   WS     /v1/{hub}/stream                            — duplex WebSocket
+ *   WS     /v1/{hub}/stream                            — hibernatable WebSocket; broadcasts call events to all docked clients (p31.k4HubStream/1.0.0)
  *   GET    /v1/metrics                                 — aggregated metrics across all four hubs
  *   GET    /v1/federation                              — aggregated topology (local + cached peers)
  *   POST   /v1/federation/peer                         — register a peer hub (signed Ed25519 required)

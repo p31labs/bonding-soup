@@ -431,6 +431,21 @@
       "role": "P2P dispatch unit tests — canonical string (1), Ed25519 round-trip (2), KV peer lookup (2); 5 tests"
     },
     {
+      "id": "p31-k4-agent-hub-ws-events",
+      "path": "packages/k4-agent-hub/src/ws-events.js",
+      "role": "WebSocket fanout event builders — WS_EVENT_SCHEMA, buildBroadcastEvent, buildDockEvent, buildCallEvent; schema p31.k4HubStream/1.0.0; no Cloudflare deps"
+    },
+    {
+      "id": "p31-k4-agent-hub-ws-fanout-test",
+      "path": "packages/k4-agent-hub/test/ws-fanout.test.mjs",
+      "role": "WS fanout event shape tests — buildBroadcastEvent (2), buildDockEvent (1), buildCallEvent (1); 4 tests"
+    },
+    {
+      "id": "p31-cwp-k4-agent-hub-ws-fanout",
+      "path": "docs/CWP-P31-K4-AGENT-HUB-WS-FANOUT.md",
+      "role": "CWP for WebSocket fanout — hibernatable WS API; call-event broadcast to all docked clients; schema p31.k4HubStream/1.0.0; 4 new tests"
+    },
+    {
       "id": "sync-atmosphere-hub-routes-script",
       "path": "scripts/sync-atmosphere-hub-routes.mjs",
       "role": "Merge hub-app-ids into docs/p31-atmosphere-routes.json — runs at verify:atmosphere-ramp prelude; npm run sync:atmosphere-hub-routes"
@@ -1577,11 +1592,14 @@
         "p31-passport-anchor-pact.json",
         "docs/CWP-P31-K4-AGENT-HUB-ANCHOR-PACT.md",
         "packages/k4-agent-hub/test/federation-p2p.test.mjs",
-        "docs/CWP-P31-K4-AGENT-HUB-FEDERATION-P2P.md"
+        "docs/CWP-P31-K4-AGENT-HUB-FEDERATION-P2P.md",
+        "packages/k4-agent-hub/src/ws-events.js",
+        "packages/k4-agent-hub/test/ws-fanout.test.mjs",
+        "docs/CWP-P31-K4-AGENT-HUB-WS-FANOUT.md"
       ],
       "apply": "Edit p31-k4-agent-hub.json (the canon manifest), then mirror vertex ids / personal-dock pairings / skill registry into src/topology.js, declare DO bindings in wrangler.toml, and ensure agents.html references the four hub ids + family triadic cover + federation panel. The Worker validates the K₄ invariant at module load via validateTopology(). After agents.html edits, copy to andromeda/04_SOFTWARE/p31ca/public/agents.html (manual mirror until sync:agents lands).",
       "verify": "npm run verify:k4-agent-hub (manifest + wrangler + topology.js + crypto + dispatcher + smoke + agents.html + p31ca mirror parity); npm run test:k4-agent-hub (K₄ invariant + skill registry + family triadic cover + Ed25519 sign/verify + dispatcher priority chain + federation P2P); npm run k4-agent-hub:client:test (anchor pact unit + Worker anchor route tests); npm run k4-agent-hub:smoke against a running hub (signed dock, signed call envelope, cross-edge, federation)",
-      "note": "v1.4.0: Federation P2P signed skill dispatch (CWP-P31-K4-AGENT-HUB-FEDERATION-P2P) — POST /v1/federation/dispatch; canonicalPeerDispatchString in crypto.js; peerDispatch() client method; schema p31.peerDispatch/1.0.0; 5 new tests. v1.3.0: Ed25519 anchor pact (CWP-P31-K4-AGENT-HUB-ANCHOR-PACT) — self-signed operator↔personal-tetra binding; CLI create/show/verify/register/status; Worker POST /v1/anchor/register + GET /v1/anchor/status + GET /v1/anchor/{clientId}; 13 new tests; public fingerprint stub at p31-passport-anchor-pact.json. v1.2.0: Ollama → simplex-v7 cloud → echo dispatch chain (CWP-P31-K4-AGENT-HUB-WIRE-SIMPLEX-LANE). v1.1.0: signed Ed25519 dock + per-call envelope, K₄,₄,₄ family triadic cover (will/sj/wj/christyn), federation peer registry, real Ollama dispatcher (env OLLAMA_BASE_URL) with structured-echo fallback. Bipartite K₄,₄ cover: structure↔forge, connection↔counsel, rhythm↔scholar, creation↔scribe."
+      "note": "v1.5.0: WebSocket fanout (CWP-P31-K4-AGENT-HUB-WS-FANOUT) — hibernatable WS API; call-event broadcast to all docked clients; ws-events.js pure module; schema p31.k4HubStream/1.0.0; 4 new tests. v1.4.0: Federation P2P signed skill dispatch (CWP-P31-K4-AGENT-HUB-FEDERATION-P2P) — POST /v1/federation/dispatch; canonicalPeerDispatchString in crypto.js; peerDispatch() client method; schema p31.peerDispatch/1.0.0; 5 new tests. v1.3.0: Ed25519 anchor pact (CWP-P31-K4-AGENT-HUB-ANCHOR-PACT) — self-signed operator↔personal-tetra binding; CLI create/show/verify/register/status; Worker POST /v1/anchor/register + GET /v1/anchor/status + GET /v1/anchor/{clientId}; 13 new tests; public fingerprint stub at p31-passport-anchor-pact.json. v1.2.0: Ollama → simplex-v7 cloud → echo dispatch chain (CWP-P31-K4-AGENT-HUB-WIRE-SIMPLEX-LANE). v1.1.0: signed Ed25519 dock + per-call envelope, K₄,₄,₄ family triadic cover (will/sj/wj/christyn), federation peer registry, real Ollama dispatcher (env OLLAMA_BASE_URL) with structured-echo fallback. Bipartite K₄,₄ cover: structure↔forge, connection↔counsel, rhythm↔scholar, creation↔scribe."
     },
     {
       "id": "p31-contract-registry-from-alignment",

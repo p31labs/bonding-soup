@@ -20,16 +20,16 @@ Counts taken at the time of this writing — they grow:
 
 | Artifact | Count | File |
 |---|---|---|
-| Alignment **sources** | **111** | `p31-alignment.json` |
-| Alignment **derivations** (one-way edges) | **53** | same |
-| `verify` pipeline gates | **45+** | `package.json` `verify` script |
-| Operator-locked constants (leaf keys) | **77** | `p31-constants.json` |
+| Alignment **sources** | **150** | `p31-alignment.json` |
+| Alignment **derivations** (one-way edges) | **55** | same |
+| `verify` pipeline gates | **55+** | `package.json` `verify` script |
+| Operator-locked constants (leaf keys) | **84** | `p31-constants.json` |
 | Files referencing the Larmor `863 Hz` canon | **40+** | `rg "larmorHz"` |
 | Smart contracts (SMART suite) | **5** | `packages/p31-sovereign-chain/src/` |
 | Sovereign layers documented | **12** | `p31-sovereign-layers.json` |
-| JSON schema contracts in registry | **36** | `contracts/p31-contract-registry.json` |
-| EVM ABIs in registry | **5** | same |
+| JSON + EVM contracts in registry | **42** (5 EVM) | `contracts/p31-contract-registry.json` |
 | Live workers / probes (glass) | **14** | `p31-ecosystem.json` |
+| TRIPER certification tests | **444+** | `tests/mvp/` + `tests/combined/` + `tests/triper/` |
 | Reports kinds | **6** | `morning · midday · evening · urgent · weekly · custom` |
 | Launch readiness lanes | **10** | `p31-launch-readiness-config.json` |
 
@@ -53,7 +53,7 @@ Files: `p31-constants.json` `physics.larmorHz`, `scripts/apply-constants.mjs`, `
 
 ### c) **Alignment graph (ephemeralization)** — `demos/alignment-graph.html`
 
-Why mind-bending: 111 sources × 53 derivations is a small, finite, *legible* graph — not a black-box ML model, not a closed proprietary platform. A force-directed render on the public web is the entire epistemology of the project, visible in 60 seconds. **Edit one node, see which leaves update; that's the system promise.**
+Why mind-bending: 150 sources × 55 derivations is a small, finite, *legible* graph — not a black-box ML model, not a closed proprietary platform. A force-directed render on the public web is the entire epistemology of the project, visible in 60 seconds. **Edit one node, see which leaves update; that's the system promise.**
 
 Files: `p31-alignment.json`, `docs/P31-ALIGNMENT-SYSTEM.md`, `scripts/verify-alignment.mjs`.
 

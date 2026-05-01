@@ -29,6 +29,24 @@
       "note": "Hub fusion liveness"
     },
     {
+      "id": "k4-agent-hub-manifest",
+      "url": "{{mesh.k4AgentHubWorkerUrl}}/v1/manifest",
+      "group": "mesh",
+      "note": "K₄ agent hub manifest — schema p31.k4AgentHub/1.1.0"
+    },
+    {
+      "id": "k4-agent-hub-topology",
+      "url": "{{mesh.k4AgentHubWorkerUrl}}/v1/topology",
+      "group": "mesh",
+      "note": "K₄ agent hub topology snapshot (vertices · edges · family triadic cover)"
+    },
+    {
+      "id": "k4-agent-hub-federation",
+      "url": "{{mesh.k4AgentHubWorkerUrl}}/v1/federation",
+      "group": "mesh",
+      "note": "K₄ agent hub federation peer registry"
+    },
+    {
       "id": "p31ca-passkey-register-begin",
       "url": "https://p31ca.org{{mesh.passkeyApiBasePath}}/register-begin",
       "method": "POST",
@@ -296,6 +314,12 @@
       "id": "k4-hubs-worker",
       "cwd": "andromeda/04_SOFTWARE/k4-hubs",
       "description": "k4-hubs fusion — PERSONAL_MESH_URL must match mesh.k4PersonalWorkerUrl",
+      "steps": [["npx", "wrangler", "deploy"]]
+    },
+    {
+      "id": "k4-agent-hub-worker",
+      "cwd": "packages/k4-agent-hub",
+      "description": "K₄ agent worker tetrahedron — Ed25519 dock/call/anchor-pact/federation/family-cage; 4 DOs + SQLite migrations",
       "steps": [["npx", "wrangler", "deploy"]]
     },
     {

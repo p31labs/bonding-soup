@@ -149,7 +149,8 @@ Use in decks, grant narratives, and long-form posts—always run the **hardware 
 | **Default merge bar** | **`docs/P31-RELEASE-LADDER-CI.md`** | `npm run verify` (P0) |
 | **Release-capable** | Same | `MESH_LIVE_STRICT=1 npm run p31:ci` (P1) when full tree |
 | **Full operator bar** | Same | `npm run p31:all` (P2) |
-| **Pre-Pages / deploy rehearsal** | Same + **`docs/P31-DEPLOY-CANON.md`** | `npm run release:public` (P3) |
+| **Pre-Pages / deploy rehearsal** | Same + **`docs/P31-DEPLOY-CANON.md`** | `npm run release:public` (P3) — **requires TRIPER cert <24h** |
+| **MVP certification (TRIPER)** | **`docs/P31-TRIPER-SYSTEM.md`** | `npm run test:triper:cert` — 9 MVP suites + combined cross-MVP gate + 70 mutation sentinels; cert logged, `release:public` blocks if stale |
 | **Ecosystem connectivity** | **`docs/ECOSYSTEM-PRODUCTION-11.md`** | `npm run verify:ecosystem`; glass: `P31_GLASS_STRICT=1 npm run ecosystem:glass` |
 | **Post-deploy** | **`docs/ENTERPRISE-LAUNCH-PREP.md`** | `npm run launch:smoke:net` (optional skip env documented there) |
 

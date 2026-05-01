@@ -122,10 +122,10 @@ function runGlassProbeCheck(check, ctx) {
   const probes = Array.isArray(ctx.glassReport.probes) ? ctx.glassReport.probes : [];
   const row = probes.find((p) => p && (p.id === check.probeId || p.name === check.probeId));
   if (!row) return { status: "warn", reason: `probe not found: ${check.probeId}` };
-  if (row.state === "up" || row.status === "up") {
+  if (row.state === "up" || row.status === "up" || row.level === "up") {
     return { status: "pass", reason: `${check.probeId}: up` };
   }
-  return { status: "fail", reason: `${check.probeId}: ${row.state || row.status || "unknown"}` };
+  return { status: "fail", reason: `${check.probeId}: ${row.level || row.state || row.status || "unknown"}` };
 }
 
 function runHumanChecklist(check, ctx) {

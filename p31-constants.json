@@ -51,7 +51,7 @@
     "fileVersion": "1.0.0"
   },
   "edge": {
-    "workerFleetCount": 12,
+    "workerFleetCount": 13,
     "notes": "Production Worker count (operator snapshot); includes cf-edge-lab + tetra-hub when shipped; not auto-verified against Cloudflare API here."
   },
   "mesh": {
@@ -59,6 +59,7 @@
     "k4PersonalWorkerUrl": "https://k4-personal.trimtab-signal.workers.dev",
     "k4CageWorkerUrl": "https://k4-cage.trimtab-signal.workers.dev",
     "k4HubsWorkerUrl": "https://k4-hubs.trimtab-signal.workers.dev",
+    "k4AgentHubWorkerUrl": "https://k4-agent-hub.trimtab-signal.workers.dev",
     "agentHubWorkerUrl": "https://p31-agent-hub.trimtab-signal.workers.dev",
     "orchestratorWorkerUrl": "https://p31-orchestrator.trimtab-signal.workers.dev",
     "passkeyApiBasePath": "/api/passkey",

@@ -30,7 +30,9 @@
       "title": "Cloudflare API token + GH PAT rotation cadence written",
       "kind": "security",
       "critical": true,
-      "status": "pending"
+      "status": "met",
+      "updatedAt": "2026-05-01T00:43:34.612Z",
+      "note": "RUNBOOK-SECRETS-ROTATION.md written: CF token + GH PAT + Stripe + wrangler worker secrets + Ed25519 keypair rotation; 90-day calendar set"
     },
     {
       "id": "successor-operator-named",

@@ -246,6 +246,35 @@
       }
     },
     {
+      "id": "k4-agent-hub",
+      "kind": "worker",
+      "label": "k4-agent-hub (K₄ agent worker tetrahedron)",
+      "prsTotal": 89,
+      "tier": "governed-ok",
+      "tierPrsUi": "P0",
+      "score": {
+        "liveReachable": 7,
+        "deployability": 9,
+        "verificationHooks": 10,
+        "testingDepth": 9,
+        "contractsSchemas": 10,
+        "observability": 8,
+        "securityPosture": 10,
+        "operationalClarity": 9,
+        "uxCompleteness": 7,
+        "ephemeralizationAlignment": 10
+      },
+      "fleet": {
+        "workersDev": "https://k4-agent-hub.trimtab-signal.workers.dev",
+        "healthPaths": [
+          "/v1/manifest",
+          "/v1/forge/health"
+        ],
+        "customDomain": null,
+        "deploy": "packages/k4-agent-hub (wrangler deploy)"
+      }
+    },
+    {
       "id": "k4-cage",
       "kind": "worker",
       "label": "k4-cage (Family cage Worker)",

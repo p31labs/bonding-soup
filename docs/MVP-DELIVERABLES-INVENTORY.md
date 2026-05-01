@@ -1,7 +1,7 @@
 # P31 Labs — MVP deliverables inventory
 
-**Last updated:** 2026-04-27  
-**Entity:** P31 Labs, Inc. (Georgia nonprofit corporation, incorporated 2026-04-03; EIN 42-1888158 assigned 2026-04-13). **IRS 501(c)(3) determination:** pending (`p31-constants.json` → `organization.status501c3`).  
+**Last updated:** 2026-05-01  
+**Entity:** P31 Labs, Inc. (Georgia nonprofit corporation, incorporated 2026-04-03; EIN 42-1888158 assigned 2026-04-13). **IRS 501(c)(3):** Form 1023-EZ **filed 2026-04-30** (Pay.gov tracking ID 281TLBGO; agency tracking ID 77374172589; $275 user fee paid). Determination pending 3–6 months. Retroactive effective-date window: July 31, 2028. (`p31-constants.json` → `organization.status501c3`, `organization.filedDate`).  
 **Audience:** Internal ops, grant reviewers, Gemini/Opus handoff, investor/funder one-pagers  
 
 **Canonical numbers:** Operator-locked fields live in **`p31-constants.json`**; run **`npm run apply:constants`** / **`npm run verify:constants`**. Edition namespaces: **`docs/CANONICAL-NUMBERING.md`**.
@@ -26,7 +26,7 @@ Deployed, CI-verifiable, and demonstrable today (URLs and baselines cross-check 
 
 ## Tier 2 — LIVE infrastructure (edge fleet)
 
-Backend Workers and related edge surface — operational, instrumented, production. **Fleet count snapshot:** **10** (`p31-constants.json` → `edge.workerFleetCount`; not auto-verified against Cloudflare API in repo).
+Backend Workers and related edge surface — operational, instrumented, production. **Fleet count snapshot:** **13** (`p31-constants.json` → `edge.workerFleetCount`; not auto-verified against Cloudflare API in repo).
 
 | # | Worker / host | Role | Key signals |
 |---|---------------|------|-------------|
@@ -40,6 +40,8 @@ Backend Workers and related edge surface — operational, instrumented, producti
 | 14 | **bouncer** | Gate / auth proxy | `BOUNCER_GATE_TOKEN` pattern. |
 | 15 | **p31-agent-hub** | Agent ↔ cage | Service bindings. |
 | 16 | **p31-cortex** | Cortex services | Bearer / DO patterns per package. |
+| 17 | **k4-agent-hub** | K₄ agent worker tetrahedron | 4 DOs (forge/counsel/scholar/scribe) + SQLite sessions. Ed25519 dock/call/anchor-pact/federation/family-cage. Schema `p31.k4AgentHub/1.1.0`. `npm run verify:k4-agent-hub` — 56/56 tests. Deployed from `packages/k4-agent-hub/`. |
+| 18 | **tetra-hub** | K₄ trio read model | Read-only `GET /api/tetra`; service-binds k4-cage + k4-personal + k4-hubs. Schema `p31.tetraHub/1.0.0`. Deployed from `workers/tetra-hub/`. |
 
 **Shared patterns:** KV status, D1 append-only audit (e.g. `epcp-audit`), R2 forensics, service bindings between packages. Detail map: **`docs/REVIEW-SUPPLEMENT-B-WORKERS-AND-PACKAGES.md`**.
 
@@ -93,9 +95,9 @@ For a funder who needs **what exists today** (facts aligned with **`p31-constant
 2. **P31 technical hub** — Product catalog, **Cognitive Passport** generator (**edition 5.1** long-form; schema **`p31.cognitivePassport/1.0.0`**), **`/dome`**, CI chain including **ground-truth**, **synergetic manifest**, and **constants** verification. **`https://p31ca.org`**.
 3. **Spaceship Earth** — PWA command-center experience (R3F, PGlite, geodesic observatory patterns). Launcher on hub; **`verify:synergetic`** pins Three **`^0.159.0`** against **`spaceship-earth/package.json`**.
 4. **Research foundation** — Zenodo series with locked DOIs (**defensive**, Paper **IV**, Papers **V–XX** batch 2026-04-26), ORCID **0009-0002-2492-9079**, K₄ / information-framing line documented in bundle + supplements.
-5. **Edge infrastructure** — **10-worker** production fleet snapshot: telemetry, k4 mesh, relays, Stripe Checkout on **`donate-api.phosphorus31.org`**, governance/operator Workers, D1/R2 patterns per **`REVIEW-SUPPLEMENT-B`**.
+5. **Edge infrastructure** — **13-worker** production fleet snapshot: telemetry, k4 mesh (personal + cage + hubs + agent-hub tetrahedron + tetra-hub), relays, Stripe Checkout on **`donate-api.phosphorus31.org`**, governance/operator Workers, D1/R2 patterns per **`REVIEW-SUPPLEMENT-B`**. K₄ agent-hub: Ed25519 operator dock, anchor-pact, P2P federation, family cage wire, hibernatable WS fanout.
 
-**Entity (accurate for filings):** P31 Labs, Inc., Georgia nonprofit corporation, **EIN 42-1888158**; **501(c)(3) determination pending**. Open-source and assistive-technology-aligned mission per org docs.
+**Entity (accurate for filings):** P31 Labs, Inc., Georgia nonprofit corporation, **EIN 42-1888158**; 501(c)(3) application **filed 2026-04-30** (Form 1023-EZ; determination pending). Open-source and assistive-technology-aligned mission per org docs.
 
 ---
 

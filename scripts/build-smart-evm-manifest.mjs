@@ -12,6 +12,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { buildStamp } from "./lib/build-stamp.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -88,7 +89,7 @@ export function regenerateSmartEvmManifest(rootDir = root) {
     solidity: "0.8.24",
     package: "packages/p31-sovereign-chain",
     verifyScript: "verify:sovereign-chain",
-    generatedAt: new Date().toISOString(),
+    generatedAt: buildStamp(),
     contracts,
   };
   fs.mkdirSync(path.dirname(outPath), { recursive: true });

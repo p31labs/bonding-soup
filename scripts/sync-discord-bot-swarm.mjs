@@ -7,6 +7,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { buildStamp } from "./lib/build-stamp.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -45,7 +46,7 @@ const commandNames = commands.map((c) => c?.name).filter(Boolean);
 
 const swarm = {
   schema: "p31.discordBotSwarm/1.0.0",
-  generatedAt: new Date().toISOString(),
+  generatedAt: buildStamp(),
   sourceManifest: path.relative(root, manifestPath).replace(/\\/g, "/"),
   ecosystemDeployableId: "p31-discord-bot-swarm",
   registryFingerprint: manifest.registryFingerprint ?? null,

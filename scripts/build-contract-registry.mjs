@@ -11,6 +11,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { regenerateSmartEvmManifest } from "./build-smart-evm-manifest.mjs";
+import { buildStamp } from "./lib/build-stamp.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -117,7 +118,7 @@ export function buildContractRegistryPayload(rootDir) {
   const payload = {
     schema: "p31.contractRegistry/1.0.0",
     version: "1.0.0",
-    generatedAt: new Date().toISOString(),
+    generatedAt: buildStamp(),
     builder,
     count: contracts.length,
     contracts,

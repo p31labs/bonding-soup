@@ -52,7 +52,7 @@ export const P31_CONSTANTS = {
   "cognitivePassport": {
     "longFormFilename": "P31 COGNITIVE PASSPORT — v5.md",
     "longFormEdition": "5.1",
-    "jsonSchema": "p31.cognitivePassport/1.0.0",
+    "jsonSchema": "p31.cognitivePassport/1.1.0",
     "htmlGeneratorTitle": "P31 Cognitive Passport — Generator (v1)"
   },
   "groundTruth": {

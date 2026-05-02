@@ -18,6 +18,7 @@ Output lands in `dist/meatspace/` (gitignored — these are build artifacts).
 ```bash
 node scripts/meatspace/generate.mjs --only=business-card
 node scripts/meatspace/generate.mjs --only=elevator-card
+node scripts/meatspace/generate.mjs --only=one-pager
 node scripts/meatspace/generate.mjs --only=qr-stickers
 node scripts/meatspace/generate.mjs --qr-target=https://p31ca.org/welcome
 ```
@@ -27,6 +28,7 @@ Equivalent npm aliases:
 ```bash
 npm run meatspace:print:business-card
 npm run meatspace:print:elevator-card
+npm run meatspace:print:one-pager
 npm run meatspace:print:qr-stickers
 ```
 
@@ -34,8 +36,8 @@ npm run meatspace:print:qr-stickers
 |-----------------|--------|----------------------------------------------------------------------------|
 | `business-card` | v1     | 3.5″×2″ with 0.125″ bleed, 2-page PDF                                      |
 | `elevator-card` | v1     | 5″×3″ with 0.125″ bleed, 2-page (front: pitch / back: tagline + large QR)  |
+| `one-pager`     | v1     | US Letter, 1-page, 3-tile body + big QR + compact legal block              |
 | `qr-stickers`   | v1     | 12-up sheet on US Letter, 2.5″ square stickers, dark face, cut ticks       |
-| `one-pager`     | TODO   | US Letter handout (D-5)                                                    |
 | `pro-handout`   | TODO   | 5.5″×8.5″ professional handout (D-6)                                       |
 
 ## Print rules
@@ -54,6 +56,16 @@ The 5″×3″ card has three production paths:
 3. **Pre-cut 5×3 perforated sheets** — verify your stock matches the bleed dimensions before volume printing.
 
 Use cases: leave on a coffee shop table, pin to a community board, slide under a door, drop into a take-one box at a library, hand to a person at the FERS hearing, mail with the appeal envelope. Larger than a business card → reads at arm's length → no follow-up question required.
+
+### one-pager print options
+
+The one-pager is a single-side US Letter handout. No bleed required (margins are 0.5″ inside the page edge). Three production paths:
+
+1. **Plain US Letter cardstock, single-side** — most common; prints on any home printer at zero special setup.
+2. **Plain US Letter paper, single-side** — cheapest; suitable for take-one boxes and bulletin boards where weight isn't critical.
+3. **US Letter color cardstock** — black ink prints fine on butter (`#cda852`)-tinted or paper-cream stock; the dark void background of the design will read as inverted (cream on cream-with-text). For this case, use `--qr-target` to swap to a custom URL if you're running a campaign-specific batch.
+
+Use cases: mail with the FERS appeal envelope, hand to a therapist or case worker at an intake meeting, pin to a community center bulletin board, slide into a clinic waiting room rack, drop in a take-one box at a library, attach to a grant application as supplementary material, hand to a journalist or grant officer at a meeting. The three-tile structure reads at desk distance; the big QR scans from across a room.
 
 ### qr-stickers print options
 

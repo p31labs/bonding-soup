@@ -263,6 +263,281 @@ async function generateBusinessCard() {
   return { pdf, name: 'p31-business-card.pdf', font: fonts.label };
 }
 
+// ─── ONE-PAGER (US Letter, single page, 3-tile body + big QR) ──────────────
+/**
+ * The leave-behind handout. Goes in FERS appeal envelopes, on library
+ * bulletin boards, in therapist waiting rooms, at community centers, in
+ * the "take one" boxes at coffee shops. Larger than the elevator card →
+ * room for actual prose; smaller than a brochure → no fold required.
+ *
+ * Audience: parents of neurodivergent kids, therapists, case workers,
+ * nonprofit administrators. Slightly more attentive than the sticker
+ * audience but still strangers. Tier-0 vocabulary discipline applies
+ * (PHOS-VOICE-DRAFT §2.11) — no K₄, no Posner, no synergetics.
+ *
+ * Anatomy (top to bottom):
+ *   1. Header strip   — K₄ mark + wordmark + operator §3.1 tagline
+ *   2. Hero block     — H1 + 2-sentence intro
+ *   3. Three tiles    — what / how it's different / how to help
+ *   4. Legal block    — compact terms §5 disclosure
+ *   5. QR + scan-to-start — large scannable target
+ *   6. Footer         — entity + trust
+ */
+async function generateOnePager() {
+  const pageW = 8.5 * IN;
+  const pageH = 11 * IN;
+  const M = 0.5 * IN;        // page margin
+  const innerW = pageW - 2 * M;
+
+  const pdf = await PDFDocument.create();
+  pdf.setTitle('P31 Labs · one-pager');
+  pdf.setAuthor('P31 Labs, Inc.');
+  pdf.setSubject(
+    `US Letter handout. Print at 100% on cardstock or plain paper. ` +
+    `QR target: ${QR_TARGET}`
+  );
+  pdf.setProducer('scripts/meatspace/generate.mjs');
+  const fonts = await loadFonts(pdf);
+
+  const page = pdf.addPage([pageW, pageH]);
+  page.drawRectangle({ x: 0, y: 0, width: pageW, height: pageH, color: C.void });
+
+  // Cursor pattern: y starts at top, decreases as we draw downward
+  let y = pageH - M;
+
+  // ── 1. Header strip (K₄ mark + wordmark + operator tagline) ─────────────
+  drawK4Mark(page, M + 11, y - 11, 11);
+  page.drawText('P31 LABS', {
+    x: M + 30, y: y - 14,
+    size: 13, font: fonts.bold, color: C.cloud,
+    characterSpacing: 1.4,
+  });
+  // Operator §3.1 tagline (right-aligned)
+  const taglineSize = 9;
+  const taglineW = fonts.bold.widthOfTextAtSize(TAGLINE_OPERATOR_VOICE, taglineSize);
+  if (taglineW <= innerW - 130) {
+    page.drawText(TAGLINE_OPERATOR_VOICE, {
+      x: M + innerW - taglineW, y: y - 13,
+      size: taglineSize, font: fonts.bold, color: C.coral,
+    });
+  } else {
+    // wrap to two lines on the right
+    const lines = wrapText(TAGLINE_OPERATOR_VOICE, fonts.bold, taglineSize, innerW - 130);
+    let ty = y - 11;
+    for (const line of lines) {
+      const w = fonts.bold.widthOfTextAtSize(line, taglineSize);
+      page.drawText(line, {
+        x: M + innerW - w, y: ty,
+        size: taglineSize, font: fonts.bold, color: C.coral,
+      });
+      ty -= taglineSize * 1.25;
+    }
+  }
+  y -= 36;
+
+  // separator line
+  page.drawLine({
+    start: { x: M, y }, end: { x: M + innerW, y },
+    thickness: 0.5, color: C.muted, opacity: 0.5,
+  });
+  y -= 28;
+
+  // ── 2. Hero block ────────────────────────────────────────────────────────
+  const heroH1 = 'Tools that adapt to your brain.';
+  const heroH1Size = 26;
+  const heroH1W = fonts.bold.widthOfTextAtSize(heroH1, heroH1Size);
+  page.drawText(heroH1, {
+    x: M + (innerW - heroH1W) / 2, y: y - heroH1Size,
+    size: heroH1Size, font: fonts.bold, color: C.cloud,
+  });
+  y -= heroH1Size + 14;
+
+  const heroSub =
+    'P31 Labs builds free, open-source software for neurodivergent families. ' +
+    'Every page changes itself for the person reading it — contrast, density, ' +
+    'motion, the way it talks — without asking you to log in or share data.';
+  const heroSubSize = 11.5;
+  const heroSubLines = wrapText(heroSub, fonts.regular, heroSubSize, innerW - 60);
+  for (const line of heroSubLines) {
+    const w = fonts.regular.widthOfTextAtSize(line, heroSubSize);
+    page.drawText(line, {
+      x: M + (innerW - w) / 2, y: y - heroSubSize,
+      size: heroSubSize, font: fonts.regular, color: C.cloud,
+    });
+    y -= heroSubSize * 1.45;
+  }
+  y -= 22;
+
+  // ── 3. Three tiles ───────────────────────────────────────────────────────
+  const tileGap = 12;
+  const tileW = (innerW - tileGap * 2) / 3;
+  const tileH = 230;
+  const tileY = y - tileH;
+
+  const tiles = [
+    {
+      heading: 'What we build',
+      lines: [
+        'A context card you fill in once and use everywhere.',
+        'Family mesh — share the load without sharing data.',
+        'Tools for kids: Node Zero, electronics, mesh comms.',
+        'Cognitive Passport for AI conversations.',
+        'Open-source code anyone can read or fork.',
+      ],
+      accent: C.teal,
+    },
+    {
+      heading: "How it's different",
+      lines: [
+        'Free forever. No "pro" tier. No "premium" features.',
+        'No login. No tracking. No accounts.',
+        'One slider quiets the whole interface for sensory load.',
+        'Built by an AuDHD operator on disability income.',
+        'Every dollar of donations is line-item visible.',
+      ],
+      accent: C.cyan,
+    },
+    {
+      heading: 'How to help',
+      lines: [
+        'Use the tools. Tell a friend.',
+        'Ko-fi: ko-fi.com/trimtab69420',
+        'Stripe direct: donate-api.phosphorus31.org',
+        'Donations not yet tax-deductible',
+        '(501(c)(3) application pending IRS).',
+      ],
+      accent: C.coral,
+    },
+  ];
+
+  for (let i = 0; i < tiles.length; i++) {
+    const tx = M + i * (tileW + tileGap);
+    const t = tiles[i];
+
+    // Tile background
+    page.drawRectangle({
+      x: tx, y: tileY,
+      width: tileW, height: tileH,
+      color: rgb(1, 1, 1), opacity: 0.025,
+    });
+    // Top accent line
+    page.drawLine({
+      start: { x: tx + 8, y: tileY + tileH - 4 },
+      end:   { x: tx + 32, y: tileY + tileH - 4 },
+      thickness: 2.2, color: t.accent,
+    });
+
+    // Heading
+    page.drawText(t.heading, {
+      x: tx + 12, y: tileY + tileH - 28,
+      size: 11, font: fonts.bold, color: t.accent,
+      characterSpacing: 0.5,
+    });
+
+    // Bullet lines
+    let by = tileY + tileH - 50;
+    for (const line of t.lines) {
+      const wrapped = wrapText('• ' + line, fonts.regular, 9.5, tileW - 20);
+      for (const wline of wrapped) {
+        page.drawText(wline, {
+          x: tx + 12, y: by,
+          size: 9.5, font: fonts.regular, color: C.cloud,
+        });
+        by -= 13;
+      }
+      by -= 4; // small gap between bullets
+    }
+  }
+  y = tileY - 18;
+
+  // ── 4. Compact legal block ───────────────────────────────────────────────
+  page.drawLine({
+    start: { x: M, y }, end: { x: M + innerW, y },
+    thickness: 0.4, color: C.butter, opacity: 0.5,
+  });
+  y -= 14;
+  const legalLines = [
+    'P31 Labs, Inc. is a Georgia domestic nonprofit (EIN 42-1888158, incorporated April 3, 2026). ' +
+    'Our 501(c)(3) application (Form 1023-EZ, Pay.gov ID 281TLBGO) was filed 2026-04-30 and is ' +
+    'pending IRS determination. Until a determination letter is issued, donations are NOT deductible.',
+  ];
+  for (const line of legalLines) {
+    const wrapped = wrapText(line, fonts.regular, 8, innerW - 20);
+    for (const wline of wrapped) {
+      page.drawText(wline, {
+        x: M + 10, y: y - 8,
+        size: 8, font: fonts.regular, color: C.muted,
+      });
+      y -= 11;
+    }
+  }
+  y -= 14;
+
+  // ── 5. Big QR + "scan to start" ──────────────────────────────────────────
+  const qrSize = 1.4 * IN;
+  const qrTilePad = 8;
+  const qrTileSize = qrSize + qrTilePad * 2;
+  const qrX = M + (innerW - qrTileSize) / 2;
+  const qrY = y - qrTileSize - 4;
+
+  const qrBytes = await qrPng(QR_TARGET, 600);
+  const qrImg = await pdf.embedPng(qrBytes);
+  page.drawRectangle({
+    x: qrX, y: qrY,
+    width: qrTileSize, height: qrTileSize,
+    color: C.paper,
+  });
+  page.drawImage(qrImg, {
+    x: qrX + qrTilePad, y: qrY + qrTilePad,
+    width: qrSize, height: qrSize,
+  });
+
+  // "scan to start" + URL beside the QR (left side, vertically centered)
+  const scanText = 'Scan to start';
+  const scanSize = 16;
+  const scanW = fonts.bold.widthOfTextAtSize(scanText, scanSize);
+  page.drawText(scanText, {
+    x: qrX - scanW - 18, y: qrY + qrTileSize / 2 + 4,
+    size: scanSize, font: fonts.bold, color: C.cloud,
+  });
+  const urlText = 'p31ca.org/welcome';
+  const urlSize = 11;
+  const urlW = fonts.regular.widthOfTextAtSize(urlText, urlSize);
+  page.drawText(urlText, {
+    x: qrX - urlW - 18, y: qrY + qrTileSize / 2 - 14,
+    size: urlSize, font: fonts.regular, color: C.coral,
+  });
+
+  // "two minutes" + privacy line on the right of the QR
+  const timeText = 'Two minutes.';
+  const timeSize = 16;
+  page.drawText(timeText, {
+    x: qrX + qrTileSize + 18, y: qrY + qrTileSize / 2 + 4,
+    size: timeSize, font: fonts.bold, color: C.cloud,
+  });
+  page.drawText('We keep nothing.', {
+    x: qrX + qrTileSize + 18, y: qrY + qrTileSize / 2 - 14,
+    size: urlSize, font: fonts.regular, color: C.coral,
+  });
+
+  // ── 6. Footer ────────────────────────────────────────────────────────────
+  const footerEntity = 'P31 Labs, Inc. · EIN 42-1888158 · Georgia domestic nonprofit corporation';
+  const footerTrust = 'Open source · No tracking · No login · We keep nothing about you';
+  const footerSize = 7.5;
+  const fEntW = fonts.regular.widthOfTextAtSize(footerEntity, footerSize);
+  const fTrW = fonts.regular.widthOfTextAtSize(footerTrust, footerSize);
+  page.drawText(footerEntity, {
+    x: M + (innerW - fEntW) / 2, y: M - 4,
+    size: footerSize, font: fonts.regular, color: C.muted,
+  });
+  page.drawText(footerTrust, {
+    x: M + (innerW - fTrW) / 2, y: M - 14,
+    size: footerSize, font: fonts.regular, color: C.muted,
+  });
+
+  return { pdf, name: 'p31-one-pager.pdf', font: fonts.label };
+}
+
 // ─── ELEVATOR CARD (5" × 3", 2-page PDF: front=pitch, back=QR + tagline) ────
 /**
  * Larger canvas than a business card. Designed to be handed to a stranger when
@@ -622,8 +897,9 @@ async function main() {
   const planned = [
     { id: 'business-card', fn: generateBusinessCard },
     { id: 'elevator-card', fn: generateElevatorCard },
+    { id: 'one-pager',     fn: generateOnePager     },
     { id: 'qr-stickers',   fn: generateQrStickers   },
-    // Future WCDs (D-5, D-6) plug in here. Keep alphabetical by id.
+    // Future WCD (D-6 pro-handout) plugs in here. Keep alphabetical by id.
   ];
   const todo = ONLY ? planned.filter(p => p.id === ONLY) : planned;
   if (ONLY && todo.length === 0) {

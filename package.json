@@ -430,6 +430,7 @@
     "meatspace:print": "node scripts/meatspace/generate.mjs",
     "meatspace:print:business-card": "node scripts/meatspace/generate.mjs --only=business-card",
     "meatspace:print:elevator-card": "node scripts/meatspace/generate.mjs --only=elevator-card",
+    "meatspace:print:one-pager": "node scripts/meatspace/generate.mjs --only=one-pager",
     "meatspace:print:qr-stickers": "node scripts/meatspace/generate.mjs --only=qr-stickers"
   },
   "engines": {

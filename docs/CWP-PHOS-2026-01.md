@@ -6,11 +6,11 @@
 | **Title** | Bus bar consolidation: CogPass nervous system, PHOS face, meatspace bridge |
 | **Version** | 1.0.0 |
 | **Effective date** | 2026-05-01 |
-| **Status** | **Shipped (13 of 14 wedges live; 22 commits across 2 repos; verify:alignment green at 215 sources / 67 derivations; 7 dedicated CI gates GREEN incl. new verify:wiring-ci-ladder anti-drift gate; D-7 wiring diagram + poster on disk; passed 4-agent quality chain — Reviewer + Connector + Verifier + QA SOULSAFE + QA Spec)** |
+| **Status** | **Shipped (13 of 14 wedges live; 24 commits across 2 repos; verify:alignment green at 217 sources / 68 derivations; 8 dedicated CI gates GREEN incl. verify:wiring-ci-ladder + verify:verify-pipeline anti-drift pair; D-7 wiring diagram + poster on disk; passed 4-agent quality chain — Reviewer + Connector + Verifier + QA SOULSAFE + QA Spec; zero-deferment closeout shipped 2026-05-02 incl. PDF byte-determinism + K₄ ASCII rebuild + hub-diff CI restored to GREEN)** |
 | **Authoring mode** | **Retrospective.** This CWP documents work that already shipped during the 2026-05-01 evening session. All "to" entries reference real files at real commits. Pending entries are unblocked work that hands off cleanly. |
 | **Applies to** | **`/home/p31`** (alignment registry, meatspace generator, voice draft, npm scripts) and **`/home/p31/andromeda`** (`04_SOFTWARE/p31ca` ground-truth, public pages, lib scripts, schema spec). Does **not** touch `phosphorus31.org/` or `bonding-soup` C.A.R.S. surfaces in this revision. |
 | **Owner (architect)** | Cursor agent (Claude Opus 4.7) under operator command authority granted at 2026-05-01T20:37:00-04:00. |
-| **Owner (voice)** | William Johnson (operator). §3.x lines in `docs/PHOS-VOICE-DRAFT.md` are OPERATOR-VOICE — agents may not edit. |
+| **Owner (voice)** | Operator (W.J.). §3.x lines in `docs/PHOS-VOICE-DRAFT.md` are OPERATOR-VOICE — agents may not edit. |
 
 **Sister packages (do not conflate):**
 
@@ -331,7 +331,9 @@ All work shipped during the 2026-05-01 evening session, in order:
 | 19 | `14a7985` | home | main | chore(constants): regenerate p31-constants-generated.ts after C-4 jsonSchema bump |
 | 20 | `9c33a399f` | andromeda | pr/fix-broken-hrefs-release-gate | feat(p31ca): BUS2 nav-by-role + BUS3 partial /research page (826 insertions) |
 | 21 | `75d057f` | home | main | docs(D-7): wiring diagram canon + 11×17 print poster (Mermaid + ASCII + PDF) |
-| 22 | (this commit) | home | main | qa(D-7): 4-agent review/connect/verify/SOULSAFE+spec chain — anti-drift gate + 7 corrections + 1 P0 + 6 P1 fixes |
+| 22 | `739a11e` | home | main | qa(D-7): 4-agent review/connect/verify/SOULSAFE+spec chain — anti-drift gate + 7 corrections + 1 P0 + 6 P1 fixes |
+| 23 | `3386161` | home | main | qa(D-7): zero-deferment pass — verifyPipeline anti-drift + PDF determinism + K₄ ASCII + poster attribution (HOME side of pair) |
+| 24 | `cdaa64bb1` | andromeda | pr/fix-broken-hrefs-release-gate | chore(p31ca): jsonSchemaIds extension (2→7) + cognitivePassport pin bump 1.0.0 → 1.1.0 (closes hub-diff CI red since C-4) |
 
 Net delta:
 - HOME: ~2,206 + 769 (PHOS pipeline) + 55 (BUS3 substrate) + 2 (TS regen) + 1,180 (wiring doc + poster generator + alignment + npm + README) = ~4,212 lines
@@ -350,11 +352,13 @@ What landed in the late-evening BUS push (post-dinner waves):
 
 The cage is closed; the chemistry is honest. Generator emit, reader normalize, PHOS consume, nav role-gate, research index renders, **and the whole topology is now on a single piece of paper** — all live, all on the same nervous system, all derived from one source per concern.
 
+9. **Zero-deferment closeout** (commits 23 + 24, 2026-05-02 00:00–00:14) — every item the 4-agent quality chain left open is now closed. New anti-drift gate `verify:verify-pipeline` mirrors the wiring-ci-ladder pattern for the registry's pipeline array (caught its own self-induced drift on first install — exactly the proof of mechanism we wanted). Every PDF in `dist/meatspace/` is byte-deterministic across runs (frozen `applyFrozenMetadata` helper + epoch constant; sha256 stable). Personal K₄ ASCII diamond rebuilt as a true 9-line mirror, centered on col 50 to align with the `│` connector below to `k4-personal`. Wiring poster footer attributed to PHOS-VOICE-DRAFT §3.3 reserved-surface list (lowest-touch option; full sentence remains canonical in markdown). Andromeda companion bumps `cognitivePassport.generator` fileSnippet pin 1.0.0 → 1.1.0 (catches up to C-4 atomic bump) and extends `jsonSchemaIds` map 2 → 7 entries — `cli.test.mjs` is now 14/14 PASS (was 13/14 with `hub-diff exits 0` red since C-4). Two new sources + one new derivation registered (215 → 217 sources, 67 → 68 derivations).
+
 ---
 
 ## 9. What awaits each owner
 
-### 9.1 Operator (William Johnson) — only you can do these
+### 9.1 Operator (W.J.) — only you can do these
 
 | Item | Scope | When |
 |------|-------|------|

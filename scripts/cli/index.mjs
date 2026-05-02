@@ -70,6 +70,7 @@ function printHelp() {
       "  " + cyan("chat") + "          P31 terminal — chat with local personas + run whitelisted commands (alias: " + cyan("term") + ", " + cyan("terminal") + ")",
       "  " + cyan("triper") + "        MVP certification system — " + cyan("triper cert") + " · " + cyan("triper status") + " · " + cyan("triper exec") + " · " + cyan("triper <suite>"),
       "  " + cyan("verify") + "        " + dim("npm run verify"),
+      "  " + cyan("launch") + "        market launch package — " + dim("npm run launch") + " · " + cyan("--dry-run") + " · " + cyan("--status"),
       "  " + cyan("facts") + "         " + dim("npm run verify:facts"),
       "  " + cyan("budgets") + "       mesh + glass SLOs (no network)",
       "  " + cyan("effective-bar") + "  which verify steps run/skip/degraded (partial clone matrix)",
@@ -270,6 +271,22 @@ async function main() {
 
   if (cmd === "verify") {
     const code = await runNpmScript("verify", fwd);
+    process.exit(code);
+  }
+
+  if (cmd === "launch") {
+    // p31 launch [--dry-run | --status | --verbose]
+    // Backed by scripts/p31-launch.mjs · docs/LAUNCH-PACKAGE-2026-05.md
+    const args = fwd.filter((a) => a !== "--");
+    if (args.includes("--status")) {
+      const code = await runNpmScript("launch:status", args.filter((a) => a !== "--status"));
+      process.exit(code);
+    }
+    if (args.includes("--dry-run") || args.includes("-n")) {
+      const code = await runNpmScript("launch:dry", args.filter((a) => a !== "--dry-run" && a !== "-n"));
+      process.exit(code);
+    }
+    const code = await runNpmScript("launch", args);
     process.exit(code);
   }
 

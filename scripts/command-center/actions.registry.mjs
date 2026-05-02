@@ -426,6 +426,38 @@ export const ACTIONS = {
     cmd: "npm",
     args: ["run", "build:fleet-entities"],
   },
+
+  // —— Market launch package (CWP-P31-LAUNCH-2026-05). See docs/LAUNCH-PACKAGE-2026-05.md.
+  // Three verbs: dry, real, status. All idempotent. Real run does NOT push remotes
+  // unless P31_LAUNCH_PUBLISH=I_UNDERSTAND is set in the operator's environment.
+  "home-launch-dry": {
+    title: "launch:dry (preview \u2014 reads p31-alignment, no shell calls, no writes)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "launch:dry"],
+  },
+  "home-launch": {
+    title: "launch (assembly: build:pwa + build:demos + sync:passport + build:doc-index + 8 verify gates \u2192 launch.html readiness snapshot)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "launch"],
+    slow: true,
+    hitl: true,
+    confirm:
+      "Runs the full launch pipeline (~10s warm). Idempotent. Local-only \u2014 does NOT push remotes unless P31_LAUNCH_PUBLISH=I_UNDERSTAND is set in your shell. Continue?",
+  },
+  "home-launch-status": {
+    title: "launch:status (read-only \u2014 last sweep result, gates, durations)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "launch:status"],
+  },
+  "home-build-pwa": {
+    title: "build:pwa (mirror SW + script + icon into all 4 PWA-installable surfaces; verify:pwa runs the gate)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "build:pwa"],
+  },
   "home-apply-constants": {
     title: "apply:constants (JSON → ground-truth fragments, generated TS)",
     cwd: repoRoot,
@@ -1345,6 +1377,26 @@ export const SECTIONS_RAW = [
       {
         href: "https://github.com/p31labs/bonding-soup/blob/main/docs/github-org-bundle/README.md",
         label: "Bundle + PAT (CI)",
+      },
+    ],
+  },
+  {
+    id: "launch",
+    title: "Launch \u00b7 market launch package (CWP-P31-LAUNCH-2026-05)",
+    ids: [
+      "home-launch-status",
+      "home-launch-dry",
+      "home-launch",
+      "home-build-pwa",
+    ],
+    links: [
+      {
+        href: "https://github.com/p31labs/bonding-soup/blob/main/docs/LAUNCH-PACKAGE-2026-05.md",
+        label: "Launch runbook (10 sections)",
+      },
+      {
+        href: "/launch.html",
+        label: "Launch readiness dashboard (local)",
       },
     ],
   },

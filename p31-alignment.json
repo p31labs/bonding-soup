@@ -1449,6 +1449,22 @@
       "note": "Declarative invariants: required paths, mesh + org keys, https worker URLs, no credential-like substrings in policy files"
     },
     {
+      "id": "p31-social-cards-mirror-pipeline",
+      "from": [
+        "social-cards/index.html",
+        "social-cards/sw.js",
+        "social-cards/p31-pwa.js"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/social-cards/index.html",
+        "andromeda/04_SOFTWARE/p31ca/public/social-cards/sw.js",
+        "andromeda/04_SOFTWARE/p31ca/public/social-cards/p31-pwa.js"
+      ],
+      "apply": "npm run build:social-cards",
+      "verify": "(implicit \u2014 part of npm run launch; byte-mirror checked manually after build:pwa populates sw.js + p31-pwa.js)",
+      "note": "Mirrors the 10-card share kit + per-app PWA companions into the p31ca public deploy tree. Must be paired with the _headers PWA exemption (see docs/LAUNCH-PACKAGE-2026-05.md \u00a73)."
+    },
+    {
       "id": "p31-pwa-mirror-pipeline",
       "from": [
         "pwa/sw.js",

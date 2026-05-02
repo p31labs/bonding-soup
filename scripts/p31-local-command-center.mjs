@@ -996,6 +996,10 @@ const server = http.createServer((req, res) => {
     "public-voice": "docs/PUBLIC-VOICE.md",
     "engineering-standard": "docs/P31-ENGINEERING-STANDARD.md",
     alignment: "docs/operator/CLAUDE-CODE-ALIGNMENT-2026-05-02.md",
+    rewards: "docs/operator/REWARDS-FRAMEWORK-2026-05-02.md",
+    crypto: "docs/operator/CRYPTO-POSITIONING-2026-05-02.md",
+    "phos-training": "docs/operator/PHOS-TRAINING-DOCTRINE-2026-05-02.md",
+    "peer-reflection": "docs/operator/PEER-CLAUDE-REFLECTION-2026-05-02.md",
   };
   const SLUG_RE = /^[a-z][a-z0-9-]{0,40}$/;
   if (req.method === "GET" && req.url && req.url.startsWith("/api/view-doc")) {

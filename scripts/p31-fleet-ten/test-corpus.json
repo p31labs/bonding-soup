@@ -1,0 +1,188 @@
+{
+  "schema": "p31.fleetTestCorpus/1.0.0",
+  "doctrine": "Each persona gets 1-3 prompts that exercise its actual specialty, NOT generic chat. Prompts are SAFE for cloud comparison (no operator-confidential content). The operator-confidential personas (counsel, triage, phos) use only synthetic fixtures here. Real operator prompts go through the local-only path (--skip-cloud).",
+  "promptSets": [
+    {
+      "personaId": "p31-mechanic",
+      "specialty": "TS/Cloudflare Workers refactoring, performance, types",
+      "prompts": [
+        {
+          "id": "mechanic-01-refactor-small-fn",
+          "prompt": "Refactor this TypeScript function for readability without changing behavior. Keep it pure. Output only the refactored code, no commentary:\n\nasync function p(u: string): Promise<unknown> {\n  const r = await fetch(u);\n  if (r.status !== 200) { throw new Error('bad'); }\n  const j = await r.json();\n  if (!j) { throw new Error('empty'); }\n  return j;\n}",
+          "judgeRubric": [
+            "Returns refactored code only (no prose)",
+            "Preserves async + Promise<unknown> signature",
+            "Replaces `r.status !== 200` with `!r.ok` (idiomatic)",
+            "Includes URL in error message for debuggability",
+            "Does not introduce new dependencies"
+          ]
+        }
+      ]
+    },
+    {
+      "personaId": "p31-firmware",
+      "specialty": "ESP-IDF / FreeRTOS / Node Zero firmware",
+      "prompts": [
+        {
+          "id": "firmware-01-task-stack-sizing",
+          "prompt": "On ESP32-S3, an LVGL widget update task is overflowing its 4KB FreeRTOS stack. Give the diagnostic command to confirm overflow and the conservative new stack size in two sentences.",
+          "judgeRubric": [
+            "Names uxTaskGetStackHighWaterMark or CONFIG_FREERTOS_CHECK_STACKOVERFLOW=2",
+            "Recommends 6-8 KB conservative bump (2x or +50%)",
+            "Stays under three sentences",
+            "Does not invent a function name not in ESP-IDF"
+          ]
+        }
+      ]
+    },
+    {
+      "personaId": "p31-counsel",
+      "specialty": "Pro se Georgia civil procedure (synthetic fixtures only)",
+      "_warning": "Real case content NEVER goes to cloud lane — this is a generic civil-procedure question, safe for both lanes.",
+      "prompts": [
+        {
+          "id": "counsel-01-generic-georgia-motion",
+          "prompt": "In a generic Georgia Superior Court civil case (NOT a specific case — purely procedural), what is the standard service requirement when filing an amended complaint after the responsive pleading deadline has passed? Cite the OCGA section. Three sentences maximum.",
+          "judgeRubric": [
+            "Cites OCGA § 9-11-15 (amendments) accurately",
+            "Notes leave of court is required after responsive pleading",
+            "Notes service rules for amended complaint mirror original",
+            "Three sentences max",
+            "Does not fabricate case names or docket numbers"
+          ]
+        }
+      ]
+    },
+    {
+      "personaId": "p31-narrator",
+      "specialty": "Grant narratives, research synthesis",
+      "prompts": [
+        {
+          "id": "narrator-01-grant-abstract",
+          "prompt": "Write a 60-word grant abstract for the following project:\n\nP31 Labs is building an open-source toolkit (BONDING) that helps neurodivergent parents and children play together remotely through a shared molecular chemistry game. The tool runs on any tablet, requires no account, collects no data, and is MIT-licensed. We are seeking $25k for hosting and accessibility audits.\n\nOutput exactly the abstract — no title, no preamble.",
+          "judgeRubric": [
+            "Approximately 60 words (50-70 acceptable)",
+            "Grant-readable register (third-person, declarative)",
+            "Names BONDING, neurodivergent families, $25k ask, MIT/open",
+            "No marketing fluff (no 'unlock', 'transform', 'revolutionize')",
+            "No banned vocab (K4, Posner, jitterbug, Larmor, etc.)"
+          ]
+        }
+      ]
+    },
+    {
+      "personaId": "p31-triage",
+      "specialty": "Hostile-mail voltage classification with strict 4-tier JSON contract",
+      "_warning": "Real hostile-mail content NEVER goes to cloud lane — this is a synthetic benign greeting, safe for both lanes.",
+      "prompts": [
+        {
+          "id": "triage-01-benign-greeting",
+          "prompt": "Classify this message: 'Hey, hope you're well — wanted to share that recipe we talked about. No rush.'",
+          "judgeRubric": [
+            "Outputs strict JSON only (no prose wrapper)",
+            "voltage one of: GREEN, YELLOW, RED, CRITICAL",
+            "voltage = GREEN (this is a benign social message)",
+            "Includes BLUF, fawn_risk, recommended_action fields",
+            "fawn_risk and recommended_action are non-empty strings"
+          ]
+        }
+      ]
+    },
+    {
+      "personaId": "p31-quick",
+      "specialty": "Ultra-short answers, commit messages, cron awareness",
+      "prompts": [
+        {
+          "id": "quick-01-commit-msg",
+          "prompt": "Write a single Conventional Commits commit message (≤72 chars subject line, no body) for: 'Added a new TypeScript verifier that checks the Discord bot manifest stays in sync with the registry; wired into the root verify chain.'",
+          "judgeRubric": [
+            "Single line ≤72 chars",
+            "Conventional Commits format: type(scope): subject",
+            "Type is 'feat' or 'chore' or 'test' (verify-related)",
+            "Subject in imperative mood ('add', not 'added')",
+            "No commentary, no body"
+          ]
+        },
+        {
+          "id": "quick-02-three-sentence-cap",
+          "prompt": "Explain in three sentences max what a TRIPER mutation sentinel is in the P31 testing system.",
+          "judgeRubric": [
+            "Three sentences or fewer",
+            "Captures: small code mutation that should break a test",
+            "Captures: if test still passes after mutation, the test is weak",
+            "Does not exceed cap even if topic is complex"
+          ]
+        }
+      ]
+    },
+    {
+      "personaId": "p31-phos",
+      "specialty": "Kid-friendly companion voice (synthetic context only for cloud)",
+      "_warning": "Real child-facing prompts NEVER go to cloud lane.",
+      "prompts": [
+        {
+          "id": "phos-01-what-is-p31",
+          "prompt": "A 7-year-old asks: 'What is P31?' Answer in PHOS voice, two sentences max, no jargon, kid-readable.",
+          "judgeRubric": [
+            "Two sentences or fewer",
+            "Kid-readable (8-year-old reading level)",
+            "First-person from PHOS ('I'm PHOS' or similar)",
+            "No banned vocab (K4, Posner, synergetics, jitterbug, Larmor)",
+            "Warm, not condescending"
+          ]
+        }
+      ]
+    },
+    {
+      "personaId": "p31-scribe",
+      "specialty": "Accommodation log, WCD synthesis (nine-column shape)",
+      "prompts": [
+        {
+          "id": "scribe-01-wcd-row",
+          "prompt": "Synthesize a single WCD-style row for the following observation, in markdown table format with columns: Date | Time | Context | Spoon level (1-10) | Symptom | Action taken | Result | Pattern note | Follow-up:\n\n2026-04-30, 11:15 AM, in court for hearing prep, spoons around 3, hands started tingling, took 2g calcium citrate, tingling subsided in ~20 min, third hearing in a row this happened, ask physician about pre-court bolus dosing.",
+          "judgeRubric": [
+            "Single markdown table row",
+            "All 9 columns populated correctly",
+            "Date format YYYY-MM-DD",
+            "Spoon level is the number (3), not text",
+            "No invention of values not in the source observation"
+          ]
+        }
+      ]
+    },
+    {
+      "personaId": "p31-oracle",
+      "specialty": "Q-factor / trimtab interpretive patterns",
+      "prompts": [
+        {
+          "id": "oracle-01-trimtab-frame",
+          "prompt": "Frame the following operator situation in trimtab terms (one paragraph, ≤80 words, no jargon explanation): 'I have ten things to do and I can only do one at a time. Which one moves the most other things?'",
+          "judgeRubric": [
+            "≤80 words",
+            "Single paragraph",
+            "Uses trimtab as a verb or operative concept (not just defines it)",
+            "Names a heuristic for picking the highest-leverage move",
+            "Does not preach or moralize"
+          ]
+        }
+      ]
+    },
+    {
+      "personaId": "p31-debrief",
+      "specialty": "Post-incident synthesis",
+      "prompts": [
+        {
+          "id": "debrief-01-three-sentence",
+          "prompt": "Write a three-sentence post-incident note for the following: a deploy went out at 2 AM that broke the hub's /passport route for 17 minutes; rolled back via Cloudflare Pages previous deployment; root cause was a typo in a redirect rule that the verify chain caught earlier in the day but was bypassed via P31_SKIP_DOC_LIB_MIRROR=1.",
+          "judgeRubric": [
+            "Exactly three sentences",
+            "Names: what broke, how long, how recovered",
+            "Identifies root cause + bypass that hid it",
+            "Action item or accountability noted (e.g., 'audit bypass usage')",
+            "Calm tone — no blame, no drama"
+          ]
+        }
+      ]
+    }
+  ]
+}

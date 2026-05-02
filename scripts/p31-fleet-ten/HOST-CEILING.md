@@ -39,10 +39,18 @@ http-server demo + ollama-mcp bridge    : 105 MiB
 container + kernel + Node compile cache : 1.5 GiB
 openclaw-gateway (when running)         : 730 MiB  [STOPPED to free space]
 
+qwen3:0.6b               needs ~0.97 GiB → BLOCKED on this host (smallest tested)
 phi4-mini:latest         needs ~2.6 GiB  → BLOCKED on this host
 qwen2.5-coder:7b based   needs ~4.5 GiB  → BLOCKED on this host
 qwen3:8b based           needs ~5.0 GiB  → BLOCKED on this host
 ```
+
+**Empirical absolute floor on this host:** qwen3:0.6b at 970 MiB. After
+aggressive `fleet:free-host --apply --aggressive` (stopped openclaw +
+p31-monitor + http-server demo + p31-discord-bot temporarily), available
+peaked at 778 MiB — still 192 MiB short of the smallest model in the
+qwen3 library. Cursor-agent's 2.1 GiB resident set is the single dominant
+constraint on this Crostini container.
 
 Even after stopping openclaw (saving 730 MiB) and dropping caches, the host
 sits at 428–824 MiB available — still 1.8+ GiB short of the smallest persona.
@@ -57,11 +65,20 @@ the operator runs is comparable in footprint.
   - RED   = fleet not materialized; setup needed
   - `--json` for machine output; `--quick` to skip live load test
 - **`npm run fleet:free-host`** — dry-run of safe-to-stop services with
-  estimated RAM recovery. `--apply` actually stops them; `--restart` restores
-  everything stopped previously (state in `~/.p31/fleet-free-host.state.json`).
-  Will not touch cursor-agent, ollama serve, ollama-mcp, or p31-discord-bot.
-- **`npm run verify:cloud-vs-local`** — static verifier on the harness;
-  joined the root ship bar.
+  estimated RAM recovery. `--apply` actually stops them; `--aggressive` also
+  pauses http-server demo + Discord bot; `--restart` restores everything
+  stopped previously (state in `~/.p31/fleet-free-host.state.json`).
+  Will not touch cursor-agent, ollama serve, or ollama-mcp.
+- **`npm run fleet:compare -- --persona p31-X`** — runs the test corpus
+  against one or more personas, calls the cloud-vs-local harness per prompt,
+  and produces a per-persona markdown report with side-by-side outputs +
+  rubric hit counts. `--all` for full sweep. Output lands in
+  `out/fleet-comparison/` (gitignored). Heuristic rubric scoring is for
+  triage only; operator spot-check is the source of truth for quality.
+- **`npm run verify:cloud-vs-local`** — static verifier on the A/B harness.
+- **`npm run verify:fleet-corpus`** — static verifier on the test corpus
+  (schema, persona coverage, operator-confidential `_warning` declarations).
+- All four verifiers are on the root `verify` ship bar (76 gates total).
 
 ---
 
@@ -77,25 +94,27 @@ the operator runs is comparable in footprint.
 ## Run on a capable host (operator recipe)
 
 ```
-# 1. Same setup as today
-ollama pull qwen2.5-coder:7b
-ollama pull qwen3:8b
-ollama pull phi4-mini:latest
+# 0. Snapshot host readiness
+npm run fleet:probe
+# expect GREEN; if AMBER, free-host first
+
+# 1. Materialize the fleet (one-time per host)
+ollama pull qwen2.5-coder:7b qwen3:8b phi4-mini:latest
 bash scripts/p31-fleet-ten/setup.sh
 
 # 2. Smoke (this is where today blocked)
 bash scripts/p31-fleet-ten/verify.sh
 
-# 3. Local-only benchmark (rough tok/s per persona)
-npm run ollama:bench
-
-# 4. Cloud-vs-local A/B for a single persona
+# 3a. One-prompt A/B for a single persona
 npm run ollama:vs-cloud -- --persona p31-mechanic \
-  --prompt "Refactor this 30-line snippet for readability without changing behavior. <code>..."
+  --prompt "Refactor this 30-line snippet for readability..."
 
-# 5. With Anthropic comparison side
-ANTHROPIC_API_KEY=sk-... npm run ollama:vs-cloud -- \
-  --persona p31-mechanic --prompt-file /tmp/code.txt --json /tmp/run.json
+# 3b. Or: run the curated test corpus and get a markdown report
+ANTHROPIC_API_KEY=sk-... npm run fleet:compare -- --all
+# → out/fleet-comparison/index.md + per-persona reports
+
+# 4. Local-only benchmark (rough tok/s per persona; no cloud)
+npm run ollama:bench
 ```
 
 ## Hard bans (carried from `.cursor/rules/p31-ollama-fleet.mdc`)

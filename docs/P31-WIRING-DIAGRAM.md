@@ -916,6 +916,7 @@ npm run verify  (root, ordered)
 ├── verify:ollama-mcp
 ├── verify:ollama-tunnel-config
 ├── verify:cloud-vs-local
+├── verify:fleet-corpus
 ├── verify:style-alignment
 ├── verify:command-center
 ├── verify:p31ca-contracts              ← ground-truth + synergetic + lattice oracle + economy

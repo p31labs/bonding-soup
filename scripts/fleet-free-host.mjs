@@ -48,6 +48,21 @@ function memSnapshot() {
   return { totalMiB: Math.round(total / 1024), availMiB: Math.round(avail / 1024) };
 }
 
+const AGGRESSIVE = process.argv.includes("--aggressive");
+const KEEP_DISCORD = process.argv.includes("--keep-discord");
+const KEEP_HTTP = process.argv.includes("--keep-http");
+
+function pmIsOnline(name) {
+  const list = safeExec("pm2 jlist") || "[]";
+  try {
+    const j = JSON.parse(list);
+    const e = j.find((x) => x.name === name);
+    return Boolean(e && e.pm2_env && e.pm2_env.status === "online");
+  } catch {
+    return false;
+  }
+}
+
 const candidates = [
   {
     id: "openclaw",
@@ -62,19 +77,30 @@ const candidates = [
     id: "p31-monitor",
     label: "p31-monitor (PM2 cluster, internal monitoring)",
     skip: false,
-    isRunning: () => {
-      const list = safeExec("pm2 jlist") || "[]";
-      try {
-        const j = JSON.parse(list);
-        const e = j.find((x) => x.name === "p31-monitor");
-        return Boolean(e && e.pm2_env && e.pm2_env.status === "online");
-      } catch {
-        return false;
-      }
-    },
+    isRunning: () => pmIsOnline("p31-monitor"),
     stop: () => safeExec("pm2 stop p31-monitor"),
     start: () => safeExec("pm2 start p31-monitor"),
     estMiB: 30,
+  },
+  {
+    id: "http-server-demo",
+    label: "http-server :8181 (local C.A.R.S. demo)",
+    skip: !AGGRESSIVE || KEEP_HTTP,
+    isRunning: () => Boolean(safeExec("pgrep -f 'http-server -p 8181'")),
+    stop: () => safeExec("pkill -f 'http-server -p 8181'"),
+    start: () => null,
+    estMiB: 73,
+    aggressiveOnly: true,
+  },
+  {
+    id: "p31-discord-bot",
+    label: "p31-discord-bot (PM2 cluster, production-bound)",
+    skip: !AGGRESSIVE || KEEP_DISCORD,
+    isRunning: () => pmIsOnline("p31-discord-bot"),
+    stop: () => safeExec("pm2 stop p31-discord-bot"),
+    start: () => safeExec("pm2 start p31-discord-bot"),
+    estMiB: 63,
+    aggressiveOnly: true,
   },
 ];
 

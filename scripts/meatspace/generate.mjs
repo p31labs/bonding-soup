@@ -48,7 +48,12 @@ const OUT_DIR = path.join(REPO_ROOT, 'dist', 'meatspace');
 const FONTS_DIR = path.join(__dirname, 'fonts');
 
 const ARGS = parseArgs(process.argv.slice(2));
-const QR_TARGET = ARGS['qr-target'] || 'https://p31ca.org';
+// Default QR target is /welcome — the meatspace bridge's intended landing
+// pad. /welcome wires the bus bar nervous system (subject-prefs + cogpass-
+// reader + phos-guide) so PHOS auto-expands and greets the human in the
+// operator's voice. Override with --qr-target=https://p31ca.org/elsewhere
+// when needed (preview branches, campaign-specific URLs, etc.).
+const QR_TARGET = ARGS['qr-target'] || 'https://p31ca.org/welcome';
 const ONLY = ARGS['only']; // optional artifact id
 
 // ─── canonical operator contact (per CWP-PHOS-2026-01 § Meatspace) ──────────

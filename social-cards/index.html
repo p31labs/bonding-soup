@@ -6,7 +6,12 @@
   <title>P31 social cards — screenshot-ready, 1080×1080, P31 canon</title>
   <meta name="description" content="Ten share-ready cards: stat flex, fleet status, the quote, perception vs reality, ethics-as-architecture, the closer, the dev flex, K4 geometry, the trim tab, ASCII tetrahedron. Open the page, screenshot a card, share it. The geometry holds." />
   <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#25897d" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='75' x='10' font-size='75' font-weight='bold' fill='%2325897d' font-family='monospace'%3E◍%3C/text%3E%3C/svg%3E" />
+  <!-- P31 PWA contract — installable to phone home screen for one-tap screenshot sessions. -->
+  <link rel="manifest" href="/pwa/manifest-social-cards.json" />
+  <link rel="apple-touch-icon" href="/pwa/p31-tetra-icon.svg" />
+  <script src="./p31-pwa.js" defer></script>
   <style>
     /* P31 canonical tokens (subset of cognitive-passport/p31-style.css) */
     :root {

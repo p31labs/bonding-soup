@@ -6,9 +6,14 @@
   <title>The Pulse — one number, every screen · P31</title>
   <meta name="description" content="One canonical number — the Larmor frequency of phosphorus-31, 863 Hz — flows from p31-constants.json into every surface in the codebase. Edit it here. Watch all 40+ surfaces update in the same window. This is ephemeralization made visible. Schema p31.thePulseDemo/0.1.0." />
   <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#cda852" />
   <meta property="og:title" content="The Pulse — ephemeralization made visible" />
   <meta property="og:description" content="Edit one number. Watch every surface in the codebase update in real time. This is what 'one source of truth' actually looks like as a verb." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='75' x='10' font-size='75' font-weight='bold' fill='%23cda852' font-family='monospace'%3E◉%3C/text%3E%3C/svg%3E" />
+  <!-- P31 PWA contract — installable for offline edit-and-watch sessions. -->
+  <link rel="manifest" href="/pwa/manifest-the-pulse.json" />
+  <link rel="apple-touch-icon" href="/pwa/p31-tetra-icon.svg" />
+  <script src="./p31-pwa.js" defer></script>
   <style>
     /* schema marker: p31.thePulseDemo/0.1.0 — used by scripts/verify-demos.mjs.
        This artifact consolidates the previous larmor-pulse.html and alignment-graph.html

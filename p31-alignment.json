@@ -141,7 +141,52 @@
     {
       "id": "p31-social-cards",
       "path": "social-cards/index.html",
-      "role": "Ten share-ready 1080\u00d71080 cards (stat flex \u00b7 fleet status \u00b7 quote \u00b7 perception/reality diptych \u00b7 ethics-as-architecture \u00b7 emotional closer \u00b7 dev flex \u00b7 K\u2084 SVG geometry \u00b7 trim-tab literary \u00b7 ASCII tetrahedron). P31 canonical palette, single-file HTML, no external font fetches, screenshot-friendly. Operator opens via npm run demo at /social-cards/ for a screenshot session. CC-BY 4.0."
+      "role": "Ten share-ready 1080\u00d71080 cards (stat flex \u00b7 fleet status \u00b7 quote \u00b7 perception/reality diptych \u00b7 ethics-as-architecture \u00b7 emotional closer \u00b7 dev flex \u00b7 K\u2084 SVG geometry \u00b7 trim-tab literary \u00b7 ASCII tetrahedron). P31 canonical palette, single-file HTML, no external font fetches, screenshot-friendly. Operator opens via npm run demo at /social-cards/ for a screenshot session. PWA-installable via /pwa/manifest-social-cards.json. CC-BY 4.0."
+    },
+    {
+      "id": "p31-pwa-icon",
+      "path": "pwa/p31-tetra-icon.svg",
+      "role": "Canonical PWA icon for all P31 mobile-installable surfaces. K\u2084 tetrahedron in canonical teal with safe-zone padding (\u22650 80px from edge) for maskable purpose. CC-BY 4.0."
+    },
+    {
+      "id": "p31-pwa-sw",
+      "path": "pwa/sw.js",
+      "role": "Universal service worker source. Network-first with cache fallback. No telemetry. Mirrored to each app folder by build:pwa so per-app scope works without HTTP-header gymnastics. Verified by verify:pwa."
+    },
+    {
+      "id": "p31-pwa-script",
+      "path": "pwa/p31-pwa.js",
+      "role": "Drop-in PWA bootstrap: registers ./sw.js relative to the loading page + surfaces an opt-in install button when beforeinstallprompt fires. Mirrored to each app folder by build:pwa."
+    },
+    {
+      "id": "p31-pwa-manifest-cogpass",
+      "path": "pwa/manifest-cogpass.json",
+      "role": "Web app manifest for Cognitive Passport. id p31.cogpass; scope /cognitive-passport/. Validated by verify:pwa."
+    },
+    {
+      "id": "p31-pwa-manifest-social-cards",
+      "path": "pwa/manifest-social-cards.json",
+      "role": "Web app manifest for the 10-card social kit. id p31.socialCards; scope /social-cards/. Validated by verify:pwa."
+    },
+    {
+      "id": "p31-pwa-manifest-same-shape",
+      "path": "pwa/manifest-same-shape.json",
+      "role": "Web app manifest for The Same Shape demo (K\u2084 \u00d7 4 panels). id p31.sameShape; scope /demos/. Validated by verify:pwa."
+    },
+    {
+      "id": "p31-pwa-manifest-the-pulse",
+      "path": "pwa/manifest-the-pulse.json",
+      "role": "Web app manifest for The Pulse demo (editable Larmor canon). id p31.thePulse; scope /demos/. Validated by verify:pwa."
+    },
+    {
+      "id": "p31-launch-package",
+      "path": "docs/LAUNCH-PACKAGE-2026-05.md",
+      "role": "p31.launchPackage/1.0.0 \u2014 definitive comprehensive enterprise production-grade market launch automation package. 17 surfaces \u00b7 4 PWAs \u00b7 83 verify gates \u00b7 10 social cards \u00b7 22 papers \u00b7 one thesis. Operator-voice runbook with phase ladder, anything-they-can-do-WE-can-do-better matrix, self-care gates. Backed by scripts/p31-launch.mjs (npm run launch)."
+    },
+    {
+      "id": "p31-launch-html",
+      "path": "launch.html",
+      "role": "p31.launchReadiness/1.0.0 \u2014 static readiness dashboard. Counters (83 gates / 17 surfaces / 4 PWAs / 10 cards / 22 papers / 10 workers / $50/mo / 0% fee), surfaces table, verbs cards, phase ladder, contrast matrix. Rewritten by scripts/p31-launch.mjs (data row attributes only)."
     },
     {
       "id": "p31-deep-dive-doc",
@@ -1402,6 +1447,62 @@
       "apply": "edit p31-facts.json when adding externally cited file/path/key claims",
       "verify": "npm run verify:facts",
       "note": "Declarative invariants: required paths, mesh + org keys, https worker URLs, no credential-like substrings in policy files"
+    },
+    {
+      "id": "p31-pwa-mirror-pipeline",
+      "from": [
+        "pwa/sw.js",
+        "pwa/p31-pwa.js",
+        "pwa/p31-tetra-icon.svg",
+        "pwa/manifest-cogpass.json",
+        "pwa/manifest-social-cards.json",
+        "pwa/manifest-same-shape.json",
+        "pwa/manifest-the-pulse.json"
+      ],
+      "to": [
+        "cognitive-passport/sw.js",
+        "cognitive-passport/p31-pwa.js",
+        "social-cards/sw.js",
+        "social-cards/p31-pwa.js",
+        "demos/sw.js",
+        "demos/p31-pwa.js",
+        "andromeda/04_SOFTWARE/p31ca/public/pwa/sw.js",
+        "andromeda/04_SOFTWARE/p31ca/public/pwa/p31-pwa.js",
+        "andromeda/04_SOFTWARE/p31ca/public/pwa/p31-tetra-icon.svg",
+        "andromeda/04_SOFTWARE/p31ca/public/pwa/manifest-cogpass.json",
+        "andromeda/04_SOFTWARE/p31ca/public/pwa/manifest-social-cards.json",
+        "andromeda/04_SOFTWARE/p31ca/public/pwa/manifest-same-shape.json",
+        "andromeda/04_SOFTWARE/p31ca/public/pwa/manifest-the-pulse.json",
+        "andromeda/04_SOFTWARE/p31ca/public/cognitive-passport/sw.js",
+        "andromeda/04_SOFTWARE/p31ca/public/cognitive-passport/p31-pwa.js",
+        "andromeda/04_SOFTWARE/p31ca/public/demos/sw.js",
+        "andromeda/04_SOFTWARE/p31ca/public/demos/p31-pwa.js"
+      ],
+      "apply": "npm run build:pwa",
+      "verify": "npm run verify:pwa",
+      "note": "Single canonical SW + drop-in script + icon + 4 manifests \u2192 mirrored into each app folder so per-app scope works without HTTP-header gymnastics. Hub mirror updates p31ca/public/pwa/* and the per-app folders that exist there. social-cards/ hub target is created on first deploy of the social-cards surface."
+    },
+    {
+      "id": "p31-launch-package-pipeline",
+      "from": [
+        "scripts/p31-launch.mjs",
+        "docs/LAUNCH-PACKAGE-2026-05.md",
+        "launch.html",
+        "pwa/manifest-cogpass.json",
+        "pwa/manifest-social-cards.json",
+        "pwa/manifest-same-shape.json",
+        "pwa/manifest-the-pulse.json",
+        "demos/the-same-shape.html",
+        "demos/the-pulse.html",
+        "social-cards/index.html",
+        "cognitive-passport/index.html"
+      ],
+      "to": [
+        ".p31-launch-readiness.json"
+      ],
+      "apply": "npm run launch  (set P31_LAUNCH_PUBLISH=I_UNDERSTAND to additionally git push)",
+      "verify": "npm run launch:status  (read-only) or npm run launch -- --dry-run",
+      "note": "Definitive market-launch automation. Chains build:pwa \u2192 build:demos \u2192 sync:passport \u2192 build:doc-index \u2192 verify:* (8 gates) \u2192 readiness snapshot. Idempotent. Local only by default. Audit log at ~/.p31/launch-log.jsonl."
     },
     {
       "id": "p31ca-design-spec-bundle",

@@ -1000,6 +1000,8 @@ const server = http.createServer((req, res) => {
     crypto: "docs/operator/CRYPTO-POSITIONING-2026-05-02.md",
     "phos-training": "docs/operator/PHOS-TRAINING-DOCTRINE-2026-05-02.md",
     "peer-reflection": "docs/operator/PEER-CLAUDE-REFLECTION-2026-05-02.md",
+    "root-authority": "docs/operator/ROOT-AUTHORITY-2026-05-02.md",
+    thesis: "docs/operator/PHOSPHORUS-THESIS-v2-2026-05-02.md",
   };
   const SLUG_RE = /^[a-z][a-z0-9-]{0,40}$/;
   if (req.method === "GET" && req.url && req.url.startsWith("/api/view-doc")) {

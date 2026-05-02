@@ -1126,6 +1126,16 @@
       "role": "p31.peerReflection/1.0.0 \u2014 honest assessment from a peer Claude session 2026-05-02. NOT P31 doctrine; treat as one-time peer commentary. Contains specific actionable warnings the operator should weigh against his own judgement and his counsel's advice: (a) PHOS-x-custody timing risk (PHOS interactions with minors during active custody dispute could become opposing-counsel evidence), (b) `lead with the blood test` legal advice (serum calcium 7.8 mg/dL as objective biomarker preferred over clever pro-se arguments), (c) audience-specific framing for crypto vocabulary (W3C/FIDO terminology to disability community, soulbound/ZKP to crypto community, plain English to grant reviewers), (d) burnout / single-stonemason risk warning. Reachable as the `peer-reflection` view slug."
     },
     {
+      "id": "p31-root-authority-2026-05-02",
+      "path": "docs/operator/ROOT-AUTHORITY-2026-05-02.md",
+      "role": "p31.operatorReference/1.0.0 \u2014 self-determination doctrine rebranded from `sovereignty` to `Root Authority` (PKI metaphor, electrical-engineering grounded-neutral metaphor) per operator request to avoid `sovereign citizen` association. Six domains (legal / financial / medical / technical / informational / identity) each with `what's already built` + `what needs to be built` sections. Closes with a 24-item checklist mappable to WCDs (6 legal + 5 financial + 5 medical + 4 technical + 2 informational + 2 identity). Core thesis: every external authority can fail; build local fallbacks (not backups) so degradation is graceful. Reachable as the `root-authority` view slug."
+    },
+    {
+      "id": "p31-phosphorus-thesis-v2-2026-05-02",
+      "path": "docs/operator/PHOSPHORUS-THESIS-v2-2026-05-02.md",
+      "role": "p31.operatorReference/1.0.0 \u2014 Phosphorus Thesis v2.0 candidate text, 10 parts (Question \u2192 Convergence \u2192 Architecture \u2192 Information-Theoretic Argument \u2192 Evidence Chain \u2192 Ethical Position \u2192 Identity Argument \u2192 Vision \u2192 Canonical Constants \u2192 Contact). Synthesizes the entire P31 corpus shipped to date into a single capstone manifesto/whitepaper aimed at Zenodo deposit as a successor to the v1.0 Tetrahedron Protocol paper. Workspace-rule edits applied: children's first names \u2192 S.J. / W.J. per `.cursorrules` / `CLAUDE.md` \u00a74 (Zenodo deposit is a separate operator-time decision; this archive is the home-tree copy). DOI pending; no Zenodo deposit until operator final-pass. Reachable as the `thesis` view slug. Cross-references the L.O.V.E. + ethical-rewards framework (rewards), the SIC-POVM training doctrine (phos-training), the crypto positioning (crypto), and the Root Authority self-determination guide (root-authority)."
+    },
+    {
       "id": "p31ca-worker-allowlist",
       "path": "andromeda/04_SOFTWARE/p31ca/security/worker-allowlist.json",
       "role": "p31.workerAllowlist/1.0.0 \u2014 named Workers + paths; inventory compares to all `wrangler.toml` under andromeda/04_SOFTWARE",
@@ -2517,6 +2527,8 @@
         "docs/operator/CRYPTO-POSITIONING-2026-05-02.md",
         "docs/operator/PHOS-TRAINING-DOCTRINE-2026-05-02.md",
         "docs/operator/PEER-CLAUDE-REFLECTION-2026-05-02.md",
+        "docs/operator/ROOT-AUTHORITY-2026-05-02.md",
+        "docs/operator/PHOSPHORUS-THESIS-v2-2026-05-02.md",
         "docs/CWP-P31-WEAVE-2026-07.md"
       ],
       "apply": "Edit the controlling CWP first (docs/CWP-P31-VIBE-2026-06.md). Phase 1 (2026-05-02) shipped the operator-entry surface (/vibe.html) + short routes. Phase 2 (2026-05-02 same session, ephemeralization pivot) adopted the existing command-center-terminal.html as the PiP CLI substrate \u2014 added /vibe alias to scripts/p31-local-command-center.mjs route handler (one HTML file, three URLs: /term + /terminal + /vibe), consolidated public vibe.html (-39 lines, removed placeholder PiP CLI + duplicate doctrine restatement; now points at :3131/vibe and links to /manifesto for canonical doctrines), and added 'Vibcoding (preview)' footer link from soup.html, cognitive-passport/index.html, and p31-personal-howto.html for discoverability. Phase 3 adds Monaco editor pane + PHOS auto-guidance to the SAME command-center-terminal.html (no new file); VIBE-3H added a third 'view' mode tab + GET /api/view-doc?slug=<slug> read-only operator doc viewer (allowlist + slug regex defends against path traversal; eight slugs: manifesto, vibe-cwp, peer-cwp, agents, public-voice, delta-language, morning-arc, engineering-standard). Phase 4 adds tetra topology Worker; Phase 5 adds 4-tetra cluster + MLS edges (gated on PEER-3A). Personal hub (/start mesh-start.html), threshold onboard (/onboard planetary-onboard.html), and starter hub (/build initial-build.html) keep their CWPs (PAR / IB) but cross-link from /vibe.",

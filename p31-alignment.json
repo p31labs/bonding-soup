@@ -106,27 +106,42 @@
     {
       "id": "p31-demos-index",
       "path": "demos/index.html",
-      "role": "p31.demosIndex/0.1.0 \u2014 gallery + share-kit for the four mind-bending visualizations. Mirrors to p31ca/public/demos/index.html via npm run build:demos; verify:demos. Live at https://p31ca.org/demos-public \u00b7 short /visuals."
+      "role": "p31.demosIndex/0.1.0 \u2014 gallery + share-kit for the two consolidated mind-bending artifacts (the-same-shape, the-pulse) plus a glass-box pointer. Lists the legacy redirect stubs. Mirrors to p31ca/public/demos/index.html via npm run build:demos; verify:demos. Live at https://p31ca.org/demos-public \u00b7 short /visuals."
+    },
+    {
+      "id": "p31-the-same-shape-demo",
+      "path": "demos/the-same-shape.html",
+      "role": "p31.sameShapeDemo/0.1.0 \u2014 four-panel synced K\u2084 visualizer rendering the same minimum-complete graph as a family mesh, a Platonic tetrahedron, a SIC-POVM in d=2, and a Posner phosphate cluster. All panels share one global rotation; click any vertex to highlight its match in the other three. Replaces the original k4-mesh.html (legacy redirect retained)."
+    },
+    {
+      "id": "p31-the-pulse-demo",
+      "path": "demos/the-pulse.html",
+      "role": "p31.thePulseDemo/0.1.0 \u2014 editable Larmor canon (863 Hz) drives a visible breathing dot at constant/100 Hz, propagates through a live alignment DAG, and updates 20+ leaf surface tiles in real time. Consolidates the original larmor-pulse.html and alignment-graph.html (both legacy redirects retained). References p31-constants.json + p31-alignment.json by name."
     },
     {
       "id": "p31-k4-mesh-demo",
       "path": "demos/k4-mesh.html",
-      "role": "p31.k4MeshDemo/0.1.0 \u2014 Three.js K\u2084 tetrahedron family-mesh visualizer. CC-BY 4.0."
+      "role": "p31.k4MeshDemo/0.1.0 \u2014 legacy redirect stub (consolidated 2026-05-02). Auto-forwards to demos/the-same-shape.html via meta-refresh; preserves required vocabulary so verify:demos stays green and external bookmarks survive."
     },
     {
       "id": "p31-alignment-graph-demo",
       "path": "demos/alignment-graph.html",
-      "role": "p31.alignmentGraphDemo/0.1.0 \u2014 force-directed render of p31-alignment.json (sources \u00d7 derivations). Reads ./p31-alignment.json relative; build:demos copies the registry alongside."
+      "role": "p31.alignmentGraphDemo/0.1.0 \u2014 legacy redirect stub (consolidated 2026-05-02). Auto-forwards to demos/the-pulse.html via meta-refresh; preserves required vocabulary so verify:demos stays green and external bookmarks survive."
     },
     {
       "id": "p31-larmor-pulse-demo",
       "path": "demos/larmor-pulse.html",
-      "role": "p31.larmorPulseDemo/0.1.0 \u2014 visual circulation of the 863 Hz Larmor canon flowing into 40+ surfaces, pulsing at the constant itself (100\u00d7 downsampled)."
+      "role": "p31.larmorPulseDemo/0.1.0 \u2014 legacy redirect stub (consolidated 2026-05-02). Auto-forwards to demos/the-pulse.html via meta-refresh; preserves required vocabulary (863, Larmor, p31-constants.json) so verify:demos stays green and external bookmarks survive."
     },
     {
       "id": "p31-demos-social-captions",
       "path": "demos/SOCIAL-CAPTIONS.md",
-      "role": "Share-kit (Bluesky / X / LinkedIn / Mastodon) for the four demos. Anti-FOMO voice; CC-BY 4.0; mirror via build:demos."
+      "role": "Share-kit (Bluesky / X / LinkedIn / Mastodon) for the consolidated demos. Anti-FOMO voice; CC-BY 4.0; mirror via build:demos."
+    },
+    {
+      "id": "p31-social-cards",
+      "path": "social-cards/index.html",
+      "role": "Ten share-ready 1080\u00d71080 cards (stat flex \u00b7 fleet status \u00b7 quote \u00b7 perception/reality diptych \u00b7 ethics-as-architecture \u00b7 emotional closer \u00b7 dev flex \u00b7 K\u2084 SVG geometry \u00b7 trim-tab literary \u00b7 ASCII tetrahedron). P31 canonical palette, single-file HTML, no external font fetches, screenshot-friendly. Operator opens via npm run demo at /social-cards/ for a screenshot session. CC-BY 4.0."
     },
     {
       "id": "p31-deep-dive-doc",

@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 /**
  * Static gate for the public visual demos:
- *   - all four pages present
- *   - declared schema markers
+ *   - 2 featured artifacts present (the-same-shape, the-pulse)
+ *   - 1 gallery index present
+ *   - 3 legacy redirect stubs preserved (k4-mesh, alignment-graph, larmor-pulse)
+ *     so external bookmarks survive after the 2026-05-02 consolidation
+ *   - declared schema markers per file
  *   - no obvious operator secrets / private routes / token shapes
- *   - alignment-graph references p31-alignment.json
+ *   - the-pulse references p31-constants.json AND p31-alignment.json
  *   - if mirrored into p31ca/public/demos/, mirrors byte-match
  */
 import fs from "node:fs";
@@ -20,10 +23,18 @@ function fail(m) { console.error("verify-demos:", m); process.exit(1); }
 function note(m) { console.log("verify-demos:", m); }
 
 const FILES = [
-  { name: "index.html",            schema: "p31.demosIndex/0.1.0",        require: ["Share kit", "K₄ family mesh", "Alignment graph", "Larmor pulse", "Glass box"] },
-  { name: "k4-mesh.html",          schema: "p31.k4MeshDemo/0.1.0",        require: ["K₄ family mesh", "tetrahedr", "auto-rotate"] },
-  { name: "alignment-graph.html",  schema: "p31.alignmentGraphDemo/0.1.0", require: ["p31-alignment.json", "ephemeralization", "repulsion"] },
-  { name: "larmor-pulse.html",     schema: "p31.larmorPulseDemo/0.1.0",   require: ["863", "Larmor", "p31-constants.json"] },
+  // Gallery index — featured artifacts + legacy notice.
+  { name: "index.html",                schema: "p31.demosIndex/0.1.0",          require: ["Share kit", "K₄ family mesh", "Alignment graph", "Larmor pulse", "Glass box", "the-same-shape", "the-pulse"] },
+
+  // Featured artifacts (post-consolidation 2026-05-02).
+  { name: "the-same-shape.html",       schema: "p31.sameShapeDemo/0.1.0",       require: ["K₄", "tetrahedron", "SIC-POVM", "Posner", "lockstep"] },
+  { name: "the-pulse.html",            schema: "p31.thePulseDemo/0.1.0",        require: ["863", "Larmor", "p31-constants.json", "p31-alignment.json", "ephemeralization"] },
+
+  // Legacy redirect stubs (kept to survive external bookmarks; auto-forward via meta-refresh).
+  // The required tokens are preserved verbatim in each stub's text + comment block.
+  { name: "k4-mesh.html",              schema: "p31.k4MeshDemo/0.1.0",          require: ["K₄ family mesh", "tetrahedron", "auto-rotate", "the-same-shape.html"] },
+  { name: "alignment-graph.html",      schema: "p31.alignmentGraphDemo/0.1.0",  require: ["p31-alignment.json", "ephemeralization", "repulsion", "the-pulse.html"] },
+  { name: "larmor-pulse.html",         schema: "p31.larmorPulseDemo/0.1.0",     require: ["863", "Larmor", "p31-constants.json", "the-pulse.html"] },
 ];
 
 const FORBIDDEN = [
@@ -62,4 +73,4 @@ for (const f of FILES) {
 const caps = path.join(SRC_DIR, "SOCIAL-CAPTIONS.md");
 if (!fs.existsSync(caps)) fail("demos/SOCIAL-CAPTIONS.md missing");
 
-note(`OK — 4 demos · ${totalBytes.toLocaleString()} bytes total · share kit present`);
+note(`OK — 2 featured + 1 index + 3 legacy stubs · ${totalBytes.toLocaleString()} bytes · share kit present`);

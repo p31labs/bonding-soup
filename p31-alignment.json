@@ -903,6 +903,32 @@
       "role": "BUS4 Phase 1 CI gate (~190 lines). Locks 7 atomic invariants: (1) bridge HTML exists; (2) bridge imports normalize() from /lib/p31-cogpass-reader.mjs AND defines no local normalize (Single Rule); (3) SCHEMA constant in HTML === 'p31.cogPassBridge/1.0.0' verbatim; (4) schema JSON exists + parses; (5) schema $id matches; (6) ALLOWED_ORIGINS in HTML \u2261 busBar.crossOriginBridge.allowedOrigins in ground-truth (sorted comparison; no wildcards allowed); (7) ground-truth schema constant matches; (8) privacy.html sentinel '\u00a72g. Cross-origin Cognitive Passport bridge' present. Skips cleanly in partial clones (no andromeda). Wired into root npm run verify after verify:cognitive-passport-profiles."
     },
     {
+      "id": "phos-voice-draft",
+      "path": "docs/PHOS-VOICE-DRAFT.md",
+      "role": "Track A canonical source — PHOS personality voice (operator hand). §1 who PHOS is (Phosphorus-31 / Wye→Delta transducer / nine-calcium cage face); §2 voice rules (14 normative rules including Tier-0 stranger vocabulary §2.11, banned operator-internal vocab §2.12, banned urgency patterns §2.13, no naval metaphors §2.14); §3 OPERATOR-VOICE canonical lines (3.1 'help is on the way', 3.2 first-greeting derivation, 3.3 'nine calcium atoms' architectural line); §4 per-page contextual copy (12 slots: _default, /welcome, /passport, /lab, /support, /research, /bonding, /stylebook, /ops, /ede, /buffer, /glass-box). Each §4 entry has tag OPERATOR-VOICE or DRAFT-AGENT-SIMULATED. The operator promotes draft entries by rewriting and changing the tag. Built into p31-phos-voice.json by scripts/build-phos-voice-json.mjs. SHA-locked by docs/PHOS-VOICE-DRAFT.lock.json (operator-voice tamper detection). Verified by scripts/verify-phos-voice.mjs."
+    },
+    {
+      "id": "phos-voice-lock",
+      "path": "docs/PHOS-VOICE-DRAFT.lock.json",
+      "role": "SHA-256 lock for OPERATOR-VOICE slots in PHOS-VOICE-DRAFT.md §4. Schema p31.phosVoiceLock/1.0.0. Maintained by `npm run verify:phos-voice -- --update-lock`. Any change to an OPERATOR-VOICE slot's content (greeting/hint/fallback/links) without a matching SHA update fails verify:phos-voice — making silent agent rewrites impossible. Bootstrap state: 1 SHA (/welcome, derived from §3.2). When operator promotes a DRAFT-AGENT-SIMULATED slot to OPERATOR-VOICE, run --update-lock and commit the lock alongside the §4 edit so the diff is reviewable."
+    },
+    {
+      "id": "phos-voice-json",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/lib/p31-phos-voice.json",
+      "role": "Built artifact (NOT hand-edited) — schema p31.phosVoice/1.0.0. Generated from PHOS-VOICE-DRAFT.md §4 by scripts/build-phos-voice-json.mjs. Top-level _meta declares schema/source/generator/slot counts/doctrine. Other top-level keys are pathnames (slots) with shape { _tag, _tagSource?, greeting, hint, fallback, links }. Fetched at runtime by /lib/p31-phos-guide.mjs tryLoadVoiceJson() and merged over baked-in DEFAULT_VOICE via setVoice() — JSON wins for every defined slot, defaults stand for everything else. Deterministic build (no generatedAt timestamp; verify:phos-voice asserts byte-equality with --check). Production URL: https://p31ca.org/lib/p31-phos-voice.json.",
+      "optional": true
+    },
+    {
+      "id": "build-phos-voice-script",
+      "path": "scripts/build-phos-voice-json.mjs",
+      "role": "Builder for the PHOS voice JSON. Parses PHOS-VOICE-DRAFT.md §4: extracts slot blocks (### `/path` heading + > **tag:** blockquote + 4 backtick-wrapped JSON-encoded fields). Strips fenced code blocks before parsing so prose examples in the §4 preamble don't pollute the slot map. Emits stable-key-ordered JSON with _default first then alphabetical. Skip-on-partial-clone (no andromeda → no-op). Run via npm run build:phos-voice."
+    },
+    {
+      "id": "verify-phos-voice-script",
+      "path": "scripts/verify-phos-voice.mjs",
+      "role": "Ship-bar gate for the PHOS voice pipeline (5 checks): (1) drift — re-runs build with --check and asserts byte-equality between PHOS-VOICE-DRAFT.md §4 and p31-phos-voice.json; (2) schema — every slot has _tag + greeting + hint + fallback + links[{label,href}]; (3) Tier-0 vocabulary — bans 17 operator-internal/naval/military words and 8 urgency patterns; (4) OPERATOR-VOICE SHA lock — compares SHA-256 of greeting+hint+fallback+links per OPERATOR-VOICE slot to docs/PHOS-VOICE-DRAFT.lock.json; mismatch = unauthorized agent rewrite; (5) busBar coverage — informational warning when busBar.slots href has no voice entry (falls back to _default). Wired into root npm run verify after verify:cogpass-bridge. Skip-on-partial-clone."
+    },
+    {
       "id": "p31-meatspace-generator",
       "path": "scripts/meatspace/generate.mjs",
       "role": "Track D \u2014 print-ready PDF generator for the meatspace bridge. Pure Node (pdf-lib + qrcode). Reads colors from andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json via scripts/meatspace/lib/canon.mjs. Output: dist/meatspace/*.pdf (gitignored build artifacts). Shipped artifacts: business-card (D-2, 3.5\u00d72 with bleed, 2-page); elevator-card (D-4, 5\u00d73 with bleed, 2-page \u2014 front: 3-sentence pitch in Tier-0 stranger vocabulary per PHOS-VOICE-DRAFT \u00a72.11, back: operator-voice tagline + 1.5\" QR); one-pager (D-5, US Letter single-side, 3-tile body 'What we build / How it's different / How to help' + compact terms \u00a75 disclosure + big 1.4\" QR with 'Scan to start' + 'Two minutes. We keep nothing.' callouts; visible surface scanned clean of banned vocabulary, naval metaphors, urgency patterns); qr-stickers (D-3, 12-up sheet on US Letter, 2.5\" square dark-face stickers with cut ticks). Planned: pro-handout (D-6, 5.5\u00d78.5 professional handout for grant meetings). Doctrine: each artifact is itself a Layer 1 (Gray Rock) surface \u2014 dark, minimal stimulus, no chroma except brand teal/coral/cyan; the QR is the activation that takes the human to Layer 2 (Alive) on the website. Run: npm run meatspace:print | :business-card | :elevator-card | :one-pager | :qr-stickers."
@@ -1647,6 +1673,19 @@
       "apply": "Bump p31.cognitivePassport id: set SCHEMA in index.html then COGNITIVE_PASSPORT_SCHEMA in @p31/shared",
       "verify": "npm run verify:cognitive-passport-schema",
       "note": "Partial clone without andromeda skips; full tree must match"
+    },
+    {
+      "id": "phos-voice-pipeline",
+      "from": [
+        "docs/PHOS-VOICE-DRAFT.md"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-phos-voice.json",
+        "docs/PHOS-VOICE-DRAFT.lock.json (OPERATOR-VOICE SHA lock)"
+      ],
+      "apply": "Edit docs/PHOS-VOICE-DRAFT.md §4 (per-page voice slots). Run `npm run build:phos-voice` to regenerate p31-phos-voice.json. If you changed an OPERATOR-VOICE slot's content (and the change is operator-approved), also run `npm run verify:phos-voice -- --update-lock` and commit the lock alongside the §4 edit so the SHA drift is reviewable in `git diff`. Promoting a DRAFT-AGENT-SIMULATED slot to OPERATOR-VOICE requires both: (a) rewrite the content in operator's voice, (b) change the tag in §4, (c) `--update-lock` to add the SHA. Never edit p31-phos-voice.json directly — verify:phos-voice (--check) will reject drift.",
+      "verify": "npm run verify:phos-voice — drift + schema + Tier-0 vocabulary + OPERATOR-VOICE SHA lock + busBar.slots coverage warning.",
+      "note": "Loaded at runtime by p31-phos-guide.mjs tryLoadVoiceJson() and merged over baked-in DEFAULT_VOICE; absent file = defaults stand (graceful degradation). Wired into root npm run verify after verify:cogpass-bridge."
     },
     {
       "id": "cogpass-cross-origin-bridge",

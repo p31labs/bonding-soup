@@ -24,20 +24,44 @@
 | `bash scripts/p31-fleet-ten/verify.sh` (smoke) | FAIL — OOM | `500 Internal Server Error: model requires more system memory (4.5 GiB) than is available (522.0 MiB)` |
 | `node lib/cloud-vs-local.mjs --persona p31-quick --prompt "ok"` (smallest persona) | FAIL — OOM | `model requires more system memory (2.6 GiB) than is available (352.2 MiB)` |
 
-## Memory math
+## Memory math (empirical, 2026-05-02 morning)
 
 ```
-total      6.4 GiB
-used       6.0 GiB   (cursor-agent ~2.1 GiB / 31% · Node services ~1 GiB · system + container ~2.9 GiB)
-available  462 MiB   (worst observed)
-swap       0 B       (Crostini default; no swapon binary)
+total      6.4 GiB    (6562 MiB)
+used       5.6 GiB    after stopping openclaw-gateway (system service, sister dev tool)
+available  428–824 MiB  (depends on cache pressure; ~700 MiB sustained)
+swap       0 B        (Crostini default; no swapon binary)
 
-phi4-mini:latest        needs ~2.6 GiB
-qwen2.5-coder:7b based  needs ~4.5 GiB
-qwen3:8b based          needs ~5.0 GiB
+cursor-agent (Anthropic agent runtime)  : 2.1 GiB resident (33% of total)
+ollama serve                            : 94 MiB
+PM2 + p31-discord-bot + p31-monitor     : 264 MiB
+http-server demo + ollama-mcp bridge    : 105 MiB
+container + kernel + Node compile cache : 1.5 GiB
+openclaw-gateway (when running)         : 730 MiB  [STOPPED to free space]
+
+phi4-mini:latest         needs ~2.6 GiB  → BLOCKED on this host
+qwen2.5-coder:7b based   needs ~4.5 GiB  → BLOCKED on this host
+qwen3:8b based           needs ~5.0 GiB  → BLOCKED on this host
 ```
 
-Even the smallest persona is ~2 GiB shy of bootable while the operator's normal toolchain is up.
+Even after stopping openclaw (saving 730 MiB) and dropping caches, the host
+sits at 428–824 MiB available — still 1.8+ GiB short of the smallest persona.
+**The cursor-agent process alone is the dominant constraint.** Nothing else
+the operator runs is comparable in footprint.
+
+## Tooling shipped with this discovery
+
+- **`npm run fleet:probe`** — one-command GREEN/AMBER/RED status report:
+  - GREEN = fleet executable, all 10 personas resident, smoke test passes
+  - AMBER = fleet exists but RAM ceiling blocks load
+  - RED   = fleet not materialized; setup needed
+  - `--json` for machine output; `--quick` to skip live load test
+- **`npm run fleet:free-host`** — dry-run of safe-to-stop services with
+  estimated RAM recovery. `--apply` actually stops them; `--restart` restores
+  everything stopped previously (state in `~/.p31/fleet-free-host.state.json`).
+  Will not touch cursor-agent, ollama serve, ollama-mcp, or p31-discord-bot.
+- **`npm run verify:cloud-vs-local`** — static verifier on the harness;
+  joined the root ship bar.
 
 ---
 

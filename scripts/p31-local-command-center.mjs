@@ -961,7 +961,7 @@ const server = http.createServer((req, res) => {
     }
     return;
   }
-  if (req.method === "GET" && (req.url === "/term" || req.url === "/terminal")) {
+  if (req.method === "GET" && (req.url === "/term" || req.url === "/terminal" || req.url === "/vibe")) {
     const termPath = path.join(repoRoot, "command-center-terminal.html");
     if (fs.existsSync(termPath)) {
       res.writeHead(200, CC_HDR.html);
@@ -1340,6 +1340,7 @@ server.listen(requestedPort === 0 ? 0 : requestedPort, listenHost, () => {
   console.log("P31 command center v" + CC_VERSION + ": " + urlLoop + "  (Ctrl+C to stop)");
   console.log("P31 operator desk: " + urlDesk);
   console.log("P31 terminal:      http://127.0.0.1:" + actualPort + "/term  (chat with personas + run commands · mobile-first)");
+  console.log("P31 vibcoding:     http://127.0.0.1:" + actualPort + "/vibe  (alias of /term — PiP CLI for vibcoding spectrum · CWP-P31-VIBE-2026-06)");
   if (!hasBondingAppleTouch()) {
     console.warn("P31 command center: apple-touch missing — npm run generate:bonding-pwa-icons");
   }

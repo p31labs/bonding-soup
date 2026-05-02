@@ -2464,11 +2464,16 @@
       "to": [
         "andromeda/04_SOFTWARE/p31ca/public/vibe.html",
         "andromeda/04_SOFTWARE/p31ca/public/_redirects",
-        "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json",
+        "scripts/p31-local-command-center.mjs",
+        "command-center-terminal.html",
+        "soup.html",
+        "cognitive-passport/index.html",
+        "p31-personal-howto.html"
       ],
-      "apply": "Edit the controlling CWP first (docs/CWP-P31-VIBE-2026-06.md). Phase 1 ships the operator-entry surface (/vibe.html) + short routes /vibe and /vibcoding; Phase 2 wires the PiP CLI + Monaco; Phase 3 adds tetra topology Worker; Phase 4 adds 4-tetra cluster + MLS edges (gated on PEER-3A). Personal hub (/start mesh-start.html), threshold onboard (/onboard planetary-onboard.html), and starter hub (/build initial-build.html) keep their CWPs (PAR / IB) but cross-link from /vibe Phase 1 entry.",
-      "verify": "manual + npm run hub:diff:p31ca + cd andromeda/04_SOFTWARE/p31ca && npm run verify:ground-truth",
-      "note": "Phase 1 (2026-05-02): operator entry surface + short routes + this alignment row. Phase 2+ tasks tracked in CWP-P31-VIBE-2026-06.md \u00a78 (Phases) and \u00a79 (WBS). Five doctrines from PEER-COMP \u00a75 are the floor. Substrate composes: tetra (K\u2084) \u2192 cluster (4 tetras) \u2192 hub (4 clusters) \u2192 mesh (open federation). PHOS is the guide at every level."
+      "apply": "Edit the controlling CWP first (docs/CWP-P31-VIBE-2026-06.md). Phase 1 (2026-05-02) shipped the operator-entry surface (/vibe.html) + short routes. Phase 2 (2026-05-02 same session, ephemeralization pivot) adopted the existing command-center-terminal.html as the PiP CLI substrate \u2014 added /vibe alias to scripts/p31-local-command-center.mjs route handler (one HTML file, three URLs: /term + /terminal + /vibe), consolidated public vibe.html (-39 lines, removed placeholder PiP CLI + duplicate doctrine restatement; now points at :3131/vibe and links to /manifesto for canonical doctrines), and added 'Vibcoding (preview)' footer link from soup.html, cognitive-passport/index.html, and p31-personal-howto.html for discoverability. Phase 3 adds Monaco editor pane + PHOS auto-guidance to the SAME command-center-terminal.html (no new file). Phase 4 adds tetra topology Worker; Phase 5 adds 4-tetra cluster + MLS edges (gated on PEER-3A). Personal hub (/start mesh-start.html), threshold onboard (/onboard planetary-onboard.html), and starter hub (/build initial-build.html) keep their CWPs (PAR / IB) but cross-link from /vibe.",
+      "verify": "manual + npm run hub:diff:p31ca + cd andromeda/04_SOFTWARE/p31ca && npm run verify:ground-truth + npm run command-center then open http://127.0.0.1:3131/vibe",
+      "note": "Ephemeralization gate (CWP \u00a74.5) is the floor for this derivation: every future agent must check whether an existing service can carry one more URL before adding a new one. Five doctrines (PEER-COMP \u00a75 / Manifesto \u00a71) are the floor for content. Substrate composes: tetra (K\u2084) \u2192 cluster (4 tetras) \u2192 hub (4 clusters) \u2192 mesh (open federation). PHOS is the guide at every level. Phase 2 closure documented in CWP-P31-VIBE-2026-06.md \u00a716."
     }
   ],
   "optionalVerifyCommands": {

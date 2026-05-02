@@ -989,11 +989,13 @@ const server = http.createServer((req, res) => {
     manifesto: "docs/P31-MANIFESTO.md",
     "vibe-cwp": "docs/CWP-P31-VIBE-2026-06.md",
     "peer-cwp": "docs/CWP-P31-PEER-COMP-2026-05.md",
+    "weave-cwp": "docs/CWP-P31-WEAVE-2026-07.md",
     "morning-arc": "docs/MORNING-OPERATOR-ARC.md",
     agents: "AGENTS.md",
     "delta-language": "docs/P31-DELTA-LANGUAGE.md",
     "public-voice": "docs/PUBLIC-VOICE.md",
     "engineering-standard": "docs/P31-ENGINEERING-STANDARD.md",
+    alignment: "docs/operator/CLAUDE-CODE-ALIGNMENT-2026-05-02.md",
   };
   const SLUG_RE = /^[a-z][a-z0-9-]{0,40}$/;
   if (req.method === "GET" && req.url && req.url.startsWith("/api/view-doc")) {

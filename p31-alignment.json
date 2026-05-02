@@ -1093,7 +1093,17 @@
     {
       "id": "p31-operator-boot-up-and-use",
       "path": "docs/operator/BOOT-UP-AND-USE.md",
-      "role": "p31.operatorRunbook/1.0.0 \u2014 mechanical boot-up loop in six moves; sibling under MORNING-OPERATOR-ARC; rendered inline as the `boot-up` view slug in the PiP CLI substrate (CWP-P31-VIBE-2026-06 \u00a720)"
+      "role": "p31.operatorRunbook/1.0.0 \u2014 mechanical boot-up loop in six moves; sibling under MORNING-OPERATOR-ARC; rendered inline as the `boot-up` view slug in the PiP CLI substrate (CWP-P31-VIBE-2026-06 \u00a720). Edition 2026-05-02b adds Two-machine setup (thin client \u2192 desktop GPU host via OLLAMA_HOST) for the RAM AMBER fix."
+    },
+    {
+      "id": "p31-claude-code-alignment-2026-05-02",
+      "path": "docs/operator/CLAUDE-CODE-ALIGNMENT-2026-05-02.md",
+      "role": "Operator-authored canonical alignment prompt for Claude Code Opus 4.7 sessions; OPERATOR-VOICE block; supersedes 2026-05-01 edition; reachable as the `alignment` view slug in the PiP CLI substrate. 16 sections covering operator condition, organization, legal, FERS, grants, engineering state, products, CWPs, design doctrine, theoretical framework, verified facts, key documents, blocking gates, communication rules."
+    },
+    {
+      "id": "p31-cwp-weave-2026-07",
+      "path": "docs/CWP-P31-WEAVE-2026-07.md",
+      "role": "p31.controlledWorkPackage/1.0.0 \u2014 Smart Weave: mesh sync + message integration + CRDT entanglement + physics-shaped visualization. v1.1.0 absorbs Opus 4.6 web critique 2026-05-02 (\u00a711 ledger). Five phases W-1..W-5; W-1 (per-edge mesh pulse counters) is the MVP per Opus \u00a76. PHOS-as-bridge deferred to a separate future CWP per Opus \u00a74.3. Reachable as the `weave-cwp` view slug in the PiP CLI substrate."
     },
     {
       "id": "p31ca-worker-allowlist",
@@ -2476,11 +2486,14 @@
         "andromeda/04_SOFTWARE/p31ca/public/_redirects",
         "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json",
         "scripts/p31-local-command-center.mjs",
+        "scripts/verify-vibe-pip-whitelist.mjs",
         "command-center-terminal.html",
         "soup.html",
         "cognitive-passport/index.html",
         "p31-personal-howto.html",
-        "docs/operator/BOOT-UP-AND-USE.md"
+        "docs/operator/BOOT-UP-AND-USE.md",
+        "docs/operator/CLAUDE-CODE-ALIGNMENT-2026-05-02.md",
+        "docs/CWP-P31-WEAVE-2026-07.md"
       ],
       "apply": "Edit the controlling CWP first (docs/CWP-P31-VIBE-2026-06.md). Phase 1 (2026-05-02) shipped the operator-entry surface (/vibe.html) + short routes. Phase 2 (2026-05-02 same session, ephemeralization pivot) adopted the existing command-center-terminal.html as the PiP CLI substrate \u2014 added /vibe alias to scripts/p31-local-command-center.mjs route handler (one HTML file, three URLs: /term + /terminal + /vibe), consolidated public vibe.html (-39 lines, removed placeholder PiP CLI + duplicate doctrine restatement; now points at :3131/vibe and links to /manifesto for canonical doctrines), and added 'Vibcoding (preview)' footer link from soup.html, cognitive-passport/index.html, and p31-personal-howto.html for discoverability. Phase 3 adds Monaco editor pane + PHOS auto-guidance to the SAME command-center-terminal.html (no new file); VIBE-3H added a third 'view' mode tab + GET /api/view-doc?slug=<slug> read-only operator doc viewer (allowlist + slug regex defends against path traversal; eight slugs: manifesto, vibe-cwp, peer-cwp, agents, public-voice, delta-language, morning-arc, engineering-standard). Phase 4 adds tetra topology Worker; Phase 5 adds 4-tetra cluster + MLS edges (gated on PEER-3A). Personal hub (/start mesh-start.html), threshold onboard (/onboard planetary-onboard.html), and starter hub (/build initial-build.html) keep their CWPs (PAR / IB) but cross-link from /vibe.",
       "verify": "manual + npm run hub:diff:p31ca + cd andromeda/04_SOFTWARE/p31ca && npm run verify:ground-truth + npm run command-center then open http://127.0.0.1:3131/vibe",

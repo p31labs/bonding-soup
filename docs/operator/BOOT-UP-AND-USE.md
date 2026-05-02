@@ -47,13 +47,48 @@ Then the loop above. `npm run doctor` confirms health before the first `npm run 
 
 ---
 
-## When the loop breaks (top three failure modes, fix in one line)
+## When the loop breaks (top failure modes, fix in one line)
 
 | Symptom | Fix |
 |---|---|
 | `Error: listen EADDRINUSE :::3131` | Port already taken. `P31_CMD_CENTER_PORT=0 npm run command-center` (auto-pick port; banner prints the chosen one). |
 | Persona dropdown shows `(not built)` next to every entry | Local Ollama not materialized. `npm run fleet:probe` shows status; `bash scripts/p31-fleet-ten/setup.sh` builds them (needs Ollama installed). |
+| Persona dropdown loads but the chat header shows **RAM AMBER** and sends never get a reply | Personas exist on disk but the host does not have ~1 GiB free for the smallest model. Either close other tabs/apps, or — better — point the substrate at a separate GPU host. See **Two-machine setup** below. |
 | `cmd` button click shows `400 bad action` in the response | Substrate ↔ registry drift. Run `npm run verify:vibe-pip-whitelist` — it will name the drift. Fix by adding the missing `home-*` entry in `scripts/command-center/actions.registry.mjs` or renaming the substrate `key`. |
+
+---
+
+## Two-machine setup (thin client → desktop GPU host)
+
+Most P31 days run this way. The Chromebook (or iPhone via SSH, or any small laptop) is a thin client; a separate Linux box with real VRAM hosts Ollama and the 10-persona fleet. Reference build: AMD RX 6600 XT + i3-12100, 8 GiB VRAM — runs the whole fleet without strain.
+
+**On the GPU host (one-time):**
+
+```bash
+export OLLAMA_HOST=0.0.0.0:11434      # accept non-loopback clients
+ollama serve &                         # leave running (or systemd unit)
+bash scripts/p31-fleet-ten/setup.sh    # builds the 10 personas onto VRAM
+```
+
+Tailscale (or LAN) gives the host a stable address — call it `<gpu-host-ip>`.
+
+**On the operator client (Chromebook / penguin / laptop):**
+
+```bash
+echo 'export OLLAMA_HOST=http://<gpu-host-ip>:11434' >> ~/.bashrc
+source ~/.bashrc
+npm run command-center                 # /api/personas now hits the GPU host
+```
+
+**Sanity probe** (from the client):
+
+```bash
+curl http://<gpu-host-ip>:11434/api/tags     # should list 10 p31-* models
+```
+
+If the curl works but the substrate still shows RAM AMBER, the command-center server has a stale persona cache — restart it (`Ctrl+C`, then `npm run command-center` again).
+
+**Why this matters.** Without the split, a Chromebook with ~276 MiB free GPU RAM cannot run even the smallest persona. The personas appear in the dropdown but every send returns silently. PHOS is a name in a list, not a thinking companion. With the split, PHOS runs on real VRAM and the substrate stays snappy on the operator's lap.
 
 ---
 

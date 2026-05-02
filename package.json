@@ -218,6 +218,7 @@
     "ollama:setup": "bash scripts/p31-fleet-ten/setup.sh",
     "ollama:verify": "bash scripts/p31-fleet-ten/verify.sh",
     "ollama:bench": "bash scripts/p31-fleet-ten/benchmark.sh",
+    "ollama:vs-cloud": "bash scripts/p31-fleet-ten/cloud-vs-local.sh",
     "ollama:tunnel": "bash scripts/ollama-tunnel.sh",
     "ollama:tunnel:status": "node scripts/ollama-tunnel-status.mjs",
     "ollama:mcp:verify": "node scripts/ollama-mcp/verify.mjs",

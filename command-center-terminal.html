@@ -73,7 +73,11 @@
     font: 500 0.7rem var(--font-mono);
     color: var(--p31-cloud-2);
     padding: 0.2rem 0.5rem; border: 1px solid var(--border); border-radius: 4px;
+    background: transparent; cursor: pointer;
+    min-height: 28px;
   }
+  .header-status:hover { border-color: var(--p31-teal); color: var(--p31-paper); }
+  .header-status:active { transform: scale(0.97); }
   .header-status.green  { color: var(--p31-phosphorus); border-color: var(--p31-teal-soft); }
   .header-status.amber  { color: var(--p31-butter);    border-color: var(--p31-butter); }
   .header-status.red    { color: var(--p31-coral);     border-color: var(--p31-coral); }
@@ -200,7 +204,7 @@
     <button class="mode-tab active" data-mode="chat" role="tab">chat</button>
     <button class="mode-tab" data-mode="cmd" role="tab">cmd</button>
   </div>
-  <span id="status" class="header-status">…</span>
+  <button id="status" class="header-status" type="button" title="click to refresh persona list">…</button>
 </header>
 
 <main id="scroll">
@@ -310,6 +314,7 @@
     }
   }
   personaSel.addEventListener("change", onPersonaChange);
+  statusEl.addEventListener("click", () => loadPersonas());
 
   inputEl.addEventListener("input", () => {
     inputEl.style.height = "auto";
@@ -394,7 +399,7 @@
   });
 
   // BOOT
-  append("system", "p31 terminal", "local only. no cloud. no middleman.\n\nchat mode: pick a persona, type, send.\ncmd mode: tap a card to run a whitelisted npm script.\n\noperator-confidential personas (counsel/triage/phos) only run locally — they are blocked from any cloud comparison surface by design.");
+  append("system", "p31 terminal", "local only. no cloud. no middleman.\n\nchat mode: pick a persona, type, send. enter sends, shift+enter newline. tap status badge above to refresh persona list.\ncmd mode: tap a card to run a whitelisted npm script.\n\noperator-confidential personas (counsel/triage/phos) only run locally — they are blocked from any cloud comparison surface by design.");
   renderCmds();
   loadPersonas();
 })();

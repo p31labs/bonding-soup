@@ -71,6 +71,38 @@ if (!serverSrc.match(/api\.anthropic\.com|api\.openai\.com/)) {
   bad("server: cloud LLM endpoint detected — this surface must be local-only");
 }
 
+const SEC_HEADERS_REQUIRED = [
+  "Content-Security-Policy",
+  "X-Frame-Options",
+  "Referrer-Policy",
+  "Permissions-Policy",
+  "Cross-Origin-Resource-Policy",
+];
+const missingHdrs = SEC_HEADERS_REQUIRED.filter(h => !serverSrc.includes('"' + h + '"'));
+if (missingHdrs.length === 0) {
+  ok("server: security headers baseline declared (" + SEC_HEADERS_REQUIRED.length + " headers)");
+} else {
+  bad("server: missing security headers: " + missingHdrs.join(", "));
+}
+
+if (serverSrc.includes("frame-ancestors 'none'") && serverSrc.includes("X-Frame-Options") && serverSrc.includes('"DENY"')) {
+  ok("server: frame embedding fully blocked (CSP frame-ancestors + X-Frame-Options)");
+} else {
+  bad("server: frame embedding not fully blocked");
+}
+
+if (serverSrc.includes("PERSONA_RATE") && serverSrc.includes("PERSONA_RATE_BURST") && serverSrc.includes("takePersonaToken")) {
+  ok("server: persona-chat rate limiter present (token bucket)");
+} else {
+  bad("server: persona-chat rate limiter missing");
+}
+
+if (serverSrc.includes('writeHead(429')) {
+  ok("server: persona-chat returns 429 Too Many Requests when limited");
+} else {
+  bad("server: no 429 path on persona-chat");
+}
+
 // Web TUI
 const webSrc = fs.readFileSync(WEB, "utf8");
 if (/viewport.*width=device-width.*initial-scale=1/.test(webSrc)) ok("web: mobile viewport meta declared");

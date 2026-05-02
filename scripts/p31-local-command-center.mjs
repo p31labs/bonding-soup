@@ -38,25 +38,63 @@ const CC_VERSION = "2.1.0";
 const MAX_BUFFER = 32 * 1024 * 1024;
 const GLASS_REPORT_MAX_BYTES = 65536;
 /** Hardening: `X-Content-Type-Options: nosniff` on common response shapes (local loopback, defense in depth). */
+/**
+ * Security header baseline applied to every response.
+ *
+ * - CSP: self-only for connect/img/font; inline allowed for script/style
+ *   because the TUI/desk pages embed both by design (no build step).
+ *   Inline is acceptable here because (a) the server is local-only by
+ *   default (127.0.0.1), (b) there is no untrusted user content rendered
+ *   into HTML, and (c) blocking 'unsafe-inline' would break the static
+ *   single-file deliverables we ship for mobile-first access.
+ * - X-Frame-Options DENY: the command center must not be iframed.
+ * - Referrer-Policy no-referrer: ops surface, no referrer leakage.
+ * - Permissions-Policy: deny everything we don't use.
+ * - Cross-Origin-Resource-Policy same-origin: prevent embedding.
+ */
+const SEC_HDR = {
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Referrer-Policy": "no-referrer",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()",
+  "Cross-Origin-Resource-Policy": "same-origin",
+  "Cross-Origin-Opener-Policy": "same-origin",
+  "Content-Security-Policy":
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline'; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data:; " +
+    "font-src 'self' data:; " +
+    "connect-src 'self'; " +
+    "frame-ancestors 'none'; " +
+    "base-uri 'self'; " +
+    "form-action 'self'",
+};
 const CC_HDR = {
   json: {
     "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": "no-store",
-    "X-Content-Type-Options": "nosniff",
+    ...SEC_HDR,
   },
   html: {
     "Content-Type": "text/html; charset=utf-8",
     "Cache-Control": "no-store",
-    "X-Content-Type-Options": "nosniff",
+    ...SEC_HDR,
   },
-  jsonAction: { "Content-Type": "application/json; charset=utf-8", "X-Content-Type-Options": "nosniff" },
-  text: { "Content-Type": "text/plain; charset=utf-8", "X-Content-Type-Options": "nosniff" },
+  jsonAction: {
+    "Content-Type": "application/json; charset=utf-8",
+    ...SEC_HDR,
+  },
+  text: {
+    "Content-Type": "text/plain; charset=utf-8",
+    ...SEC_HDR,
+  },
   jsonManifest: {
     "Content-Type": "application/manifest+json; charset=utf-8",
     "Cache-Control": "no-store",
-    "X-Content-Type-Options": "nosniff",
+    ...SEC_HDR,
   },
-  noContent: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" },
+  noContent: { "Cache-Control": "no-store", ...SEC_HDR },
 };
 
 /**
@@ -344,6 +382,7 @@ function buildPageHtml(portForUi) {
         </div>
         <nav class="cc-header__nav" aria-label="Operator views">
           <a class="cc-header__link" href="/desk">Operator desk</a>
+          <a class="cc-header__link" href="/term">Terminal (chat + cmd, mobile-first)</a>
           <a class="cc-header__link" href="/cli">CLI Dashboard</a>
         </nav>
       </div>
@@ -784,6 +823,40 @@ const FLEET_PERSONAS = [
   "p31-quick","p31-phos","p31-scribe","p31-oracle","p31-debrief",
 ];
 
+/**
+ * Per-IP token bucket for /api/persona-chat. Loopback-only by default,
+ * but if the operator opens LAN mode we still want to refuse a hammer.
+ * Bucket: 6 tokens, refill 1 per 5s (≈12 req/min sustained, burst of 6).
+ * Eviction: drop entries older than 10 minutes.
+ */
+const PERSONA_RATE = new Map();
+const PERSONA_RATE_BURST = 6;
+const PERSONA_RATE_REFILL_MS = 5000;
+function takePersonaToken(ip) {
+  const now = Date.now();
+  const e = PERSONA_RATE.get(ip) || { tokens: PERSONA_RATE_BURST, last: now };
+  const refill = Math.floor((now - e.last) / PERSONA_RATE_REFILL_MS);
+  if (refill > 0) {
+    e.tokens = Math.min(PERSONA_RATE_BURST, e.tokens + refill);
+    e.last = now;
+  }
+  if (e.tokens <= 0) {
+    PERSONA_RATE.set(ip, e);
+    return false;
+  }
+  e.tokens -= 1;
+  PERSONA_RATE.set(ip, e);
+  if (PERSONA_RATE.size > 256) {
+    const cutoff = now - 10 * 60 * 1000;
+    for (const [k, v] of PERSONA_RATE) if (v.last < cutoff) PERSONA_RATE.delete(k);
+  }
+  return true;
+}
+function clientIp(req) {
+  const ra = req.socket && req.socket.remoteAddress;
+  return (ra || "unknown").replace(/^::ffff:/, "");
+}
+
 async function handlePersonasList(res) {
   res.writeHead(200, CC_HDR.json);
   let materialized = [];
@@ -818,6 +891,12 @@ async function handlePersonasList(res) {
 }
 
 async function handlePersonaChat(req, res) {
+  const ip = clientIp(req);
+  if (!takePersonaToken(ip)) {
+    res.writeHead(429, { ...CC_HDR.json, "Retry-After": "5" });
+    res.end(JSON.stringify({ error: "rate limited", retryAfterSeconds: 5 }));
+    return;
+  }
   let body = "";
   req.on("data", (chunk) => { body += chunk; if (body.length > 64 * 1024) req.destroy(); });
   req.on("end", async () => {
@@ -1260,6 +1339,7 @@ server.listen(requestedPort === 0 ? 0 : requestedPort, listenHost, () => {
   const urlDesk = "http://127.0.0.1:" + actualPort + "/desk";
   console.log("P31 command center v" + CC_VERSION + ": " + urlLoop + "  (Ctrl+C to stop)");
   console.log("P31 operator desk: " + urlDesk);
+  console.log("P31 terminal:      http://127.0.0.1:" + actualPort + "/term  (chat with personas + run commands · mobile-first)");
   if (!hasBondingAppleTouch()) {
     console.warn("P31 command center: apple-touch missing — npm run generate:bonding-pwa-icons");
   }

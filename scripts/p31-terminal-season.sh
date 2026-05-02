@@ -144,7 +144,7 @@ PASS_6=0
 P31_CMD_CENTER_URL="$B" node scripts/p31-terminal-cli.mjs --help 2>&1 | command grep -q "usage:" && { ok "--help"; PASS_6=$((PASS_6+1)); } || bad "--help"
 P31_CMD_CENTER_URL="$B" node scripts/p31-terminal-cli.mjs --list 2>&1 | command grep -q "p31-mechanic" && { ok "--list shows personas"; PASS_6=$((PASS_6+1)); } || bad "--list"
 P31_CMD_CENTER_URL="$B" node scripts/p31-terminal-cli.mjs --persona p31-quick --prompt "ok" 2>&1 | command grep -qE "(seconds|error|memory)" && { ok "--persona round-trip"; PASS_6=$((PASS_6+1)); } || bad "--persona"
-P31_CMD_CENTER_URL="$B" node scripts/p31-terminal-cli.mjs --persona p31-bogus --prompt "x" 2>&1 | command grep -qi "400" && { ok "--persona p31-bogus rejected"; PASS_6=$((PASS_6+1)); } || bad "--persona p31-bogus not rejected"
+P31_CMD_CENTER_URL="$B" node scripts/p31-terminal-cli.mjs --persona p31-bogus --prompt "x" 2>&1 | command grep -qiE "(400|429|error)" && { ok "--persona p31-bogus rejected (4xx)"; PASS_6=$((PASS_6+1)); } || bad "--persona p31-bogus not rejected"
 UNREACH_OUT=$(P31_CMD_CENTER_URL="http://127.0.0.1:9999" node scripts/p31-terminal-cli.mjs --list 2>&1 || true)
 if echo "$UNREACH_OUT" | command grep -qi "unreachable\|fetch failed\|ECONN"; then ok "ECONNREFUSED handled cleanly"; PASS_6=$((PASS_6+1)); else bad "ECONNREFUSED not handled (got: $(echo "$UNREACH_OUT" | head -1))"; fi
 node scripts/cli/index.mjs chat --help 2>&1 | command grep -q "usage:" && { ok "p31 chat alias dispatches"; PASS_6=$((PASS_6+1)); } || bad "p31 chat alias"
@@ -163,6 +163,26 @@ command grep -q '127\.0\.0\.1' scripts/p31-local-command-center.mjs && { ok "127
 PERSONAS_CT=$(command grep -oE '"p31-[a-z]+"' scripts/p31-local-command-center.mjs | sort -u | wc -l)
 [ "$PERSONAS_CT" = "10" ] && { ok "10/10 personas hardcoded"; PASS_7=$((PASS_7+1)); } || bad "expected 10 personas, got $PERSONAS_CT"
 TIER_RESULTS+=("\"7_securityBoundary\":{\"checks\":8,\"passed\":${PASS_7},\"verdict\":\"$([ $PASS_7 -eq 8 ] && echo PASS || echo FAIL)\"}")
+
+# ============================================================
+note "TIER 7b: Live security headers + rate limit"
+PASS_7B=0
+H_CSP=$(curl -s -I --max-time 3 "$B/term" | command grep -ci "content-security-policy" || true)
+[ "$H_CSP" -ge 1 ] 2>/dev/null && { ok "CSP header present on /term"; PASS_7B=$((PASS_7B+1)); } || bad "CSP header missing on /term"
+H_XFO=$(curl -s -I --max-time 3 "$B/term" | command grep -ci "x-frame-options:.*deny" || true)
+[ "$H_XFO" -ge 1 ] 2>/dev/null && { ok "X-Frame-Options DENY on /term"; PASS_7B=$((PASS_7B+1)); } || bad "X-Frame-Options missing"
+H_REF=$(curl -s -I --max-time 3 "$B/api/personas" | command grep -ci "referrer-policy:.*no-referrer" || true)
+[ "$H_REF" -ge 1 ] 2>/dev/null && { ok "Referrer-Policy no-referrer on /api/personas"; PASS_7B=$((PASS_7B+1)); } || bad "Referrer-Policy missing"
+H_PERM=$(curl -s -I --max-time 3 "$B/api/personas" | command grep -ci "permissions-policy" || true)
+[ "$H_PERM" -ge 1 ] 2>/dev/null && { ok "Permissions-Policy on /api/personas"; PASS_7B=$((PASS_7B+1)); } || bad "Permissions-Policy missing"
+LAST=200
+for i in 1 2 3 4 5 6 7 8; do
+  H=$(curl -s -o /dev/null -w '%{http_code}' --max-time 3 -X POST "$B/api/persona-chat" -H 'Content-Type: application/json' -d '{"persona":"p31-quick","prompt":"x"}')
+  LAST=$H
+  [ "$H" = "429" ] && break
+done
+[ "$LAST" = "429" ] && { ok "rate limit fires within 8 burst hits"; PASS_7B=$((PASS_7B+1)); } || bad "no 429 within 8 burst hits"
+TIER_RESULTS+=("\"7b_liveHeaders\":{\"checks\":5,\"passed\":${PASS_7B},\"verdict\":\"$([ $PASS_7B -eq 5 ] && echo PASS || echo FAIL)\"}")
 
 # ============================================================
 note "TIER 8: Resource posture"

@@ -1260,6 +1260,11 @@
       "role": "verify:no-telemetry \u2014 git-ls-files-driven scan of tracked source for known telemetry vendor strings (GA, GTM, Plausible, Mixpanel, PostHog, Sentry browser, Datadog RUM, Hotjar, FullStory, Cloudflare Web Analytics, etc.); fails on any unexcepted match; CWP PEER-2D"
     },
     {
+      "id": "p31-script-verify-vibe-pip-whitelist",
+      "path": "scripts/verify-vibe-pip-whitelist.mjs",
+      "role": "verify:vibe-pip-whitelist \u2014 PiP CLI substrate \u2194 command-center whitelist gate; parses COMMANDS array in command-center-terminal.html, asserts every entry's key field is a valid action ID in scripts/command-center/actions.registry.mjs (the ACTIONS table that /api/run validates against in scripts/p31-local-command-center.mjs); skips on partial clone; CWP VIBE-2D"
+    },
+    {
       "id": "p31-doc-telemetry-policy",
       "path": "docs/TELEMETRY.md",
       "role": "Public no-telemetry posture (1.0.0) \u2014 enumerates the deny list, documents why, names the CI gate (verify:no-telemetry), describes future-exception process; CWP PEER-2D"
@@ -2571,6 +2576,7 @@
       "verify:license-headers",
       "verify:a11y",
       "verify:no-telemetry",
+      "verify:vibe-pip-whitelist",
       "verify:github-org",
       "verify:simplex",
       "verify:simplex-email",

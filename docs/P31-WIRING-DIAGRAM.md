@@ -948,6 +948,7 @@ npm run verify  (root, ordered)
 ├── verify:license-headers
 ├── verify:a11y
 ├── verify:no-telemetry
+├── verify:vibe-pip-whitelist
 ├── verify:github-org
 ├── verify:simplex                      ← simplex-v7 SIMPLEX + SENTINEL
 ├── verify:simplex-email
@@ -1114,7 +1115,7 @@ DIGITAL                                          MEATSPACE                 DIGIT
 | **Bus bar** | The nervous system: BaseLayout + 5 scripts + ground-truth nav |
 | **Wedge** | One unit of work in a CWP (Controlled Work Package) |
 | **OPERATOR-VOICE** | A copy line written by the operator; SHA-locked against agent rewrites |
-| **DRAFT-AGENT-SIMULATED** | Placeholder copy by an agent under operator-defined voice rules |
+| **DRAFT-AGENT-SIMULATED** | Stand-in copy by an agent under operator-defined voice rules (avoid-list aware) |
 | **Tier-0 vocabulary** | Stranger-facing words: brain, tools, free, adapt, yours, safe, help, here |
 | **Gray Rock** | Layer-1 minimal-stimulus mode; pinned when CogPass `screenComfort < 10` |
 | **Glass box** | Public transparency surface — every CI gate's output, every deploy, every audit |

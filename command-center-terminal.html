@@ -194,6 +194,25 @@
     background: var(--bg-0); padding: 1px 4px; border-radius: 3px;
   }
   .body pre { display: block; padding: 0.5rem 0.75rem; margin: 0.4rem 0; overflow-x: auto; }
+
+  /* PHOS auto-guidance hook (VIBE-3G) — surfaces after a cmd run */
+  .phos-handoff {
+    margin-top: 0.5rem;
+    padding: 0.4rem 0.6rem;
+    background: rgba(110, 231, 183, 0.06);
+    border-left: 2px solid var(--p31-phosphorus);
+    border-radius: 3px;
+    font: 500 0.72rem var(--font-mono);
+    color: var(--p31-cloud);
+  }
+  .phos-handoff button {
+    background: transparent; border: 0;
+    color: var(--p31-phosphorus);
+    font: 600 0.72rem var(--font-mono);
+    cursor: pointer; padding: 0; text-decoration: underline;
+  }
+  .phos-handoff button:hover { color: var(--p31-paper); }
+  .phos-handoff small { display: block; margin-top: 0.2rem; color: var(--p31-cloud-2); font-size: 0.65rem; }
 </style>
 </head>
 <body data-mode="chat">
@@ -234,17 +253,22 @@
   const statusEl = $("status");
   const formEl = $("form");
 
+  // PiP CLI command palette. `key` MUST match an ACTIONS id in
+  // scripts/command-center/actions.registry.mjs (POST { action: c.key } is
+  // validated server-side at p31-local-command-center.mjs ~L1289). The
+  // verify:vibe-pip-whitelist gate (CWP-P31-VIBE-2026-06 §8 VIBE-2D) keeps
+  // these in sync — adding a card without a matching ACTIONS entry fails CI.
   const COMMANDS = [
-    { key: "doctor",         desc: "P31 doctor — full health check",            cmd: "npm run doctor" },
-    { key: "verify",         desc: "Full verify chain (~70s)",                  cmd: "npm run verify", slow: true },
-    { key: "fleet:probe",    desc: "Fleet status (GREEN/AMBER/RED)",            cmd: "npm run fleet:probe" },
-    { key: "fleet:free-host",desc: "Show safe-to-stop services (dry)",          cmd: "npm run fleet:free-host" },
-    { key: "deploy:p31ca",   desc: "Deploy hub to Cloudflare Pages",            cmd: "npm run deploy:p31ca" },
-    { key: "release:public", desc: "Full ship-bar gate (~2 min)",               cmd: "npm run release:public", slow: true },
-    { key: "build:phos-voice", desc: "Rebuild PHOS voice JSON",                 cmd: "npm run build:phos-voice" },
-    { key: "verify:phos-voice",desc: "Verify PHOS voice locks",                 cmd: "npm run verify:phos-voice" },
-    { key: "p31:ci",         desc: "Local CI parity (~70s)",                    cmd: "npm run p31:ci", slow: true },
-    { key: "fun",            desc: "Operator joy — one line",                   cmd: "npm run fun" },
+    { key: "home-doctor",            desc: "P31 doctor — full health check",            cmd: "npm run doctor" },
+    { key: "home-verify",            desc: "Full verify chain (~70s)",                  cmd: "npm run verify", slow: true },
+    { key: "home-fleet-probe",       desc: "Fleet status (GREEN/AMBER/RED)",            cmd: "npm run fleet:probe" },
+    { key: "home-fleet-free-host",   desc: "Show safe-to-stop services (dry)",          cmd: "npm run fleet:free-host" },
+    { key: "home-deploy-p31ca",      desc: "Deploy hub to Cloudflare Pages",            cmd: "npm run deploy:p31ca" },
+    { key: "home-release-public",    desc: "Full ship-bar gate (~2 min)",               cmd: "npm run release:public", slow: true },
+    { key: "home-build-phos-voice",  desc: "Rebuild PHOS voice JSON",                   cmd: "npm run build:phos-voice" },
+    { key: "home-verify-phos-voice", desc: "Verify PHOS voice locks",                   cmd: "npm run verify:phos-voice" },
+    { key: "home-p31-ci",            desc: "Local CI parity (~70s)",                    cmd: "npm run p31:ci", slow: true },
+    { key: "home-fun",               desc: "Operator joy — one line",                   cmd: "npm run fun" },
   ];
 
   let busy = false;
@@ -381,10 +405,54 @@
       const j = await r.json();
       out.querySelector(".body").textContent = (j.stdout || "") + (j.stderr ? "\n--- stderr ---\n" + j.stderr : "");
       cards.forEach(x => { if (x.dataset.key === c.key) { x.classList.remove("running"); x.classList.add(j.code === 0 ? "success" : "error"); } });
+      attachPhosHandoff(out, c, j);
     } catch (err) {
       out.querySelector(".body").textContent = "REQUEST ERROR: " + err.message + "\nIf this command isn't in /api/run's whitelist, run it via the legacy /cli dashboard or terminal.";
       cards.forEach(x => { if (x.dataset.key === c.key) { x.classList.remove("running"); x.classList.add("error"); } });
     }
+  }
+
+  /**
+   * VIBE-3G — PHOS auto-guidance hook.
+   * After a whitelisted cmd finishes, attach a one-line "ask PHOS about this"
+   * prompt. PHOS observes; never auto-edits. CWP-P31-VIBE-2026-06 §5.
+   * Uses ONLY existing /api/persona-chat — no new endpoint.
+   */
+  function attachPhosHandoff(out, c, j) {
+    const phosId = "p31-phos";
+    if (!hasPersona(phosId)) return;
+    const code = (typeof j.code === "number") ? j.code : 1;
+    const stdoutHead = (j.stdout || "").split("\n").slice(0, 4).join("\n").trim();
+    const stderrHead = (j.stderr || "").split("\n").slice(0, 4).join("\n").trim();
+    const summary = code === 0
+      ? "I just ran `" + c.cmd + "` and it succeeded. Output (first 4 lines):\n" + (stdoutHead || "(no stdout)") + "\n\nWhat's the most useful next step for me right now? One line."
+      : "I just ran `" + c.cmd + "` and it exited with code " + code + ". Stderr (first 4 lines):\n" + (stderrHead || "(no stderr)") + "\n\nWhat is the smallest, safest next move? One line. Do not invent fixes; flag if you don't know.";
+    const wrap = document.createElement("div");
+    wrap.className = "phos-handoff";
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = code === 0 ? "Ask PHOS for the next move" : "Ask PHOS about this failure";
+    btn.addEventListener("click", () => {
+      personaSel.value = phosId;
+      personaSel.dispatchEvent(new Event("change"));
+      inputEl.value = summary;
+      document.body.dataset.mode = "chat";
+      document.querySelectorAll(".mode-tab").forEach(t => t.classList.toggle("active", t.dataset.mode === "chat"));
+      cmdListEl.hidden = true;
+      inputEl.focus();
+    });
+    wrap.appendChild(btn);
+    const note = document.createElement("small");
+    note.textContent = "PHOS observes only — never auto-edits. Local Ollama; nothing leaves this device.";
+    wrap.appendChild(note);
+    out.appendChild(wrap);
+  }
+
+  function hasPersona(id) {
+    for (const opt of personaSel.options) {
+      if (opt.value === id && !opt.disabled) return true;
+    }
+    return false;
   }
 
   // MODE TABS

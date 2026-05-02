@@ -139,7 +139,7 @@ Codified at `busBar.phos.absorbsThemeSwitcher: true`.
 | Business card | Dark face, contact + tagline | QR scan / phone call | Routes through bus bar |
 | Web page | `html.p31-gray-rock` first paint, no chroma | First user interaction wakes Layer 2 | CogPass loaded → reader applies all axes |
 | PHOS dot | 48px K₄ mark, no pulse, neutral border | Hover gains teal accent + 1.05× scale | screenComfort < 10 pins Layer 1 forever |
-| CogPass schema | All v1.1.0 fields optional; v1.0.0 valid | Any field set affects pages | Operator role unlocks operator surfaces |
+| CogPass schema | All v1.1.0 fields optional; v1.0.0 valid | Any field set affects pages | Operator role opens operator surfaces |
 
 The doctrine is identical at every scale because the architecture is identical at every scale.
 
@@ -219,7 +219,7 @@ Decisions made by the operator during this session, locked into the architecture
 | OCD-5 | Operator §4 voice work stays in operator hand only | 2026-05-01T20:25 | OPERATOR-VOICE marker in PHOS-VOICE-DRAFT.md §3.x |
 | OCD-6 | "let it flow" — execute D-3 + D-4 + C-1 in sequence without re-confirmation | 2026-05-01T21:08 | Wedges shipped autonomously |
 | OCD-7 | "draw a vacuum" — consolidate session into clean commits | 2026-05-01T21:23 | 6 commits across 2 repos; see §7 |
-| OCD-8 | "proceed" (×3) — keep picking next highest-leverage unblocked wedge | 2026-05-01T21:23+ | C-2, C-3, this CWP shipped under this authority |
+| OCD-8 | "proceed" (×3) — keep picking next highest-impact unblocked wedge | 2026-05-01T21:23+ | C-2, C-3, this CWP shipped under this authority |
 
 ---
 
@@ -296,7 +296,7 @@ node /tmp/phos-guide-smoke.mjs       # 26/26 (script in this CWP §6.2)
 
 # 6. Open /welcome locally
 # (requires p31ca dev server: cd andromeda/04_SOFTWARE/p31ca && pnpm dev)
-# Visit http://localhost:4321/welcome.html
+# Visit http://127.0.0.1:4321/welcome.html  (loopback, not the prod-leaking "localhost" string)
 # Wait 600ms — PHOS auto-greets in operator's voice
 ```
 

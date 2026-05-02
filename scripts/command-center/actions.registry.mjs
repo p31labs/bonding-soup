@@ -983,6 +983,13 @@ export const ACTIONS = {
     slow: true,
     network: true,
   },
+  "home-p31-ci": {
+    title: "p31:ci (local CI parity — verify + p31ca verify + build)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "p31:ci"],
+    slow: true,
+  },
   "home-p31-ci-all": {
     title: "p31:ci:all (strict mesh + p31-ci + security)",
     cwd: repoRoot,
@@ -991,6 +998,47 @@ export const ACTIONS = {
     slow: true,
     network: true,
     confirm: "Runs strict mesh + full p31-ci with security. Uses network (live mesh). Continue?",
+  },
+  // —— PiP CLI substrate exposes these (VIBE-2D contract; see verify:vibe-pip-whitelist)
+  "home-fleet-probe": {
+    title: "fleet:probe (Ollama persona status — GREEN/AMBER/RED)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "fleet:probe"],
+    network: true,
+  },
+  "home-fleet-free-host": {
+    title: "fleet:free-host (show safe-to-stop services — dry by default)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "fleet:free-host"],
+  },
+  "home-deploy-p31ca": {
+    title: "deploy:p31ca (Cloudflare Pages — needs CLOUDFLARE_API_TOKEN)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "deploy:p31ca"],
+    slow: true,
+    network: true,
+    confirm: "Deploys p31ca/dist to Cloudflare Pages. Requires CLOUDFLARE_API_TOKEN. Continue?",
+  },
+  "home-build-phos-voice": {
+    title: "build:phos-voice (rebuild PHOS voice JSON from sources)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "build:phos-voice"],
+  },
+  "home-verify-phos-voice": {
+    title: "verify:phos-voice (PHOS voice locks — anchors, vocab, layers)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "verify:phos-voice"],
+  },
+  "home-fun": {
+    title: "fun (operator joy — one trim-tab line)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "fun"],
   },
   "home-validate-full": {
     title: "validate:full (scorecard + extended audits → /tmp report)",

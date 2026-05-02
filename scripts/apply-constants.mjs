@@ -89,6 +89,23 @@ async function main() {
     console.warn("apply-constants: skip p31-mesh-constants (no p31ca tree):", p31caMeshJson);
   }
 
+  // Mirror research.papers (the 22-paper Zenodo canon) into p31ca for the
+  // /research static page (WCD-PHOS-2026-01 BUS3). Two copies match the mesh
+  // pattern: src/data for build-time imports, public for runtime fetch.
+  if (c.research && Array.isArray(c.research.papers) && fs.existsSync(p31caRoot)) {
+    const researchBody = JSON.stringify(c.research, null, 2) + "\n";
+    const researchSrc = path.join(p31caRoot, "src/data/p31-research.json");
+    const researchPub = path.join(p31caRoot, "public/p31-research.json");
+    fs.mkdirSync(path.dirname(researchSrc), { recursive: true });
+    fs.writeFileSync(researchSrc, researchBody, "utf8");
+    console.log("Wrote", path.relative(root, researchSrc));
+    fs.mkdirSync(path.dirname(researchPub), { recursive: true });
+    fs.writeFileSync(researchPub, researchBody, "utf8");
+    console.log("Wrote", path.relative(root, researchPub));
+  } else if (c.research) {
+    console.warn("apply-constants: skip p31-research (no p31ca tree)");
+  }
+
   if (c.integrations && fs.existsSync(p31caRoot)) {
     const integMerged = await enrichHubIntegrations(c.integrations, p31caRoot, c.mesh);
     const integBody = JSON.stringify(integMerged, null, 2) + "\n";

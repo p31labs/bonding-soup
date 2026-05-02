@@ -985,6 +985,7 @@ const server = http.createServer((req, res) => {
   // prevent path traversal; never compose a path from user input.
   // CWP-P31-VIBE-2026-06 §18.
   const DOC_SLUG_ALLOWLIST = {
+    "boot-up": "docs/operator/BOOT-UP-AND-USE.md",
     manifesto: "docs/P31-MANIFESTO.md",
     "vibe-cwp": "docs/CWP-P31-VIBE-2026-06.md",
     "peer-cwp": "docs/CWP-P31-PEER-COMP-2026-05.md",

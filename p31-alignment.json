@@ -1091,6 +1091,11 @@
       "role": "Operator morning experience arc \u2014 lived-time Gray Rock\u2192Alive; shipped/partial/vision ladder vs simplex-v7 + HA assembly; not a deploy contract"
     },
     {
+      "id": "p31-operator-boot-up-and-use",
+      "path": "docs/operator/BOOT-UP-AND-USE.md",
+      "role": "p31.operatorRunbook/1.0.0 \u2014 mechanical boot-up loop in six moves; sibling under MORNING-OPERATOR-ARC; rendered inline as the `boot-up` view slug in the PiP CLI substrate (CWP-P31-VIBE-2026-06 \u00a720)"
+    },
+    {
       "id": "p31ca-worker-allowlist",
       "path": "andromeda/04_SOFTWARE/p31ca/security/worker-allowlist.json",
       "role": "p31.workerAllowlist/1.0.0 \u2014 named Workers + paths; inventory compares to all `wrangler.toml` under andromeda/04_SOFTWARE",
@@ -2474,7 +2479,8 @@
         "command-center-terminal.html",
         "soup.html",
         "cognitive-passport/index.html",
-        "p31-personal-howto.html"
+        "p31-personal-howto.html",
+        "docs/operator/BOOT-UP-AND-USE.md"
       ],
       "apply": "Edit the controlling CWP first (docs/CWP-P31-VIBE-2026-06.md). Phase 1 (2026-05-02) shipped the operator-entry surface (/vibe.html) + short routes. Phase 2 (2026-05-02 same session, ephemeralization pivot) adopted the existing command-center-terminal.html as the PiP CLI substrate \u2014 added /vibe alias to scripts/p31-local-command-center.mjs route handler (one HTML file, three URLs: /term + /terminal + /vibe), consolidated public vibe.html (-39 lines, removed placeholder PiP CLI + duplicate doctrine restatement; now points at :3131/vibe and links to /manifesto for canonical doctrines), and added 'Vibcoding (preview)' footer link from soup.html, cognitive-passport/index.html, and p31-personal-howto.html for discoverability. Phase 3 adds Monaco editor pane + PHOS auto-guidance to the SAME command-center-terminal.html (no new file); VIBE-3H added a third 'view' mode tab + GET /api/view-doc?slug=<slug> read-only operator doc viewer (allowlist + slug regex defends against path traversal; eight slugs: manifesto, vibe-cwp, peer-cwp, agents, public-voice, delta-language, morning-arc, engineering-standard). Phase 4 adds tetra topology Worker; Phase 5 adds 4-tetra cluster + MLS edges (gated on PEER-3A). Personal hub (/start mesh-start.html), threshold onboard (/onboard planetary-onboard.html), and starter hub (/build initial-build.html) keep their CWPs (PAR / IB) but cross-link from /vibe.",
       "verify": "manual + npm run hub:diff:p31ca + cd andromeda/04_SOFTWARE/p31ca && npm run verify:ground-truth + npm run command-center then open http://127.0.0.1:3131/vibe",

@@ -823,6 +823,482 @@ function drawSticker(page, x, y, size, qrImg, fonts) {
   });
 }
 
+// ─── WIRING POSTER (11 × 17 tabloid landscape, single sheet) ────────────────
+// CWP-PHOS-2026-01 D-7. Operator wall reference for the entire P31 mesh.
+// Source of truth: docs/P31-WIRING-DIAGRAM.md (the markdown has all detail
+// + Mermaid + ASCII; this poster is the single-glance overview).
+//
+// Layout (1224 × 792 pt = 17 × 11 inches, landscape):
+//
+//   ┌────────────────────────── HEADER (56pt) ──────────────────────────┐
+//   │   P31 ANDROMEDA — WIRING DIAGRAM        v1.0.0  ·  2026-05-01     │
+//   │   "For every family out there figuring it out as they go..."      │
+//   ├──────────────────────────┬────────────────────────────────────────┤
+//   │  Q1: PUBLIC PORTALS      │  Q2: EDGE FLEET (33 Workers)           │
+//   │  (hubs + routes + role)  │  (mesh + agents + bridges + identity)  │
+//   │                          │                                        │
+//   ├──────────────────────────┼────────────────────────────────────────┤
+//   │  Q3: BUS BAR + PHOS      │  Q4: SOURCES + SWARMS + GATES          │
+//   │  (5 scripts; voice JSON) │  (apply:constants; 10+11 agents; CI)   │
+//   │                          │                                        │
+//   ├──────────────────────────┴────────────────────────────────────────┤
+//   │   FOOTER: doc reference + npm verify · the cage is closed          │
+//   └────────────────────────────────────────────────────────────────────┘
+async function generateWiringPoster() {
+  const pdf = await PDFDocument.create();
+  const fonts = await loadFonts(pdf);
+  const W = 17 * IN;   // 1224 pt
+  const H = 11 * IN;   // 792 pt
+  const page = pdf.addPage([W, H]);
+
+  const HEADER_H = 56;
+  const FOOTER_H = 56;
+  const BODY_H = H - HEADER_H - FOOTER_H;
+  const BODY_Y = FOOTER_H;
+  const QUAD_W = W / 2;
+  const QUAD_H = BODY_H / 2;
+
+  // ── canvas: void background w/ subtle grid ─────────────────────────────
+  page.drawRectangle({ x: 0, y: 0, width: W, height: H, color: C.void });
+
+  // grid (cyan 4% alpha approximation via near-void color)
+  const gridColor = rgb(0.10, 0.11, 0.13);
+  const gridStep = 24;
+  for (let x = 0; x <= W; x += gridStep) {
+    page.drawLine({ start: { x, y: 0 }, end: { x, y: H }, thickness: 0.25, color: gridColor });
+  }
+  for (let y = 0; y <= H; y += gridStep) {
+    page.drawLine({ start: { x: 0, y }, end: { x: W, y }, thickness: 0.25, color: gridColor });
+  }
+
+  // ── HEADER ─────────────────────────────────────────────────────────────
+  const headerY = H - HEADER_H;
+  page.drawRectangle({ x: 0, y: headerY, width: W, height: HEADER_H, color: C.void });
+  page.drawLine({
+    start: { x: 0, y: headerY },
+    end: { x: W, y: headerY },
+    thickness: 1, color: C.teal,
+  });
+  page.drawText('P31 ANDROMEDA', {
+    x: 24, y: headerY + 28,
+    size: 22, font: fonts.bold, color: C.cloud,
+    characterSpacing: 1.2,
+  });
+  page.drawText('WIRING DIAGRAM', {
+    x: 24, y: headerY + 8,
+    size: 12, font: fonts.regular, color: C.teal,
+    characterSpacing: 1.6,
+  });
+  const versionLabel = 'p31.wiringDiagram/1.0.0  ·  2026-05-01';
+  const verW = fonts.regular.widthOfTextAtSize(versionLabel, 9);
+  page.drawText(versionLabel, {
+    x: W - 24 - verW, y: headerY + 36,
+    size: 9, font: fonts.regular, color: C.muted,
+  });
+  page.drawText(TAGLINE_OPERATOR_VOICE, {
+    x: W - 24 - fonts.regular.widthOfTextAtSize(TAGLINE_OPERATOR_VOICE, 9), y: headerY + 16,
+    size: 9, font: fonts.regular, color: C.cloud,
+  });
+  page.drawText('— PHOS-VOICE-DRAFT.md §3.1 (OPERATOR-VOICE)', {
+    x: W - 24 - fonts.regular.widthOfTextAtSize('— PHOS-VOICE-DRAFT.md §3.1 (OPERATOR-VOICE)', 7), y: headerY + 4,
+    size: 7, font: fonts.regular, color: C.muted,
+  });
+
+  // ── QUADRANT FRAMES ────────────────────────────────────────────────────
+  const Q1 = { x: 0,            y: BODY_Y + QUAD_H, w: QUAD_W, h: QUAD_H };
+  const Q2 = { x: QUAD_W,       y: BODY_Y + QUAD_H, w: QUAD_W, h: QUAD_H };
+  const Q3 = { x: 0,            y: BODY_Y,          w: QUAD_W, h: QUAD_H };
+  const Q4 = { x: QUAD_W,       y: BODY_Y,          w: QUAD_W, h: QUAD_H };
+  for (const q of [Q1, Q2, Q3, Q4]) {
+    page.drawLine({
+      start: { x: q.x, y: q.y },
+      end: { x: q.x + q.w, y: q.y },
+      thickness: 0.5, color: C.muted,
+    });
+    page.drawLine({
+      start: { x: q.x + q.w, y: q.y },
+      end: { x: q.x + q.w, y: q.y + q.h },
+      thickness: 0.5, color: C.muted,
+    });
+  }
+
+  drawQuadrantPortals(page, Q1, fonts);
+  drawQuadrantFleet(page, Q2, fonts);
+  drawQuadrantBusBar(page, Q3, fonts);
+  drawQuadrantSwarms(page, Q4, fonts);
+
+  // ── FOOTER ─────────────────────────────────────────────────────────────
+  page.drawLine({
+    start: { x: 0, y: FOOTER_H },
+    end: { x: W, y: FOOTER_H },
+    thickness: 1, color: C.teal,
+  });
+  page.drawText('Source of truth:', {
+    x: 24, y: 32,
+    size: 8, font: fonts.bold, color: C.muted,
+  });
+  page.drawText('docs/P31-WIRING-DIAGRAM.md  (8 sections, every system, every file)', {
+    x: 110, y: 32,
+    size: 8, font: fonts.regular, color: C.cloud,
+  });
+  page.drawText('Verify on every commit:', {
+    x: 24, y: 18,
+    size: 8, font: fonts.bold, color: C.muted,
+  });
+  page.drawText('npm run verify  ->  alignment · phos-voice · cogpass-bridge · constants · facts · 50+ gates', {
+    x: 140, y: 18,
+    size: 8, font: fonts.regular, color: C.cloud,
+  });
+  page.drawText('Print on cardstock:', {
+    x: 24, y: 4,
+    size: 7, font: fonts.bold, color: C.muted,
+  });
+  page.drawText('npm run meatspace:print:wiring-poster   ·   11 × 17 tabloid landscape   ·   pin where you will see it', {
+    x: 110, y: 4,
+    size: 7, font: fonts.regular, color: C.muted,
+  });
+  // bottom-right tag
+  const tag = 'Nine calcium · One phosphorus · The cage is complete';
+  const tagW = fonts.regular.widthOfTextAtSize(tag, 9);
+  page.drawText(tag, {
+    x: W - 24 - tagW, y: 22,
+    size: 9, font: fonts.regular, color: C.coral,
+  });
+
+  return { pdf, name: 'p31-wiring-poster.pdf', font: fonts.label };
+}
+
+// ─── Q1: Public portals (hubs + routes + role gates) ───────────────────────
+function drawQuadrantPortals(page, q, fonts) {
+  drawQuadrantHeader(page, q, fonts, '1', 'PUBLIC PORTALS', 'Hubs · Routes · Role gates');
+
+  // Three role lanes vertically
+  const innerY = q.y + 28;
+  const innerH = q.h - 56;
+  const lanes = [
+    { label: 'STRANGER',  color: C.cloud,   roles: 'no CogPass',          y: innerY + innerH * 0.78 },
+    { label: 'USER',      color: C.teal,    roles: 'CogPass user',        y: innerY + innerH * 0.45 },
+    { label: 'OPERATOR',  color: C.coral,   roles: 'CogPass operator',    y: innerY + innerH * 0.12 },
+  ];
+  for (const lane of lanes) {
+    page.drawText(lane.label, {
+      x: q.x + 16, y: lane.y + 14,
+      size: 9, font: fonts.bold, color: lane.color, characterSpacing: 1.0,
+    });
+    page.drawText(lane.roles, {
+      x: q.x + 16, y: lane.y + 4,
+      size: 7, font: fonts.regular, color: C.muted,
+    });
+    // Lane underline across quadrant
+    page.drawLine({
+      start: { x: q.x + 16, y: lane.y + 1 },
+      end:   { x: q.x + q.w - 16, y: lane.y + 1 },
+      thickness: 0.4, color: C.muted,
+    });
+  }
+
+  // Routes positioned by role
+  const routes = [
+    { id: '/welcome',   role: 0, x: q.x + 100, color: C.teal,   note: 'PHOS first contact' },
+    { id: '/passport/', role: 0, x: q.x + 200, color: C.teal,   note: 'localStorage card' },
+    { id: '/support',   role: 0, x: q.x + 300, color: C.teal,   note: 'Ko-fi / Stripe' },
+    { id: '/research',  role: 0, x: q.x + 400, color: C.teal,   note: '22 papers' },
+    { id: '/lab',       role: 1, x: q.x + 100, color: C.cyan,   note: 'product catalog' },
+    { id: '/stylebook', role: 1, x: q.x + 220, color: C.cyan,   note: 'design system' },
+    { id: '/bonding',   role: 1, x: q.x + 340, color: C.coral,  note: 'cross-origin (BUS4)' },
+    { id: '/ops',       role: 2, x: q.x + 100, color: C.coral,  note: 'dashboard' },
+    { id: '/ede',       role: 2, x: q.x + 200, color: C.coral,  note: 'IDE' },
+    { id: '/buffer',    role: 2, x: q.x + 290, color: C.coral,  note: 'comms drafts' },
+    { id: '/glass-box', role: 2, x: q.x + 390, color: C.coral,  note: 'transparency' },
+  ];
+  for (const r of routes) {
+    const lane = lanes[r.role];
+    drawRouteBox(page, r.x, lane.y - 18, r.id, r.note, r.color, fonts);
+  }
+
+  // BUS4 bridge note (right edge)
+  const bridgeX = q.x + q.w - 110;
+  const bridgeY = lanes[1].y - 22;
+  page.drawRectangle({
+    x: bridgeX, y: bridgeY - 18,
+    width: 100, height: 30,
+    borderColor: C.phosphorus, borderWidth: 0.7, color: C.void,
+  });
+  page.drawText('BUS4 BRIDGE', {
+    x: bridgeX + 6, y: bridgeY + 2,
+    size: 7, font: fonts.bold, color: C.phosphorus, characterSpacing: 0.5,
+  });
+  page.drawText('cogpass-bridge.html', {
+    x: bridgeX + 6, y: bridgeY - 8,
+    size: 6, font: fonts.regular, color: C.cloud,
+  });
+  page.drawText('postMessage  ·  CSP-locked', {
+    x: bridgeX + 6, y: bridgeY - 16,
+    size: 5.5, font: fonts.regular, color: C.muted,
+  });
+}
+
+// ─── Q2: Edge fleet (Workers grouped) ──────────────────────────────────────
+function drawQuadrantFleet(page, q, fonts) {
+  drawQuadrantHeader(page, q, fonts, '2', 'EDGE FLEET', '14 verified Workers · 18 allowlisted');
+
+  const groups = [
+    {
+      title: 'MESH (THE CAGE)',          color: C.teal,
+      x: q.x + 16,  y: q.y + q.h - 60,   w: 180, h: 84,
+      items: ['k4-personal · DO+KV', 'k4-cage · DO+KV', 'k4-hubs · life-context', 'tetra-hub'],
+    },
+    {
+      title: 'AGENTS + ORCH',            color: C.phosphorus,
+      x: q.x + 200, y: q.y + q.h - 60,   w: 180, h: 84,
+      items: ['k4-agent-hub', 'p31-agent-hub', 'p31-orchestrator', 'command-center', 'p31-cortex · grants', 'p31-forge'],
+    },
+    {
+      title: 'COLLAB + BRIDGES',         color: C.cyan,
+      x: q.x + 384, y: q.y + q.h - 60,   w: 180, h: 84,
+      items: ['geodesic-room · WS DO', 'p31-google-bridge', 'bonding-relay', 'cf-edge-lab', 'spaceship-relay'],
+    },
+    {
+      title: 'IDENTITY + AUTH',          color: C.coral,
+      x: q.x + 16,  y: q.y + 12,         w: 180, h: 84,
+      items: ['p31-passkey  ·  zone route', '   p31ca.org/api/passkey/*', 'genesis-gate', 'p31-bouncer'],
+    },
+    {
+      title: 'PAYMENTS + COMMS',         color: C.coral,
+      x: q.x + 200, y: q.y + 12,         w: 180, h: 84,
+      items: ['donate-api  ·  Stripe', '   donate-api.phosphorus31.org', 'p31-social-worker', 'p31-social-broadcast', 'p31-pwa'],
+    },
+    {
+      title: 'OPERATOR TOOLS',           color: C.muted,
+      x: q.x + 384, y: q.y + 12,         w: 180, h: 84,
+      items: ['p31-hearing-ops', 'p31-state', 'p31-quantum-edge', 'p31-telemetry', 'kenosis-mesh'],
+    },
+  ];
+  for (const g of groups) drawWorkerGroup(page, g, fonts);
+
+  // Constraints note
+  const noteY = q.y + 110;
+  page.drawText('CONSTRAINTS:  10 ms CPU  ·  1000 internal subrequests  ·  zero-budget edge', {
+    x: q.x + 16, y: noteY,
+    size: 7, font: fonts.regular, color: C.muted,
+  });
+}
+
+// ─── Q3: Bus bar + PHOS voice pipeline ─────────────────────────────────────
+function drawQuadrantBusBar(page, q, fonts) {
+  drawQuadrantHeader(page, q, fonts, '3', 'BUS BAR + PHOS PIPELINE', 'BaseLayout 5-script load order');
+
+  // Vertical script stack on the left half
+  const stackX = q.x + 24;
+  const stackY = q.y + q.h - 80;
+  const scripts = [
+    { num: '1', name: 'p31-subject-prefs.js',     mode: 'inline · sync',     color: C.cloud },
+    { num: '2', name: 'p31-theme-engine.mjs',     mode: 'module',            color: C.teal  },
+    { num: '3', name: 'p31-cogpass-reader.mjs',   mode: 'module',            color: C.cyan  },
+    { num: '4', name: 'p31-phos-guide.mjs',       mode: 'module · CLAIMS',   color: C.phosphorus },
+    { num: '5', name: 'p31-theme-switcher.mjs',   mode: 'module · SUPPRESS', color: C.muted },
+  ];
+  const stepH = 22;
+  for (let i = 0; i < scripts.length; i++) {
+    const s = scripts[i];
+    const y = stackY - i * stepH;
+    page.drawText(s.num + '.', {
+      x: stackX, y,
+      size: 11, font: fonts.bold, color: s.color,
+    });
+    page.drawText(s.name, {
+      x: stackX + 18, y,
+      size: 9, font: fonts.bold, color: C.cloud,
+    });
+    page.drawText(s.mode, {
+      x: stackX + 170, y,
+      size: 7, font: fonts.regular, color: C.muted,
+    });
+    if (i < scripts.length - 1) {
+      page.drawLine({
+        start: { x: stackX + 6, y: y - 4 },
+        end:   { x: stackX + 6, y: y - stepH + 12 },
+        thickness: 0.5, color: C.muted,
+      });
+    }
+  }
+  // Outcome callout
+  const outY = stackY - scripts.length * stepH - 8;
+  page.drawRectangle({
+    x: stackX, y: outY - 24,
+    width: 280, height: 22,
+    borderColor: C.coral, borderWidth: 0.7, color: C.void,
+  });
+  page.drawText('PHOS = only floating personalization affordance', {
+    x: stackX + 6, y: outY - 16,
+    size: 8, font: fonts.bold, color: C.coral,
+  });
+
+  // PHOS voice pipeline on the right half
+  const pipeX = q.x + 320;
+  page.drawText('PHOS VOICE', {
+    x: pipeX, y: q.y + q.h - 40,
+    size: 9, font: fonts.bold, color: C.teal, characterSpacing: 1.0,
+  });
+  const pipe = [
+    { line: 'docs/PHOS-VOICE-DRAFT.md §4',     note: '13 slots · 1 OP · 12 DRAFT', color: C.cloud },
+    { line: '   v   npm run build:phos-voice',  note: 'parser strips fenced examples', color: C.muted },
+    { line: 'p31-phos-voice.json',              note: 'p31ca/public/lib/ · deterministic', color: C.cloud },
+    { line: '   v   runtime fetch (every page)', note: 'tryLoadVoiceJson()', color: C.muted },
+    { line: 'PHOS guide renders right copy',    note: 'voiceForPage(pathname)', color: C.cloud },
+    { line: '!  CI gate: verify:phos-voice',    note: '5 checks · SHA-locked', color: C.coral },
+  ];
+  for (let i = 0; i < pipe.length; i++) {
+    const p = pipe[i];
+    const y = q.y + q.h - 56 - i * 16;
+    page.drawText(p.line, {
+      x: pipeX, y,
+      size: 8, font: fonts.bold, color: p.color,
+    });
+    page.drawText(p.note, {
+      x: pipeX + 8, y: y - 8,
+      size: 6.5, font: fonts.regular, color: C.muted,
+    });
+  }
+}
+
+// ─── Q4: Sources + Swarms + Gates ──────────────────────────────────────────
+function drawQuadrantSwarms(page, q, fonts) {
+  drawQuadrantHeader(page, q, fonts, '4', 'SOURCES + SWARMS + GATES', 'Apply-constants · Ollama · simplex-v7 · CI');
+
+  // Top: apply-constants derivation graph (compact)
+  const topY = q.y + q.h - 50;
+  page.drawText('APPLY-CONSTANTS  ->  10 sinks (one source, many derived)', {
+    x: q.x + 16, y: topY,
+    size: 8, font: fonts.bold, color: C.teal, characterSpacing: 0.6,
+  });
+  page.drawText('p31-constants.json  ->  ground-truth · mesh x2 · integrations x2 · research x2 · dev-workbench · cog-passport HTML · generated.ts', {
+    x: q.x + 16, y: topY - 12,
+    size: 6.5, font: fonts.regular, color: C.cloud,
+  });
+
+  // Middle: two swarm columns
+  const swarmY = topY - 30;
+  // Local Ollama (left)
+  page.drawText('LOCAL OLLAMA (10 · operator host)', {
+    x: q.x + 16, y: swarmY,
+    size: 8, font: fonts.bold, color: C.cyan, characterSpacing: 0.6,
+  });
+  const ollama = [
+    'mechanic · firmware · counsel',
+    'narrator · triage · quick',
+    'phos · scribe · oracle · debrief',
+  ];
+  for (let i = 0; i < ollama.length; i++) {
+    page.drawText(ollama[i], {
+      x: q.x + 16, y: swarmY - 12 - i * 9,
+      size: 7, font: fonts.regular, color: C.cloud,
+    });
+  }
+  page.drawText('lanes:  A=MCP  ·  B=tunnel  ·  C=Continue.dev', {
+    x: q.x + 16, y: swarmY - 12 - ollama.length * 9,
+    size: 6, font: fonts.regular, color: C.muted,
+  });
+  page.drawText('B BANS counsel · triage · phos (cloud round-trip)', {
+    x: q.x + 16, y: swarmY - 22 - ollama.length * 9,
+    size: 6, font: fonts.regular, color: C.coral,
+  });
+
+  // Cloud crew (right)
+  const crewX = q.x + 300;
+  page.drawText('SIMPLEX-V7 (11 · Cloudflare cron + D1)', {
+    x: crewX, y: swarmY,
+    size: 8, font: fonts.bold, color: C.phosphorus, characterSpacing: 0.6,
+  });
+  const crew = [
+    'STEWARD · COUNSEL · ADVOCATE',
+    'TREASURER · FORGE · MEDIC',
+    'HERALD · SCHOLAR · SCRIBE',
+    'SENTINEL · ORACLE',
+  ];
+  for (let i = 0; i < crew.length; i++) {
+    page.drawText(crew[i], {
+      x: crewX, y: swarmY - 12 - i * 9,
+      size: 7, font: fonts.regular, color: C.cloud,
+    });
+  }
+  page.drawText('ADVOCATE: FERS hard deadline 2026-09-30', {
+    x: crewX, y: swarmY - 12 - crew.length * 9,
+    size: 6, font: fonts.regular, color: C.coral,
+  });
+
+  // Bottom: gate ladder (compact)
+  const gateY = q.y + 14;
+  page.drawText('CI GATES (npm run verify · ordered · fast-fail · 50+ checks):', {
+    x: q.x + 16, y: gateY + 60,
+    size: 8, font: fonts.bold, color: C.teal, characterSpacing: 0.5,
+  });
+  const gates = [
+    'alignment · nonprofit · protocol-registry · contract-registry · sovereign-chain',
+    'sovereign-layers · launch-readiness · reports-* · verify-pulse · glass-box · demos',
+    'facts · subscriptions · p31-env · shipbox · passport · cog-passport-schema · profiles',
+    'cogpass-bridge · phos-voice · constants · mesh-canon · ecosystem · live-fleet',
+    'production-readiness · launch-lane-sync · map-pipeline · p31-style · command-center',
+    'p31ca-contracts · egg-hunt · onboarding · fleet-portal · cars-wire · poets-room',
+    'runbooks · delta-language · public-voice · doc-index · simplex-* · edge-lab · tsc',
+  ];
+  for (let i = 0; i < gates.length; i++) {
+    page.drawText(gates[i], {
+      x: q.x + 16, y: gateY + 48 - i * 8.5,
+      size: 6.2, font: fonts.regular, color: C.cloud,
+    });
+  }
+}
+
+function drawQuadrantHeader(page, q, fonts, num, title, subtitle) {
+  const baseY = q.y + q.h - 18;
+  page.drawText(num, {
+    x: q.x + 16, y: baseY,
+    size: 16, font: fonts.bold, color: C.teal,
+  });
+  page.drawText(title, {
+    x: q.x + 32, y: baseY,
+    size: 12, font: fonts.bold, color: C.cloud, characterSpacing: 1.2,
+  });
+  page.drawText(subtitle, {
+    x: q.x + 32, y: baseY - 10,
+    size: 7, font: fonts.regular, color: C.muted,
+  });
+}
+
+function drawRouteBox(page, x, y, label, note, color, fonts) {
+  const w = 92, h = 26;
+  page.drawRectangle({
+    x, y, width: w, height: h,
+    borderColor: color, borderWidth: 0.7, color: C.void,
+  });
+  page.drawText(label, {
+    x: x + 6, y: y + 14,
+    size: 8, font: fonts.bold, color: color,
+  });
+  page.drawText(note, {
+    x: x + 6, y: y + 4,
+    size: 6, font: fonts.regular, color: C.muted,
+  });
+}
+
+function drawWorkerGroup(page, g, fonts) {
+  page.drawRectangle({
+    x: g.x, y: g.y, width: g.w, height: g.h,
+    borderColor: g.color, borderWidth: 0.6, color: C.void,
+  });
+  page.drawText(g.title, {
+    x: g.x + 6, y: g.y + g.h - 12,
+    size: 7, font: fonts.bold, color: g.color, characterSpacing: 0.7,
+  });
+  for (let i = 0; i < g.items.length; i++) {
+    page.drawText(g.items[i], {
+      x: g.x + 6, y: g.y + g.h - 24 - i * 10,
+      size: 6.5, font: fonts.regular, color: C.cloud,
+    });
+  }
+}
+
 function drawCutGuides(page, ox, oy, gridW, gridH, sticker, cols, rows) {
   const tick = 0.18 * IN;
   const lineColor = C.muted;
@@ -895,10 +1371,11 @@ async function writePdf({ pdf, name, font }) {
 // ─── main ───────────────────────────────────────────────────────────────────
 async function main() {
   const planned = [
-    { id: 'business-card', fn: generateBusinessCard },
-    { id: 'elevator-card', fn: generateElevatorCard },
-    { id: 'one-pager',     fn: generateOnePager     },
-    { id: 'qr-stickers',   fn: generateQrStickers   },
+    { id: 'business-card',  fn: generateBusinessCard },
+    { id: 'elevator-card',  fn: generateElevatorCard },
+    { id: 'one-pager',      fn: generateOnePager     },
+    { id: 'qr-stickers',    fn: generateQrStickers   },
+    { id: 'wiring-poster',  fn: generateWiringPoster },
     // Future WCD (D-6 pro-handout) plugs in here. Keep alphabetical by id.
   ];
   const todo = ONLY ? planned.filter(p => p.id === ONLY) : planned;

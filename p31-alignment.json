@@ -955,7 +955,12 @@
     {
       "id": "p31-meatspace-generator",
       "path": "scripts/meatspace/generate.mjs",
-      "role": "Track D \u2014 print-ready PDF generator for the meatspace bridge. Pure Node (pdf-lib + qrcode). Reads colors from andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json via scripts/meatspace/lib/canon.mjs. Output: dist/meatspace/*.pdf (gitignored build artifacts). Shipped artifacts: business-card (D-2, 3.5\u00d72 with bleed, 2-page); elevator-card (D-4, 5\u00d73 with bleed, 2-page \u2014 front: 3-sentence pitch in Tier-0 stranger vocabulary per PHOS-VOICE-DRAFT \u00a72.11, back: operator-voice tagline + 1.5\" QR); one-pager (D-5, US Letter single-side, 3-tile body 'What we build / How it's different / How to help' + compact terms \u00a75 disclosure + big 1.4\" QR with 'Scan to start' + 'Two minutes. We keep nothing.' callouts; visible surface scanned clean of banned vocabulary, naval metaphors, urgency patterns); qr-stickers (D-3, 12-up sheet on US Letter, 2.5\" square dark-face stickers with cut ticks). Planned: pro-handout (D-6, 5.5\u00d78.5 professional handout for grant meetings). Doctrine: each artifact is itself a Layer 1 (Gray Rock) surface \u2014 dark, minimal stimulus, no chroma except brand teal/coral/cyan; the QR is the activation that takes the human to Layer 2 (Alive) on the website. Run: npm run meatspace:print | :business-card | :elevator-card | :one-pager | :qr-stickers."
+      "role": "Track D \u2014 print-ready PDF generator for the meatspace bridge. Pure Node (pdf-lib + qrcode). Reads colors from andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json via scripts/meatspace/lib/canon.mjs. Output: dist/meatspace/*.pdf (gitignored build artifacts). Shipped artifacts: business-card (D-2, 3.5\u00d72 with bleed, 2-page); elevator-card (D-4, 5\u00d73 with bleed, 2-page \u2014 front: 3-sentence pitch in Tier-0 stranger vocabulary per PHOS-VOICE-DRAFT \u00a72.11, back: operator-voice tagline + 1.5\" QR); one-pager (D-5, US Letter single-side, 3-tile body 'What we build / How it's different / How to help' + compact terms \u00a75 disclosure + big 1.4\" QR with 'Scan to start' + 'Two minutes. We keep nothing.' callouts; visible surface scanned clean of banned vocabulary, naval metaphors, urgency patterns); qr-stickers (D-3, 12-up sheet on US Letter, 2.5\" square dark-face stickers with cut ticks); wiring-poster (D-7, 11\u00d717 tabloid landscape operator wall reference \u2014 4 quadrants: Public Portals / Edge Fleet 33-Workers / Bus Bar 5-script load + PHOS pipeline / Sources + Swarms 10+11 + CI gate ladder; companion to docs/P31-WIRING-DIAGRAM.md). Planned: pro-handout (D-6, 5.5\u00d78.5 professional handout for grant meetings). Doctrine: each artifact is itself a Layer 1 (Gray Rock) surface \u2014 dark, minimal stimulus, no chroma except brand teal/coral/cyan; the QR is the activation that takes the human to Layer 2 (Alive) on the website. Run: npm run meatspace:print | :business-card | :elevator-card | :one-pager | :qr-stickers | :wiring-poster."
+    },
+    {
+      "id": "p31-wiring-diagram",
+      "path": "docs/P31-WIRING-DIAGRAM.md",
+      "role": "Canonical source of truth for the entire P31 mesh topology (CWP-PHOS-2026-01 D-7). Schema p31.wiringDiagram/1.0.0. Ten focused diagrams \u2014 Public Portals \u00b7 K\u2084 Mesh Cage \u00b7 Edge Fleet 33 Workers \u00b7 Bus Bar Nervous System (5-script load order with PHOS suppression handshake) \u00b7 PHOS Voice Pipeline \u00b7 BUS4 CogPass Cross-Origin Bridge \u00b7 Apply-Constants Derivation Graph (10 sinks) \u00b7 Swarms (10 Ollama personas + 11 simplex-v7 cloud crew + Discord bot) \u00b7 CI Gate Ladder (50+ verifiers in execution order) \u00b7 Meatspace Bridge. Every diagram has Mermaid (browser-renderable) + ASCII fallback (terminal-friendly) + file references + verifier names. Source for the printable wall poster (scripts/meatspace/generate.mjs generateWiringPoster \u2014 npm run meatspace:print:wiring-poster). When a new system ships, update this doc in the same commit so the registry edge stays clean."
     },
     {
       "id": "p31-cogpass-reader",
@@ -1723,6 +1728,23 @@
       "apply": "Edit docs/PHOS-VOICE-DRAFT.md §4 (per-page voice slots). Run `npm run build:phos-voice` to regenerate p31-phos-voice.json. If you changed an OPERATOR-VOICE slot's content (and the change is operator-approved), also run `npm run verify:phos-voice -- --update-lock` and commit the lock alongside the §4 edit so the SHA drift is reviewable in `git diff`. Promoting a DRAFT-AGENT-SIMULATED slot to OPERATOR-VOICE requires both: (a) rewrite the content in operator's voice, (b) change the tag in §4, (c) `--update-lock` to add the SHA. Never edit p31-phos-voice.json directly — verify:phos-voice (--check) will reject drift.",
       "verify": "npm run verify:phos-voice — drift + schema + Tier-0 vocabulary + OPERATOR-VOICE SHA lock + busBar.slots coverage warning.",
       "note": "Loaded at runtime by p31-phos-guide.mjs tryLoadVoiceJson() and merged over baked-in DEFAULT_VOICE; absent file = defaults stand (graceful degradation). Wired into root npm run verify after verify:cogpass-bridge."
+    },
+    {
+      "id": "wiring-diagram-poster",
+      "from": [
+        "docs/P31-WIRING-DIAGRAM.md",
+        "p31-live-fleet.json",
+        "scripts/p31-fleet-ten/models.json",
+        "simplex-v7/src/agents/registry.ts",
+        "andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json"
+      ],
+      "to": [
+        "scripts/meatspace/generate.mjs (generateWiringPoster + drawQuadrant* helpers)",
+        "dist/meatspace/p31-wiring-poster.pdf (gitignored build artifact)"
+      ],
+      "apply": "When a major topology change ships (new Worker, new persona, new bus bar slot, new CI gate), update docs/P31-WIRING-DIAGRAM.md FIRST (the markdown is the canonical source — Mermaid + ASCII diagrams + file refs + verifier names). The poster generator references the doc only by name, so changes do not require regenerating the PDF unless the operator wants the wall reference updated. Run `npm run meatspace:print:wiring-poster` to regenerate the 11×17 tabloid poster after substantive edits. Print on cardstock, pin where the operator works.",
+      "verify": "verify:doc-index (the wiring diagram is in the searchable doc library); verify:alignment (catches missing source rows when a new system is added without doc update). The PDF itself has no CI verifier — it is a print artifact derived from the markdown.",
+      "note": "Doctrine: ONE wiring diagram. The markdown is for browser/IDE/agent-handoff use; the PDF is for the wall. Both serve the same goal — eliminate 'wait, what calls k4-personal?' moments months from now. The 11×17 size is small enough to fit on most home/office printers (most office stores tabloid + laminate <$5) but large enough to read all 33 Worker names from across a room."
     },
     {
       "id": "cogpass-cross-origin-bridge",

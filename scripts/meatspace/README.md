@@ -20,6 +20,7 @@ node scripts/meatspace/generate.mjs --only=business-card
 node scripts/meatspace/generate.mjs --only=elevator-card
 node scripts/meatspace/generate.mjs --only=one-pager
 node scripts/meatspace/generate.mjs --only=qr-stickers
+node scripts/meatspace/generate.mjs --only=wiring-poster
 node scripts/meatspace/generate.mjs --qr-target=https://p31ca.org/welcome
 ```
 
@@ -30,15 +31,32 @@ npm run meatspace:print:business-card
 npm run meatspace:print:elevator-card
 npm run meatspace:print:one-pager
 npm run meatspace:print:qr-stickers
+npm run meatspace:print:wiring-poster
 ```
 
-| ID              | Status | Spec                                                                       |
-|-----------------|--------|----------------------------------------------------------------------------|
-| `business-card` | v1     | 3.5″×2″ with 0.125″ bleed, 2-page PDF                                      |
-| `elevator-card` | v1     | 5″×3″ with 0.125″ bleed, 2-page (front: pitch / back: tagline + large QR)  |
-| `one-pager`     | v1     | US Letter, 1-page, 3-tile body + big QR + compact legal block              |
-| `qr-stickers`   | v1     | 12-up sheet on US Letter, 2.5″ square stickers, dark face, cut ticks       |
-| `pro-handout`   | TODO   | 5.5″×8.5″ professional handout (D-6)                                       |
+| ID               | Status | Spec                                                                       |
+|------------------|--------|----------------------------------------------------------------------------|
+| `business-card`  | v1     | 3.5″×2″ with 0.125″ bleed, 2-page PDF                                      |
+| `elevator-card`  | v1     | 5″×3″ with 0.125″ bleed, 2-page (front: pitch / back: tagline + large QR)  |
+| `one-pager`      | v1     | US Letter, 1-page, 3-tile body + big QR + compact legal block              |
+| `qr-stickers`    | v1     | 12-up sheet on US Letter, 2.5″ square stickers, dark face, cut ticks       |
+| `wiring-poster`  | v1     | **11″×17″ tabloid landscape**, 4-quadrant operator wall reference (D-7)    |
+| `pro-handout`    | TODO   | 5.5″×8.5″ professional handout (D-6)                                       |
+
+### wiring-poster (D-7 — operator wall reference)
+
+Single-sheet schematic of the entire P31 mesh. Use when you need to show someone what the system actually is — or pin it where you can see it during work sessions to keep the topology in cache.
+
+The poster mirrors `docs/P31-WIRING-DIAGRAM.md` (the canonical source with full Mermaid diagrams + ASCII fallbacks). The PDF is the at-a-glance overview; the markdown is the deep reference.
+
+Quadrants:
+
+1. **Public Portals** — STRANGER / USER / OPERATOR role lanes with their accessible routes; BUS4 cross-origin bridge callout
+2. **Edge Fleet** — 33 Workers grouped by concern (mesh / agents / bridges / identity / payments / operator tools) + the 10ms / 1000-subrequest constraints
+3. **Bus Bar + PHOS Pipeline** — `BaseLayout` 5-script load order with PHOS suppression handshake; PHOS voice draft → JSON → fetch → render flow
+4. **Sources + Swarms + Gates** — `apply:constants` 10-sink derivation; 10 local Ollama personas + 11 simplex-v7 cloud crew + the CI verifier ladder
+
+Print on **11″×17″ (tabloid) cardstock**. Most office supply stores will print + laminate this for under $5.
 
 ## Print rules
 

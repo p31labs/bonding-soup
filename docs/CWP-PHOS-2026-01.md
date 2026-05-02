@@ -6,7 +6,7 @@
 | **Title** | Bus bar consolidation: CogPass nervous system, PHOS face, meatspace bridge |
 | **Version** | 1.0.0 |
 | **Effective date** | 2026-05-01 |
-| **Status** | **Shipped (12 of 13 wedges live; 14 commits across 2 repos; verify:alignment green at 214 sources / 65 derivations; 6 dedicated CI gates GREEN)** |
+| **Status** | **Shipped (13 of 14 wedges live; 21 commits across 2 repos; verify:alignment green at 215 sources / 66 derivations; 6 dedicated CI gates GREEN; D-7 wiring diagram + poster on disk)** |
 | **Authoring mode** | **Retrospective.** This CWP documents work that already shipped during the 2026-05-01 evening session. All "to" entries reference real files at real commits. Pending entries are unblocked work that hands off cleanly. |
 | **Applies to** | **`/home/p31`** (alignment registry, meatspace generator, voice draft, npm scripts) and **`/home/p31/andromeda`** (`04_SOFTWARE/p31ca` ground-truth, public pages, lib scripts, schema spec). Does **not** touch `phosphorus31.org/` or `bonding-soup` C.A.R.S. surfaces in this revision. |
 | **Owner (architect)** | Cursor agent (Claude Opus 4.7) under operator command authority granted at 2026-05-01T20:37:00-04:00. |
@@ -330,11 +330,12 @@ All work shipped during the 2026-05-01 evening session, in order:
 | 18 | `cd2552d` | home | main | feat: BUS2 + BUS3 substrate (research mirror) + close C-4 atomicity gap |
 | 19 | `14a7985` | home | main | chore(constants): regenerate p31-constants-generated.ts after C-4 jsonSchema bump |
 | 20 | `9c33a399f` | andromeda | pr/fix-broken-hrefs-release-gate | feat(p31ca): BUS2 nav-by-role + BUS3 partial /research page (826 insertions) |
+| 21 | (this commit) | home | main | docs(D-7): wiring diagram canon + 11×17 print poster (Mermaid + ASCII + PDF) |
 
 Net delta:
-- HOME: ~2,206 + 769 (PHOS pipeline) + 55 (BUS3 substrate) + 2 (TS regen) = ~3,032 lines
+- HOME: ~2,206 + 769 (PHOS pipeline) + 55 (BUS3 substrate) + 2 (TS regen) + 1,180 (wiring doc + poster generator + alignment + npm + README) = ~4,212 lines
 - ANDROMEDA: ~1,980 + 15,544 (stylebook batch) + 248 (bus bar wiring + PHOS JSON) + 826 (BUS2 + BUS3) = ~18,598 lines
-- **Total: ~21,630 lines across 60+ files in 2 repos** (stylebook batch dominates the andromeda count; lifted out it would be ~3,054 andromeda lines from this CWP's direct work)
+- **Total: ~22,810 lines across 65+ files in 2 repos** (stylebook batch dominates the andromeda count; lifted out it would be ~3,054 andromeda lines from this CWP's direct work)
 
 What landed in the late-evening BUS push (post-dinner waves):
 1. **BUS4 Phase 1 LIVE** — cross-origin Cognitive Passport bridge endpoint at `https://p31ca.org/cogpass-bridge.html`. Strict CSP, hardcoded allowlist (`https://bonding.p31ca.org`), Single Rule enforced (bridge imports `normalize()` from cogpass-reader; no duplicate logic). Wire schema p31.cogPassBridge/1.0.0. CI gate `verify:cogpass-bridge` locks 7 atomic invariants.
@@ -344,8 +345,9 @@ What landed in the late-evening BUS push (post-dinner waves):
 5. **BUS2 nav-by-role component shipped** — `BusBarNav.astro` reads ground-truth at build time, emits 11-slot superset nav, role-gated by pure CSS attribute selectors. Opt-in (not auto-injected; pages adopt by replacing their nav).
 6. **BUS3 partial — /research page LIVE** — first BusBarNav adopter. Renders the 22-paper Zenodo canon from p31-constants.json via apply:constants → src/data/p31-research.json mirror. Production URL `https://p31ca.org/research`.
 7. **C-4 atomicity gap closed** — bumped `p31-constants.json → cognitivePassport.jsonSchema` to 1.1.0 so `apply:constants` no longer reverts the cogpass HTML SCHEMA constant. The schema is now truly atomic across all four surfaces (constants → HTML → @p31/shared → output placeholder).
+8. **D-7 wiring diagram on paper** — `docs/P31-WIRING-DIAGRAM.md` (~700 lines, schema `p31.wiringDiagram/1.0.0`) — ten focused diagrams, every one with Mermaid + ASCII + file refs + verifier names: Public Portals · K₄ Mesh Cage · Edge Fleet (33 Workers) · Bus Bar Nervous System · PHOS Voice Pipeline · BUS4 Cross-Origin Bridge · Apply-Constants Derivation · Swarms (10 Ollama + 11 simplex-v7 + Discord) · CI Gate Ladder · Meatspace Bridge. Plus `scripts/meatspace/generate.mjs generateWiringPoster` — 11×17 tabloid landscape, 4-quadrant single-sheet wall reference. `npm run meatspace:print:wiring-poster` regenerates after topology changes. Print on cardstock; pin where the operator works. Catches the "wait, what calls k4-personal?" moment months from now.
 
-The cage is closed; the chemistry is honest. Generator emit, reader normalize, PHOS consume, nav role-gate, research index renders — all live, all on the same nervous system, all derived from one source per concern.
+The cage is closed; the chemistry is honest. Generator emit, reader normalize, PHOS consume, nav role-gate, research index renders, **and the whole topology is now on a single piece of paper** — all live, all on the same nervous system, all derived from one source per concern.
 
 ---
 

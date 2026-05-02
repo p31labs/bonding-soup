@@ -166,7 +166,7 @@
       "tweets": [
         "I built a chemistry game so my kids could see me.\n\nI'm autistic — late diagnosed at 39. When the family-court window changed, I built BONDING: a multiplayer molecular builder where every atom is a timestamped engagement log.\n\n{{c.bonding.publicUrl}}",
         "{{c.bonding.testBaseline.tests}} tests / {{c.bonding.testBaseline.suites}} suites. PWA. Works offline on tablets. Touch-first. No accounts. No ads. No data collection.\n\n11 elements + 2 secret elements named after my kids. Quest chains to the Posner molecule.",
-        "Two secret elements unlock when you finish quest chains. Names mean something to one family. Code on GitHub: github.com/{{c.contact.githubOrg}}",
+        "Two secret elements show up after quest chains. Names mean something to one family. Code on GitHub: github.com/{{c.contact.githubOrg}}",
         "P31 Labs — Georgia nonprofit (EIN {{c.organization.ein}}; 501(c)(3) determination pending). MIT licensed. The code outlives this housing situation; support keeps me at a desk.\n\n{{c.contact.kofiUrl}}",
         "Stack: TypeScript strict · React + Three.js + Zustand + Vite · Cloudflare Pages + Workers + KV · Web Audio API · IndexedDB · PWA · COPPA-aligned, zero data collection.\n\ngithub.com/{{c.contact.githubOrg}}"
       ],

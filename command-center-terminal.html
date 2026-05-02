@@ -177,9 +177,31 @@
   .send-btn:disabled { background: var(--bg-3); color: var(--p31-cloud-2); cursor: not-allowed; }
   .send-btn.busy { background: var(--p31-butter); color: var(--bg-0); }
 
-  /* HIDE/SHOW per mode */
+  /* HIDE/SHOW per mode (VIBE-3H view mirrors cmd; #view-pane uses `hidden` attr) */
   body[data-mode='cmd'] .input-bar { display: none; }
   body[data-mode='chat'] .cmd-list { display: none; }
+  body[data-mode='view'] .input-bar,
+  body[data-mode='view'] .cmd-list,
+  body[data-mode='view'] #msgs { display: none; }
+
+  /* VIEW MODE pane — read-only operator doc viewer */
+  .view-pane { display: flex; flex-direction: column; gap: 0.5rem; }
+  .view-pane select {
+    background: var(--bg-2); color: var(--p31-paper);
+    border: 1px solid var(--border); border-radius: 6px;
+    font: 600 0.78rem var(--font-mono);
+    padding: 0 0.5rem; height: var(--tap);
+    appearance: none; -webkit-appearance: none;
+    align-self: flex-start; min-width: 16rem; max-width: 100%;
+  }
+  .view-pane select:focus { outline: none; border-color: var(--p31-teal); }
+  .view-body {
+    background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.6rem 0.8rem; max-height: 70vh; overflow: auto;
+    font: 400 0.78rem var(--font-mono); white-space: pre-wrap;
+    color: var(--p31-cloud);
+  }
+  .view-body code { display: block; background: transparent; padding: 0; }
 
   .footer-tip {
     font: 400 0.7rem var(--font-mono); color: var(--p31-cloud-2);
@@ -222,6 +244,7 @@
   <div class="mode-tabs" role="tablist">
     <button class="mode-tab active" data-mode="chat" role="tab">chat</button>
     <button class="mode-tab" data-mode="cmd" role="tab">cmd</button>
+    <button class="mode-tab" data-mode="view" role="tab">view</button>
   </div>
   <button id="status" class="header-status" type="button" title="click to refresh persona list">…</button>
 </header>
@@ -229,6 +252,10 @@
 <main id="scroll">
   <div id="msgs"></div>
   <div id="cmd-list" class="cmd-list" hidden></div>
+  <div id="view-pane" class="view-pane" hidden>
+    <select id="view-slug" aria-label="document slug"></select>
+    <pre id="view-body" class="view-body"><code>(pick a document above)</code></pre>
+  </div>
 </main>
 
 <form class="input-bar" id="form" autocomplete="off">
@@ -252,6 +279,24 @@
   const sendBtn = $("send");
   const statusEl = $("status");
   const formEl = $("form");
+  const viewPaneEl = $("view-pane");
+  const viewSlugEl = $("view-slug");
+  const viewBodyCodeEl = $("view-body").querySelector("code");
+
+  // VIBE-3H — view-mode allowlist mirror. Slugs MUST match DOC_SLUG_ALLOWLIST
+  // in scripts/p31-local-command-center.mjs; server is the actual gate.
+  // CWP-P31-VIBE-2026-06 §18.
+  const VIEW_SLUGS = [
+    { slug: "manifesto",            desc: "Manifesto — five doctrines + ten principles" },
+    { slug: "vibe-cwp",             desc: "VIBE CWP — PiP CLI substrate (this work)" },
+    { slug: "peer-cwp",             desc: "PEER-COMP CWP — peer comparison + voice" },
+    { slug: "agents",               desc: "AGENTS.md — workspace ground truth" },
+    { slug: "public-voice",         desc: "Public voice — identity-first guardrails" },
+    { slug: "delta-language",       desc: "DELTA language — voice + topology words" },
+    { slug: "morning-arc",          desc: "Morning operator arc — lived time ladder" },
+    { slug: "engineering-standard", desc: "Engineering standard — DoD ship bar" },
+  ];
+  let viewLoadedSlug = null;
 
   // PiP CLI command palette. `key` MUST match an ACTIONS id in
   // scripts/command-center/actions.registry.mjs (POST { action: c.key } is
@@ -455,20 +500,56 @@
     return false;
   }
 
+  // VIBE-3H — view mode helpers (textContent only; no markdown render).
+  function populateViewSlugs() {
+    viewSlugEl.innerHTML = "";
+    for (const v of VIEW_SLUGS) {
+      const opt = document.createElement("option");
+      opt.value = v.slug;
+      opt.textContent = v.slug + " — " + v.desc;
+      viewSlugEl.appendChild(opt);
+    }
+  }
+  async function loadViewDoc(slug) {
+    viewBodyCodeEl.textContent = "loading…";
+    try {
+      const r = await fetch("/api/view-doc?slug=" + encodeURIComponent(slug));
+      const text = await r.text();
+      if (!r.ok) {
+        viewBodyCodeEl.textContent = "error " + r.status + ": " + text.trim();
+        return;
+      }
+      viewBodyCodeEl.textContent = text;
+      viewLoadedSlug = slug;
+    } catch (err) {
+      viewBodyCodeEl.textContent = "network error: " + err.message;
+    }
+  }
+  async function ensureView() {
+    const slug = viewSlugEl.value;
+    if (!slug) return;
+    if (viewLoadedSlug === slug) return;
+    await loadViewDoc(slug);
+  }
+  viewSlugEl.addEventListener("change", () => loadViewDoc(viewSlugEl.value));
+
   // MODE TABS
   document.querySelectorAll(".mode-tab").forEach(tab => {
     tab.addEventListener("click", () => {
       document.body.dataset.mode = tab.dataset.mode;
       document.querySelectorAll(".mode-tab").forEach(t => t.classList.toggle("active", t === tab));
       cmdListEl.hidden = (tab.dataset.mode !== "cmd");
+      viewPaneEl.hidden = (tab.dataset.mode !== "view");
       msgsEl.hidden = false;  // keep scroll visible
+      if (tab.dataset.mode === "view") ensureView();
       if (tab.dataset.mode === "chat") inputEl.focus();
     });
   });
 
   // BOOT
-  append("system", "p31 terminal", "local only. no cloud. no middleman.\n\nchat mode: pick a persona, type, send. enter sends, shift+enter newline. tap status badge above to refresh persona list.\ncmd mode: tap a card to run a whitelisted npm script.\n\noperator-confidential personas (counsel/triage/phos) only run locally — they are blocked from any cloud comparison surface by design.");
+  append("system", "p31 terminal", "local only. no cloud. no middleman.\n\nchat mode: pick a persona, type, send. enter sends, shift+enter newline. tap status badge above to refresh persona list.\ncmd mode: tap a card to run a whitelisted npm script.\nview mode: read an allowlisted operator doc inline (raw markdown, no editor).\n\noperator-confidential personas (counsel/triage/phos) only run locally — they are blocked from any cloud comparison surface by design.");
   renderCmds();
+  populateViewSlugs();
   loadPersonas();
 })();
 </script>

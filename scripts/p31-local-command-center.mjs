@@ -980,6 +980,51 @@ const server = http.createServer((req, res) => {
     handlePersonaChat(req, res);
     return;
   }
+  // VIBE-3H — read-only operator doc viewer for the PiP CLI substrate
+  // (command-center-terminal.html `view` tab). Allowlist + slug regex
+  // prevent path traversal; never compose a path from user input.
+  // CWP-P31-VIBE-2026-06 §18.
+  const DOC_SLUG_ALLOWLIST = {
+    manifesto: "docs/P31-MANIFESTO.md",
+    "vibe-cwp": "docs/CWP-P31-VIBE-2026-06.md",
+    "peer-cwp": "docs/CWP-P31-PEER-COMP-2026-05.md",
+    "morning-arc": "docs/MORNING-OPERATOR-ARC.md",
+    agents: "AGENTS.md",
+    "delta-language": "docs/P31-DELTA-LANGUAGE.md",
+    "public-voice": "docs/PUBLIC-VOICE.md",
+    "engineering-standard": "docs/P31-ENGINEERING-STANDARD.md",
+  };
+  const SLUG_RE = /^[a-z][a-z0-9-]{0,40}$/;
+  if (req.method === "GET" && req.url && req.url.startsWith("/api/view-doc")) {
+    const qIdx = req.url.indexOf("?");
+    const params = new URLSearchParams(qIdx >= 0 ? req.url.slice(qIdx + 1) : "");
+    const slug = (params.get("slug") || "").trim();
+    if (!slug || !SLUG_RE.test(slug)) {
+      res.writeHead(400, CC_HDR.text);
+      res.end("bad slug\n");
+      return;
+    }
+    if (!Object.prototype.hasOwnProperty.call(DOC_SLUG_ALLOWLIST, slug)) {
+      res.writeHead(403, CC_HDR.text);
+      res.end("slug not allowlisted\n");
+      return;
+    }
+    const docPath = path.join(repoRoot, DOC_SLUG_ALLOWLIST[slug]);
+    if (!fs.existsSync(docPath)) {
+      res.writeHead(404, CC_HDR.text);
+      res.end("doc not found on disk\n");
+      return;
+    }
+    try {
+      const buf = fs.readFileSync(docPath, "utf8");
+      res.writeHead(200, { ...CC_HDR.text, "Cache-Control": "no-store" });
+      res.end(buf);
+    } catch (e) {
+      res.writeHead(500, CC_HDR.text);
+      res.end("read error\n");
+    }
+    return;
+  }
   const assetBase = req.url && req.url.split("?")[0];
   if (req.method === "GET" && (assetBase === "/desk" || assetBase === "/operator-desk")) {
     res.writeHead(200, CC_HDR.html);

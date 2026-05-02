@@ -244,6 +244,251 @@
       "role": "Design constitution: one night sky / twenty-three windows \u2014 altitude, five minds, Layer-1.5 starfield, return ribbon, jarring-cut fixes; pairs p31-universal-canon, design doctrine, ethical style map, starfield assets"
     },
     {
+      "id": "p31ca-design-spec-md",
+      "path": "andromeda/04_SOFTWARE/p31ca/docs/DESIGN-SPEC.md",
+      "optional": true,
+      "role": "p31.designSpec/1.0.0 — canonical design specification for p31ca.org; codifies visual language, interaction patterns, asset inventory, and design system governance; derives from p31-universal-canon.json + p31.ground-truth.json"
+    },
+    {
+      "id": "p31ca-theme-engine-md",
+      "path": "andromeda/04_SOFTWARE/p31ca/docs/THEME-ENGINE.md",
+      "optional": true,
+      "role": "p31.themeEngine/2.0.0 documentation — fluid design system with 6 themes, 5 modes, smart adaptive engine; human guide"
+    },
+    {
+      "id": "p31ca-theme-engine-mjs",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/lib/p31-theme-engine.mjs",
+      "optional": true,
+      "role": "p31.themeEngine/2.0.0 — ThemeController class with 6 themes, 5 adaptive modes, color adjustment algorithms, auto-appearance"
+    },
+    {
+      "id": "p31ca-fluid-css",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/lib/p31-fluid.css",
+      "optional": true,
+      "role": "p31.fluidDesign/2.0.0 — CSS tokens, utilities, animations, glass morphism, component classes"
+    },
+    {
+      "id": "p31ca-theme-switcher-mjs",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/lib/p31-theme-switcher.mjs",
+      "optional": true,
+      "role": "p31.themeSwitcher/2.0.0 — floating widget component for theme/mode selection, keyboard shortcuts"
+    },
+    {
+      "id": "p31ca-theme-showcase-html",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/theme-showcase.html",
+      "optional": true,
+      "role": "p31.themeShowcase/2.0.0 — demo page showing all 6 themes, tokens, motion library, components"
+    },
+    {
+      "id": "p31ca-stylebook-index",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/stylebook/index.html",
+      "optional": true,
+      "role": "p31.stylebook/2.0.0 — root of the canonical stylebook tree (foundations, components, patterns, theme, resources)"
+    },
+    {
+      "id": "p31ca-stylebook-chrome-css",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/stylebook/_chrome.css",
+      "optional": true,
+      "role": "p31.stylebook/2.0.0 chrome — shared sidebar, topbar, code-block, callout, table, page-nav styles"
+    },
+    {
+      "id": "p31ca-stylebook-chrome-js",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/stylebook/_chrome.js",
+      "optional": true,
+      "role": "p31.stylebook/2.0.0 chrome — renderShell helper, NAV_TREE, code/preview/callout authoring helpers, syntax highlighter, copy buttons"
+    },
+    {
+      "id": "p31ca-stylebook-sitemap-html",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/stylebook/sitemap.html",
+      "optional": true,
+      "role": "p31.stylebook/2.0.0 guidelines — canonical site map: visual tree of all P31 domains, searchable catalog of every public route, sitemap.xml + llms.txt patterns"
+    },
+    {
+      "id": "p31ca-stylebook-routing-html",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/stylebook/routing.html",
+      "optional": true,
+      "role": "p31.stylebook/2.0.0 guidelines — three-tier IA, URL grammar, deep linking conventions, mobile nav patterns, anti-patterns"
+    },
+    {
+      "id": "p31ca-stylebook-accessibility-html",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/stylebook/accessibility.html",
+      "optional": true,
+      "role": "p31.stylebook/2.0.0 guidelines — WCAG 2.1 AA checklist (20 items), keyboard map (12 bindings), ARIA usage, focus management, cognitive accessibility"
+    },
+    {
+      "id": "p31ca-stylebook-metadata-html",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/stylebook/metadata.html",
+      "optional": true,
+      "role": "p31.stylebook/2.0.0 guidelines — head metadata (9 required tags), OpenGraph, JSON-LD (Organization/WebSite/Breadcrumb/TechArticle), robots.txt, sitemap.xml"
+    },
+    {
+      "id": "p31ca-stylebook-performance-html",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/stylebook/performance.html",
+      "optional": true,
+      "role": "p31.stylebook/2.0.0 guidelines — Core Web Vitals targets (LCP/INP/CLS/FCP), per-page asset budgets, loading strategy, image format hierarchy, Cache-Control headers"
+    },
+    {
+      "id": "p31ca-stylebook-voice-html",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/stylebook/voice.html",
+      "optional": true,
+      "role": "p31.stylebook/2.0.0 guidelines — voice axes (tone/authority/energy/humor), don't-write-this/write-this comparisons, banned vocabulary, punctuation rules; pairs PUBLIC-VOICE.md"
+    },
+    {
+      "id": "p31ca-stylebook-error-pages-html",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/stylebook/error-pages.html",
+      "optional": true,
+      "role": "p31.stylebook/2.0.0 patterns — 404/500/403/offline/maintenance error page mocks, anatomy of error pages, HTTP status code reference"
+    },
+    {
+      "id": "p31ca-stylebook-brand-html",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/stylebook/brand.html",
+      "optional": true,
+      "role": "p31.stylebook/2.0.0 guidelines — P31/Phosphorus31/P31 Labs naming, 6 logo variants, lockups, clearspace, brand color rules, do/don't"
+    },
+    {
+      "id": "p31ca-stylebook-support-matrix-html",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/stylebook/support-matrix.html",
+      "optional": true,
+      "role": "p31.stylebook/2.0.0 resources — 3 support tiers, browser matrix (11 browsers), device list (8 devices), platform feature dependencies, feature detection patterns"
+    },
+    {
+      "id": "p31ca-stylebook-contributing-html",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/stylebook/contributing.html",
+      "optional": true,
+      "role": "p31.stylebook/2.0.0 resources — 6 contribution paths, canonical token-change flow (7 steps), RFC template, PR checklist, semver policy, code style"
+    },
+    {
+      "id": "p31ca-stylebook-nonprofit-html",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/stylebook/nonprofit.html",
+      "optional": true,
+      "role": "p31.stylebook/2.0.0 operations — operator-facing visualization of the nonprofit scaffold: 9 canonical contracts, 6 runbooks, 5 automation commands, critical-path gaps, mission-lock mechanisms"
+    },
+    {
+      "id": "p31ca-llms-txt",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/llms.txt",
+      "optional": true,
+      "role": "Curated entrypoint for LLM/agentic crawlers — markdown summary of P31 surfaces, public APIs, what we don't do, contact channels"
+    },
+    {
+      "id": "nonprofit-governance-json",
+      "path": "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/governance.json",
+      "optional": true,
+      "role": "p31.nonprofit.governance/1.0.0 — canonical board, officers, COI, meeting cadence, document retention, succession planning. Single source of truth for governance pages, board portals, audit trails."
+    },
+    {
+      "id": "nonprofit-compliance-json",
+      "path": "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/compliance.json",
+      "optional": true,
+      "role": "p31.nonprofit.compliance/1.0.0 — Form 1023 + 990 schedule, GA annual registration, 39-state charitable solicitation tracker, filing calendar; drives npm run nonprofit:calendar"
+    },
+    {
+      "id": "nonprofit-financials-json",
+      "path": "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/financials.json",
+      "optional": true,
+      "role": "p31.nonprofit.financials/1.0.0 — chart of accounts, expense ratio targets (75/15/10), fund accounting, audit triggers, donor-acknowledgment thresholds, transparency commitments"
+    },
+    {
+      "id": "nonprofit-donor-policy-json",
+      "path": "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/donor-policy.json",
+      "optional": true,
+      "role": "p31.nonprofit.donorPolicy/1.0.0 — gift acceptance (9 types accepted, 6 declined), recognition tiers, refund policy (30d window), receipt language with IRS conditional, ethical screening"
+    },
+    {
+      "id": "nonprofit-programs-json",
+      "path": "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/programs.json",
+      "optional": true,
+      "role": "p31.nonprofit.programs/1.0.0 — mission, vision, theory of change (problem/intervention/short-medium-long outcomes), 5-program portfolio, KPIs, impact-measurement framework"
+    },
+    {
+      "id": "nonprofit-grants-json",
+      "path": "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/grants.json",
+      "optional": true,
+      "role": "p31.nonprofit.grants/1.0.0 — 10-stage pipeline, fit criteria (must-have + automatic-decline), 12-funder candidate pool, post-award discipline, ethical declines log"
+    },
+    {
+      "id": "nonprofit-legal-json",
+      "path": "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/legal.json",
+      "optional": true,
+      "role": "p31.nonprofit.legal/1.0.0 — IP licensing (AGPL+CC-BY default), 3 trademark filings planned, contract template library, GDPR/CCPA/HIPAA/COPPA matrix, breach notification protocol"
+    },
+    {
+      "id": "nonprofit-risk-json",
+      "path": "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/risk.json",
+      "optional": true,
+      "role": "p31.nonprofit.risk/1.0.0 — 9-risk register (R-001 to R-009), incident response classes (P0–P3), business continuity scenarios, insurance roadmap (D&O P0, GL/cyber P1, workers-comp P2)"
+    },
+    {
+      "id": "nonprofit-people-json",
+      "path": "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/people.json",
+      "optional": true,
+      "role": "p31.nonprofit.people/1.0.0 — role classifications, current roster, P0 open positions (Vice-Chair + Treasurer + Secretary), onboarding checklists per role type, comp philosophy, accessibility commitments"
+    },
+    {
+      "id": "nonprofit-operations-master-md",
+      "path": "docs/P31-NONPROFIT-OPERATIONS.md",
+      "role": "Master operational index — single navigation point for nonprofit scaffold; lists 9 contracts, critical-path gaps, filing calendar, runbooks, automation; written operator-friendly with spoon-deficit assumption"
+    },
+    {
+      "id": "nonprofit-runbook-board-meeting",
+      "path": "docs/runbooks/nonprofit/board-meeting.md",
+      "role": "Quarterly + annual + special board meeting runbook — 14d notice, agenda template, quorum check, minutes discipline, special meeting protocols"
+    },
+    {
+      "id": "nonprofit-runbook-donor-receipt",
+      "path": "docs/runbooks/nonprofit/donor-receipt.md",
+      "role": "Donor receipt issuance runbook — automated Stripe path, manual path, January 31 batch, replacement requests, refund handling, IRS conditional language"
+    },
+    {
+      "id": "nonprofit-runbook-grant-application",
+      "path": "docs/runbooks/nonprofit/grant-application.md",
+      "role": "Grant lifecycle runbook — 7 stages (researching → drafting → submission → award → reporting → closeout → rejection/ethical decline), fit criteria, post-award discipline"
+    },
+    {
+      "id": "nonprofit-runbook-incident-response",
+      "path": "docs/runbooks/nonprofit/incident-response.md",
+      "role": "P0–P3 incident response runbook — data breach, payment fraud, operator medical emergency, legal threat, service outage; communication discipline, post-incident discipline, tabletop exercises"
+    },
+    {
+      "id": "nonprofit-runbook-filing-calendar",
+      "path": "docs/runbooks/nonprofit/filing-calendar.md",
+      "role": "Filing calendar runbook — monthly review, per-filing-type checklists (990-N/EZ/full, GA registration, state charitable, 8868 extension, 1099-NEC), missed-deadline protocol"
+    },
+    {
+      "id": "nonprofit-runbook-onboarding",
+      "path": "docs/runbooks/nonprofit/onboarding.md",
+      "role": "Onboarding runbook — board (7d), staff W-2 (90d arc), contractor 1099, volunteer, advisor, founder/officer; offboarding cross-reference"
+    },
+    {
+      "id": "nonprofit-runbooks-readme",
+      "path": "docs/runbooks/nonprofit/README.md",
+      "role": "Index of nonprofit runbooks + automation commands + canonical contracts"
+    },
+    {
+      "id": "nonprofit-script-verify",
+      "path": "scripts/nonprofit/verify.mjs",
+      "role": "npm run verify:nonprofit — schema shape + cross-contract references (EIN consistency, board member <-> roster, officer separation-of-duties, state-code validity, risk-register format)"
+    },
+    {
+      "id": "nonprofit-script-status",
+      "path": "scripts/nonprofit/status.mjs",
+      "role": "npm run nonprofit:status — one-screen ops dashboard: entity, P0 critical gaps, 90-day deadlines, programs, grants pipeline, top risks by impact, state registrations"
+    },
+    {
+      "id": "nonprofit-script-calendar",
+      "path": "scripts/nonprofit/calendar.mjs",
+      "role": "npm run nonprofit:calendar — render upcoming filing deadlines from compliance.json with urgency colors and owner assignments"
+    },
+    {
+      "id": "nonprofit-script-receipt",
+      "path": "scripts/nonprofit/receipt.mjs",
+      "role": "npm run nonprofit:receipt — generate tax-deductible donation receipt (HTML + plaintext) with IRS conditional language driven by governance.json irsStatus"
+    },
+    {
+      "id": "nonprofit-script-report",
+      "path": "scripts/nonprofit/report.mjs",
+      "role": "npm run nonprofit:report — assemble annual impact report skeleton from canonical contracts (mission, programs, KPIs, financials, governance, risks, transparency commitments)"
+    },
+    {
       "id": "p31-delta-language-md",
       "path": "docs/P31-DELTA-LANGUAGE.md",
       "role": "Normative DELTA vocabulary \u2014 same void/sky, layers, bridges, topology speaks; pairs docs/p31-delta-language.json + verify:delta-language"
@@ -620,6 +865,34 @@
       "role": "Long-form human passport (v5.1); structured store should render this class of content \u2014 single source targets"
     },
     {
+      "id": "cognitive-passport-v1-1-overlay-schema",
+      "path": "andromeda/04_SOFTWARE/p31ca/ground-truth/cognitive-passport-v1-1.schema.json",
+      "role": "p31.cognitivePassport/1.1.0 \u2014 additive overlay JSON Schema (Draft 7) for the v1.0.0 base. Documents optional identity / cognition / communication / accessibility / stylePreferences / context blocks introduced by WCD-PHOS-2026-01 (bus bar + face). SCHEMA constant in cognitive-passport/index.html and @p31/shared remain 1.0.0 until WCD-PHOS C-4 (generator rebuild) atomically bumps both. Spec is ready; bump is a separate atomic move.",
+      "optional": true
+    },
+    {
+      "id": "phos-voice-draft",
+      "path": "docs/PHOS-VOICE-DRAFT.md",
+      "role": "Track A keystone \u2014 operator-authored canonical voice of PHOS (the personality face of P31). \u00a73 contains OPERATOR-VOICE lines (do-not-edit) including 'For all the parents and kids out there raw dogging life \u2014 help is on the way.' Source for andromeda/04_SOFTWARE/p31ca/public/lib/p31-phos-voice.json (planned). Future verify:phos-voice (planned) enforces banned-vocabulary list and never-edit-OPERATOR-VOICE rule."
+    },
+    {
+      "id": "p31-meatspace-generator",
+      "path": "scripts/meatspace/generate.mjs",
+      "role": "Track D \u2014 print-ready PDF generator for the meatspace bridge. Pure Node (pdf-lib + qrcode). Reads colors from andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json via scripts/meatspace/lib/canon.mjs. Output: dist/meatspace/*.pdf (gitignored build artifacts). Shipped artifacts: business-card (D-2, 3.5\u00d72 with bleed, 2-page); elevator-card (D-4, 5\u00d73 with bleed, 2-page \u2014 front: 3-sentence pitch in Tier-0 stranger vocabulary per PHOS-VOICE-DRAFT \u00a72.11, back: operator-voice tagline + 1.5\" QR); qr-stickers (D-3, 12-up sheet on US Letter, 2.5\" square dark-face stickers with cut ticks). Planned: one-pager (D-5), pro-handout (D-6). Doctrine: each artifact is itself a Layer 1 (Gray Rock) surface \u2014 dark, minimal stimulus, no chroma except brand teal/coral; the QR is the activation that takes the human to Layer 2 (Alive) on the website. Run: npm run meatspace:print | npm run meatspace:print:business-card | npm run meatspace:print:elevator-card | npm run meatspace:print:qr-stickers."
+    },
+    {
+      "id": "p31-cogpass-reader",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/lib/p31-cogpass-reader.mjs",
+      "role": "Track B-4 \u2014 CogPass v1.1.0 reader (the activator). Browser ES module, ~16KB raw / ~5KB gzip, no dependencies. Reads p31-cogpass-v1 from localStorage (declared in privacy.html \u00a72f), normalizes to v1.1.0 shape, and configures the existing personalization stack: window.p31SubjectPrefs (contrast/density/motion/temperature) and window.p31Theme (theme/mode/appearance). Sets data-p31-cogpass / data-p31-cogpass-role / data-p31-glass / data-p31-animations / data-p31-phos-register / --p31-font-scale on <html> for CSS + nav consumers. Implements screenComfort cascade (<30 forces low-stim; <10 pins p31-gray-rock). Public API: window.p31CogPass.{get,set,clear,getRole,getDisplayName,onChange}. Events: p31:cogpass-loaded, p31:cogpass-cleared, p31:cogpass-error. SSR-safe. Will be loaded by BaseLayout.astro alongside p31-subject-prefs.js in WCD-PHOS-2026-01 B-2.",
+      "optional": true
+    },
+    {
+      "id": "p31-phos-guide",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/lib/p31-phos-guide.mjs",
+      "role": "Track C-1 \u2014 PHOS guide v0 (the FACE). Browser ES module, ~24KB raw / ~6KB gzip, no dependencies. Renders a 48px K\u2084-marked dot in the bottom-right corner that expands to a 320px personalization panel. Embeds the operator-canon \u00a73.1 (\"help is on the way\") and \u00a73.2 (first-greeting) voice lines as DEFAULT_VOICE; auto-fetches /lib/p31-phos-voice.json when present (operator extends \u00a74). Greeting + links are page-aware (/welcome /passport /lab /support + _default). Panel includes Screen Comfort slider (0-100, routes through subject-prefs cascade), Appearance toggle (auto/light/dark via window.p31Theme), and contextual links from voice. Auto-expands on /welcome on first visit (p31-phos-greeted flag); never re-appears after dismiss (p31-phos-dismissed flag). Honors data-p31-phos-guide=\"off\" (CogPass stylePreferences.phosGuide=false) and data-p31-gray-rock=\"pinned\" (screenComfort < 10 \u2014 dot stays inert, no wake). Suppresses p31-theme-switcher.mjs auto-mount by setting window.p31ThemeSwitcher pre-emptively (bus bar busBar.phos.absorbsThemeSwitcher=true). Public API: window.p31PhosGuide.{open,close,toggle,dismiss,isOpen,isDismissed,setVoice,refresh}. Events: p31:phos-opened, p31:phos-closed, p31:phos-dismissed. Listens for p31:cogpass-loaded / p31:cogpass-cleared to re-render with new role badge.",
+      "optional": true
+    },
+    {
       "id": "soup-entry",
       "path": "soup.html",
       "role": "C.A.R.S. (`soup.html`) \u2014 Collaborative Affective Realtime Sim; bonding deploy via sync"
@@ -804,6 +1077,82 @@
       "apply": "edit p31-facts.json when adding externally cited file/path/key claims",
       "verify": "npm run verify:facts",
       "note": "Declarative invariants: required paths, mesh + org keys, https worker URLs, no credential-like substrings in policy files"
+    },
+    {
+      "id": "p31ca-design-spec-bundle",
+      "from": [
+        "p31-universal-canon.json",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json",
+        "docs/P31-DESIGN-DOCTRINE.md",
+        "docs/ETHICAL-STYLE-MAP.md",
+        "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs",
+        "andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/docs/DESIGN-SPEC.md"
+      ],
+      "apply": "Edit p31-universal-canon.json or ground-truth when changing tokens or routes; edit DESIGN-SPEC.md when documenting new patterns or assets",
+      "verify": "npm run verify:alignment -- --verify (shape + sink mtime check)",
+      "note": "Human-readable design spec is a sink that documents the union of canonical tokens, ground truth contracts, and product registry"
+    },
+    {
+      "id": "p31ca-stylebook-tree-bundle",
+      "from": [
+        "p31-universal-canon.json",
+        "andromeda/04_SOFTWARE/p31ca/public/p31-style.css",
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-fluid.css",
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-theme-engine.mjs",
+        "andromeda/04_SOFTWARE/p31ca/docs/DESIGN-SPEC.md",
+        "andromeda/04_SOFTWARE/p31ca/docs/THEME-ENGINE.md",
+        "p31-constants.json",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json",
+        "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs",
+        "docs/PUBLIC-VOICE.md",
+        "docs/p31-public-voice-guardrails.json"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/stylebook/index.html",
+        "andromeda/04_SOFTWARE/p31ca/public/stylebook/sitemap.html",
+        "andromeda/04_SOFTWARE/p31ca/public/stylebook/routing.html",
+        "andromeda/04_SOFTWARE/p31ca/public/stylebook/accessibility.html",
+        "andromeda/04_SOFTWARE/p31ca/public/stylebook/metadata.html",
+        "andromeda/04_SOFTWARE/p31ca/public/stylebook/performance.html",
+        "andromeda/04_SOFTWARE/p31ca/public/stylebook/voice.html",
+        "andromeda/04_SOFTWARE/p31ca/public/stylebook/brand.html",
+        "andromeda/04_SOFTWARE/p31ca/public/stylebook/support-matrix.html",
+        "andromeda/04_SOFTWARE/p31ca/public/stylebook/contributing.html",
+        "andromeda/04_SOFTWARE/p31ca/public/llms.txt"
+      ],
+      "apply": "Edit canon/tokens, ground-truth, or voice guardrails when changing the system; edit individual stylebook pages when documenting new components, routes, or patterns",
+      "verify": "npm run verify:alignment -- --verify (shape + sink mtime check)",
+      "note": "Stylebook is a sink that documents the union of design tokens, theme engine, fluid CSS, route catalog, voice guardrails, and pattern library — the operator-facing canonical reference"
+    },
+    {
+      "id": "nonprofit-operations-bundle",
+      "from": [
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/governance.json",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/compliance.json",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/financials.json",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/donor-policy.json",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/programs.json",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/grants.json",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/legal.json",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/risk.json",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/nonprofit/people.json"
+      ],
+      "to": [
+        "docs/P31-NONPROFIT-OPERATIONS.md",
+        "docs/runbooks/nonprofit/board-meeting.md",
+        "docs/runbooks/nonprofit/donor-receipt.md",
+        "docs/runbooks/nonprofit/grant-application.md",
+        "docs/runbooks/nonprofit/incident-response.md",
+        "docs/runbooks/nonprofit/filing-calendar.md",
+        "docs/runbooks/nonprofit/onboarding.md",
+        "docs/runbooks/nonprofit/README.md"
+      ],
+      "apply": "Edit the relevant ground-truth/nonprofit/*.json contract; runbooks document procedures; automation scripts (status/calendar/receipt/report) consume the contracts",
+      "verify": "npm run verify:nonprofit (schema shape + cross-references); also runs as part of npm run verify",
+      "note": "Nine canonical contracts cover the operational layer of P31 Labs as a 501(c)(3): governance, compliance, financials, donor-policy, programs, grants, legal, risk, people. Master index at docs/P31-NONPROFIT-OPERATIONS.md."
     },
     {
       "id": "mesh-architecture-canon-suite",
@@ -1265,6 +1614,70 @@
       "apply": "Bump p31.cognitivePassport id: set SCHEMA in index.html then COGNITIVE_PASSPORT_SCHEMA in @p31/shared",
       "verify": "npm run verify:cognitive-passport-schema",
       "note": "Partial clone without andromeda skips; full tree must match"
+    },
+    {
+      "id": "cognitive-passport-v1-1-overlay",
+      "from": [
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/cognitive-passport-v1-1.schema.json"
+      ],
+      "to": [
+        "(planned) cognitive-passport/index.html SCHEMA bump 1.0.0 \u2192 1.1.0",
+        "(planned) andromeda/04_SOFTWARE/packages/shared/src/cognitive-passport-schema.ts COGNITIVE_PASSPORT_SCHEMA bump",
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-cogpass-reader.mjs (configurator over p31SubjectPrefs + p31Theme; ships in WCD-PHOS-2026-01 B-4)",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json busBar.roles.cogPassAccessLevel"
+      ],
+      "apply": "Author phase complete. Reader (B-4) ships ahead of the SCHEMA bump and reads any document tagged v1.0.0 OR v1.1.0 \u2014 normalize() supplies safe defaults for absent v1.1.0 blocks. Atomic bump of SCHEMA constants is WCD-PHOS-2026-01 C-4 (generator rebuild). BaseLayout wiring is B-2.",
+      "verify": "JSON Schema Draft 7 validity (manual today; npm run verify:cognitive-passport-overlay planned); npm run verify:bus-bar (planned) checks busBar.roles enum matches identity.accessLevel enum in this schema",
+      "note": "Additive: every v1.0.0 document is a valid v1.1.0 document (additionalProperties:true; all v1.1.0 blocks optional). See overlay schema doctrine block."
+    },
+    {
+      "id": "p31-cogpass-reader-binds-engines",
+      "from": [
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-cogpass-reader.mjs",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/cognitive-passport-v1-1.schema.json"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-subject-prefs.js (window.p31SubjectPrefs.set call surface: contrast / density / motion / temp)",
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-theme-engine.mjs (window.p31Theme.setTheme / setMode / setAppearance call surface)",
+        "<html> attributes consumed by CSS + nav: data-p31-cogpass, data-p31-cogpass-role, data-p31-glass, data-p31-animations, data-p31-phos-guide, data-p31-phos-register, --p31-font-scale, p31-gray-rock class (screenComfort < 10)",
+        "(planned) andromeda/04_SOFTWARE/p31ca/src/layouts/BaseLayout.astro <head> \u2014 add `<script type=\"module\" is:inline src=\"/lib/p31-cogpass-reader.mjs\"></script>` after p31-subject-prefs.js (B-2)"
+      ],
+      "apply": "Reader is a CONFIGURATOR, not a parallel state store. It reads CogPass once on DOMContentLoaded and translates each axis into the corresponding existing engine API call. Density vocabulary mismatch (CogPass v1.1: minimal/standard/dense/comfortable/compact/spacious vs p31-subject-prefs: comfortable/compact/spacious) is mediated by densityToSubjectPrefs(). Motion 'auto' resolves via prefers-reduced-motion media query. phosRegister 'auto' resolves from communication.preferredTone. screenComfort cascade is enforced (<30 disables glass+animations and reduces motion; <10 pins p31-gray-rock).",
+      "verify": "Manual today: load a v1.1.0 document into localStorage 'p31-cogpass-v1' on a page that includes both p31-subject-prefs.js and p31-theme-engine.mjs and p31-cogpass-reader.mjs; verify <html> data-* attributes match passport, document.dispatchEvent fires p31:cogpass-loaded once. CI: npm run verify:cogpass-reader (planned, jsdom + vitest). Until then: node --check andromeda/04_SOFTWARE/p31ca/public/lib/p31-cogpass-reader.mjs."
+    },
+    {
+      "id": "p31-phos-guide-absorbs-switcher",
+      "from": [
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-phos-guide.mjs",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json#/busBar/phos",
+        "docs/PHOS-VOICE-DRAFT.md \u00a73.1 + \u00a73.2 (DEFAULT_VOICE seed)"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-theme-switcher.mjs (auto-mount suppressed via pre-emptive window.p31ThemeSwitcher assignment with _supersededByPhos flag)",
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-theme-engine.mjs (PHOS panel calls window.p31Theme.setAppearance directly)",
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-subject-prefs.js (Screen Comfort slider routes through window.p31SubjectPrefs.set)",
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-cogpass-reader.mjs (PHOS reads role + display name via window.p31CogPass; re-renders on p31:cogpass-loaded / p31:cogpass-cleared)",
+        "(planned) andromeda/04_SOFTWARE/p31ca/public/lib/p31-phos-voice.json \u2014 operator extends docs/PHOS-VOICE-DRAFT.md \u00a74; PHOS auto-fetches and merges over DEFAULT_VOICE",
+        "(planned) andromeda/04_SOFTWARE/p31ca/src/layouts/BaseLayout.astro <head> \u2014 add `<script type=\"module\" is:inline src=\"/lib/p31-phos-guide.mjs\"></script>` after p31-cogpass-reader.mjs (B-2)"
+      ],
+      "apply": "PHOS guide is the single personalization affordance per busBar.phos.absorbsThemeSwitcher=true. It pre-emptively claims window.p31ThemeSwitcher to suppress the floating switcher widget's setTimeout(100) auto-mount. PHOS embeds the same controls (theme appearance + Screen Comfort) inside its own panel and calls the engines directly. DEFAULT_VOICE is baked from PHOS-VOICE-DRAFT \u00a73.1 + \u00a73.2 (operator hand) so PHOS speaks immediately on first deploy without waiting for the voice JSON.",
+      "verify": "Smoke (this commit): node /tmp/phos-guide-smoke.mjs \u2014 26/26 green covering voice canon, banned-vocabulary scan (\u00a72.12), banned-urgency-patterns scan (\u00a72.13), naval/military metaphor scan (.cursorrules \u00a71), K\u2084 SVG structure (6 edges, 4 vertices, coral core), voice-resolution path normalization. Future: npm run verify:phos-voice (planned) and visual e2e under playwright."
+    },
+    {
+      "id": "p31-bus-bar",
+      "from": [
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json#/busBar",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/cognitive-passport-v1-1.schema.json#/properties/identity/properties/accessLevel",
+        "docs/PHOS-VOICE-DRAFT.md \u00a73.3"
+      ],
+      "to": [
+        "(planned) BaseLayout.astro nav slot \u2014 renders navByRole[accessLevel] link set",
+        "(planned) andromeda/04_SOFTWARE/p31ca/public/lib/p31-phos-guide.mjs \u2014 absorbs theme switcher per busBar.phos.absorbsThemeSwitcher",
+        "(planned) andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs review \u2014 enforces busBar.constraints.maxProducts (9, the cage)",
+        "(planned) andromeda/04_SOFTWARE/p31ca/src/pages/{welcome,support,research,lab,ops}.astro \u2014 each renders into a busBar slot"
+      ],
+      "apply": "WCD-PHOS-2026-01 BUS1 (this commit) defines the spine. BUS2 (nav-by-role component), BUS3 (route consolidation), BUS4 (BONDING cross-origin bridge) graft onto it. Nine-MVP cage constraint is binding doctrine: see PHOS-VOICE-DRAFT.md \u00a73.3.",
+      "verify": "npm run verify:bus-bar (planned). Manual today: every key in busBar.productSlots must exist in registryAppUrlInvariants OR be subdomain-only (bonding); every value must be a key in busBar.slots; every entry in navByRole must be a key in busBar.slots."
     },
     {
       "id": "cognitive-passport-audience-matrix-suite",

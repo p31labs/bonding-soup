@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0e1117" />
+<title>P31 terminal — local personas + commands</title>
+<link rel="icon" href="/favicon.png" />
+<style>
+  /* P31 universal canon tokens (subset, hub appearance) */
+  :root {
+    --p31-paper:    #f4f4f5;   /* primary text on dark */
+    --p31-cloud:    #d8d6d0;   /* secondary text */
+    --p31-cloud-2:  #94a3b8;   /* tertiary text */
+    --p31-teal:     #25897d;   /* hub anchor accent */
+    --p31-teal-soft:#1f6f66;
+    --p31-coral:    #d95f5f;   /* danger / sensitive */
+    --p31-butter:   #ddb567;   /* warning */
+    --p31-lavender: #9c7cd9;   /* user voice */
+    --p31-phosphorus:#6ee7b7;  /* success */
+    --bg-0:         #0a0d12;   /* base */
+    --bg-1:         #0e1117;   /* surface */
+    --bg-2:         #161b22;   /* surface raised */
+    --bg-3:         #21262d;   /* surface high */
+    --border:       #30363d;
+    --font-mono:    'JetBrains Mono','SF Mono','Menlo','Consolas',monospace;
+    --font-sans:    system-ui,-apple-system,'Segoe UI',sans-serif;
+    --tap:          44px;       /* min tap target */
+    --safe-bottom:  env(safe-area-inset-bottom, 0px);
+    --safe-top:     env(safe-area-inset-top, 0px);
+  }
+
+  *,*::before,*::after { box-sizing: border-box; margin:0; padding:0; }
+  html,body { height:100%; overflow:hidden; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-0);
+    color: var(--p31-paper);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--bg-1);
+    border-bottom: 1px solid var(--border);
+    padding: calc(var(--safe-top) + 0.6rem) 0.9rem 0.6rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .logo {
+    font-family: var(--font-mono);
+    font-weight: 700; font-size: 0.95rem;
+    color: var(--p31-teal);
+    letter-spacing: -0.01em;
+  }
+  .logo .accent { color: var(--p31-phosphorus); }
+  .mode-tabs {
+    display: flex; gap: 0.25rem; margin-left: auto;
+    background: var(--bg-2); border-radius: 8px; padding: 3px;
+  }
+  .mode-tab {
+    background: transparent; border: 0; color: var(--p31-cloud-2);
+    font: 600 0.78rem var(--font-sans);
+    padding: 0.45rem 0.75rem; border-radius: 6px; cursor: pointer;
+    min-height: 32px;
+  }
+  .mode-tab.active {
+    background: var(--p31-teal); color: var(--p31-paper);
+  }
+  .header-status {
+    font: 500 0.7rem var(--font-mono);
+    color: var(--p31-cloud-2);
+    padding: 0.2rem 0.5rem; border: 1px solid var(--border); border-radius: 4px;
+  }
+  .header-status.green  { color: var(--p31-phosphorus); border-color: var(--p31-teal-soft); }
+  .header-status.amber  { color: var(--p31-butter);    border-color: var(--p31-butter); }
+  .header-status.red    { color: var(--p31-coral);     border-color: var(--p31-coral); }
+
+  /* MAIN scroll area */
+  main {
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.75rem 0.9rem 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  main::-webkit-scrollbar { width: 6px; }
+  main::-webkit-scrollbar-thumb { background: var(--bg-3); border-radius: 3px; }
+
+  /* MESSAGES */
+  .msg {
+    margin: 0 0 0.85rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-1);
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+  }
+  .msg.user        { background: var(--bg-2); border-color: var(--p31-lavender); }
+  .msg.persona     { background: var(--bg-1); border-color: var(--p31-teal-soft); }
+  .msg.system      { background: var(--bg-1); border-color: var(--border); color: var(--p31-cloud-2); font-size: 0.85rem; }
+  .msg.error       { background: rgba(217,95,95,0.08); border-color: var(--p31-coral); color: var(--p31-coral); }
+  .msg.command-out { background: var(--bg-0); font-family: var(--font-mono); font-size: 0.78rem; white-space: pre-wrap; line-height: 1.4; max-height: 60vh; overflow-y: auto; }
+  .msg .who {
+    display: block; font: 600 0.7rem var(--font-mono);
+    color: var(--p31-cloud-2); margin-bottom: 0.3rem; text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .msg.user .who    { color: var(--p31-lavender); }
+  .msg.persona .who { color: var(--p31-teal); }
+  .msg .body { white-space: pre-wrap; }
+  .msg .meta {
+    margin-top: 0.4rem; font: 500 0.7rem var(--font-mono); color: var(--p31-cloud-2);
+  }
+  .msg.persona.sensitive::after {
+    content: '🛡 LOCAL ONLY — operator-confidential persona';
+    display: block; margin-top: 0.4rem; font: 600 0.65rem var(--font-mono);
+    color: var(--p31-butter);
+  }
+
+  /* COMMAND MODE list */
+  .cmd-list { display: grid; grid-template-columns: 1fr; gap: 0.5rem; }
+  @media (min-width: 600px) {
+    .cmd-list { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 900px) {
+    .cmd-list { grid-template-columns: 1fr 1fr 1fr; }
+  }
+  .cmd-card {
+    background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.7rem 0.85rem; cursor: pointer; transition: border-color 0.15s;
+    min-height: var(--tap);
+  }
+  .cmd-card:hover, .cmd-card:focus { border-color: var(--p31-teal); outline: none; }
+  .cmd-card .cmd-key { font: 600 0.85rem var(--font-mono); color: var(--p31-paper); }
+  .cmd-card .cmd-desc { font: 400 0.72rem var(--font-sans); color: var(--p31-cloud-2); margin-top: 0.2rem; }
+  .cmd-card.running { border-color: var(--p31-butter); }
+  .cmd-card.success { border-color: var(--p31-phosphorus); }
+  .cmd-card.error   { border-color: var(--p31-coral); }
+
+  /* INPUT BAR (sticky bottom, mobile-friendly) */
+  .input-bar {
+    background: var(--bg-1);
+    border-top: 1px solid var(--border);
+    padding: 0.55rem 0.6rem calc(var(--safe-bottom) + 0.55rem);
+    display: flex; gap: 0.5rem; align-items: flex-end;
+  }
+  .persona-pick {
+    background: var(--bg-2); color: var(--p31-paper);
+    border: 1px solid var(--border); border-radius: 6px;
+    font: 600 0.78rem var(--font-mono);
+    padding: 0 0.5rem; height: var(--tap);
+    appearance: none; -webkit-appearance: none;
+  }
+  .persona-pick.sensitive { color: var(--p31-butter); border-color: var(--p31-butter); }
+  .input-text {
+    flex: 1; background: var(--bg-2); color: var(--p31-paper);
+    border: 1px solid var(--border); border-radius: 6px;
+    font: 400 0.95rem var(--font-mono);
+    padding: 0.6rem 0.75rem;
+    min-height: var(--tap); max-height: 30vh;
+    resize: none; outline: none;
+  }
+  .input-text:focus { border-color: var(--p31-teal); }
+  .send-btn {
+    background: var(--p31-teal); color: var(--p31-paper);
+    border: 0; border-radius: 6px;
+    font: 700 0.85rem var(--font-sans);
+    padding: 0 1rem; height: var(--tap); cursor: pointer; min-width: var(--tap);
+  }
+  .send-btn:disabled { background: var(--bg-3); color: var(--p31-cloud-2); cursor: not-allowed; }
+  .send-btn.busy { background: var(--p31-butter); color: var(--bg-0); }
+
+  /* HIDE/SHOW per mode */
+  body[data-mode='cmd'] .input-bar { display: none; }
+  body[data-mode='chat'] .cmd-list { display: none; }
+
+  .footer-tip {
+    font: 400 0.7rem var(--font-mono); color: var(--p31-cloud-2);
+    text-align: center; padding: 0.4rem 0.8rem;
+    border-top: 1px solid var(--border); background: var(--bg-1);
+  }
+  .footer-tip a { color: var(--p31-teal); text-decoration: none; }
+
+  /* code blocks inside persona output */
+  .body code, .body pre {
+    font-family: var(--font-mono); font-size: 0.82rem;
+    background: var(--bg-0); padding: 1px 4px; border-radius: 3px;
+  }
+  .body pre { display: block; padding: 0.5rem 0.75rem; margin: 0.4rem 0; overflow-x: auto; }
+</style>
+</head>
+<body data-mode="chat">
+
+<header>
+  <div class="logo">P31 <span class="accent">▲</span> terminal</div>
+  <div class="mode-tabs" role="tablist">
+    <button class="mode-tab active" data-mode="chat" role="tab">chat</button>
+    <button class="mode-tab" data-mode="cmd" role="tab">cmd</button>
+  </div>
+  <span id="status" class="header-status">…</span>
+</header>
+
+<main id="scroll">
+  <div id="msgs"></div>
+  <div id="cmd-list" class="cmd-list" hidden></div>
+</main>
+
+<form class="input-bar" id="form" autocomplete="off">
+  <select id="persona" class="persona-pick" aria-label="persona"></select>
+  <textarea id="input" class="input-text" rows="1" placeholder="message persona…" aria-label="message"></textarea>
+  <button id="send" class="send-btn" type="submit">send</button>
+</form>
+
+<div class="footer-tip" id="footer-tip">
+  <span>local only · no cloud · 0% middleman · </span>
+  <a href="/">control plane</a> · <a href="/desk">desk</a> · <a href="/cli">legacy cli</a>
+</div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const msgsEl = $("msgs");
+  const cmdListEl = $("cmd-list");
+  const personaSel = $("persona");
+  const inputEl = $("input");
+  const sendBtn = $("send");
+  const statusEl = $("status");
+  const formEl = $("form");
+
+  const COMMANDS = [
+    { key: "doctor",         desc: "P31 doctor — full health check",            cmd: "npm run doctor" },
+    { key: "verify",         desc: "Full verify chain (~70s)",                  cmd: "npm run verify", slow: true },
+    { key: "fleet:probe",    desc: "Fleet status (GREEN/AMBER/RED)",            cmd: "npm run fleet:probe" },
+    { key: "fleet:free-host",desc: "Show safe-to-stop services (dry)",          cmd: "npm run fleet:free-host" },
+    { key: "deploy:p31ca",   desc: "Deploy hub to Cloudflare Pages",            cmd: "npm run deploy:p31ca" },
+    { key: "release:public", desc: "Full ship-bar gate (~2 min)",               cmd: "npm run release:public", slow: true },
+    { key: "build:phos-voice", desc: "Rebuild PHOS voice JSON",                 cmd: "npm run build:phos-voice" },
+    { key: "verify:phos-voice",desc: "Verify PHOS voice locks",                 cmd: "npm run verify:phos-voice" },
+    { key: "p31:ci",         desc: "Local CI parity (~70s)",                    cmd: "npm run p31:ci", slow: true },
+    { key: "fun",            desc: "Operator joy — one line",                   cmd: "npm run fun" },
+  ];
+
+  let busy = false;
+
+  function append(kind, who, body, meta) {
+    const div = document.createElement("div");
+    div.className = "msg " + kind;
+    if (kind === "persona" && SENSITIVE.has(personaSel.value)) div.classList.add("sensitive");
+    if (who) {
+      const w = document.createElement("span"); w.className = "who"; w.textContent = who;
+      div.appendChild(w);
+    }
+    const b = document.createElement("div"); b.className = "body"; b.textContent = body;
+    div.appendChild(b);
+    if (meta) {
+      const m = document.createElement("div"); m.className = "meta"; m.textContent = meta;
+      div.appendChild(m);
+    }
+    msgsEl.appendChild(div);
+    requestAnimationFrame(() => { document.getElementById("scroll").scrollTop = 1e9; });
+    return div;
+  }
+
+  const SENSITIVE = new Set(["p31-counsel","p31-triage","p31-phos"]);
+
+  async function loadPersonas() {
+    statusEl.textContent = "loading…";
+    statusEl.className = "header-status";
+    try {
+      const r = await fetch("/api/personas");
+      const j = await r.json();
+      personaSel.innerHTML = "";
+      let firstMaterialized = null;
+      for (const p of j.personas) {
+        const opt = document.createElement("option");
+        opt.value = p.id;
+        opt.textContent = p.id + (p.materialized ? "" : " (not built)");
+        opt.disabled = !p.materialized;
+        personaSel.appendChild(opt);
+        if (p.materialized && !firstMaterialized) firstMaterialized = p.id;
+      }
+      if (firstMaterialized) personaSel.value = firstMaterialized;
+      const built = j.personas.filter(p => p.materialized).length;
+      statusEl.textContent = built + "/10 personas · " + (j.memAvailMiB ?? "?") + " MiB free";
+      if (built === 0) {
+        statusEl.className = "header-status red";
+        append("system","setup needed","No personas materialized. Run npm run ollama:setup on this host (needs ollama installed). Until then, use cmd mode for npm scripts.");
+      } else if ((j.memAvailMiB ?? 0) < 970) {
+        statusEl.className = "header-status amber";
+        append("system","ram amber","Ollama is up and "+built+" personas exist, but only "+j.memAvailMiB+" MiB free. Smallest persona needs ≥970 MiB. Try: npm run fleet:free-host -- --apply --aggressive");
+      } else {
+        statusEl.className = "header-status green";
+      }
+      onPersonaChange();
+    } catch (e) {
+      statusEl.textContent = "offline";
+      statusEl.className = "header-status red";
+      append("error","backend","Could not reach /api/personas — is the command center server running?");
+    }
+  }
+
+  function onPersonaChange() {
+    if (SENSITIVE.has(personaSel.value)) {
+      personaSel.classList.add("sensitive");
+    } else {
+      personaSel.classList.remove("sensitive");
+    }
+  }
+  personaSel.addEventListener("change", onPersonaChange);
+
+  inputEl.addEventListener("input", () => {
+    inputEl.style.height = "auto";
+    inputEl.style.height = Math.min(inputEl.scrollHeight, window.innerHeight * 0.3) + "px";
+  });
+  inputEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey && !e.metaKey) { e.preventDefault(); formEl.requestSubmit(); }
+  });
+
+  formEl.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (busy) return;
+    const prompt = inputEl.value.trim();
+    if (!prompt) return;
+    const persona = personaSel.value;
+    if (!persona) { append("error","no persona","Pick a persona first (none are materialized — see status badge)."); return; }
+    append("user","you", prompt);
+    inputEl.value = ""; inputEl.style.height = "auto";
+    busy = true; sendBtn.disabled = true; sendBtn.classList.add("busy"); sendBtn.textContent = "…";
+    try {
+      const r = await fetch("/api/persona-chat", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ persona, prompt }),
+      });
+      const j = await r.json();
+      if (j.ok) {
+        const meta = persona + " · " + j.seconds + "s" + (j.tokPerSec ? " · " + j.tokPerSec + " tok/s" : "");
+        append("persona", persona, j.response || "(empty)", meta);
+      } else {
+        append("error", persona, j.error || "unknown error");
+      }
+    } catch (err) {
+      append("error","network", err.message);
+    } finally {
+      busy = false; sendBtn.disabled = false; sendBtn.classList.remove("busy"); sendBtn.textContent = "send";
+    }
+  });
+
+  // CMD MODE
+  function renderCmds() {
+    cmdListEl.innerHTML = "";
+    for (const c of COMMANDS) {
+      const card = document.createElement("button");
+      card.className = "cmd-card"; card.type = "button";
+      card.dataset.key = c.key;
+      card.innerHTML = '<div class="cmd-key">'+c.key+'</div><div class="cmd-desc">'+c.desc+(c.slow?' · slow':'')+'</div>';
+      card.addEventListener("click", () => runCmd(c));
+      cmdListEl.appendChild(card);
+    }
+  }
+
+  async function runCmd(c) {
+    const cards = document.querySelectorAll(".cmd-card");
+    cards.forEach(x => { if (x.dataset.key === c.key) x.classList.add("running"); });
+    append("system", "cmd", "▶ " + c.cmd);
+    const out = append("command-out", "stdout", "");
+    try {
+      const r = await fetch("/api/run", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ action: c.key }),
+      });
+      const j = await r.json();
+      out.querySelector(".body").textContent = (j.stdout || "") + (j.stderr ? "\n--- stderr ---\n" + j.stderr : "");
+      cards.forEach(x => { if (x.dataset.key === c.key) { x.classList.remove("running"); x.classList.add(j.code === 0 ? "success" : "error"); } });
+    } catch (err) {
+      out.querySelector(".body").textContent = "REQUEST ERROR: " + err.message + "\nIf this command isn't in /api/run's whitelist, run it via the legacy /cli dashboard or terminal.";
+      cards.forEach(x => { if (x.dataset.key === c.key) { x.classList.remove("running"); x.classList.add("error"); } });
+    }
+  }
+
+  // MODE TABS
+  document.querySelectorAll(".mode-tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.body.dataset.mode = tab.dataset.mode;
+      document.querySelectorAll(".mode-tab").forEach(t => t.classList.toggle("active", t === tab));
+      cmdListEl.hidden = (tab.dataset.mode !== "cmd");
+      msgsEl.hidden = false;  // keep scroll visible
+      if (tab.dataset.mode === "chat") inputEl.focus();
+    });
+  });
+
+  // BOOT
+  append("system", "p31 terminal", "local only. no cloud. no middleman.\n\nchat mode: pick a persona, type, send.\ncmd mode: tap a card to run a whitelisted npm script.\n\noperator-confidential personas (counsel/triage/phos) only run locally — they are blocked from any cloud comparison surface by design.");
+  renderCmds();
+  loadPersonas();
+})();
+</script>
+</body>
+</html>

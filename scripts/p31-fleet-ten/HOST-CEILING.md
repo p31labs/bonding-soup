@@ -78,7 +78,7 @@ the operator runs is comparable in footprint.
 - **`npm run verify:cloud-vs-local`** — static verifier on the A/B harness.
 - **`npm run verify:fleet-corpus`** — static verifier on the test corpus
   (schema, persona coverage, operator-confidential `_warning` declarations).
-- All four verifiers are on the root `verify` ship bar (76 gates total).
+- All four verifiers are on the root `verify` ship bar (77 gates total after `verify:p31-terminal` was added 2026-05-02 afternoon).
 
 ---
 

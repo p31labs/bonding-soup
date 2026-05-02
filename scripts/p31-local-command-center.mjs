@@ -776,6 +776,95 @@ function sendAsset(res, req, absPath, contentType) {
   });
 }
 
+const OLLAMA_BASE = process.env.OLLAMA_BASE || "http://127.0.0.1:11434";
+const SENSITIVE_PERSONAS = new Set(["p31-counsel", "p31-triage", "p31-phos"]);
+const PERSONA_TIMEOUT_MS = Number(process.env.P31_PERSONA_TIMEOUT_MS || 120000);
+const FLEET_PERSONAS = [
+  "p31-mechanic","p31-firmware","p31-counsel","p31-narrator","p31-triage",
+  "p31-quick","p31-phos","p31-scribe","p31-oracle","p31-debrief",
+];
+
+async function handlePersonasList(res) {
+  res.writeHead(200, CC_HDR.json);
+  let materialized = [];
+  let memAvailMiB = null;
+  try {
+    const meminfo = fs.readFileSync("/proc/meminfo", "utf8");
+    memAvailMiB = Math.round(Number(meminfo.match(/MemAvailable:\s+(\d+)/)?.[1] || 0) / 1024);
+  } catch { /* not Linux */ }
+  try {
+    const ctl = new AbortController();
+    const tk = setTimeout(() => ctl.abort(), 3000);
+    const r = await fetch(OLLAMA_BASE + "/api/tags", { signal: ctl.signal });
+    clearTimeout(tk);
+    if (r.ok) {
+      const j = await r.json();
+      const names = (j.models || []).map((m) => (m.name || "").split(":")[0]);
+      materialized = FLEET_PERSONAS.filter((p) => names.includes(p));
+    }
+  } catch { /* ollama down */ }
+  const personas = FLEET_PERSONAS.map((id) => ({
+    id,
+    materialized: materialized.includes(id),
+    sensitive: SENSITIVE_PERSONAS.has(id),
+  }));
+  res.end(JSON.stringify({
+    schema: "p31.personas/1.0.0",
+    personas,
+    memAvailMiB,
+    ollamaBase: OLLAMA_BASE,
+    note: "sensitive personas (counsel/triage/phos) refuse cloud lane on the A/B harness; this UI is local-only and safe.",
+  }));
+}
+
+async function handlePersonaChat(req, res) {
+  let body = "";
+  req.on("data", (chunk) => { body += chunk; if (body.length > 64 * 1024) req.destroy(); });
+  req.on("end", async () => {
+    let parsed;
+    try { parsed = JSON.parse(body); } catch {
+      res.writeHead(400, CC_HDR.json); res.end(JSON.stringify({ error: "bad json" })); return;
+    }
+    const { persona, prompt } = parsed || {};
+    if (!persona || typeof persona !== "string" || !FLEET_PERSONAS.includes(persona)) {
+      res.writeHead(400, CC_HDR.json); res.end(JSON.stringify({ error: "unknown persona" })); return;
+    }
+    if (!prompt || typeof prompt !== "string" || prompt.length > 16000) {
+      res.writeHead(400, CC_HDR.json); res.end(JSON.stringify({ error: "missing or oversized prompt (max 16000 chars)" })); return;
+    }
+    const t0 = Date.now();
+    const ctl = new AbortController();
+    const tk = setTimeout(() => ctl.abort(), PERSONA_TIMEOUT_MS);
+    try {
+      const r = await fetch(OLLAMA_BASE + "/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ model: persona, prompt, stream: false, keep_alive: 0 }),
+        signal: ctl.signal,
+      });
+      const dt = (Date.now() - t0) / 1000;
+      if (!r.ok) {
+        const errBody = await r.text().catch(() => "");
+        res.writeHead(200, CC_HDR.json);
+        res.end(JSON.stringify({ ok: false, persona, seconds: dt, error: r.status + " " + errBody.slice(0, 400) }));
+        return;
+      }
+      const j = await r.json();
+      res.writeHead(200, CC_HDR.json);
+      res.end(JSON.stringify({
+        ok: true, persona, seconds: Number(dt.toFixed(2)),
+        response: j.response, evalCount: j.eval_count,
+        tokPerSec: j.eval_count && j.eval_duration ? Number((j.eval_count / (j.eval_duration / 1e9)).toFixed(2)) : null,
+      }));
+    } catch (e) {
+      res.writeHead(200, CC_HDR.json);
+      res.end(JSON.stringify({ ok: false, persona, error: e.message }));
+    } finally {
+      clearTimeout(tk);
+    }
+  });
+}
+
 const server = http.createServer((req, res) => {
   if (req.method === "GET" && (req.url === "/" || req.url === "/index.html")) {
     res.writeHead(200, CC_HDR.html);
@@ -791,6 +880,25 @@ const server = http.createServer((req, res) => {
       res.writeHead(404, CC_HDR.text);
       res.end("CLI dashboard not found — run npm run dashboard");
     }
+    return;
+  }
+  if (req.method === "GET" && (req.url === "/term" || req.url === "/terminal")) {
+    const termPath = path.join(repoRoot, "command-center-terminal.html");
+    if (fs.existsSync(termPath)) {
+      res.writeHead(200, CC_HDR.html);
+      res.end(fs.readFileSync(termPath, "utf8"));
+    } else {
+      res.writeHead(404, CC_HDR.text);
+      res.end("P31 terminal UI not found at command-center-terminal.html");
+    }
+    return;
+  }
+  if (req.method === "GET" && req.url === "/api/personas") {
+    handlePersonasList(res);
+    return;
+  }
+  if (req.method === "POST" && req.url === "/api/persona-chat") {
+    handlePersonaChat(req, res);
     return;
   }
   const assetBase = req.url && req.url.split("?")[0];

@@ -67,6 +67,7 @@ function printHelp() {
         dim("npm run fun:shower / fun:bowl") +
         "",
       "  " + cyan("connect") + "       CONNECTION spine — " + dim("npm run connection"),
+      "  " + cyan("chat") + "          P31 terminal — chat with local personas + run whitelisted commands (alias: " + cyan("term") + ", " + cyan("terminal") + ")",
       "  " + cyan("triper") + "        MVP certification system — " + cyan("triper cert") + " · " + cyan("triper status") + " · " + cyan("triper exec") + " · " + cyan("triper <suite>"),
       "  " + cyan("verify") + "        " + dim("npm run verify"),
       "  " + cyan("facts") + "         " + dim("npm run verify:facts"),
@@ -249,6 +250,11 @@ async function main() {
 
   if (cmd === "command-center" || cmd === "cc") {
     const code = await runNodeScript("scripts/p31-local-command-center.mjs", fwd);
+    process.exit(code);
+  }
+
+  if (cmd === "chat" || cmd === "term" || cmd === "terminal") {
+    const code = await runNodeScript("scripts/p31-terminal-cli.mjs", fwd);
     process.exit(code);
   }
 

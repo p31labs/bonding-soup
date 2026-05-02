@@ -883,7 +883,24 @@
     {
       "id": "cwp-bus4-cogpass-bridge-2026-05",
       "path": "docs/CWP-BUS4-COGPASS-BRIDGE-2026-05.md",
-      "role": "WCD-PHOS-07 / BUS4 design spec \u2014 cross-origin Cognitive Passport bridge (postMessage iframe). Closes the bus bar's cross-origin gap so BONDING (https://bonding.p31ca.org) and any future cross-origin P31 surface can read the same CogPass without copying the JSON across origins. ~700 lines, 16 sections: TL;DR, problem statement, ground truth, 5 strategies considered (URL / shared cookie / path-merge / KV+ID cookie / postMessage \u2014 with single-table triage in \u00a715.4), recommended postMessage iframe bridge in detail (actors / handshake / single rule \u2014 'bridge HTML imports normalize from reader, never duplicates'), architecture (HTML + helper + wire contract p31.cogPassBridge/1.0.0), file inventory (~340 LOC across 2 repos), privacy implications + disclosure plan (verbatim policy paragraph + UI banner copy), failure modes + graceful degradation matrix, verify:cogpass-bridge gate (planned, locks 4 atomic surfaces), 3-tier testing strategy (Node unit + Playwright e2e + manual runbook), 5-phase rollout plan, alignment registry edits to land WITH Phase 1, 5 open questions for operator. Author phase complete; implementation deferred per AuDHD wedge planning. The single rule that prevents drift: bridge HTML imports normalize() from p31-cogpass-reader.mjs \u2014 zero duplicate normalization logic."
+      "role": "WCD-PHOS-07 / BUS4 design spec \u2014 cross-origin Cognitive Passport bridge (postMessage iframe). Closes the bus bar's cross-origin gap so BONDING (https://bonding.p31ca.org) and any future cross-origin P31 surface can read the same CogPass without copying the JSON across origins. ~700 lines, 16 sections. PHASE 1 NOW LIVE: cogpass-bridge.html + cogpass-bridge.schema.json + busBar.crossOriginBridge ground-truth block + privacy.html \u00a72g + verify:cogpass-bridge ALL SHIPPED. Phases 2-5 (helper module / BONDING integration / PHOS UI affordance / partner allowlist expansion) tracked in spec \u00a712. The single rule that prevents drift across schema bumps: bridge HTML imports normalize() from p31-cogpass-reader.mjs \u2014 zero duplicate normalization logic. Locked by verify:cogpass-bridge."
+    },
+    {
+      "id": "cogpass-bridge-html",
+      "path": "andromeda/04_SOFTWARE/p31ca/public/cogpass-bridge.html",
+      "role": "BUS4 Phase 1 \u2014 the bridge endpoint at https://p31ca.org/cogpass-bridge.html. ~115 lines. Reads localStorage('p31-cogpass-v1'), normalizes via /lib/p31-cogpass-reader.mjs (imported, NOT duplicated \u2014 the Single Rule), and replies to postMessage requests from allowlisted origins. Strict CSP (default-src 'none'; script-src 'self'; base-uri 'none'; form-action 'none'). Allowlist hardcoded: https://bonding.p31ca.org. Wire contract p31.cogPassBridge/1.0.0. Locked by scripts/verify-cogpass-bridge.mjs against busBar.crossOriginBridge.allowedOrigins.",
+      "optional": true
+    },
+    {
+      "id": "cogpass-bridge-schema",
+      "path": "andromeda/04_SOFTWARE/p31ca/ground-truth/cogpass-bridge.schema.json",
+      "role": "BUS4 Phase 1 \u2014 JSON Schema Draft 7 for the postMessage envelope p31.cogPassBridge/1.0.0. Defines cogpass:get / cogpass:reply / cogpass:ready message shapes with nonce + schema fields and conditional 'present:false implies passport:null' constraint. Doctrine block embedded (single_rule, privacy, origin_validation, graceful_degradation). $id locked atomically against bridge HTML SCHEMA constant by verify:cogpass-bridge.",
+      "optional": true
+    },
+    {
+      "id": "verify-cogpass-bridge-script",
+      "path": "scripts/verify-cogpass-bridge.mjs",
+      "role": "BUS4 Phase 1 CI gate (~190 lines). Locks 7 atomic invariants: (1) bridge HTML exists; (2) bridge imports normalize() from /lib/p31-cogpass-reader.mjs AND defines no local normalize (Single Rule); (3) SCHEMA constant in HTML === 'p31.cogPassBridge/1.0.0' verbatim; (4) schema JSON exists + parses; (5) schema $id matches; (6) ALLOWED_ORIGINS in HTML \u2261 busBar.crossOriginBridge.allowedOrigins in ground-truth (sorted comparison; no wildcards allowed); (7) ground-truth schema constant matches; (8) privacy.html sentinel '\u00a72g. Cross-origin Cognitive Passport bridge' present. Skips cleanly in partial clones (no andromeda). Wired into root npm run verify after verify:cognitive-passport-profiles."
     },
     {
       "id": "p31-meatspace-generator",
@@ -1630,6 +1647,24 @@
       "apply": "Bump p31.cognitivePassport id: set SCHEMA in index.html then COGNITIVE_PASSPORT_SCHEMA in @p31/shared",
       "verify": "npm run verify:cognitive-passport-schema",
       "note": "Partial clone without andromeda skips; full tree must match"
+    },
+    {
+      "id": "cogpass-cross-origin-bridge",
+      "from": [
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-cogpass-reader.mjs",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/cogpass-bridge.html",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/cogpass-bridge.schema.json",
+        "andromeda/04_SOFTWARE/p31ca/public/privacy.html (\u00a72g cross-origin disclosure)",
+        "scripts/verify-cogpass-bridge.mjs",
+        "(planned Phase 2) andromeda/04_SOFTWARE/p31ca/public/lib/p31-cogpass-fetch.mjs",
+        "(planned Phase 3) bonding-soup integration via <script src=\"https://p31ca.org/lib/p31-cogpass-fetch.mjs\">"
+      ],
+      "apply": "BUS4 Phase 1 LIVE. Bridge HTML deployed at /cogpass-bridge.html with strict CSP and hardcoded origin allowlist. Schema JSON provides Draft-7 contract for the postMessage envelope. Privacy disclosure landed at \u00a72g in privacy.html. Phase 1 ships infrastructure as a no-op until consumers wire in (Phase 3). The Single Rule (bridge imports normalize from reader; no duplicate normalization) is enforced at CI by verify:cogpass-bridge. Phases 2-5 deferred per AuDHD wedge planning \u2014 each phase is a separate commit, dependency-ordered.",
+      "verify": "npm run verify:cogpass-bridge \u2014 atomic locks across cogpass-bridge.html SCHEMA + ALLOWED_ORIGINS, cogpass-bridge.schema.json $id, busBar.crossOriginBridge.{schema, allowedOrigins} in ground-truth, privacy.html \u00a72g sentinel. Drift in any of the 4 surfaces fails CI.",
+      "note": "See docs/CWP-BUS4-COGPASS-BRIDGE-2026-05.md \u00a712 phase gates. Phase 5 (operator approval for new partner origins) is a process gate, not a code gate."
     },
     {
       "id": "cognitive-passport-v1-1-overlay",

@@ -123,8 +123,8 @@ describe("I — Interface: Cognitive Passport schema", () => {
   let constants;
   beforeAll(() => { constants = readJson("p31-constants.json"); });
 
-  it("cognitivePassport.jsonSchema is p31.cognitivePassport/1.0.0", () => {
-    expect(constants.cognitivePassport.jsonSchema).toBe("p31.cognitivePassport/1.0.0");
+  it("cognitivePassport.jsonSchema is p31.cognitivePassport/1.1.0 (additive overlay on /1.0.0; bumped CWP-PHOS C-4)", () => {
+    expect(constants.cognitivePassport.jsonSchema).toBe("p31.cognitivePassport/1.1.0");
   });
 
   it("cognitive passport HTML generator exists", () => {

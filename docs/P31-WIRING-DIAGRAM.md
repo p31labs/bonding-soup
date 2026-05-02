@@ -876,6 +876,8 @@ The verify chain runs in order on every commit. Fast-fail. Each gate locks one i
 npm run verify  (root, ordered)
 ├── verify:alignment                    ← registry of every source + derivation
 ├── verify:nonprofit                    ← nonprofit ground truth
+├── verify:bus-bar
+├── verify:cogpass-reader
 ├── verify:protocol-registry            ← contract registry
 ├── build:contract-registry             ← rebuild, then verify drift
 ├── verify:contract-registry

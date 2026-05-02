@@ -5,7 +5,7 @@
   "solidity": "0.8.24",
   "package": "packages/p31-sovereign-chain",
   "verifyScript": "verify:sovereign-chain",
-  "generatedAt": "2026-05-02T04:42:56.268Z",
+  "generatedAt": "2026-05-02T05:03:07.730Z",
   "contracts": [
     {
       "letter": "S",

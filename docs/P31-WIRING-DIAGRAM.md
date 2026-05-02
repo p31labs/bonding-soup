@@ -944,6 +944,9 @@ npm run verify  (root, ordered)
 ├── verify:wiring-ci-ladder
 ├── verify:verify-pipeline
 ├── verify:doc-library:p31ca-mirror
+├── verify:reproducible
+├── verify:license-headers
+├── verify:a11y
 ├── verify:github-org
 ├── verify:simplex                      ← simplex-v7 SIMPLEX + SENTINEL
 ├── verify:simplex-email

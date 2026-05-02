@@ -1,0 +1,457 @@
+{
+  "schema": "p31.a11yReport/1.0.0",
+  "generatedAt": "2026-05-02T18:26:28.154Z",
+  "wcagTarget": "2.2 AA (static checks subset)",
+  "scannedFiles": 34,
+  "counts": {
+    "error": 0,
+    "warn": 16,
+    "info": 28
+  },
+  "rows": [
+    {
+      "file": "agents.html",
+      "findings": [
+        {
+          "rule": "heading-skip",
+          "severity": "warn",
+          "wcag": "1.3.1",
+          "message": "heading level skip: h1 → h3 at position 1"
+        },
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "cognitive-passport/index.html",
+      "findings": [
+        {
+          "rule": "input-label",
+          "severity": "warn",
+          "wcag": "3.3.2",
+          "message": "4 interactive <input> element(s) likely missing a programmatic label",
+          "examples": [
+            "<input type=\"checkbox\" data-key=\"noMilitary\" checked />",
+            "<input type=\"checkbox\" data-key=\"handwriting\" checked />"
+          ]
+        },
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "command-center-cli.html",
+      "findings": [
+        {
+          "rule": "input-label",
+          "severity": "warn",
+          "wcag": "3.3.2",
+          "message": "1 interactive <input> element(s) likely missing a programmatic label",
+          "examples": [
+            "<input type=\"text\" class=\"terminal-input\" id=\"terminal-input\" placeholder=\"Enter"
+          ]
+        },
+        {
+          "rule": "heading-h1",
+          "severity": "warn",
+          "wcag": "1.3.1 / 2.4.6",
+          "message": "no <h1> on page"
+        },
+        {
+          "rule": "skip-link",
+          "severity": "info",
+          "wcag": "2.4.1",
+          "message": "no skip-to-main link on a page that has <nav>"
+        },
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "command-center-terminal.html",
+      "findings": [
+        {
+          "rule": "heading-h1",
+          "severity": "warn",
+          "wcag": "1.3.1 / 2.4.6",
+          "message": "no <h1> on page"
+        }
+      ]
+    },
+    {
+      "file": "demo-tour.html",
+      "findings": [
+        {
+          "rule": "skip-link",
+          "severity": "info",
+          "wcag": "2.4.1",
+          "message": "no skip-to-main link on a page that has <nav>"
+        }
+      ]
+    },
+    {
+      "file": "demos/alignment-graph.html",
+      "findings": [
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "demos/index.html",
+      "findings": [
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "demos/k4-mesh.html",
+      "findings": [
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "demos/larmor-pulse.html",
+      "findings": [
+        {
+          "rule": "input-label",
+          "severity": "warn",
+          "wcag": "3.3.2",
+          "message": "1 interactive <input> element(s) likely missing a programmatic label",
+          "examples": [
+            "<input id=\"speed\" type=\"range\" min=\"0.05\" max=\"3\" step=\"0.05\" value=\"1\" />"
+          ]
+        },
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "design-assets/forge/apex-forge.html",
+      "findings": []
+    },
+    {
+      "file": "design-assets/kofi/kofi-engine.html",
+      "findings": []
+    },
+    {
+      "file": "design-assets/starfield/demo.html",
+      "findings": [
+        {
+          "rule": "heading-h1",
+          "severity": "warn",
+          "wcag": "1.3.1 / 2.4.6",
+          "message": "no <h1> on page"
+        },
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "design-assets/templates/p31-static-product-shell-snippet.html",
+      "findings": [
+        {
+          "rule": "heading-h1",
+          "severity": "warn",
+          "wcag": "1.3.1 / 2.4.6",
+          "message": "no <h1> on page"
+        },
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "docs/doc-library/index.html",
+      "findings": []
+    },
+    {
+      "file": "docs/p31-delta-glossary.html",
+      "findings": [
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "docs/physics-learn/index.html",
+      "findings": [
+        {
+          "rule": "heading-h1",
+          "severity": "warn",
+          "wcag": "1.3.1 / 2.4.6",
+          "message": "no <h1> on page"
+        }
+      ]
+    },
+    {
+      "file": "docs/physics-learn/labs.html",
+      "findings": []
+    },
+    {
+      "file": "fleet-portal.html",
+      "findings": [
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "garden-phos-probe.html",
+      "findings": [
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "glass-box-widget.html",
+      "findings": [
+        {
+          "rule": "heading-h1",
+          "severity": "warn",
+          "wcag": "1.3.1 / 2.4.6",
+          "message": "no <h1> on page"
+        },
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "glass-box.html",
+      "findings": [
+        {
+          "rule": "input-label",
+          "severity": "warn",
+          "wcag": "3.3.2",
+          "message": "1 interactive <input> element(s) likely missing a programmatic label",
+          "examples": [
+            "<input type=\"checkbox\" id=\"autoPilot\" />"
+          ]
+        }
+      ]
+    },
+    {
+      "file": "p31-device-setup.html",
+      "findings": [
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "p31-personal-howto.html",
+      "findings": [
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "p31-quantum-material-u.html",
+      "findings": []
+    },
+    {
+      "file": "p31-slicer.html",
+      "findings": [
+        {
+          "rule": "skip-link",
+          "severity": "info",
+          "wcag": "2.4.1",
+          "message": "no skip-to-main link on a page that has <nav>"
+        },
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "p31-sovereign-lab.html",
+      "findings": [
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "poets-room.html",
+      "findings": [
+        {
+          "rule": "heading-h1",
+          "severity": "warn",
+          "wcag": "1.3.1 / 2.4.6",
+          "message": "no <h1> on page"
+        },
+        {
+          "rule": "skip-link",
+          "severity": "info",
+          "wcag": "2.4.1",
+          "message": "no skip-to-main link on a page that has <nav>"
+        },
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "public/index.html",
+      "findings": []
+    },
+    {
+      "file": "soup.html",
+      "findings": [
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "spikes/d20-geodesic-icosahedron/omnibus-icosa-three-r128.html",
+      "findings": [
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "spikes/d20-geodesic-icosahedron/react/index.html",
+      "findings": [
+        {
+          "rule": "heading-h1",
+          "severity": "warn",
+          "wcag": "1.3.1 / 2.4.6",
+          "message": "no <h1> on page"
+        },
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "spikes/posner-stable/index.html",
+      "findings": [
+        {
+          "rule": "heading-h1",
+          "severity": "warn",
+          "wcag": "1.3.1 / 2.4.6",
+          "message": "no <h1> on page"
+        },
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "spikes/sovereign-geodesic-preview/index.html",
+      "findings": [
+        {
+          "rule": "input-label",
+          "severity": "warn",
+          "wcag": "3.3.2",
+          "message": "1 interactive <input> element(s) likely missing a programmatic label",
+          "examples": [
+            "<input type=\"checkbox\" id=\"auto\" />"
+          ]
+        },
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    },
+    {
+      "file": "spikes/spatial-chat/spike-02-demo.html",
+      "findings": [
+        {
+          "rule": "heading-h1",
+          "severity": "warn",
+          "wcag": "1.3.1 / 2.4.6",
+          "message": "no <h1> on page"
+        },
+        {
+          "rule": "main-landmark",
+          "severity": "info",
+          "wcag": "1.3.1 / 2.4.1",
+          "message": "no <main> landmark or role=main on page"
+        }
+      ]
+    }
+  ]
+}

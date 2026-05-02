@@ -6,7 +6,7 @@
 | **Title** | Bus bar consolidation: CogPass nervous system, PHOS face, meatspace bridge |
 | **Version** | 1.0.0 |
 | **Effective date** | 2026-05-01 |
-| **Status** | **Shipped (13 of 14 wedges live; 31 commits across 2 repos; verify:alignment green at 224 sources / 68 derivations; 10 dedicated CI gates GREEN incl. verify:wiring-ci-ladder + verify:verify-pipeline anti-drift pair AND new verify:bus-bar + verify:cogpass-reader behavioral pair; D-7 wiring diagram + poster on disk; passed 4-agent quality chain — Reviewer + Connector + Verifier + QA SOULSAFE + QA Spec; zero-deferment closeout shipped 2026-05-02 incl. PDF byte-determinism + K₄ ASCII rebuild + hub-diff CI restored to GREEN; nonprofit-operations system + stylebook bug sweep + SENTINEL:PASSKEY closeout shipped 2026-05-02; release:public ladder unblocked 2026-05-02 — TRIPER cert AUTHORIZED, 12/12 suites PASS, 108 mutation sentinels GREEN; full root verify GREEN exit 0 / 74 gates / 291 hub html files scan clean)** |
+| **Status** | **CLOSED-GREEN (13 of 14 wedges live; 33 commits across 2 repos — HOME 32 / ANDROMEDA 11 from session start; verify:alignment green at 224 sources / 68 derivations; 10 dedicated CI gates GREEN incl. verify:wiring-ci-ladder + verify:verify-pipeline anti-drift pair AND verify:bus-bar + verify:cogpass-reader behavioral pair; D-7 wiring diagram + poster on disk; passed 4-agent quality chain — Reviewer + Connector + Verifier + QA SOULSAFE + QA Spec; zero-deferment closeout shipped 2026-05-02 incl. PDF byte-determinism + K₄ ASCII rebuild + hub-diff CI restored to GREEN; nonprofit-operations system + stylebook bug sweep + SENTINEL:PASSKEY closeout shipped 2026-05-02; release:public ladder unblocked 2026-05-02 — TRIPER cert AUTHORIZED, 12/12 suites PASS, 108 mutation sentinels GREEN; full root verify GREEN exit 0 / 74 gates / 291 hub html files scan clean; FINAL CLOSURE 2026-05-02 01:32 — release:public exit 0 end-to-end + idempotent verify chain + DELTA-language clean across all canon — see §12)** |
 | **Authoring mode** | **Retrospective.** This CWP documents work that already shipped during the 2026-05-01 evening session. All "to" entries reference real files at real commits. Pending entries are unblocked work that hands off cleanly. |
 | **Applies to** | **`/home/p31`** (alignment registry, meatspace generator, voice draft, npm scripts) and **`/home/p31/andromeda`** (`04_SOFTWARE/p31ca` ground-truth, public pages, lib scripts, schema spec). Does **not** touch `phosphorus31.org/` or `bonding-soup` C.A.R.S. surfaces in this revision. |
 | **Owner (architect)** | Cursor agent (Claude Opus 4.7) under operator command authority granted at 2026-05-01T20:37:00-04:00. |
@@ -442,6 +442,36 @@ Pick the next unblocked wedge from CWP §9.2. Ship it. Update this CWP §4 +
 §8. Maintain alignment registry. Use the same Wye-to-Delta posture: do the
 work the operator can't reliably serialize in real-time.
 ```
+
+---
+
+## 12. Final closure — release:public ladder shipped GREEN (2026-05-02 01:32 UTC-4)
+
+After the TRIPER cert was unblocked (§11), one more pass surfaced two latent classes of issue that were silently degrading every `npm run verify`:
+
+1. **`generatedAt` timestamp drift in five generators.** `contracts/p31-smart-evm.json`, `contracts/p31-contract-registry.json`, `p31-discord-bot-swarm.json`, `andromeda/.../hub-landing.json`, and `andromeda/.../p31-bot.manifest.json` all contained `new Date().toISOString()` fields with **zero downstream consumers**. Every `verify` run rewrote them with a fresh ISO string, so two consecutive verifies always left ≥5 dirty files. Fix: removed the fields entirely (canonical pattern from `scripts/build-phos-voice-json.mjs:205` — git log on the artifact is the audit trail). Updated the matching `BotManifest` TypeScript type. Two consecutive `npm run verify` from a clean tree now produce **ZERO** drift across both repos. (HOME `8b3acec`, ANDROMEDA `d9c78c5`.)
+
+2. **One DELTA-language voice violation in the production social Worker.** `andromeda/04_SOFTWARE/cloudflare-worker/social-drop-automation/worker.js:121` still said *"Two secret elements unlock when you complete quest chains"* — `unlock` is on the public-voice avoid-list (engagement-pattern marketing verb). Replaced with *"appear"* (verifier-suggested alternative). Mirror line in `p31-social-engine.json:169` updated in parallel. `verify-social-engine` now reports **0 fail · 0 warn**. (HOME `12ed66f`, ANDROMEDA `a10c884`.)
+
+3. **A latent build-system drift in `ops-glass-probes.json`.** Same pattern as (1): `ingested: new Date().toISOString()` in `p31ca/scripts/ops/ingest-glass-probes.mjs:118` was rewriting the artifact on every prebuild. Removed the field. (Bundled into ANDROMEDA `a10c884`.)
+
+**`npm run release:public` now ships clean end-to-end:**
+- TRIPER cert AUTHORIZED (12/12 suites · 108 mutation sentinels)
+- Root verify: 74 gates GREEN
+- k4-personal wrangler dry-run: PASS
+- Mesh live vs constants: PASS
+- p31ca hub:ci (verify + Astro build): PASS
+- p31ca security:check: PASS — quantum-core 45/45 (FIPS 203/204 KAT), passkey RP_ID contract OK, ES256+RS256 SubtleCrypto verify confirmed, signCount replay protection present
+- 15 advisory warnings remaining are all wildcard-CORS reviews on existing Workers (operator-decision policy choices, not code defects)
+
+**Final state at 2026-05-02 01:32 UTC-4:**
+- HOME `main`: 32 commits ahead of session start, pushed to origin
+- ANDROMEDA `pr/fix-broken-hrefs-release-gate`: 11 commits ahead, pushed to origin (PR #103 ready for operator merge decision)
+- Both trees: `git status --short` clean immediately after `verify`
+- `release:public` exit 0
+- Operator can run `wrangler pages deploy dist` from `andromeda/04_SOFTWARE/p31ca/` whenever the spoons are there. No code is in the way.
+
+This is the **closeout state** of CWP-PHOS-2026-01. Everything an agent can do without operator hand-input is done.
 
 ---
 

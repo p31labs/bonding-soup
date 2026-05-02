@@ -79,6 +79,7 @@
     "terminal": "node scripts/p31-terminal-cli.mjs",
     "terminal:list": "node scripts/p31-terminal-cli.mjs --list",
     "terminal:web": "node scripts/p31-local-command-center.mjs",
+    "terminal:season": "bash scripts/p31-terminal-season.sh",
     "command-center:open-desk": "node scripts/cli/index.mjs open desk",
     "command-center:auto": "P31_CMD_CENTER_PORT=0 node scripts/p31-local-command-center.mjs",
     "test:command-center:integration": "node scripts/command-center/integration-local.mjs",

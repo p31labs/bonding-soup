@@ -147,7 +147,7 @@ The doctrine is identical at every scale because the architecture is identical a
 
 ## 4. Work breakdown (the wedges)
 
-Six tracks. Twenty-six wedges originally scoped. Thirteen reached "shipped" status by 2026-05-01 21:30. Status legend: ✓ shipped, ◐ partial, ○ pending, ⏸ blocked.
+Six tracks. Twenty-six wedges originally scoped. **Fifteen reached "shipped" status by 2026-05-01 21:50** (D-5 one-pager + C-4 atomic SCHEMA bump landed after the original CWP was filed). Status legend: ✓ shipped, ◐ partial, ○ pending, ⏸ blocked.
 
 ### Track A — Voice (operator hand only)
 
@@ -173,7 +173,7 @@ Six tracks. Twenty-six wedges originally scoped. Thirteen reached "shipped" stat
 | C-1 | PHOS guide v0 component | ✓ | `04_SOFTWARE/p31ca/public/lib/p31-phos-guide.mjs` (708 lines, 26/26 smoke green) |
 | C-2 | /welcome page (bus bar wired) | ◐ | `04_SOFTWARE/p31ca/public/welcome.html` (existing page enhanced with 3 script tags) |
 | C-3 | /support page (Ko-fi + Stripe + GitHub) | ✓ | `04_SOFTWARE/p31ca/public/support.html` (285 lines, Tier-0 voice clean) |
-| C-4 | CogPass v6 generator rebuild + atomic SCHEMA bump | ○ | `cognitive-passport/index.html` + `@p31/shared/cognitive-passport-schema.ts` |
+| C-4 | CogPass v6 generator rebuild + atomic SCHEMA bump | ✓ | `cognitive-passport/index.html` SCHEMA → 1.1.0 + screenComfort slider; `@p31/shared/cognitive-passport-schema.ts` atomically bumped; mirror synced; verifiers green. HOME `d783efb` + ANDROMEDA `15920da6f`. |
 
 ### Track D — Meatspace (printable artifacts)
 
@@ -183,7 +183,7 @@ Six tracks. Twenty-six wedges originally scoped. Thirteen reached "shipped" stat
 | D-2 | Business card (3.5″×2″, 2-page) | ✓ | `dist/meatspace/p31-business-card.pdf` (16 KB) |
 | D-3 | QR sticker sheet (12-up US Letter) | ✓ | `dist/meatspace/p31-qr-stickers-12up.pdf` (21 KB) |
 | D-4 | Elevator card (5″×3″, 2-page, Tier-0 pitch) | ✓ | `dist/meatspace/p31-elevator-card.pdf` (17 KB) |
-| D-5 | One-pager (US Letter handout) | ○ | Same generator pattern; ~150 words placeholder body |
+| D-5 | One-pager (US Letter handout) | ✓ | US Letter, 3-tile body (What we build / How it's different / How to help) + compact terms §5 disclosure + 1.4″ QR. Visible-surface clean of Tier-0 banned vocab. HOME `efaf6cb`. |
 | D-6 | Pro-handout (5.5″×8.5″ for grant meetings) | ○ | Benefits from operator §4 narrative pass first |
 
 ### Track BUS — Bus bar consolidation (WCD-PHOS-07)
@@ -316,12 +316,18 @@ All work shipped during the 2026-05-01 evening session, in order:
 | 4 | `996512bfe` | andromeda | pr/fix-broken-hrefs-release-gate | feat(p31ca): wire bus bar into welcome.html (C-2 partial activation) |
 | 5 | `24fd0b5` | home | main | phos: register /support page source (C-3) |
 | 6 | `51177e907` | andromeda | pr/fix-broken-hrefs-release-gate | feat(p31ca): /support page (C-3) — stranger-facing donation landing |
-| 7 | _this CWP_ | home | main | docs(cwp): CWP-PHOS-2026-01 — PHOS, the bus bar, and the meatspace bridge |
+| 7 | `90b46dd` | home | main | docs(cwp): CWP-PHOS-2026-01 — PHOS, the bus bar, and the meatspace bridge |
+| 8 | `7ebc2cb4f` | andromeda | pr/fix-broken-hrefs-release-gate | docs(p31ca): mirror doc-library index.json after CWP-PHOS-2026-01 |
+| 9 | `efaf6cb` | home | main | meatspace(D-5): one-pager — US Letter handout, 3-tile body + big QR |
+| 10 | `d783efb` | home | main | cogpass(C-4): atomic SCHEMA bump 1.0.0 → 1.1.0 + screenComfort slider |
+| 11 | `15920da6f` | andromeda | pr/fix-broken-hrefs-release-gate | cogpass(C-4): atomic SCHEMA bump 1.0.0 → 1.1.0 (sister of HOME d783efb) |
 
-Net delta:
-- HOME: +1,824 lines (alignment +413, meatspace +862, voice draft +142, npm scripts +13, lockfile +384, this CWP +~500)
-- ANDROMEDA: +1,927 lines (privacy +55, ground-truth +145, schema +303, reader +426, guide +708, welcome wiring +6, support +284)
-- **Total: ~3,751 lines across 6+ files in 2 repos**
+Net delta after late-evening additions:
+- HOME: +1,824 + 292 (D-5) + 60 (C-4) + ~30 (this update) = ~2,206 lines
+- ANDROMEDA: +1,927 + 53 (C-4 sister) = ~1,980 lines
+- **Total: ~4,186 lines across 8+ files in 2 repos**
+
+The cage is closed; the chemistry is honest. Generator emit, reader normalize, PHOS consume — all three speak v1.1.0 in lockstep.
 
 ---
 
@@ -339,12 +345,11 @@ Net delta:
 
 | Item | Wedge | Estimated wedge cost |
 |------|-------|----------------------|
-| One-pager | D-5 | 1 wedge (same generator pattern, ~150 word placeholder body) |
 | Pro-handout | D-6 | 2 wedges (benefits from operator §4 voice first) |
 | Auto-fetch voice JSON when committed | A-3 (after A-2) | trivial — already wired; just commit the JSON when stable |
 | BUS3 routes (rename /lab, build /research) | BUS3 | 3-5 wedges (multiple pages) |
 | BUS4 BONDING bridge | BUS4 | Design spike + implementation = 2-3 wedges |
-| C-4 atomic SCHEMA bump | C-4 | 1 wedge (`cognitive-passport/index.html` + `@p31/shared/cognitive-passport-schema.ts` synchronously) |
+| C-4b: expose accessLevel + phosRegister in generator UI | C-4b | 1-2 wedges; needs operator decision on whether to hide stranger-facing role pickers |
 
 ### 9.3 Coordination (held for in-flight work)
 

@@ -269,7 +269,7 @@ function renderHtml(report) {
   </div>
   ${lanesHtml}
   <footer>
-    Machine source <a href="/p31_launch_readiness.json">/p31_launch_readiness.json</a> ·
+    Machine source <code>/tmp/p31_launch_readiness.json</code> (local; not publicly served — <code>npm run launch:audit</code> regenerates) ·
     Config <code>p31-launch-readiness-config.json</code> ·
     Checklist <code>p31-launch-checklist.json</code> ·
     <a href="/contracts">/contracts</a> · <a href="/fleet-portal">/fleet-portal</a>

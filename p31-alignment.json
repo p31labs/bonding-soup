@@ -186,7 +186,7 @@
     {
       "id": "p31-launch-html",
       "path": "launch.html",
-      "role": "p31.launchReadiness/1.0.0 \u2014 static readiness dashboard. Counters (83 gates / 17 surfaces / 4 PWAs / 10 cards / 22 papers / 10 workers / $50/mo / 0% fee), surfaces table, verbs cards, phase ladder, contrast matrix. Rewritten by scripts/p31-launch.mjs (data row attributes only)."
+      "role": "p31.launchReadiness/1.0.0 \u2014 readiness dashboard. Static counters (83 gates / 17 surfaces / 4 PWAs / 10 cards / 22 papers / 10 workers / $50/mo / 0% fee), surfaces table, verbs cards, phase ladder, contrast matrix. Adds a live \u00a705 panel client-side when .p31-launch-readiness.json is present (local only). Mirrored to p31ca/public/launch.html via build:launch-page; live at https://p31ca.org/launch (short) / /launch.html."
     },
     {
       "id": "p31-deep-dive-doc",
@@ -1447,6 +1447,18 @@
       "apply": "edit p31-facts.json when adding externally cited file/path/key claims",
       "verify": "npm run verify:facts",
       "note": "Declarative invariants: required paths, mesh + org keys, https worker URLs, no credential-like substrings in policy files"
+    },
+    {
+      "id": "p31-launch-page-mirror-pipeline",
+      "from": [
+        "launch.html"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/launch.html"
+      ],
+      "apply": "npm run build:launch-page",
+      "verify": "(implicit \u2014 part of npm run launch; byte-mirror)",
+      "note": "Mirrors launch.html into the p31ca public deploy tree. Short redirect /launch \u2192 /launch.html lives in p31ca/public/_redirects. .p31-launch-readiness.json is gitignored so the public mirror renders the static counters only."
     },
     {
       "id": "p31-social-cards-mirror-pipeline",

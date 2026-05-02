@@ -179,7 +179,7 @@
   <div class="meta">
     <span class="pill live">assembled</span>
     <span class="pill">schema p31.launchReadiness/1.0.0</span>
-    <span class="pill">last sweep: <span data-bind="lastSweep">manual edit</span></span>
+    <span class="pill" id="last-sweep-pill">last sweep: <span data-bind="lastSweep">manual edit</span></span>
     <span class="pill">runbook: <a href="docs/LAUNCH-PACKAGE-2026-05.md">docs/LAUNCH-PACKAGE-2026-05.md</a></span>
   </div>
 </header>
@@ -275,6 +275,58 @@
     <li><strong>They</strong> chase scale as ideology. <strong>WE</strong>: ephemeralization \u2014 one source, many derivations.</li>
   </ul>
 </section>
+
+<!-- Live readiness consumer: when launch.html is served alongside .p31-launch-readiness.json
+     (npm run demo from repo root), this script tries to fetch it client-side and updates
+     the "last sweep" pill + step rows below. Fails silently when the JSON is missing
+     (e.g. on the public p31ca mirror) so the static page still works.
+     Schema: p31.launchReadiness/1.0.0 — written by scripts/p31-launch.mjs. -->
+<section class="block" id="live-sweep" hidden>
+  <h2>\u00a705 \u00b7 last sweep (live)</h2>
+  <p class="desc">Read live from <code>.p31-launch-readiness.json</code> next to this page.</p>
+  <table class="surfaces" id="live-steps">
+    <thead><tr><th>step</th><th>result</th><th>duration</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</section>
+<script>
+(function () {
+  "use strict";
+  // Attempt to fetch the readiness snapshot from the same directory as this page.
+  // Skips silently on 404 / fetch error / non-JSON.
+  fetch("./.p31-launch-readiness.json", { cache: "no-store" })
+    .then((r) => r.ok ? r.json() : Promise.reject(r.status))
+    .then((d) => {
+      if (!d || d.schema !== "p31.launchReadiness/1.0.0") return;
+      // pill
+      const at = new Date(d.at);
+      const pill = document.getElementById("last-sweep-pill");
+      if (pill) {
+        const fmt = at.toISOString().replace("T", " ").slice(0, 19) + " UTC";
+        const allGreen = d.allGreen ? " \u2713" : " \u2717";
+        pill.innerHTML = "last sweep: <span style=\"color:" + (d.allGreen ? "var(--phos)" : "var(--coral)") + "\">" + fmt + allGreen + "</span>"
+          + (d.commit ? " <span style=\"color:var(--muted)\">@ " + d.commit + "</span>" : "");
+        pill.classList.add(d.allGreen ? "live" : "thinking");
+      }
+      // table
+      const sec = document.getElementById("live-sweep");
+      const tbody = sec.querySelector("tbody");
+      tbody.innerHTML = "";
+      for (const s of (d.steps || [])) {
+        const tr = document.createElement("tr");
+        tr.dataset.status = s.ok ? "green" : (s.critical ? "red" : "amber");
+        const mark = s.ok ? "\u2713" : "\u2717";
+        const color = s.ok ? "var(--phos)" : "var(--coral)";
+        tr.innerHTML = "<td><span class=\"tier " + (s.publish ? "story" : (s.ok ? "substrate" : "education")) + "\">" + (s.publish ? "publish" : "step") + "</span></td>"
+          + "<td><code>" + s.name + "</code></td>"
+          + "<td><span style=\"color:" + color + "\">" + mark + "</span> <span style=\"color:var(--muted);font-family:var(--mono);font-size:12px\">" + (s.durationMs || 0) + " ms</span></td>";
+        tbody.appendChild(tr);
+      }
+      sec.hidden = false;
+    })
+    .catch(() => { /* JSON absent (public mirror) \u2014 keep static page intact */ });
+})();
+</script>
 
 <footer class="bottom">
   <div class="nav">

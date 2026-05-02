@@ -360,6 +360,7 @@
     "build:pwa": "node scripts/build-pwa.mjs",
     "verify:pwa": "node scripts/verify-pwa.mjs",
     "build:social-cards": "node scripts/build-social-cards.mjs",
+    "build:launch-page": "node scripts/build-launch-page.mjs",
     "launch": "node scripts/p31-launch.mjs",
     "launch:dry": "node scripts/p31-launch.mjs --dry-run",
     "launch:status": "node scripts/p31-launch.mjs --status",

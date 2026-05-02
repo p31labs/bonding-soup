@@ -58,6 +58,38 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
+      "label": "P31: launch — full assembly (idempotent; LOCAL ONLY unless P31_LAUNCH_PUBLISH=I_UNDERSTAND)",
+      "type": "shell",
+      "command": "npm run launch",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true }
+    },
+    {
+      "label": "P31: launch — dry-run (no shell calls, no writes)",
+      "type": "shell",
+      "command": "npm run launch:dry",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: launch — status (read last sweep, no run)",
+      "type": "shell",
+      "command": "npm run launch:status",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
+      "label": "P31: build PWA layer (mirror SW + script + icon to all 4 surfaces)",
+      "type": "shell",
+      "command": "npm run build:pwa",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
       "label": "P31: sync Sovereign Lab + slicer → p31ca public",
       "type": "shell",
       "command": "npm run sync:sovereign-p31ca",

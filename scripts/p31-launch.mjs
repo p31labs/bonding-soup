@@ -93,6 +93,7 @@ const PIPELINE = [
   { name: "build:pwa",                cmd: "npm run build:pwa",               critical: true,  reason: "mirror SW + script into all installable surfaces" },
   { name: "build:demos",              cmd: "npm run build:demos",             critical: true,  reason: "mirror two consolidated artifacts into p31ca" },
   { name: "build:social-cards",       cmd: "npm run build:social-cards",      critical: false, reason: "mirror 10-card kit into p31ca/public/social-cards/ (skip if no andromeda)" },
+  { name: "build:launch-page",        cmd: "npm run build:launch-page",       critical: false, reason: "mirror launch.html into p31ca/public/launch.html (skip if no andromeda)" },
   { name: "sync:passport",            cmd: "npm run sync:passport",           critical: false, reason: "regenerate cognitive-passport p31ca mirror (skip if no andromeda)" },
   { name: "build:doc-index",          cmd: "npm run build:doc-index",         critical: false, reason: "rebuild searchable doc library" },
 

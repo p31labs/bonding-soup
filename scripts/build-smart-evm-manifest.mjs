@@ -89,7 +89,8 @@ export function regenerateSmartEvmManifest(rootDir = root) {
     solidity: "0.8.24",
     package: "packages/p31-sovereign-chain",
     verifyScript: "verify:sovereign-chain",
-    generatedAt: buildStamp(),
+    // No generatedAt: deterministic build for drift detection; git log is the audit trail.
+    // (Same pattern as scripts/build-phos-voice-json.mjs line 205.)
     contracts,
   };
   fs.mkdirSync(path.dirname(outPath), { recursive: true });

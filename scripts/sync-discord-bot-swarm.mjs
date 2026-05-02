@@ -46,7 +46,8 @@ const commandNames = commands.map((c) => c?.name).filter(Boolean);
 
 const swarm = {
   schema: "p31.discordBotSwarm/1.0.0",
-  generatedAt: buildStamp(),
+  // No generatedAt: deterministic build for drift detection; git log is the audit trail.
+  // (Same pattern as scripts/build-phos-voice-json.mjs line 205.)
   sourceManifest: path.relative(root, manifestPath).replace(/\\/g, "/"),
   ecosystemDeployableId: "p31-discord-bot-swarm",
   registryFingerprint: manifest.registryFingerprint ?? null,

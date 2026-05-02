@@ -118,7 +118,8 @@ export function buildContractRegistryPayload(rootDir) {
   const payload = {
     schema: "p31.contractRegistry/1.0.0",
     version: "1.0.0",
-    generatedAt: buildStamp(),
+    // No generatedAt: deterministic build for drift detection; git log is the audit trail.
+    // (Same pattern as scripts/build-phos-voice-json.mjs line 205.)
     builder,
     count: contracts.length,
     contracts,

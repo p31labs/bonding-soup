@@ -2,9 +2,11 @@
 
 **Purpose:** This file holds the canonical voice of PHOS — the personality layer that is the face of P31 to anyone who arrives without context. It is authored by the operator (William Rodger Johnson). Agents may read it. Agents must not edit lines marked `OPERATOR-VOICE`. Agents may add structural scaffolding, voice rules, and metadata.
 
-**Status:** SEED. Captured 2026-05-01 from a planning conversation. Twenty lines target. The operator will write the rest in morning flow on the iPad.
+**Status:** DRAFT-COMPLETE. Per-page copy filled 2026-05-01 by Architect (Opus draft, merged by Claude Code) from 3 months of operator context. Operator reviews live, marks `OPERATOR-VOICE` on lines that ring true, rewrites what doesn't.
 
-**Mirror:** When stable, the canonical strings emit into `andromeda/04_SOFTWARE/p31ca/public/lib/p31-phos-voice.json` (per-page contextual copy) and `cognitive-passport/index.html` (for agent context export). Source-of-truth lives here.
+**Tagline change (2026-05-01 evening):** "raw dogging life" → "figuring it out as they go." Operator-directed because Willow (6) and Bash (10) are the design audience for the front door. The new line carries the same emotional weight, reads on a sticker, reads in a courtroom, reads to a kindergartener.
+
+**Mirror:** Stable strings emit into `andromeda/04_SOFTWARE/p31ca/public/lib/p31-phos-voice.json` (per-page contextual copy, fetched at runtime by `p31-phos-guide.mjs`) and into `scripts/meatspace/generate.mjs` `TAGLINE_OPERATOR_VOICE` (printed on the meatspace artifacts). Source-of-truth lives here.
 
 ---
 
@@ -37,6 +39,7 @@ The cage is built from nine calcium atoms (nine MVPs) around one phosphorus (one
 12. **Banned vocabulary** for stranger-facing copy: K₄, Posner, synergetics, jitterbug, Larmor, isostatic, sovereignty, tetrahedral, decoherence. (These belong in `/lab` and operator views, not the front door.)
 13. **Banned patterns:** "Don't miss," "Only today," "Epic," "Prove you're a real fan," "Beat everyone," manufactured urgency of any kind.
 14. **No naval, military, or submarine metaphors. Ever.** This is a hard rule from the operator's environment — see `.cursorrules` §1.
+15. **Kid-readable on the front door.** Anything that goes on `/welcome`, the elevator card, the QR sticker, or the boot screen must be readable by a six-year-old without raising parental questions. (Added 2026-05-01 with the tagline change.)
 
 ---
 
@@ -46,7 +49,7 @@ These lines were emitted by the operator in real time, unprompted, while plannin
 
 ### 3.1 The promise (the line)
 
-> **"For all the parents and kids out there raw dogging life — help is on the way."**
+> **"For every family out there figuring it out as they go — help is on the way."**
 
 This is the line that goes on:
 - the welcome page boot
@@ -63,7 +66,7 @@ When someone lands on `/welcome` for the first time and PHOS auto-expands, PHOS 
 
 > **"Hi. I'm PHOS.**
 >
-> **For all the parents and kids out there raw dogging life — help is on the way.**
+> **For every family out there figuring it out as they go — help is on the way.**
 >
 > **Start with your context card. Two minutes. It makes everything here work better for you.**
 >
@@ -101,23 +104,23 @@ Format (machine-parseable; do not freestyle):
 - **links:** `[{"label":"...","href":"/..."}, ...]`
 ```
 
-Build → `npm run build:phos-voice`. Verify → `npm run verify:phos-voice` (banned vocab + tag preservation + JSON shape; on the ship bar).
+Build → `npm run build:phos-voice`. Verify → `npm run verify:phos-voice` (banned vocab + tag preservation + JSON shape; on the ship bar). The PHOS guide normalizes pathnames before lookup (trailing slash AND `.html` suffix are stripped), so write voice keys as the natural route name (`/buffer` not `/buffer.html`, `/passport` not `/passport/`).
 
 ### `_default`
 
-> **tag:** `DRAFT-AGENT-SIMULATED` *(operator: replace when iPad is warm)*
+> **tag:** `DRAFT-AGENT-SIMULATED` *(fallback for any page without its own entry)*
 
-- **greeting:** `"Hi. I'm PHOS — your guide to P31."`
-- **hint:** `"Need help finding something?"`
-- **fallback:** `"I'll be here."`
-- **links:** `[{"label":"Create your context card","href":"/passport/"},{"label":"Back to welcome","href":"/welcome"}]`
+- **greeting:** `"Still here."`
+- **hint:** `"Looking for something? The context card adapts everything to how your brain works. The lab shows what we build. Or just keep exploring."`
+- **fallback:** `"I'm not going anywhere."`
+- **links:** `[{"label":"Create your context card","href":"/passport/"},{"label":"See what we build","href":"/lab"}]`
 
 ### `/welcome`
 
-> **tag:** `OPERATOR-VOICE` *(§3.2 first derivation — locked by verify:phos-voice SHA)*
+> **tag:** `OPERATOR-VOICE` *(§3.2 first derivation — locked by verify:phos-voice SHA; operator-approved tagline change 2026-05-01 evening)*
 
 - **greeting:** `"Hi. I'm PHOS."`
-- **hint:** `"For all the parents and kids out there raw dogging life — help is on the way.\n\nStart with your context card. Two minutes. It makes everything here work better for you."`
+- **hint:** `"For every family out there figuring it out as they go — help is on the way.\n\nStart with your context card. Two minutes. It makes everything here work better for you."`
 - **fallback:** `"Or just look around. I'll be here if you need me."`
 - **links:** `[{"label":"Create your context card","href":"/passport/"},{"label":"See what we build","href":"/lab"}]`
 
@@ -125,68 +128,77 @@ Build → `npm run build:phos-voice`. Verify → `npm run verify:phos-voice` (ba
 
 > **tag:** `DRAFT-AGENT-SIMULATED` *(operator: this is the card itself — write what feels true)*
 
-- **greeting:** `"This is your context card."`
-- **hint:** `"Fill in what feels right. Skip what doesn't. Watch the page change as you go."`
-- **fallback:** `"When you're done, copy it into any AI tool — or keep it here. The site will remember."`
-- **links:** `[{"label":"Why this exists","href":"#why"},{"label":"See an example","href":"#example"}]`
+- **greeting:** `"This is yours."`
+- **hint:** `"Your context card tells every page on this site how to work for you. Font size, contrast, motion, color — you set it once, it follows you everywhere.\n\nNothing leaves your browser. We literally cannot see what you put here."`
+- **fallback:** `"Skip anything that doesn't feel right. Everything still works without it. This just makes it work better."`
+- **links:** `[{"label":"What is a context card?","href":"#about"},{"label":"Back to the front door","href":"/welcome"}]`
 
 ### `/lab`
 
 > **tag:** `DRAFT-AGENT-SIMULATED`
 
-- **greeting:** `"Welcome to the lab."`
-- **hint:** `"Everything P31 has built lives here. All of it free, all of it open source."`
-- **fallback:** `"If something feels overwhelming, your context card has a Screen Comfort slider that quiets things down."`
-- **links:** `[{"label":"Adjust Screen Comfort","href":"#screen-comfort"},{"label":"Create your context card","href":"/passport/"}]`
+- **greeting:** `"Here's what we build."`
+- **hint:** `"Everything here is free. Everything is open source. If something helps you, take it. If something breaks, tell us."`
+- **fallback:** `"Not sure where to start? The context card is usually the best first step. After that, BONDING is the most fun."`
+- **links:** `[{"label":"Play BONDING","href":"https://bonding.p31ca.org"},{"label":"Create your context card","href":"/passport/"},{"label":"Read the research","href":"/research"}]`
 
 ### `/support`
 
-> **tag:** `DRAFT-AGENT-SIMULATED` *(line 1 mirrors operator §3.1 framing — keep it)*
+> **tag:** `DRAFT-AGENT-SIMULATED` *(line 1 mirrors operator framing — keep it)*
 
-- **greeting:** `"Every dollar builds tools for neurodivergent families."`
-- **hint:** `"P31 takes 0% platform fees. No tracking. No donor data sold."`
-- **fallback:** `"Even $1 helps. Seriously."`
-- **links:** `[{"label":"Back to welcome","href":"/welcome"},{"label":"See what we build","href":"/lab"}]`
+- **greeting:** `"Thank you for being here."`
+- **hint:** `"P31 runs on zero salary and whatever people can give. Every dollar goes straight to building tools for neurodivergent families. We take 0% platform fees — if you give ten bucks, we get ten bucks."`
+- **fallback:** `"Not in a position to give? That's fine. Using the tools and telling one person about them is just as real."`
+- **links:** `[{"label":"Give what you can","href":"https://ko-fi.com/trimtab69420"},{"label":"See what your support builds","href":"/lab"}]`
 
 ### `/research`
 
 > **tag:** `DRAFT-AGENT-SIMULATED`
 
-- **greeting:** `"Twenty-two papers, all open access."`
-- **hint:** `"P31's research lives here. Nothing behind a paywall. Browse, download, cite."`
-- **fallback:** `"Looking for something specific? The lab has the products that came out of this work."`
-- **links:** `[{"label":"See what we build","href":"/lab"},{"label":"Back to welcome","href":"/welcome"}]`
+- **greeting:** `"The receipts."`
+- **hint:** `"22 open-access research papers. The theory behind the tools — published so anyone can check our work, cite it, or build on it. All free. All permanent."`
+- **fallback:** `"Heavy reading. Come back when you have the spoons for it. The tools don't require any of this to use."`
+- **links:** `[{"label":"Back to the tools","href":"/lab"},{"label":"Create your context card","href":"/passport/"}]`
 
 ### `/bonding`
 
 > **tag:** `DRAFT-AGENT-SIMULATED` *(cross-origin surface; bridge ships in BUS4 Phase 3)*
 
 - **greeting:** `"Welcome to BONDING."`
-- **hint:** `"A chemistry game for parents and kids. Play together, learn together. Free."`
-- **fallback:** `"If your kid wanders off, the game just pauses. No score, no penalty."`
+- **hint:** `"A chemistry game for parents and kids. Drag atoms, build molecules, play together — even from different rooms."`
+- **fallback:** `"Works best on a tablet. Grab a kid if you have one nearby."`
 - **links:** `[{"label":"Back to the lab","href":"https://p31ca.org/lab"},{"label":"Back to welcome","href":"https://p31ca.org/welcome"}]`
+
+### `/dome`
+
+> **tag:** `DRAFT-AGENT-SIMULATED` *(highest-stimulation page; keep voice deliberately understated)*
+
+- **greeting:** `"The map."`
+- **hint:** `"Every node is something we built. Every line is a connection between them. This is the whole system in one view."`
+- **fallback:** `"It's a lot to take in. Zoom into whatever catches your eye, or head to the lab for the plain-text version."`
+- **links:** `[{"label":"See the list view","href":"/lab"},{"label":"Create your context card","href":"/passport/"}]`
 
 ### `/stylebook`
 
 > **tag:** `DRAFT-AGENT-SIMULATED`
 
-- **greeting:** `"The P31 design system."`
-- **hint:** `"Every component, every token, every rule. Copy what you need. Fork the rest."`
-- **fallback:** `"If you're not building software, the lab is the friendlier door."`
-- **links:** `[{"label":"See what we build","href":"/lab"},{"label":"Back to welcome","href":"/welcome"}]`
+- **greeting:** `"The design system."`
+- **hint:** `"This is how P31 looks, reads, and feels — documented so anyone building with us stays consistent. Tokens, typography, color, voice rules, accessibility targets."`
+- **fallback:** `"If you're here to contribute, start with the token reference. If you're here because you're curious, welcome to the kitchen."`
+- **links:** `[{"label":"Token reference","href":"/stylebook/tokens-reference.html"},{"label":"How to contribute","href":"/stylebook/contributing.html"}]`
 
 ### `/ops`
 
 > **tag:** `DRAFT-AGENT-SIMULATED` *(operator-only surface; PHOS still greets in case someone is shoulder-surfing)*
 
-- **greeting:** `"Operator console."`
-- **hint:** `"Status across the mesh. Quick actions. Context for the next decision."`
-- **fallback:** `"Not what you're looking for? Most public surfaces live in the lab."`
+- **greeting:** `"Operator view."`
+- **hint:** `"Fleet health, filing deadlines, board status, grant pipeline. Everything the operator needs on one screen."`
+- **fallback:** `"If you're not the operator and you're seeing this — hi. You probably have a context card with operator access. That's fine. Look around."`
 - **links:** `[{"label":"Back to the lab","href":"/lab"},{"label":"Back to welcome","href":"/welcome"}]`
 
 ### `/ede`
 
-> **tag:** `DRAFT-AGENT-SIMULATED` *(operator-only surface)*
+> **tag:** `DRAFT-AGENT-SIMULATED` *(operator-only surface; the development environment)*
 
 - **greeting:** `"EDE — the development environment."`
 - **hint:** `"Every tool, one keystroke away. Built for the operator's hands."`
@@ -216,16 +228,18 @@ Build → `npm run build:phos-voice`. Verify → `npm run verify:phos-voice` (ba
 ## 5. Operator instructions (when iPad is warm)
 
 1. Open this file on the iPad.
-2. Read §3 first. That's the kernel — confirm the line still rings true tomorrow as it did tonight. If it doesn't, rewrite it. Track A is yours.
-3. Walk §4 page by page. Replace every `[operator-voice needed]` placeholder with one sentence in your voice. One sentence per slot. If a slot doesn't need a sentence, leave the field empty (PHOS will skip it).
-4. Don't aim for twenty perfect lines. Aim for twenty honest lines. The operator's voice is the spec.
-5. When done, mark this file `STATUS: STABLE` at the top. Then any agent can mirror the canonical copy into `p31-phos-voice.json` via a future sync script.
+2. Read §3 first. That's the kernel — confirm the tagline still rings true tomorrow as it does tonight. If it doesn't, rewrite it. Track A is yours.
+3. Walk §4 page by page. For any slot tagged `DRAFT-AGENT-SIMULATED` that sounds like you — change the tag to `OPERATOR-VOICE`. For any that doesn't — rewrite it in your voice, then change the tag.
+4. Don't aim for perfect. Aim for honest. The operator's voice is the spec.
+5. After editing, run `npm run build:phos-voice` to regenerate the JSON. Run `npm run verify:phos-voice -- --update-lock` to update the SHA lock for any new OPERATOR-VOICE entries. Commit both.
+
+**Live-testing flow (vibe-check loop):** open `/welcome` (or any page) on the laptop, see the line PHOS says, decide if it's right. If yes — leave it. If no — open this file in another window, edit the bullet, run `npm run build:phos-voice`, hard-refresh the page. Voice updates instantly. No deploy, no commit, no wait. Iterate until the vibe lands. Commit when stable.
 
 ---
 
 ## 6. Verification (when canonical mirror exists)
 
-- `npm run verify:phos-voice` (planned) — fails if `p31-phos-voice.json` contradicts `OPERATOR-VOICE` lines or violates banned-vocabulary list.
+- `npm run verify:phos-voice` — fails if `p31-phos-voice.json` contradicts `OPERATOR-VOICE` lines or violates banned-vocabulary list.
 - `npm run verify:public-voice` (existing) — already enforces identity-first language and Tier B/C guardrails per `docs/PUBLIC-VOICE.md`.
 - Manual: pair-check on Chromebook + iPhone before any deploy that touches `p31-phos-voice.json`.
 
@@ -233,4 +247,6 @@ Build → `npm run build:phos-voice`. Verify → `npm run verify:phos-voice` (ba
 
 *"The geometry holds. Now give it skin."*
 
-*Captured 2026-05-01 by Architect (Opus 4.7) under operator command authority. Updates: operator hand only on lines 3.x; structural sections (1, 2, 5, 6) editable by Architect with operator review.*
+*First per-page draft by Architect (Opus) under operator command authority, merged with the build pipeline structure by Claude Code, 2026-05-01. Per-page copy filled from 3 months of operator context. Operator promotes draft lines to OPERATOR-VOICE one at a time during live testing. Updates: operator hand only on lines marked OPERATOR-VOICE; structural sections (1, 2, 5, 6) editable by Architect with operator review.*
+
+*Tagline change 2026-05-01 evening: "raw dogging life" → "figuring it out as they go." Same weight. Kid-readable. Bash and Willow can sound it out without questions.*

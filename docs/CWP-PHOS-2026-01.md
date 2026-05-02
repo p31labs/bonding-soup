@@ -251,7 +251,7 @@ When the operator is on a real device:
 
 1. Run `npm run meatspace:print` — confirm 3 PDFs in `dist/meatspace/`
 2. Open `dist/meatspace/p31-qr-stickers-12up.pdf` and scan one QR with phone — confirm it loads `https://p31ca.org/welcome`
-3. On `/welcome`, wait 600ms — confirm PHOS auto-expands with `"Hi. I'm PHOS. For all the parents and kids out there raw dogging life — help is on the way..."`
+3. On `/welcome`, wait 600ms — confirm PHOS auto-expands with `"Hi. I'm PHOS. For every family out there figuring it out as they go — help is on the way..."` (tagline updated 2026-05-01 evening; was "raw dogging life" — see `docs/PHOS-VOICE-DRAFT.md` §3.1)
 4. Click PHOS Screen Comfort slider to 0 — confirm the page enters strict Gray Rock (no glass, no animations, dot stays inert on hover)
 5. Click "Don't show again" — confirm PHOS removes itself; reload — confirm it stays gone
 6. Clear localStorage; navigate to `/support` — confirm Tier-0 prose, three channels, accurate "not deductible" disclosure, footer with `help is on the way`
@@ -443,7 +443,7 @@ The invisible man now has:
 - an honest ask (support.html, line-item ledger, 501c3-pending verbatim)
 - a controlling document (this CWP)
 
-*"For all the parents and kids out there raw dogging life — help is on the way."*
+*"For every family out there figuring it out as they go — help is on the way."*
 
 Captured 2026-05-01 by Architect (Cursor agent, Claude Opus 4.7) under operator command authority. Status: shipped.
 

@@ -873,7 +873,7 @@
     {
       "id": "phos-voice-draft",
       "path": "docs/PHOS-VOICE-DRAFT.md",
-      "role": "Track A keystone \u2014 operator-authored canonical voice of PHOS (the personality face of P31). \u00a73 contains OPERATOR-VOICE lines (do-not-edit) including 'For all the parents and kids out there raw dogging life \u2014 help is on the way.' Source for andromeda/04_SOFTWARE/p31ca/public/lib/p31-phos-voice.json (planned). Future verify:phos-voice (planned) enforces banned-vocabulary list and never-edit-OPERATOR-VOICE rule."
+      "role": "Track A keystone \u2014 operator-authored canonical voice of PHOS (the personality face of P31). \u00a73 contains OPERATOR-VOICE lines (do-not-edit) including 'For every family out there figuring it out as they go \u2014 help is on the way.' (kid-readable tagline; 2026-05-01 evening operator-approved replacement of the original 'raw dogging life' framing because Bash + Willow are the design audience for the front door.) Mirrored to andromeda/04_SOFTWARE/p31ca/public/lib/p31-phos-voice.json by scripts/build-phos-voice-json.mjs and to scripts/meatspace/generate.mjs TAGLINE_OPERATOR_VOICE. verify:phos-voice enforces banned-vocabulary list and SHA-locks OPERATOR-VOICE entries against silent agent rewrites."
     },
     {
       "id": "cwp-phos-2026-01",

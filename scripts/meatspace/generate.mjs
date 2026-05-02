@@ -72,7 +72,7 @@ const ENTITY = {
   pendingNote: '501(c)(3) application pending',
 };
 const TAGLINE_PRIMARY = 'Technology that adapts to your brain — not the other way around.';
-const TAGLINE_OPERATOR_VOICE = 'For all the parents and kids out there raw dogging life — help is on the way.';
+const TAGLINE_OPERATOR_VOICE = 'For every family out there figuring it out as they go — help is on the way.';
 const TRUST_LINE = 'Open source · Nonprofit · Free';
 
 // ─── unit helpers ───────────────────────────────────────────────────────────

@@ -315,7 +315,14 @@ function main() {
       const voicePaths = new Set(
         slotKeys.map((k) => k.replace(/\/$/, "")).filter((k) => k.startsWith("/")),
       );
-      const missing = groundSlotPaths.filter((p) => !voicePaths.has(p));
+      // Mirror p31-phos-guide.mjs voiceForPage() normalization: strip .html so
+      // a busBar slot href like "/ede.html" matches a voice key "/ede".
+      const missing = groundSlotPaths.filter((p) => {
+        if (voicePaths.has(p)) return true === false;
+        const noHtml = p.replace(/\.html$/, "");
+        if (noHtml !== p && voicePaths.has(noHtml)) return false;
+        return !voicePaths.has(p);
+      });
       const total = groundSlotPaths.length;
       const covered = total - missing.length;
       coverage = `${covered}/${total} slots covered`;

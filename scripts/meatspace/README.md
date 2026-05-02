@@ -2,7 +2,7 @@
 
 Track D of **CWP-PHOS-2026-01** (the face). Generates PDFs the operator can hand to humans when speech serialization fails or context is short.
 
-> *"For all the parents and kids out there raw dogging life — help is on the way."* — see `docs/PHOS-VOICE-DRAFT.md`
+> *"For every family out there figuring it out as they go — help is on the way."* — see `docs/PHOS-VOICE-DRAFT.md` (operator-approved tagline change 2026-05-01 evening; previous "raw dogging life" framing was retired so the line is kid-readable on the elevator card and QR sticker)
 
 ## Quick start
 

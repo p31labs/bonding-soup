@@ -78,7 +78,7 @@ That is PHOS at first contact. Warm. Direct. No jargon. Acknowledges the load. N
 
 > **"Nine calcium atoms. Nine MVPs. One phosphorus at the center. The cage is complete."**
 
-This is operator-voice expressing the architectural alignment. Not for stranger copy. Reserved for `/lab`, the cognitive passport long-form (edition 5.1+), grant narratives, and the `?alive=1` deep-dive surfaces. Confirms that the product count was emergent from the chemistry, not designed to match.
+This is operator-voice expressing the architectural alignment. Not for stranger copy. Reserved for `/lab`, the cognitive passport long-form (edition 5.1+), grant narratives, the `?alive=1` deep-dive surfaces, and the operator wall poster (`scripts/meatspace/generate.mjs` `generateWiringPoster()` footer — abbreviated to fit the 11×17 footer band; full sentence is canonical here). Confirms that the product count was emergent from the chemistry, not designed to match.
 
 **Architectural consequence (binding):** the canonical product count is **nine**. A tenth product breaks the symmetry. New product proposals must either (a) absorb into one of the existing nine, (b) wait for an explicit cage-expansion CWP that re-derives the geometry, or (c) live outside the cage as infrastructure (Workers, fleet) rather than as user-facing MVPs. This rule is enforced in `andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs` review.
 

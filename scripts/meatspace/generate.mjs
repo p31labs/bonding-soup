@@ -75,6 +75,28 @@ const TAGLINE_PRIMARY = 'Technology that adapts to your brain — not the other 
 const TAGLINE_OPERATOR_VOICE = 'For every family out there figuring it out as they go — help is on the way.';
 const TRUST_LINE = 'Open source · Nonprofit · Free';
 
+// Frozen PDF metadata epoch — every artifact stamps the same creation/modification
+// date so identical inputs produce byte-identical PDFs. Without this, pdf-lib
+// stamps Date.now() into the trailer and PDFs diff on every run, which breaks
+// content-addressable distribution (printers, mirrors, snapshot diffs). Bump
+// only when the artifact spec itself changes intentionally; never on a whim.
+// Anchored to the day CWP-PHOS-2026-01 D-7 + Phase-4b spec audit shipped.
+const FROZEN_PDF_EPOCH = new Date('2026-05-02T00:00:00Z');
+
+/**
+ * Stamp deterministic metadata on a freshly created PDFDocument so the byte
+ * stream is reproducible. Caller still owns Title / Subject because those
+ * vary per artifact; this helper only freezes the parts pdf-lib otherwise
+ * defaults to "now".
+ */
+function applyFrozenMetadata(pdf) {
+  pdf.setAuthor('P31 Labs, Inc.');
+  pdf.setProducer('scripts/meatspace/generate.mjs');
+  pdf.setCreator('scripts/meatspace/generate.mjs');
+  pdf.setCreationDate(FROZEN_PDF_EPOCH);
+  pdf.setModificationDate(FROZEN_PDF_EPOCH);
+}
+
 // ─── unit helpers ───────────────────────────────────────────────────────────
 const IN = 72;            // 1 inch = 72 PDF points
 const BLEED = 0.125 * IN; // 9 pt
@@ -173,9 +195,8 @@ async function generateBusinessCard() {
 
   const pdf = await PDFDocument.create();
   pdf.setTitle('P31 Labs · business card');
-  pdf.setAuthor('P31 Labs, Inc.');
   pdf.setSubject('Print at 100% on 3.5×2 stock with 0.125" bleed');
-  pdf.setProducer('scripts/meatspace/generate.mjs');
+  applyFrozenMetadata(pdf);
   const fonts = await loadFonts(pdf);
 
   // ── Page 1: FRONT ─────────────────────────────────────────────────────────
@@ -291,12 +312,11 @@ async function generateOnePager() {
 
   const pdf = await PDFDocument.create();
   pdf.setTitle('P31 Labs · one-pager');
-  pdf.setAuthor('P31 Labs, Inc.');
   pdf.setSubject(
     `US Letter handout. Print at 100% on cardstock or plain paper. ` +
     `QR target: ${QR_TARGET}`
   );
-  pdf.setProducer('scripts/meatspace/generate.mjs');
+  applyFrozenMetadata(pdf);
   const fonts = await loadFonts(pdf);
 
   const page = pdf.addPage([pageW, pageH]);
@@ -566,12 +586,11 @@ async function generateElevatorCard() {
 
   const pdf = await PDFDocument.create();
   pdf.setTitle('P31 Labs · elevator card');
-  pdf.setAuthor('P31 Labs, Inc.');
   pdf.setSubject(
     `5"×3" leave-behind card. Print at 100% on 5×3 stock with 0.125" bleed, ` +
     `or 4-up on US Letter and trim. QR target: ${QR_TARGET}`
   );
-  pdf.setProducer('scripts/meatspace/generate.mjs');
+  applyFrozenMetadata(pdf);
   const fonts = await loadFonts(pdf);
 
   const xL = BLEED + SAFE;
@@ -742,12 +761,11 @@ async function generateQrStickers() {
 
   const pdf = await PDFDocument.create();
   pdf.setTitle('P31 Labs · QR sticker sheet (12-up)');
-  pdf.setAuthor('P31 Labs, Inc.');
   pdf.setSubject(
     `12 stickers, 2.5" square. Print at 100% on US Letter cardstock or sticker stock. ` +
     `Cut along the gridlines (corner ticks in the page margins). QR target: ${QR_TARGET}`
   );
-  pdf.setProducer('scripts/meatspace/generate.mjs');
+  applyFrozenMetadata(pdf);
   const fonts = await loadFonts(pdf);
 
   const page = pdf.addPage([pageW, pageH]);
@@ -846,6 +864,11 @@ function drawSticker(page, x, y, size, qrImg, fonts) {
 //   └────────────────────────────────────────────────────────────────────┘
 async function generateWiringPoster() {
   const pdf = await PDFDocument.create();
+  pdf.setTitle('P31 wiring diagram · operator wall poster');
+  pdf.setSubject(
+    'Print at 100% on 11×17 tabloid landscape. Companion to docs/P31-WIRING-DIAGRAM.md.'
+  );
+  applyFrozenMetadata(pdf);
   const fonts = await loadFonts(pdf);
   const W = 17 * IN;   // 1224 pt
   const H = 11 * IN;   // 792 pt

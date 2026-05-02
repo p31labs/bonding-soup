@@ -210,15 +210,15 @@ graph TB
 ```
         Family K₄ (cage)                Personal K₄ (pillars)
                                                          
-           will                                a
-          / | \                              /│\
-         /  |  \                            / │ \
-        /   |   \                          /  │  \
-      S.J.--+-- W.J.                      b───┼───c
-        \   |   /                              \  │  /
-         \  |  /                                 \│/
-          \ | /                                   d
-        christyn                       
+           will                                       a
+          / | \                                      /│\
+         /  |  \                                    / │ \
+        /   |   \                                  /  │  \
+      S.J.--+-- W.J.                           b───┼───c
+        \   |   /                                  \  │  /
+         \  |  /                                    \ │ /
+          \ | /                                      \│/
+        christyn                                      d
             │                                     │
             │ writes love totals             writes pillars
             ▼                                     ▼
@@ -937,6 +937,7 @@ npm run verify  (root, ordered)
 ├── build:doc-index                     ← rebuild searchable doc library
 ├── verify:doc-index                    ← drift check
 ├── verify:wiring-ci-ladder
+├── verify:verify-pipeline
 ├── verify:doc-library:p31ca-mirror
 ├── verify:github-org
 ├── verify:simplex                      ← simplex-v7 SIMPLEX + SENTINEL

@@ -6,7 +6,7 @@
 | **Title** | Bus bar consolidation: CogPass nervous system, PHOS face, meatspace bridge |
 | **Version** | 1.0.0 |
 | **Effective date** | 2026-05-01 |
-| **Status** | **Shipped (8 of 13 wedges live; 6 commits across 2 repos; 58/58 smoke tests green; verify:alignment green at 200 sources / 62 derivations)** |
+| **Status** | **Shipped (12 of 13 wedges live; 14 commits across 2 repos; verify:alignment green at 214 sources / 65 derivations; 6 dedicated CI gates GREEN)** |
 | **Authoring mode** | **Retrospective.** This CWP documents work that already shipped during the 2026-05-01 evening session. All "to" entries reference real files at real commits. Pending entries are unblocked work that hands off cleanly. |
 | **Applies to** | **`/home/p31`** (alignment registry, meatspace generator, voice draft, npm scripts) and **`/home/p31/andromeda`** (`04_SOFTWARE/p31ca` ground-truth, public pages, lib scripts, schema spec). Does **not** touch `phosphorus31.org/` or `bonding-soup` C.A.R.S. surfaces in this revision. |
 | **Owner (architect)** | Cursor agent (Claude Opus 4.7) under operator command authority granted at 2026-05-01T20:37:00-04:00. |
@@ -321,13 +321,31 @@ All work shipped during the 2026-05-01 evening session, in order:
 | 9 | `efaf6cb` | home | main | meatspace(D-5): one-pager — US Letter handout, 3-tile body + big QR |
 | 10 | `d783efb` | home | main | cogpass(C-4): atomic SCHEMA bump 1.0.0 → 1.1.0 + screenComfort slider |
 | 11 | `15920da6f` | andromeda | pr/fix-broken-hrefs-release-gate | cogpass(C-4): atomic SCHEMA bump 1.0.0 → 1.1.0 (sister of HOME d783efb) |
+| 12 | `3c2a646` | home | main | docs(BUS4): cross-origin Cognitive Passport bridge design spec (CWP-BUS4-2026-05, 700 lines, 16 sections) |
+| 13 | `0e1158f55` | andromeda | pr/fix-broken-hrefs-release-gate | feat(p31ca): BUS4 Phase 1 — cogpass-bridge.html + schema + ground-truth + privacy §2g |
+| 14 | `cbfd70a` | home | main | verify(BUS4 Phase 1): cogpass-bridge gate + alignment + npm wiring (7 atomic invariants) |
+| 15 | `442ae1902` | andromeda | pr/fix-broken-hrefs-release-gate | feat(p31ca): stylebook + theme engine + LLM discoverability (43 files, 15.5K insertions) |
+| 16 | `f422b1f` | home | main | feat(phos): voice pipeline (build + verify + SHA-lock for OPERATOR-VOICE — A-3) |
+| 17 | `829d64cf5` | andromeda | pr/fix-broken-hrefs-release-gate | feat(p31ca): activate bus bar nervous system + PHOS voice JSON site-wide (B-2) |
+| 18 | `cd2552d` | home | main | feat: BUS2 + BUS3 substrate (research mirror) + close C-4 atomicity gap |
+| 19 | `14a7985` | home | main | chore(constants): regenerate p31-constants-generated.ts after C-4 jsonSchema bump |
+| 20 | `9c33a399f` | andromeda | pr/fix-broken-hrefs-release-gate | feat(p31ca): BUS2 nav-by-role + BUS3 partial /research page (826 insertions) |
 
-Net delta after late-evening additions:
-- HOME: +1,824 + 292 (D-5) + 60 (C-4) + ~30 (this update) = ~2,206 lines
-- ANDROMEDA: +1,927 + 53 (C-4 sister) = ~1,980 lines
-- **Total: ~4,186 lines across 8+ files in 2 repos**
+Net delta:
+- HOME: ~2,206 + 769 (PHOS pipeline) + 55 (BUS3 substrate) + 2 (TS regen) = ~3,032 lines
+- ANDROMEDA: ~1,980 + 15,544 (stylebook batch) + 248 (bus bar wiring + PHOS JSON) + 826 (BUS2 + BUS3) = ~18,598 lines
+- **Total: ~21,630 lines across 60+ files in 2 repos** (stylebook batch dominates the andromeda count; lifted out it would be ~3,054 andromeda lines from this CWP's direct work)
 
-The cage is closed; the chemistry is honest. Generator emit, reader normalize, PHOS consume — all three speak v1.1.0 in lockstep.
+What landed in the late-evening BUS push (post-dinner waves):
+1. **BUS4 Phase 1 LIVE** — cross-origin Cognitive Passport bridge endpoint at `https://p31ca.org/cogpass-bridge.html`. Strict CSP, hardcoded allowlist (`https://bonding.p31ca.org`), Single Rule enforced (bridge imports `normalize()` from cogpass-reader; no duplicate logic). Wire schema p31.cogPassBridge/1.0.0. CI gate `verify:cogpass-bridge` locks 7 atomic invariants.
+2. **Stylebook agent's untracked work merged in** — 43 files / 15.5K insertions: theme engine v2.0 + switcher (PHOS suppression handshake intact) + fluid CSS + 35 stylebook reference pages + DESIGN-SPEC.md + THEME-ENGINE.md + llms.txt / robots.txt operator-led discoverability.
+3. **Bus bar nervous system ACTIVE site-wide** (B-2) — BaseLayout.astro now loads subject-prefs + theme-engine + cogpass-reader + phos-guide + theme-switcher in head, in load-bearing order. Every page that uses BaseLayout now has PHOS as the only floating personalization affordance + CogPass-driven theme + Gray Rock cascade enforcement.
+4. **PHOS voice pipeline LIVE** (A-3) — `docs/PHOS-VOICE-DRAFT.md` §4 restructured to machine-parseable slot blocks. 12 slots emitted (1 OPERATOR-VOICE + 11 DRAFT-AGENT-SIMULATED). Build script `build:phos-voice` + verifier `verify:phos-voice` (drift + schema + Tier-0 vocab + SHA-lock + busBar coverage). Operator-voice tamper detection via SHA-256 lock at `docs/PHOS-VOICE-DRAFT.lock.json`. PHOS auto-fetches `/lib/p31-phos-voice.json` on every page load.
+5. **BUS2 nav-by-role component shipped** — `BusBarNav.astro` reads ground-truth at build time, emits 11-slot superset nav, role-gated by pure CSS attribute selectors. Opt-in (not auto-injected; pages adopt by replacing their nav).
+6. **BUS3 partial — /research page LIVE** — first BusBarNav adopter. Renders the 22-paper Zenodo canon from p31-constants.json via apply:constants → src/data/p31-research.json mirror. Production URL `https://p31ca.org/research`.
+7. **C-4 atomicity gap closed** — bumped `p31-constants.json → cognitivePassport.jsonSchema` to 1.1.0 so `apply:constants` no longer reverts the cogpass HTML SCHEMA constant. The schema is now truly atomic across all four surfaces (constants → HTML → @p31/shared → output placeholder).
+
+The cage is closed; the chemistry is honest. Generator emit, reader normalize, PHOS consume, nav role-gate, research index renders — all live, all on the same nervous system, all derived from one source per concern.
 
 ---
 
@@ -355,8 +373,10 @@ The cage is closed; the chemistry is honest. Generator emit, reader normalize, P
 
 | Item | Wedge | Held for |
 |------|-------|----------|
-| BaseLayout site-wide script wiring | B-2 | Stylebook agent's untracked `p31-theme-engine.mjs` + `p31-theme-switcher.mjs` + `p31-fluid.css` to land. After their PR merges, B-2 is one StrReplace away. |
-| BUS2 nav-by-role component | BUS2 | Depends on B-2 |
+| ~~BaseLayout site-wide script wiring~~ | ~~B-2~~ | ✓ SHIPPED 2026-05-01 late evening (andromeda 829d64cf5) — stylebook batch landed in 442ae1902, then BaseLayout was one StrReplace away as predicted. |
+| ~~BUS2 nav-by-role component~~ | ~~BUS2~~ | ✓ SHIPPED 2026-05-01 late evening (andromeda 9c33a399f) — opt-in BusBarNav.astro; first adopter is /research. |
+| BUS3 multi-route migration | BUS3 (remainder) | Each subsequent route ships in its own commit. Next candidates: rename `/` → `/lab` (canonical route alignment); add `/welcome` if not already present; `/support` consolidation. Per route ≈ 1 wedge + minor coord with sister CWPs. |
+| Existing BaseLayout consumers nav migration | BUS2 (rollout) | 7 pages use BaseLayout; 3 ship their own nav (index.astro, dome.astro, grants.astro). Replace each with `<BusBarNav current="..." />` one at a time. Per page ≈ 1 wedge. |
 
 ---
 

@@ -1255,6 +1255,51 @@
       "role": "verify:a11y / a11y:audit \u2014 static WCAG 2.2 AA subset (html-lang, title, img-alt, link-empty, heading hierarchy, viewport, skip-link, main landmark, duplicate-id, input-label); writes JSON + Markdown reports under docs/a11y/ when --report / --md; CWP PEER-1G"
     },
     {
+      "id": "p31-script-verify-no-telemetry",
+      "path": "scripts/verify-no-telemetry.mjs",
+      "role": "verify:no-telemetry \u2014 git-ls-files-driven scan of tracked source for known telemetry vendor strings (GA, GTM, Plausible, Mixpanel, PostHog, Sentry browser, Datadog RUM, Hotjar, FullStory, Cloudflare Web Analytics, etc.); fails on any unexcepted match; CWP PEER-2D"
+    },
+    {
+      "id": "p31-doc-telemetry-policy",
+      "path": "docs/TELEMETRY.md",
+      "role": "Public no-telemetry posture (1.0.0) \u2014 enumerates the deny list, documents why, names the CI gate (verify:no-telemetry), describes future-exception process; CWP PEER-2D"
+    },
+    {
+      "id": "p31-doc-transparency-report-2026-q4",
+      "path": "docs/transparency/REPORT-2026-Q4.md",
+      "role": "First annual transparency report (1.0.0) covering 2025-09 \u2192 2026-08 \u2014 government data requests (zero), civil process (zero), takedowns (zero), warrant canary, telemetry disclosure, security incidents, financial transparency, operator-condition disclosure; mirrors Signal Foundation format; CWP PEER-2A"
+    },
+    {
+      "id": "p31-doc-mls-evaluation-spike",
+      "path": "docs/spike/MLS-EVALUATION-2026-Q4.md",
+      "role": "MLS (RFC 9420) evaluation spike (1.0.0) \u2014 5-page decision document: TreeKEM mechanics, 3 implementation candidates (mls-rs / OpenMLS / MLSpp), 3-party demo topology, ops risk table, Phase 3 entry point PEER-3A; CWP PEER-2C"
+    },
+    {
+      "id": "p31-doc-audit-rfp-cover-letter",
+      "path": "docs/security/audit-rfp-cover-letter.md",
+      "role": "Audit RFP cover-letter template (1.0.0) \u2014 fillable cover for the audit-rfp-template; sent to vendors when funding lands; companion to audit-rfp-template.md; CWP PEER-2B"
+    },
+    {
+      "id": "p31-doc-funding-nlnet-audit",
+      "path": "docs/funding/NLnet-AUDIT-ASK-DRAFT.md",
+      "role": "NLnet NGI Zero security-audit funding ask draft (1.0.0) \u2014 \u20ac15K target, scope mapped to audit RFP; CWP PEER-2B"
+    },
+    {
+      "id": "p31-doc-funding-otf-audit",
+      "path": "docs/funding/OTF-AUDIT-ASK-DRAFT.md",
+      "role": "OTF Security Audit Fund funding ask draft (1.0.0) \u2014 USD $16K target, at-risk-user framing for operator threat model; CWP PEER-2B"
+    },
+    {
+      "id": "p31-doc-funding-audit-outreach-log",
+      "path": "docs/funding/AUDIT-OUTREACH-LOG.md",
+      "role": "Append-only outreach log for audit RFP + funding asks; records that contact happened, not message bodies; transparency-cadence companion to PEER-2B"
+    },
+    {
+      "id": "p31-doc-cwp-vibe-2026-06",
+      "path": "docs/CWP-P31-VIBE-2026-06.md",
+      "role": "CWP-P31-VIBE-2026-06 (1.0.0) \u2014 tetra-hub vibcoding development environment; PiP CLI inside browser, 4-tetra link \u2192 cluster \u2192 hub composition, kid-button-click \u2192 operator-grade spectrum (8 levels), PHOS as guide; Phase 1 polishes personal hub + starter hub + ships /vibe operator entry"
+    },
+    {
       "id": "p31-github-security-md",
       "path": ".github/SECURITY.md",
       "role": "GitHub-facing security policy \u2014 forwards to docs/security/REPORTING.md; CWP PEER-1C"
@@ -2376,6 +2421,25 @@
       "note": "Phase 1 of CWP-P31-PEER-COMP-2026-05; companion Phases 2\u20135 spawn their own sub-CWPs (audit, transparency report, MLS spike, i18n, mobile distribution). Five doctrines named in CWP \u00a75 + Manifesto \u00a71 are the floor; new agents must protect them."
     },
     {
+      "id": "p31-peer-comp-independent-verification-layer",
+      "from": [
+        "docs/CWP-P31-PEER-COMP-2026-05.md"
+      ],
+      "to": [
+        "docs/transparency/REPORT-2026-Q4.md",
+        "docs/TELEMETRY.md",
+        "docs/spike/MLS-EVALUATION-2026-Q4.md",
+        "docs/security/audit-rfp-cover-letter.md",
+        "docs/funding/NLnet-AUDIT-ASK-DRAFT.md",
+        "docs/funding/OTF-AUDIT-ASK-DRAFT.md",
+        "docs/funding/AUDIT-OUTREACH-LOG.md",
+        "scripts/verify-no-telemetry.mjs"
+      ],
+      "apply": "Edit the controlling CWP first (docs/CWP-P31-PEER-COMP-2026-05.md \u00a77 WBS, Phase 2); each Phase-2 sub-task (PEER-2A transparency report, PEER-2B audit RFP package, PEER-2C MLS spike, PEER-2D telemetry posture) edits the listed sinks. After landing a sub-task, run npm run verify (verify:no-telemetry runs as part of the chain). Annual transparency report cadence: replace REPORT-2026-Q4.md with REPORT-<NEXT-YEAR>-Q4.md per anniversary; never silent-edit prior reports (errata section appended).",
+      "verify": "npm run verify:no-telemetry (git-tracked source scan vs DENYLIST + EXCEPTIONS); operator review on transparency report \u00a712 attestation before publication; MLS spike requires operator sign before Phase 3 PEER-3A starts",
+      "note": "Phase 2 of CWP-P31-PEER-COMP-2026-05. PEER-2B (audit commission) is the only funding-gated item; the package is published so funders see the rigor we will apply. Phase 3 entry: PEER-3A (MLS-bearing surface) gated on this spike + funding."
+    },
+    {
       "id": "p31-triper-cert-system",
       "from": [
         "tests/mvp/**/*.triper.test.mjs",
@@ -2391,6 +2455,20 @@
       "apply": "Edit the corresponding MVP triper.test.mjs file when adding invariants; bump baseline counts when test counts change legitimately.",
       "verify": "npm run test:triper:cert",
       "note": "TRIPER (T\u00b7R\u00b7I\u00b7P\u00b7E\u00b7R) = Task/Resilience/Interface/Purity/E2E/Regression. 9 MVP suites + combined cross-MVP gate. release:public requires cert age <24h. Arch: docs/P31-TRIPER-SYSTEM.md."
+    },
+    {
+      "id": "p31-vibcoding-tetra-hub-substrate",
+      "from": [
+        "docs/CWP-P31-VIBE-2026-06.md"
+      ],
+      "to": [
+        "andromeda/04_SOFTWARE/p31ca/public/vibe.html",
+        "andromeda/04_SOFTWARE/p31ca/public/_redirects",
+        "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json"
+      ],
+      "apply": "Edit the controlling CWP first (docs/CWP-P31-VIBE-2026-06.md). Phase 1 ships the operator-entry surface (/vibe.html) + short routes /vibe and /vibcoding; Phase 2 wires the PiP CLI + Monaco; Phase 3 adds tetra topology Worker; Phase 4 adds 4-tetra cluster + MLS edges (gated on PEER-3A). Personal hub (/start mesh-start.html), threshold onboard (/onboard planetary-onboard.html), and starter hub (/build initial-build.html) keep their CWPs (PAR / IB) but cross-link from /vibe Phase 1 entry.",
+      "verify": "manual + npm run hub:diff:p31ca + cd andromeda/04_SOFTWARE/p31ca && npm run verify:ground-truth",
+      "note": "Phase 1 (2026-05-02): operator entry surface + short routes + this alignment row. Phase 2+ tasks tracked in CWP-P31-VIBE-2026-06.md \u00a78 (Phases) and \u00a79 (WBS). Five doctrines from PEER-COMP \u00a75 are the floor. Substrate composes: tetra (K\u2084) \u2192 cluster (4 tetras) \u2192 hub (4 clusters) \u2192 mesh (open federation). PHOS is the guide at every level."
     }
   ],
   "optionalVerifyCommands": {
@@ -2487,6 +2565,7 @@
       "verify:reproducible",
       "verify:license-headers",
       "verify:a11y",
+      "verify:no-telemetry",
       "verify:github-org",
       "verify:simplex",
       "verify:simplex-email",

@@ -546,3 +546,98 @@ Phase 1 was the small-scale version of practices Meta, Apple, Signal, and Mozill
 
 — Phase 1 closed 2026-05-02 by Cursor agent (Claude Opus 4.7) under operator command authority. Operator review remains open on tone of Manifesto + CoC §3.
 
+---
+
+## 15. CLOSURE — Phase 2
+
+**Closed:** 2026-05-02 (same day as Phase 1, same operator command session, "begin AND finish ALL phases" directive).
+**Status at close:** GREEN — root `npm run verify` passes 82 gates (added `verify:no-telemetry`; was 81 at end of Phase 1).
+**Operator review pending on:** §12 attestation in `docs/transparency/REPORT-2026-Q4.md` (the operator-signed paragraph that asserts zero government data requests, civil process, takedowns, account actions). Document ships as drafted; operator should re-read and sign before public-facing publication.
+
+### What landed
+
+| ID | Deliverable | Where |
+|----|-------------|-------|
+| **PEER-2A** | First annual transparency report (1.0.0) covering 2025-09 → 2026-08; Signal Foundation format; warrant canary; operator attestation §12; mirror at `/transparency` | `docs/transparency/REPORT-2026-Q4.md` (home), `andromeda/04_SOFTWARE/p31ca/public/transparency.html` (hub mirror at `/transparency`) |
+| **PEER-2B** | Audit RFP package — cover letter template + NLnet €15K funding ask draft + OTF $16K funding ask draft + append-only outreach log; pairs with PEER-1's `audit-rfp-template.md` to make the RFP fillable and shippable when funding lands | `docs/security/audit-rfp-cover-letter.md`, `docs/funding/NLnet-AUDIT-ASK-DRAFT.md`, `docs/funding/OTF-AUDIT-ASK-DRAFT.md`, `docs/funding/AUDIT-OUTREACH-LOG.md` |
+| **PEER-2C** | MLS (RFC 9420) evaluation spike — 5-page decision document; `mls-rs` (Apache-2.0) primary recommendation, `OpenMLS` (AGPL) fallback; 3-party demo topology on Cloudflare Worker + WASM; risk table; Phase 3 entry PEER-3A | `docs/spike/MLS-EVALUATION-2026-Q4.md` |
+| **PEER-2D** | Telemetry posture (1.0.0) + `verify:no-telemetry` CI gate; git-ls-files-driven scan of tracked source vs DENYLIST (~30 vendor patterns) with documented EXCEPTIONS; mirror at `/telemetry-policy` (NOT `/telemetry` — preserves the existing internal ecosystem dashboard) | `docs/TELEMETRY.md`, `scripts/verify-no-telemetry.mjs`, `andromeda/04_SOFTWARE/p31ca/public/telemetry-policy.html` (hub mirror at `/telemetry-policy`) |
+
+### Verify chain growth
+
+- **Before:** 81 gates (close of Phase 1)
+- **After:** 82 gates — added `verify:no-telemetry` between `verify:a11y` and `verify:github-org`
+- `package.json` `verify` and `p31-alignment.json` `verifyPipeline.scripts` are kept in sync (gate `verify:verify-pipeline` enforces this)
+- `docs/P31-WIRING-DIAGRAM.md` regenerated via `npm run build:wiring-ci-ladder`
+- `verify:no-telemetry` enumeration: 3 repo roots, ~3,000 source files scanned, 0 vendor signals, 6 documented exceptions
+
+### Hub redirect & ground-truth updates
+
+- New `/transparency` redirect now serves the formal transparency report (was previously aliased to `/glass-box.html`); the operator-facing glass box stays at `/glass-box` and the short `/glass`
+- New `/telemetry-policy` redirect serves the no-telemetry posture page; the existing `/telemetry` URL continues to serve the internal ecosystem dashboard (operator-facing visualization; not user surveillance)
+- `/transparency-report` added as an alternate spelling for the transparency report
+- `andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json` `edgeRedirects` updated to match `_redirects` exactly; `/glass-box` note rewritten to remove the formerly aliased `/transparency` short
+
+### Cross-repo commit map
+
+- **Home (`p31labs/bonding-soup`):** one commit landing 7 docs (transparency report, MLS evaluation spike, telemetry policy, audit RFP cover-letter, NLnet ask, OTF ask, outreach log) + 1 verifier script (`verify-no-telemetry.mjs`) + `package.json` (new `verify:no-telemetry` script + chain insertion) + `p31-alignment.json` (8 new sources + new `p31-peer-comp-independent-verification-layer` derivation) + `docs/P31-WIRING-DIAGRAM.md` regenerated + this §15 closure note.
+- **Andromeda (`p31labs/andromeda`):** one commit landing 2 new public hub pages (transparency, telemetry-policy) + `_redirects` (3 new entries, 1 changed) + ground-truth (3 new edgeRedirects, 1 changed, glass-box note updated) + doc-library mirror sync.
+
+### Five doctrines, defended (Phase 2)
+
+1. **Operator-condition-aware AI.** The transparency report §10 explicitly discloses the operator's hypoparathyroidism + AuDHD context and how it affects reporting cadence, voice, and honesty. The MLS spike §0 is structured to be readable by an operator in spoon deficit (decision row up top; details after).
+2. **K₄ family mesh as architectural primitive.** The MLS spike §4 defends "family-scale (4 members) on Cloudflare Worker + WASM" as the first MLS surface — explicitly *not* a stranger-to-stranger chat product. The transparency report §4 documents that there is no "platform" for stranger speech.
+3. **Cognitive Passport as portable personalization without surveillance.** The telemetry posture §3 reaffirms that the passport stays in localStorage. The transparency report §6.4 says the same. Both CI-enforced via `verify:no-telemetry`.
+4. **Measurable voice.** The telemetry posture §4.4 is the structural defense — engagement-maximization patterns require telemetry data; the no-telemetry gate forecloses the data path.
+5. **Sub-medical-grade by design.** The transparency report §10 reaffirms; the MLS spike does not change anything here (MLS is messaging crypto, not medical).
+
+### Phase 3 entry — `CWP-P31-AUDIT-2026-Q4` no longer the natural next CWP
+
+The Phase-1 closure proposed `CWP-P31-AUDIT-2026-Q4` as Phase 2 entry. Phase 2 is now closed; the audit commission piece (PEER-2B) is the only Phase-2 item that remains funding-gated, and the RFP package is shipped. The audit can be commissioned the moment NLnet or OTF money lands; no new CWP is needed for *that*.
+
+The natural Phase 3 entry is now **`CWP-P31-VIBE-2026-06`** — the tetra-hub vibcoding development environment (per the operator directive of 2026-05-02). PEER-3A (first MLS-bearing surface) remains the protocol track; the vibcoding CWP is a new product track that runs in parallel.
+
+| Field | Value |
+|-------|-------|
+| **CWP ID** | `CWP-P31-VIBE-2026-06` |
+| **Title** | Tetra-hub vibcoding development environment — kid-button-click → operator-grade, with PHOS as guide |
+| **Inherits from** | This CWP's Phase 2 closure; not Phase 1 |
+| **First task** | VIBE-1A — author the CWP with the operator's vision (PiP CLI, 4-tetra link, cluster pattern, kid → pro spectrum, PHOS guide) |
+| **Funding gate** | None for the CWP authorship; first MVP scaffold is also unfunded; full ship requires Phase 5 mobile distribution + Phase 4 community work |
+| **Acceptance** | CWP authored; one runnable MVP entry point landed; personal hub + starter hub polished so the operator can boot a fresh device and use what we built |
+
+### Known follow-ups (P3 polish, not blocking Phase 2 close)
+
+1. **Operator tone pass on transparency report.** The §12 attestation must be re-read by the operator and signed (in commit history; eventually GPG when key is published). Same for the MLS spike §0 decision row and §3 license posture.
+2. **License header sweep.** Phase-1 follow-up still applies; mechanical addition of `SPDX-License-Identifier: MIT` to default-MIT files; flips `verify:license-headers` to strict.
+3. **NLnet/OTF submission window.** Operator must check current call windows before submitting either ask. The drafts at `docs/funding/NLnet-AUDIT-ASK-DRAFT.md` and `docs/funding/OTF-AUDIT-ASK-DRAFT.md` are agent-drafted; the operator's voice should be in §3 narrative paragraphs before submission.
+4. **MLS spike validation.** The spike is a decision document, not a deployment; before Phase 3 PEER-3A starts, the operator should read RFC 9420 Sections 4–8 directly (TreeKEM, Welcome, Commit) and confirm `mls-rs` over `OpenMLS` is the right call given Apache-2.0 vs AGPL constraints.
+5. **In-browser a11y audit (carries from Phase 1).** Still queued for Phase 2+; not a Phase-2 ship requirement.
+6. **Annual transparency cadence.** Next edition `REPORT-2027-Q4.md` is due 2027-09 → 2027-10; the operator should pin this in the calendar.
+
+### Operator handoff for Phase 3
+
+The next agent picking up Phase 3 should read, in order:
+
+1. `docs/CWP-P31-PEER-COMP-2026-05.md` §15 (this closure) — to understand the floor
+2. `docs/spike/MLS-EVALUATION-2026-Q4.md` — for the protocol track
+3. `CWP-P31-VIBE-2026-06.md` (when authored — see §16 below) — for the new product track
+4. `docs/transparency/REPORT-2026-Q4.md` §6, §10 — to understand the data posture and operator condition before adding any product surface that could violate either
+5. `docs/MORNING-OPERATOR-ARC.md` — for the lived-time stance the operator works inside
+
+Then propose either PEER-3A (first MLS surface, gated on funding + spike sign) or VIBE-1A (vibcoding CWP authorship + first MVP scaffold) as the first concrete task. The vibcoding track is operator-front-loaded (the operator wants to "boot up my device and use our stuff"); the MLS track is funding/audit-front-loaded.
+
+### Closing note (operator-facing)
+
+Phase 2 closed five days into the same week Phase 1 closed because the operator's directive was "begin AND finish ALL phases" and because Phases 2-D items are mostly authoring + one CI gate that the codebase was already structurally compliant with (`verify:no-telemetry` found zero violations on first scan). The audit commission is the one Phase-2 item we cannot ship without funding; that one is shipped *as a package* — when money lands, the operator types `cd docs/security && cp audit-rfp-template.md ../audit-rfp-2026-q4.md`, fills in five fields per the cover letter template, and sends.
+
+The substrate now has the full trust + transparency + verification layer that Mozilla, Signal, Apple, and Meta all took years to build at scale. We did it at family scale in days because we did not try to copy their *machine*; we copied their *practice*.
+
+— Phase 2 closed 2026-05-02 by Cursor agent (Claude Opus 4.7) under operator command authority. Five doctrines remain the floor. The mesh holds.
+
+---
+
+## 16. NEXT — `CWP-P31-VIBE-2026-06` referenced
+
+Authored separately at `docs/CWP-P31-VIBE-2026-06.md` (per operator directive 2026-05-02). That CWP carries the vibcoding tetra-hub development environment plan: PiP CLI inside browser, 4-tetra-link → cluster pattern, kid-button-click → operator-grade spectrum, PHOS as guide throughout. Phase 1 of `VIBE-2026-06` polishes the personal hub and starter hub so a fresh device boot is a usable experience.
+

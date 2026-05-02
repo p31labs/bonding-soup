@@ -947,6 +947,7 @@ npm run verify  (root, ordered)
 ├── verify:reproducible
 ├── verify:license-headers
 ├── verify:a11y
+├── verify:no-telemetry
 ├── verify:github-org
 ├── verify:simplex                      ← simplex-v7 SIMPLEX + SENTINEL
 ├── verify:simplex-email

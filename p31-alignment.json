@@ -867,7 +867,7 @@
     {
       "id": "cognitive-passport-v1-1-overlay-schema",
       "path": "andromeda/04_SOFTWARE/p31ca/ground-truth/cognitive-passport-v1-1.schema.json",
-      "role": "p31.cognitivePassport/1.1.0 \u2014 additive overlay JSON Schema (Draft 7) for the v1.0.0 base. Documents optional identity / cognition / communication / accessibility / stylePreferences / context blocks introduced by WCD-PHOS-2026-01 (bus bar + face). SCHEMA constant in cognitive-passport/index.html and @p31/shared remain 1.0.0 until WCD-PHOS C-4 (generator rebuild) atomically bumps both. Spec is ready; bump is a separate atomic move.",
+      "role": "p31.cognitivePassport/1.1.0 \u2014 additive overlay JSON Schema (Draft 7) for the v1.0.0 base. Documents optional identity / cognition / communication / accessibility / stylePreferences / context blocks introduced by WCD-PHOS-2026-01 (bus bar + face). LIVE as of WCD-PHOS C-4: SCHEMA constant in cognitive-passport/index.html and COGNITIVE_PASSPORT_SCHEMA in @p31/shared atomically bumped to 1.1.0; live generator now emits accessibility.{screenComfort, motionPreference, contrastPreference, informationDensity, temperaturePreference} alongside the legacy uiComfort block (backward compatible \u2014 every v1.0.0 reader can still read v1.1.0 documents).",
       "optional": true
     },
     {
@@ -1632,14 +1632,15 @@
         "andromeda/04_SOFTWARE/p31ca/ground-truth/cognitive-passport-v1-1.schema.json"
       ],
       "to": [
-        "(planned) cognitive-passport/index.html SCHEMA bump 1.0.0 \u2192 1.1.0",
-        "(planned) andromeda/04_SOFTWARE/packages/shared/src/cognitive-passport-schema.ts COGNITIVE_PASSPORT_SCHEMA bump",
-        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-cogpass-reader.mjs (configurator over p31SubjectPrefs + p31Theme; ships in WCD-PHOS-2026-01 B-4)",
+        "cognitive-passport/index.html (SCHEMA = \"p31.cognitivePassport/1.1.0\"; emits accessibility.{screenComfort, motionPreference, contrastPreference, informationDensity, temperaturePreference} alongside legacy uiComfort)",
+        "andromeda/04_SOFTWARE/packages/shared/src/cognitive-passport-schema.ts (COGNITIVE_PASSPORT_SCHEMA = 'p31.cognitivePassport/1.1.0' \u2014 atomically locked by verify:cognitive-passport-schema)",
+        "andromeda/04_SOFTWARE/p31ca/public/passport-generator.html (mirror via sync:passport \u2014 also at 1.1.0; Tier-0 audit: identical SCHEMA + accessibility emit shape)",
+        "andromeda/04_SOFTWARE/p31ca/public/lib/p31-cogpass-reader.mjs (consumer \u2014 normalizes v1.0.0 + v1.1.0 docs into the same shape; v1.0.0 docs get safe defaults for absent v1.1.0 blocks; v1.1.0 docs flow through directly)",
         "andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json busBar.roles.cogPassAccessLevel"
       ],
-      "apply": "Author phase complete. Reader (B-4) ships ahead of the SCHEMA bump and reads any document tagged v1.0.0 OR v1.1.0 \u2014 normalize() supplies safe defaults for absent v1.1.0 blocks. Atomic bump of SCHEMA constants is WCD-PHOS-2026-01 C-4 (generator rebuild). BaseLayout wiring is B-2.",
-      "verify": "JSON Schema Draft 7 validity (manual today; npm run verify:cognitive-passport-overlay planned); npm run verify:bus-bar (planned) checks busBar.roles enum matches identity.accessLevel enum in this schema",
-      "note": "Additive: every v1.0.0 document is a valid v1.1.0 document (additionalProperties:true; all v1.1.0 blocks optional). See overlay schema doctrine block."
+      "apply": "LIVE \u2014 bumped in WCD-PHOS-2026-01 C-4. Generator UI now exposes a 'Master comfort 0-100' slider (the court mode slider) at the top of \u00a73 Screen comfort (cognitive-passport/index.html sec-comfort fieldset). readSubjectPrefs() returns the value; buildPayloadBase() emits it under accessibility.screenComfort. Existing 4-axis controls (contrast/density/motion/temp) continue to populate uiComfort for backward compat AND the v1.1.0 accessibility.* mirror fields. Atomic bump verified by verify:cognitive-passport-schema. Mirror parity verified by verify:passport. Audience matrix unbroken: verify:cognitive-passport-profiles 5/5 green.",
+      "verify": "npm run verify:cognitive-passport-schema (atomic SCHEMA equality, html \u2261 @p31/shared); npm run verify:passport (mirror parity); npm run verify:cognitive-passport-profiles (audience matrix types unbroken). JSON Schema Draft 7 validity is manual today; npm run verify:cognitive-passport-overlay remains planned.",
+      "note": "Additive: every v1.0.0 document is a valid v1.1.0 document (additionalProperties:true; all v1.1.0 blocks optional). The reader is the receiver; the generator is now the canonical v1.1.0 emitter."
     },
     {
       "id": "p31-cogpass-reader-binds-engines",

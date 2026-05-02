@@ -2,20 +2,20 @@
 
 **Schema:** `p31.wiringDiagram/1.0.0`
 **Updated:** 2026-05-01
-**Source for the printable poster:** `scripts/meatspace/generate-wiring-poster.mjs` (see `npm run meatspace:print:wiring-poster`)
+**Source for the printable poster:** `scripts/meatspace/generate.mjs` (the `generateWiringPoster()` function + `drawQuadrant*` helpers); run via `npm run meatspace:print:wiring-poster`
 **Source of truth:** Each named element points to the file that defines it. Edit the file → re-run the verifier listed at section end → diagram regenerates.
 
 ---
 
 ## How to read this document
 
-This doc has **eight diagrams**, each focused on one concern. Together they describe every connection in the P31 mesh:
+This doc has **ten diagrams**, each focused on one concern. Together they describe every connection in the P31 mesh:
 
 | § | Diagram | Concern |
 |---|---------|---------|
 | 1 | **Hubs + Portals** | Public-facing surfaces (sites, routes, role gates) |
 | 2 | **The Cage (K₄ Mesh)** | Family/personal/hub Workers + Durable Objects |
-| 3 | **The Edge Fleet** | All 14 verified Workers + 18 allowlisted Workers |
+| 3 | **The Edge Fleet** | 30 unique Workers (14 verified + 18 allowlisted; `bonding-relay` and `p31-google-bridge` overlap both lists) |
 | 4 | **Bus Bar Nervous System** | BaseLayout 5-script load order + PHOS suppression handshake |
 | 5 | **PHOS Voice Pipeline** | PHOS-VOICE-DRAFT.md → JSON → fetch → guide |
 | 6 | **CogPass Cross-Origin Bridge (BUS4)** | postMessage iframe sharing localStorage across origins |
@@ -136,6 +136,8 @@ graph TB
         bonding receives normalized passport, applies CogPass
 ```
 
+**Note:** "Bus-bar slot" ≠ "public route". Bus-bar slots are the personalization-aware navigation set declared in `busBar.slots`. Other live routes such as `/dome`, `/cogpass-bridge.html`, `/api/passkey/*`, `/demos`, `/visuals`, `/contracts`, `/composer`, `/cars`, `/fleet`, `/agents`, `/delta`, `/why`, `/connect.html`, `/build`, `/family-pack` are valid endpoints but are not bus-bar slots — they don't appear in `BusBarNav.astro` and don't get role-gated by CogPass.
+
 **Files:**
 - Routes: `andromeda/04_SOFTWARE/p31ca/src/pages/*.astro` + `andromeda/04_SOFTWARE/p31ca/public/*.html`
 - Bus bar slots: `andromeda/04_SOFTWARE/p31ca/ground-truth/p31.ground-truth.json` `busBar.slots`
@@ -239,7 +241,7 @@ graph TB
 - Zero-budget serverless (no D1 unless explicitly opted in)
 
 **Files:**
-- Workers: `andromeda/04_SOFTWARE/k4-personal/`, `andromeda/04_SOFTWARE/k4-cage/` (when present), `andromeda/04_SOFTWARE/k4-hubs/`
+- Workers: `andromeda/04_SOFTWARE/k4-personal/`, `andromeda/04_SOFTWARE/k4-cage/`, `andromeda/04_SOFTWARE/k4-hubs/`
 - Constants: `p31-constants.json` `mesh.k4PersonalWorkerUrl`, `mesh.k4CageWorkerUrl`, `mesh.k4HubsWorkerUrl`
 - Live fleet: `p31-live-fleet.json` `workersVerified` (entries 0-3)
 
@@ -296,6 +298,12 @@ graph LR
     KEN[kenosis-mesh]:::w_op
   end
 
+  subgraph "MISC / LEGACY (3)"
+    PCC[p31-command-center<br/>sovereign-command-center<br/>distinct from EPCP]:::w_misc
+    PWK[p31-workers<br/>love-ledger monolith]:::w_misc
+    P31CA[p31ca<br/>Pages project]:::w_misc
+  end
+
   classDef w_mesh fill:#25897d,stroke:#0f1115,color:#fff
   classDef w_agent fill:#a47bd4,stroke:#0f1115,color:#fff
   classDef w_svc fill:#5da6e0,stroke:#0f1115,color:#fff
@@ -303,9 +311,12 @@ graph LR
   classDef w_pay fill:#cf6f5a,stroke:#0f1115,color:#fff
   classDef w_comm fill:#7ab87f,stroke:#0f1115,color:#0f1115
   classDef w_op fill:#9c9c9c,stroke:#0f1115,color:#0f1115
+  classDef w_misc fill:#9c9c9c,stroke:#0f1115,color:#0f1115,stroke-dasharray:4 3
 ```
 
-**ASCII fallback (33 Workers in 6 categories):**
+**Headline:** **30 unique Workers** (14 verified + 18 allowlisted; `bonding-relay` and `p31-google-bridge` overlap both lists).
+
+**ASCII fallback (30 unique Workers in 7 categories):**
 
 ```
 MESH (4)                AGENTS (6)              COLLAB+BRIDGES (5)
@@ -325,6 +336,12 @@ p31-passkey  ←  zone    donate-api (Stripe)     p31-hearing-ops
    passkey/*            p31-pwa                 p31-telemetry
 genesis-gate                                    kenosis-mesh
 p31-bouncer
+
+MISC / LEGACY (3)
+──────────────────
+p31-command-center    ← sovereign-command-center; distinct from EPCP command-center
+p31-workers           ← love-ledger monolith (orchestrator is separate Worker)
+p31ca                 ← Pages project (https://p31ca.org; not a Worker per se)
 ```
 
 **Pattern conventions:**
@@ -621,9 +638,9 @@ ALLOWED_ORIGINS = ["https://bonding.p31ca.org"]    ← hardcoded in bridge HTML
 **Files:**
 - Endpoint: `andromeda/04_SOFTWARE/p31ca/public/cogpass-bridge.html`
 - Schema: `andromeda/04_SOFTWARE/p31ca/ground-truth/cogpass-bridge.schema.json`
-- Wire spec: `docs/CWP-BUS4-COGPASS-BRIDGE-2026-05.md` (16 sections, 700 lines)
+- Wire spec: `docs/CWP-BUS4-COGPASS-BRIDGE-2026-05.md` (16 sections, 613 lines)
 - Privacy disclosure: `andromeda/04_SOFTWARE/p31ca/public/privacy.html` §2g
-- Gate: `scripts/verify-cogpass-bridge.mjs` (7 atomic invariants)
+- Gate: `scripts/verify-cogpass-bridge.mjs` (8 checks · 1 partial-clone existence skip + 7 hard invariants)
 
 **Verifies:** `verify:cogpass-bridge`
 
@@ -750,12 +767,12 @@ graph TB
     ADV[ADVOCATE<br/>0 8 * * 1<br/>FERS deadline]:::cron
     TRE[TREASURER<br/>0 9 * * *]:::cron
     FOR[FORGE<br/>0 */4 * * *]:::cron
-    MED[MEDIC<br/>health]:::cron
+    MED[MEDIC<br/>0 */6 * * *<br/>health]:::cron
     HER[HERALD<br/>hostile mail]:::cron
-    SCH[SCHOLAR<br/>research]:::cron
+    SCH[SCHOLAR<br/>0 10 * * 1<br/>research]:::cron
     SCR[SCRIBE<br/>WCD synthesis]:::cron
-    SEN[SENTINEL<br/>physical layer]:::cron
-    OR2[ORACLE<br/>strategy]:::cron
+    SEN[SENTINEL<br/>*/5 * * * *<br/>physical layer]:::cron
+    OR2[ORACLE<br/>0 20 * * *<br/>strategy]:::cron
   end
 
   subgraph "Discord Bot Swarm"
@@ -857,55 +874,78 @@ The verify chain runs in order on every commit. Fast-fail. Each gate locks one i
 
 ```
 npm run verify  (root, ordered)
-├── verify:alignment              ← registry of every source + derivation
-├── verify:nonprofit              ← nonprofit ground truth
-├── verify:protocol-registry      ← contract registry
-├── build:contract-registry       ← rebuild, then verify drift
+├── verify:alignment                    ← registry of every source + derivation
+├── verify:nonprofit                    ← nonprofit ground truth
+├── verify:protocol-registry            ← contract registry
+├── build:contract-registry             ← rebuild, then verify drift
 ├── verify:contract-registry
-├── verify:sovereign-chain        ← Ed25519 attestation chain
+├── verify:sovereign-chain              ← Ed25519 attestation chain
 ├── verify:sovereign-layers
 ├── verify:launch-readiness-config
 ├── verify:reports-index
 ├── verify:reports-automation
-├── verify:verify-pulse           ← pulse beacon
+├── verify:verify-pulse                 ← pulse beacon
 ├── verify:reports-promoted
-├── verify:glass-box              ← public transparency
+├── verify:glass-box                    ← public transparency
 ├── verify:demos
-├── verify:facts                  ← p31-facts.json invariants
-├── verify:subscriptions          ← AI subscription stack
-├── verify:p31-env                ← env catalog
+├── verify:facts                        ← p31-facts.json invariants
+├── verify:subscriptions                ← AI subscription stack
+├── verify:p31-env                      ← env catalog
 ├── verify:shipbox
-├── verify:passport               ← cog passport sync
+├── verify:passport                     ← cog passport sync
 ├── verify:cognitive-passport-schema    ← p31.cognitivePassport/1.1.0 ≡ shared
 ├── verify:cognitive-passport-profiles  ← audience matrix
-├── verify:cogpass-bridge         ← BUS4 7 atomic invariants
-├── verify:phos-voice             ← voice JSON drift + SHA + Tier-0 + coverage
-├── verify:constants              ← apply:constants golden behavior
+├── verify:cogpass-bridge               ← BUS4 8 checks · 1 skip + 7 hard invariants
+├── verify:phos-voice                   ← voice JSON drift + SHA + Tier-0 + coverage
+├── verify:constants                    ← apply:constants golden behavior
 ├── verify:mesh-canon
 ├── verify:ecosystem
 ├── verify:live-fleet:p31ca-mirror
 ├── verify:production-readiness
 ├── verify:launch-lane-sync
 ├── verify:map-pipeline
-├── verify:p31-style              ← universal canon
+├── verify:p31-style                    ← universal canon
+├── verify:quantum-material-u
+├── verify:canon-css
+├── verify:phos-truth
+├── verify:starfield
+├── verify:fleet-ten
+├── verify:fleet-llm-bridge
+├── verify:ollama-mcp
+├── verify:ollama-tunnel-config
+├── verify:style-alignment
 ├── verify:command-center
-├── verify:p31ca-contracts        ← ground-truth + synergetic + lattice oracle + economy
-├── verify:egg-hunt + verify:quantum-egg
-├── verify:onboarding             ← planetary onboard anchors
+├── verify:p31ca-contracts              ← ground-truth + synergetic + lattice oracle + economy
+├── verify:egg-hunt
+├── verify:onboarding                   ← planetary onboard anchors
 ├── verify:fleet-portal
-├── verify:cars-wire              ← C.A.R.S. WS message alignment
+├── verify:cars-wire                    ← C.A.R.S. WS message alignment
+├── verify:geodesic-wire-fixtures
+├── verify:quantum-deck
+├── verify:k4-agent-hub
+├── verify:agents-mirror
+├── verify:discord-bot
+├── verify:social-engine
+├── verify:simulations
 ├── verify:poets-room
 ├── verify:runbooks
-├── verify:delta-language         ← DELTA voice + topology words
-├── verify:public-voice           ← identity-first + Tier B/C
-├── build:doc-index               ← rebuild searchable doc library
-├── verify:doc-index              ← drift check
-├── verify:simplex                ← simplex-v7 SIMPLEX + SENTINEL
+├── verify:delta-language               ← DELTA voice + topology words
+├── verify:public-voice                 ← identity-first + Tier B/C
+├── verify:public-sanitization
+├── verify:phos-play-session-bridge
+├── verify:atmosphere-ramp
+├── build:doc-index                     ← rebuild searchable doc library
+├── verify:doc-index                    ← drift check
+├── verify:wiring-ci-ladder
+├── verify:doc-library:p31ca-mirror
+├── verify:github-org
+├── verify:simplex                      ← simplex-v7 SIMPLEX + SENTINEL
 ├── verify:simplex-email
 ├── verify:simplex-bootstrap
-├── verify:edge-lab               ← cf-edge-lab wrangler dry-run
-├── tsc                           ← TypeScript across all roots
-└── soup:prep:check               ← C.A.R.S. dist + assets fresh
+├── verify:edge-lab                     ← cf-edge-lab wrangler dry-run
+├── build
+├── soup:prep:check                     ← C.A.R.S. dist + assets fresh
+└── verify:triper
 ```
 
 **Promotion ladder:**
@@ -1037,7 +1077,7 @@ DIGITAL                                          MEATSPACE                 DIGIT
 | `wiring-poster.pdf` | Operator wall reference (this doc, printed) | Header |
 
 **Files:**
-- Generator: `scripts/meatspace/generate.mjs` + `scripts/meatspace/generate-wiring-poster.mjs` (NEW)
+- Generator: `scripts/meatspace/generate.mjs` (`generateWiringPoster()` + `drawQuadrantPortals/Fleet/BusBar/Swarms` helpers — D-7 added 2026-05-01)
 - Canon source: `andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json`
 - Tagline source: `docs/PHOS-VOICE-DRAFT.md` §3.1 (mirrored as `TAGLINE_OPERATOR_VOICE` constant)
 

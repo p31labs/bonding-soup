@@ -903,9 +903,9 @@
       "role": "BUS4 Phase 1 CI gate (~190 lines). Locks 7 atomic invariants: (1) bridge HTML exists; (2) bridge imports normalize() from /lib/p31-cogpass-reader.mjs AND defines no local normalize (Single Rule); (3) SCHEMA constant in HTML === 'p31.cogPassBridge/1.0.0' verbatim; (4) schema JSON exists + parses; (5) schema $id matches; (6) ALLOWED_ORIGINS in HTML \u2261 busBar.crossOriginBridge.allowedOrigins in ground-truth (sorted comparison; no wildcards allowed); (7) ground-truth schema constant matches; (8) privacy.html sentinel '\u00a72g. Cross-origin Cognitive Passport bridge' present. Skips cleanly in partial clones (no andromeda). Wired into root npm run verify after verify:cognitive-passport-profiles."
     },
     {
-      "id": "phos-voice-draft",
+      "id": "phos-voice-draft-structure",
       "path": "docs/PHOS-VOICE-DRAFT.md",
-      "role": "Track A canonical source — PHOS personality voice (operator hand). §1 who PHOS is (Phosphorus-31 / Wye→Delta transducer / nine-calcium cage face); §2 voice rules (14 normative rules including Tier-0 stranger vocabulary §2.11, banned operator-internal vocab §2.12, banned urgency patterns §2.13, no naval metaphors §2.14); §3 OPERATOR-VOICE canonical lines (3.1 'help is on the way', 3.2 first-greeting derivation, 3.3 'nine calcium atoms' architectural line); §4 per-page contextual copy (12 slots: _default, /welcome, /passport, /lab, /support, /research, /bonding, /stylebook, /ops, /ede, /buffer, /glass-box). Each §4 entry has tag OPERATOR-VOICE or DRAFT-AGENT-SIMULATED. The operator promotes draft entries by rewriting and changing the tag. Built into p31-phos-voice.json by scripts/build-phos-voice-json.mjs. SHA-locked by docs/PHOS-VOICE-DRAFT.lock.json (operator-voice tamper detection). Verified by scripts/verify-phos-voice.mjs."
+      "role": "Companion structural-rules row to phos-voice-draft (renamed 2026-05-01 evening to dedupe id collision flagged by Phase 4b spec audit). Same file, different lens. §1 who PHOS is (Phosphorus-31 / Wye→Delta transducer / nine-calcium cage face); §2 voice rules (15 normative rules including Tier-0 stranger vocabulary §2.11, banned operator-internal vocab §2.12, banned urgency patterns §2.13, no naval metaphors §2.14, kid-readable on the front door §2.15); §3 OPERATOR-VOICE canonical lines (3.1 'help is on the way', 3.2 first-greeting derivation, 3.3 'nine calcium atoms' architectural line); §4 per-page contextual copy (13 slots — see phos-voice-pipeline derivation for emit details). Each §4 entry has tag OPERATOR-VOICE or DRAFT-AGENT-SIMULATED. The operator promotes draft entries by rewriting and changing the tag. Built into p31-phos-voice.json by scripts/build-phos-voice-json.mjs. SHA-locked by docs/PHOS-VOICE-DRAFT.lock.json (operator-voice tamper detection). Verified by scripts/verify-phos-voice.mjs."
     },
     {
       "id": "phos-voice-lock",
@@ -955,12 +955,12 @@
     {
       "id": "p31-meatspace-generator",
       "path": "scripts/meatspace/generate.mjs",
-      "role": "Track D \u2014 print-ready PDF generator for the meatspace bridge. Pure Node (pdf-lib + qrcode). Reads colors from andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json via scripts/meatspace/lib/canon.mjs. Output: dist/meatspace/*.pdf (gitignored build artifacts). Shipped artifacts: business-card (D-2, 3.5\u00d72 with bleed, 2-page); elevator-card (D-4, 5\u00d73 with bleed, 2-page \u2014 front: 3-sentence pitch in Tier-0 stranger vocabulary per PHOS-VOICE-DRAFT \u00a72.11, back: operator-voice tagline + 1.5\" QR); one-pager (D-5, US Letter single-side, 3-tile body 'What we build / How it's different / How to help' + compact terms \u00a75 disclosure + big 1.4\" QR with 'Scan to start' + 'Two minutes. We keep nothing.' callouts; visible surface scanned clean of banned vocabulary, naval metaphors, urgency patterns); qr-stickers (D-3, 12-up sheet on US Letter, 2.5\" square dark-face stickers with cut ticks); wiring-poster (D-7, 11\u00d717 tabloid landscape operator wall reference \u2014 4 quadrants: Public Portals / Edge Fleet 33-Workers / Bus Bar 5-script load + PHOS pipeline / Sources + Swarms 10+11 + CI gate ladder; companion to docs/P31-WIRING-DIAGRAM.md). Planned: pro-handout (D-6, 5.5\u00d78.5 professional handout for grant meetings). Doctrine: each artifact is itself a Layer 1 (Gray Rock) surface \u2014 dark, minimal stimulus, no chroma except brand teal/coral/cyan; the QR is the activation that takes the human to Layer 2 (Alive) on the website. Run: npm run meatspace:print | :business-card | :elevator-card | :one-pager | :qr-stickers | :wiring-poster."
+      "role": "Track D \u2014 print-ready PDF generator for the meatspace bridge. Pure Node (pdf-lib + qrcode). Reads colors from andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json via scripts/meatspace/lib/canon.mjs. Output: dist/meatspace/*.pdf (gitignored build artifacts). Shipped artifacts: business-card (D-2, 3.5\u00d72 with bleed, 2-page); elevator-card (D-4, 5\u00d73 with bleed, 2-page \u2014 front: 3-sentence pitch in Tier-0 stranger vocabulary per PHOS-VOICE-DRAFT \u00a72.11, back: operator-voice tagline + 1.5\" QR); one-pager (D-5, US Letter single-side, 3-tile body 'What we build / How it's different / How to help' + compact terms \u00a75 disclosure + big 1.4\" QR with 'Scan to start' + 'Two minutes. We keep nothing.' callouts; visible surface scanned clean of banned vocabulary, naval metaphors, urgency patterns); qr-stickers (D-3, 12-up sheet on US Letter, 2.5\" square dark-face stickers with cut ticks); wiring-poster (D-7, 11\u00d717 tabloid landscape operator wall reference \u2014 4 quadrants: Public Portals / Edge Fleet 30 unique Workers / Bus Bar 5-script load + PHOS pipeline / Sources + Swarms 10+11 + CI gate ladder; companion to docs/P31-WIRING-DIAGRAM.md). Planned: pro-handout (D-6, 5.5\u00d78.5 professional handout for grant meetings). Doctrine: each artifact is itself a Layer 1 (Gray Rock) surface \u2014 dark, minimal stimulus, no chroma except brand teal/coral/cyan; the QR is the activation that takes the human to Layer 2 (Alive) on the website. Run: npm run meatspace:print | :business-card | :elevator-card | :one-pager | :qr-stickers | :wiring-poster."
     },
     {
       "id": "p31-wiring-diagram",
       "path": "docs/P31-WIRING-DIAGRAM.md",
-      "role": "Canonical source of truth for the entire P31 mesh topology (CWP-PHOS-2026-01 D-7). Schema p31.wiringDiagram/1.0.0. Ten focused diagrams \u2014 Public Portals \u00b7 K\u2084 Mesh Cage \u00b7 Edge Fleet 33 Workers \u00b7 Bus Bar Nervous System (5-script load order with PHOS suppression handshake) \u00b7 PHOS Voice Pipeline \u00b7 BUS4 CogPass Cross-Origin Bridge \u00b7 Apply-Constants Derivation Graph (10 sinks) \u00b7 Swarms (10 Ollama personas + 11 simplex-v7 cloud crew + Discord bot) \u00b7 CI Gate Ladder (50+ verifiers in execution order) \u00b7 Meatspace Bridge. Every diagram has Mermaid (browser-renderable) + ASCII fallback (terminal-friendly) + file references + verifier names. Source for the printable wall poster (scripts/meatspace/generate.mjs generateWiringPoster \u2014 npm run meatspace:print:wiring-poster). When a new system ships, update this doc in the same commit so the registry edge stays clean."
+      "role": "Canonical source of truth for the entire P31 mesh topology (CWP-PHOS-2026-01 D-7). Schema p31.wiringDiagram/1.0.0. Ten focused diagrams \u2014 Public Portals \u00b7 K\u2084 Mesh Cage \u00b7 Edge Fleet 30 unique Workers (14 verified + 18 allowlisted; bonding-relay and p31-google-bridge overlap both lists; 7 categories incl. MISC/LEGACY) \u00b7 Bus Bar Nervous System (5-script load order with PHOS suppression handshake) \u00b7 PHOS Voice Pipeline \u00b7 BUS4 CogPass Cross-Origin Bridge \u00b7 Apply-Constants Derivation Graph (10 sinks) \u00b7 Swarms (10 Ollama personas + 11 simplex-v7 cloud crew + Discord bot) \u00b7 CI Gate Ladder (72 gates in execution order; regenerated by build:wiring-ci-ladder so it can never drift) \u00b7 Meatspace Bridge. Every diagram has Mermaid (browser-renderable) + ASCII fallback (terminal-friendly) + file references + verifier names. Source for the printable wall poster (scripts/meatspace/generate.mjs generateWiringPoster \u2014 npm run meatspace:print:wiring-poster). When a new system ships, update this doc in the same commit so the registry edge stays clean."
     },
     {
       "id": "p31-cogpass-reader",
@@ -1730,6 +1730,18 @@
       "note": "Loaded at runtime by p31-phos-guide.mjs tryLoadVoiceJson() and merged over baked-in DEFAULT_VOICE; absent file = defaults stand (graceful degradation). Wired into root npm run verify after verify:cogpass-bridge."
     },
     {
+      "id": "wiring-diagram-ci-ladder",
+      "from": [
+        "package.json (scripts.verify chain)"
+      ],
+      "to": [
+        "docs/P31-WIRING-DIAGRAM.md §9 (The Gates — CI Verifier Ladder fenced block)"
+      ],
+      "apply": "Edit `package.json` `scripts.verify`, then run `npm run build:wiring-ci-ladder` to regenerate the §9 fenced block in execution order. Inline `← ...` annotations are preserved best-effort by gate name. Idempotent — running twice produces no diff.",
+      "verify": "npm run verify:wiring-ci-ladder — re-runs the regeneration in-memory and exits non-zero on drift, naming the lines that disagree. Wired into root `verify` after verify:doc-index and before verify:doc-library:p31ca-mirror so drift is caught alongside the doc index registry sweep.",
+      "note": "Anti-drift mechanism for the wiring diagram. Without this, every new verify gate silently fell out of §9 (the Reviewer caught a 22-gate gap on 2026-05-01). Source of truth is package.json — the diagram is now a derived surface."
+    },
+    {
       "id": "wiring-diagram-poster",
       "from": [
         "docs/P31-WIRING-DIAGRAM.md",
@@ -1744,7 +1756,7 @@
       ],
       "apply": "When a major topology change ships (new Worker, new persona, new bus bar slot, new CI gate), update docs/P31-WIRING-DIAGRAM.md FIRST (the markdown is the canonical source — Mermaid + ASCII diagrams + file refs + verifier names). The poster generator references the doc only by name, so changes do not require regenerating the PDF unless the operator wants the wall reference updated. Run `npm run meatspace:print:wiring-poster` to regenerate the 11×17 tabloid poster after substantive edits. Print on cardstock, pin where the operator works.",
       "verify": "verify:doc-index (the wiring diagram is in the searchable doc library); verify:alignment (catches missing source rows when a new system is added without doc update). The PDF itself has no CI verifier — it is a print artifact derived from the markdown.",
-      "note": "Doctrine: ONE wiring diagram. The markdown is for browser/IDE/agent-handoff use; the PDF is for the wall. Both serve the same goal — eliminate 'wait, what calls k4-personal?' moments months from now. The 11×17 size is small enough to fit on most home/office printers (most office stores tabloid + laminate <$5) but large enough to read all 33 Worker names from across a room."
+      "note": "Doctrine: ONE wiring diagram. The markdown is for browser/IDE/agent-handoff use; the PDF is for the wall. Both serve the same goal — eliminate 'wait, what calls k4-personal?' moments months from now. The 11×17 size is small enough to fit on most home/office printers (most office stores tabloid + laminate <$5) but large enough to read all 30 unique Worker names from across a room (14 verified + 18 allowlisted with `bonding-relay` and `p31-google-bridge` overlapping both lists)."
     },
     {
       "id": "cogpass-cross-origin-bridge",
@@ -2290,6 +2302,7 @@
       "verify:atmosphere-ramp",
       "build:doc-index",
       "verify:doc-index",
+      "verify:wiring-ci-ladder",
       "verify:doc-library:p31ca-mirror",
       "verify:github-org",
       "verify:simplex",

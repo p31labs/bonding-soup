@@ -39,7 +39,7 @@
  * Sample output (success):
  *   verify-phos-voice: OK
  *     drift check       PHOS-VOICE-DRAFT.md §4 ≡ p31-phos-voice.json
- *     schema            12 slots (1 OPERATOR-VOICE · 11 DRAFT-AGENT-SIMULATED)
+ *     schema            13 slots (1 OPERATOR-VOICE · 12 DRAFT-AGENT-SIMULATED)
  *     vocabulary        clean (Tier-0)
  *     OPERATOR-VOICE    1 SHA verified (PHOS-VOICE-DRAFT.lock.json)
  *     busBar coverage   11/11 slots covered

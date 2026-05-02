@@ -52,7 +52,7 @@ The poster mirrors `docs/P31-WIRING-DIAGRAM.md` (the canonical source with full 
 Quadrants:
 
 1. **Public Portals** — STRANGER / USER / OPERATOR role lanes with their accessible routes; BUS4 cross-origin bridge callout
-2. **Edge Fleet** — 33 Workers grouped by concern (mesh / agents / bridges / identity / payments / operator tools) + the 10ms / 1000-subrequest constraints
+2. **Edge Fleet** — 30 unique Workers in 7 categories (mesh / agents / bridges / identity / payments / operator tools / misc-legacy) + the 10ms / 1000-subrequest constraints
 3. **Bus Bar + PHOS Pipeline** — `BaseLayout` 5-script load order with PHOS suppression handshake; PHOS voice draft → JSON → fetch → render flow
 4. **Sources + Swarms + Gates** — `apply:constants` 10-sink derivation; 10 local Ollama personas + 11 simplex-v7 cloud crew + the CI verifier ladder
 

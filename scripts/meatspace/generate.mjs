@@ -834,7 +834,7 @@ function drawSticker(page, x, y, size, qrImg, fonts) {
 //   │   P31 ANDROMEDA — WIRING DIAGRAM        v1.0.0  ·  2026-05-01     │
 //   │   "For every family out there figuring it out as they go..."      │
 //   ├──────────────────────────┬────────────────────────────────────────┤
-//   │  Q1: PUBLIC PORTALS      │  Q2: EDGE FLEET (33 Workers)           │
+//   │  Q1: PUBLIC PORTALS      │  Q2: EDGE FLEET (30 unique Workers)    │
 //   │  (hubs + routes + role)  │  (mesh + agents + bridges + identity)  │
 //   │                          │                                        │
 //   ├──────────────────────────┼────────────────────────────────────────┤
@@ -937,7 +937,7 @@ async function generateWiringPoster() {
     x: 24, y: 32,
     size: 8, font: fonts.bold, color: C.muted,
   });
-  page.drawText('docs/P31-WIRING-DIAGRAM.md  (8 sections, every system, every file)', {
+  page.drawText('docs/P31-WIRING-DIAGRAM.md  (10 sections, every system, every file)', {
     x: 110, y: 32,
     size: 8, font: fonts.regular, color: C.cloud,
   });
@@ -1040,7 +1040,7 @@ function drawQuadrantPortals(page, q, fonts) {
 
 // ─── Q2: Edge fleet (Workers grouped) ──────────────────────────────────────
 function drawQuadrantFleet(page, q, fonts) {
-  drawQuadrantHeader(page, q, fonts, '2', 'EDGE FLEET', '14 verified Workers · 18 allowlisted');
+  drawQuadrantHeader(page, q, fonts, '2', 'EDGE FLEET', '14 verified · 18 allowlisted · 30 unique (overlap: bonding-relay, p31-google-bridge)');
 
   const groups = [
     {

@@ -22,7 +22,7 @@ if (!fs.existsSync(HUB_PUBLIC)) {
   process.exit(0);
 }
 
-/** @param {string} src @param {string} dst */
+/** @param {string} src @param {string} dst @param {string} label */
 function mirror(src, dst, label) {
   if (!fs.existsSync(src)) return { wrote: false, missing: true, label };
   const txt = fs.readFileSync(src, "utf8");

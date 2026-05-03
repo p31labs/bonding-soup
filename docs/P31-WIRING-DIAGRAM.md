@@ -957,7 +957,8 @@ npm run verify  (root, ordered)
 ├── verify:edge-lab                     ← cf-edge-lab wrangler dry-run
 ├── build
 ├── soup:prep:check                     ← C.A.R.S. dist + assets fresh
-└── verify:triper
+├── verify:triper
+└── verify:public-line
 ```
 
 **Promotion ladder:**

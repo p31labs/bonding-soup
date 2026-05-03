@@ -1428,6 +1428,16 @@
       "id": "p31-github-code-of-conduct-md",
       "path": ".github/CODE_OF_CONDUCT.md",
       "role": "GitHub-facing Code of Conduct stub \u2014 forwards to docs/CODE-OF-CONDUCT.md; CWP PEER-1F"
+    },
+    {
+      "id": "p31-cogpass-v4-master",
+      "path": "docs/operator/P31-COGNITIVE-PASSPORT-v4-MASTER.md",
+      "role": "Operator-private MASTER cognitive passport (v4.0) \u2014 full names, address, phone, case number, financial figures. Gitignored. Never pushed to public remotes. Public-safe twin: docs/P31-COGNITIVE-PASSPORT-v4-PUBLIC.md."
+    },
+    {
+      "id": "p31-cogpass-v4-public",
+      "path": "docs/P31-COGNITIVE-PASSPORT-v4-PUBLIC.md",
+      "role": "Public-safe cognitive passport (v4.0) \u2014 children referenced as S.J./W.J. only; address/phone/case-number/financial specifics redacted. Folds in codebase corrections Opus 4.6 web missed (sources 273\u2192275; workers 14 verified / 18 allowlisted; local Ollama fleet 10 personas; GEODESIC Phase 1 shipped; C.A.R.S. shipped as bonding-soup; etc.). Safe to attach to any AI handoff outside operator-controlled instances."
     }
   ],
   "derivations": [
@@ -2688,6 +2698,18 @@
       "apply": "Edit the controlling CWP first (docs/CWP-P31-VIBE-2026-06.md). Phase 1 (2026-05-02) shipped the operator-entry surface (/vibe.html) + short routes. Phase 2 (2026-05-02 same session, ephemeralization pivot) adopted the existing command-center-terminal.html as the PiP CLI substrate \u2014 added /vibe alias to scripts/p31-local-command-center.mjs route handler (one HTML file, three URLs: /term + /terminal + /vibe), consolidated public vibe.html (-39 lines, removed placeholder PiP CLI + duplicate doctrine restatement; now points at :3131/vibe and links to /manifesto for canonical doctrines), and added 'Vibcoding (preview)' footer link from soup.html, cognitive-passport/index.html, and p31-personal-howto.html for discoverability. Phase 3 adds Monaco editor pane + PHOS auto-guidance to the SAME command-center-terminal.html (no new file); VIBE-3H added a third 'view' mode tab + GET /api/view-doc?slug=<slug> read-only operator doc viewer (allowlist + slug regex defends against path traversal; eight slugs: manifesto, vibe-cwp, peer-cwp, agents, public-voice, delta-language, morning-arc, engineering-standard). Phase 4 adds tetra topology Worker; Phase 5 adds 4-tetra cluster + MLS edges (gated on PEER-3A). Personal hub (/start mesh-start.html), threshold onboard (/onboard planetary-onboard.html), and starter hub (/build initial-build.html) keep their CWPs (PAR / IB) but cross-link from /vibe.",
       "verify": "manual + npm run hub:diff:p31ca + cd andromeda/04_SOFTWARE/p31ca && npm run verify:ground-truth + npm run command-center then open http://127.0.0.1:3131/vibe",
       "note": "Ephemeralization gate (CWP \u00a74.5) is the floor for this derivation: every future agent must check whether an existing service can carry one more URL before adding a new one. Five doctrines (PEER-COMP \u00a75 / Manifesto \u00a71) are the floor for content. Substrate composes: tetra (K\u2084) \u2192 cluster (4 tetras) \u2192 hub (4 clusters) \u2192 mesh (open federation). PHOS is the guide at every level. Phase 2 closure documented in CWP-P31-VIBE-2026-06.md \u00a716. VIBE-3H view mode (read-only doc viewer; allowlist-gated /api/view-doc) closure documented in \u00a718; no new ship-bar gate this session (slug-allowlist verifier is a Phase 4 follow-up if needed)."
+    },
+    {
+      "id": "p31-cogpass-v4-master-public-twin",
+      "from": [
+        "p31-cogpass-v4-master"
+      ],
+      "to": [
+        "p31-cogpass-v4-public"
+      ],
+      "apply": "Edit the MASTER first when adding sections, products, or facts; then propagate corrections to the PUBLIC twin while applying the sanitization rules: children referenced as S.J./W.J. only (never full names), operator address/phone/case-number/financial figures redacted, third-party emails removed, sealed legal detail summarized to public-safe framing. The two files share schema and section ordering; only the redacted fields differ.",
+      "verify": "node scripts/probe-public-sanitization.mjs --strict",
+      "note": "MASTER is gitignored (operator-private; full-detail context for AI handoff inside operator-controlled instances). PUBLIC ships in the repo and is mirrored to p31ca via doc-library + sync:doc-library:p31ca. Section 14 of both files is the codebase-survey addendum that catches what an external session-only writer (e.g. Opus 4.6 web) would miss: 273 sources, 14 verified Workers / 18 allowlisted, 34 ecosystem deployables, 10 local Ollama personas (not 6; HERALD/SENTINEL/MEDIC do not exist on the local lane), GEODESIC Phase 1 shipped, C.A.R.S. shipped as bonding-soup, TRIPER 9-suite cert, IB / PAR / Operator-UI / Super-Centaur / K4-Agent-Hub CWP set, Document Foundry, SIMPLEX v7 + simplex-email + cf-edge-lab, three Cursor lanes, 22-paper DOI list."
     }
   ],
   "optionalVerifyCommands": {

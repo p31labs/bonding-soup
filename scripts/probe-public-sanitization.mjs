@@ -82,6 +82,7 @@ const EXEMPT_PATHS = new Set([
   "docs/P31-K4-AGENT-HUBS.md",       // same
   "AGENTS.md",
   "P31 COGNITIVE PASSPORT — v5.md",
+  "docs/P31-COGNITIVE-PASSPORT-v4-PUBLIC.md", // CogPass v4 quotes the avoid-list terms inside the rule about them
   "scripts/probe-public-sanitization.mjs",  // self
   "scripts/verify-public-voice.mjs",
   "scripts/verify-delta-language.mjs",

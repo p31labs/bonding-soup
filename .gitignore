@@ -2,6 +2,11 @@
 andromeda/
 phosphorus31.org/
 
+# Operator-private CogPass MASTER (full names, address, phone, case detail).
+# Public twin lives at docs/P31-COGNITIVE-PASSPORT-v4-PUBLIC.md and IS committed.
+docs/operator/P31-COGNITIVE-PASSPORT-v4-MASTER.md
+docs/operator/private/
+
 # OS / browser drops at repo root (multi-root home; never commit)
 /Desktop/
 /Downloads/

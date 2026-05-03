@@ -1,0 +1,43 @@
+{
+  "personality": "Screen Reader User (methodical)",
+  "sessionId": "session_1777811712231_4ksry4vv4",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: tab-nav",
+      "page": "/cognitive-passport/index.html",
+      "grade": "Excellent",
+      "action": "tab-nav"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: tab-nav",
+      "page": "/p31-device-setup.html",
+      "grade": "Excellent",
+      "action": "tab-nav"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: tab-nav",
+      "page": "/docs/doc-library/index.html",
+      "grade": "Excellent",
+      "action": "tab-nav"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 1425ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 2455ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 3,
+    "averageScore": 96.66666666666667
+  }
+}

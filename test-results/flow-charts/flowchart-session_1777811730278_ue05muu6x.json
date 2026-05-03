@@ -1,0 +1,91 @@
+{
+  "personality": "Curious Explorer (cautious)",
+  "sessionId": "session_1777811730278_ue05muu6x",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: click",
+      "page": "/glass-box.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: click",
+      "page": "/p31-personal-howto.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: click",
+      "page": "/docs/doc-library/index.html?a=child",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: scroll",
+      "page": "/demos/index.html",
+      "grade": "Excellent",
+      "action": "scroll"
+    },
+    {
+      "id": "step_4",
+      "label": "Step 5: forward",
+      "page": "/fleet-portal.html",
+      "grade": "Excellent",
+      "action": "forward"
+    },
+    {
+      "id": "step_5",
+      "label": "Step 6: forward",
+      "page": "/cognitive-passport/index.html",
+      "grade": "Excellent",
+      "action": "forward"
+    },
+    {
+      "id": "step_6",
+      "label": "Step 7: click",
+      "page": "/fleet-portal.html",
+      "grade": "Excellent",
+      "action": "click"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 1645ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 769ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 947ms"
+    },
+    {
+      "from": "step_3",
+      "to": "step_4",
+      "label": "→ 1257ms"
+    },
+    {
+      "from": "step_4",
+      "to": "step_5",
+      "label": "→ 2303ms"
+    },
+    {
+      "from": "step_5",
+      "to": "step_6",
+      "label": "→ 1949ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 7,
+    "averageScore": 100
+  }
+}

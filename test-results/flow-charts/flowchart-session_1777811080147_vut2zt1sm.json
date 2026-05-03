@@ -1,0 +1,55 @@
+{
+  "personality": "ADHD User (exploratory)",
+  "sessionId": "session_1777811080147_vut2zt1sm",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: click",
+      "page": "/p31-device-setup.html",
+      "grade": "Good",
+      "action": "click"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: click",
+      "page": "/cognitive-passport/index.html",
+      "grade": "Good",
+      "action": "click"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: scroll",
+      "page": "/p31-personal-howto.html",
+      "grade": "Good",
+      "action": "scroll"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: click",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "click"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 913ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 358ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 230ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 4,
+    "averageScore": 88.75
+  }
+}

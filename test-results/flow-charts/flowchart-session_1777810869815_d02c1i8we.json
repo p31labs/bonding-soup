@@ -1,0 +1,91 @@
+{
+  "personality": "Curious Explorer (methodical)",
+  "sessionId": "session_1777810869815_d02c1i8we",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: click",
+      "page": "/demos/index.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: scroll",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "scroll"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: click",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: click",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_4",
+      "label": "Step 5: forward",
+      "page": "/planetary-onboard.html",
+      "grade": "Excellent",
+      "action": "forward"
+    },
+    {
+      "id": "step_5",
+      "label": "Step 6: back",
+      "page": "/glass-box.html",
+      "grade": "Excellent",
+      "action": "back"
+    },
+    {
+      "id": "step_6",
+      "label": "Step 7: click",
+      "page": "/delta.html",
+      "grade": "Excellent",
+      "action": "click"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 515ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 1912ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 1644ms"
+    },
+    {
+      "from": "step_3",
+      "to": "step_4",
+      "label": "→ 593ms"
+    },
+    {
+      "from": "step_4",
+      "to": "step_5",
+      "label": "→ 1312ms"
+    },
+    {
+      "from": "step_5",
+      "to": "step_6",
+      "label": "→ 2339ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 7,
+    "averageScore": 100
+  }
+}

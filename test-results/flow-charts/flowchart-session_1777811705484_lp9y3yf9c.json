@@ -1,0 +1,67 @@
+{
+  "personality": "Impatient User (cautious)",
+  "sessionId": "session_1777811705484_lp9y3yf9c",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: scan",
+      "page": "/tomography.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: scan",
+      "page": "/glass-box.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: scan",
+      "page": "/delta.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: scan",
+      "page": "/soup.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_4",
+      "label": "Step 5: scan",
+      "page": "/docs/doc-library/index.html",
+      "grade": "Excellent",
+      "action": "scan"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 495ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 658ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 878ms"
+    },
+    {
+      "from": "step_3",
+      "to": "step_4",
+      "label": "→ 491ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 5,
+    "averageScore": 100
+  }
+}

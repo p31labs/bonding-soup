@@ -1,0 +1,67 @@
+{
+  "personality": "ADHD User (methodical)",
+  "sessionId": "session_1777810909677_lfjy2pa9w",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: click",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: click",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Good",
+      "action": "click"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: scroll",
+      "page": "/p31-personal-howto.html",
+      "grade": "Good",
+      "action": "scroll"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: click",
+      "page": "/fleet-portal.html",
+      "grade": "Good",
+      "action": "click"
+    },
+    {
+      "id": "step_4",
+      "label": "Step 5: scroll",
+      "page": "/docs/doc-library/index.html",
+      "grade": "Good",
+      "action": "scroll"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 685ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 813ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 925ms"
+    },
+    {
+      "from": "step_3",
+      "to": "step_4",
+      "label": "→ 844ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 5,
+    "averageScore": 88
+  }
+}

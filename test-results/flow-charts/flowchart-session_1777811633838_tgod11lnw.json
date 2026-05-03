@@ -1,0 +1,67 @@
+{
+  "personality": "Curious Explorer (impatient)",
+  "sessionId": "session_1777811633838_tgod11lnw",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: back",
+      "page": "/docs/doc-library/index.html",
+      "grade": "Excellent",
+      "action": "back"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: back",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "back"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: click",
+      "page": "/cognitive-passport/index.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: forward",
+      "page": "/docs/doc-library/index.html?a=child",
+      "grade": "Excellent",
+      "action": "forward"
+    },
+    {
+      "id": "step_4",
+      "label": "Step 5: click",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "click"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 1829ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 771ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 1348ms"
+    },
+    {
+      "from": "step_3",
+      "to": "step_4",
+      "label": "→ 1170ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 5,
+    "averageScore": 100
+  }
+}

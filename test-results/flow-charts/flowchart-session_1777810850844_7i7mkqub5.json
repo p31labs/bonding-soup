@@ -1,0 +1,43 @@
+{
+  "personality": "Methodical User (cautious)",
+  "sessionId": "session_1777810850844_7i7mkqub5",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: read",
+      "page": "/p31-personal-howto.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: read",
+      "page": "/glass-box.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: read",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "read"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 3782ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 5480ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 3,
+    "averageScore": 100
+  }
+}

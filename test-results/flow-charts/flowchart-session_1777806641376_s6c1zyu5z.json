@@ -1,0 +1,43 @@
+{
+  "personality": "Impatient User (methodical)",
+  "sessionId": "session_1777806641376_s6c1zyu5z",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: scan",
+      "page": "/p31-device-setup.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: scan",
+      "page": "/docs/doc-library/index.html?a=child",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: scan",
+      "page": "/planetary-onboard.html",
+      "grade": "Excellent",
+      "action": "scan"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 368ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 777ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 3,
+    "averageScore": 100
+  }
+}

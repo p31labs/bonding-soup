@@ -29,7 +29,7 @@
       "phosSlot": "passport",
       "phosReady": true,
       "lastVerified": "2026-05-03",
-      "notes": "PHOS bus bar slot 2. _redirects: /passport → /passport-generator.html 301."
+      "notes": "PHOS bus bar slot 2. OG image added 2026-05-03. _redirects: /passport → /passport-generator.html 301."
     },
     {
       "path": "/glass-box",
@@ -47,7 +47,7 @@
       "phosSlot": "lab",
       "phosReady": true,
       "lastVerified": "2026-05-03",
-      "notes": "PHOS bus bar slot 4. _redirects: /lab → /p31-sovereign-lab.html 301."
+      "notes": "PHOS bus bar slot 4. OG image added 2026-05-03. _redirects: /lab → /p31-sovereign-lab.html 301."
     },
     {
       "path": "/support",

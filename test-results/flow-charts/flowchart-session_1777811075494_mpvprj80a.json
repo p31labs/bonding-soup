@@ -1,0 +1,67 @@
+{
+  "personality": "ADHD User (exploratory)",
+  "sessionId": "session_1777811075494_mpvprj80a",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: scroll",
+      "page": "/planetary-onboard.html",
+      "grade": "Excellent",
+      "action": "scroll"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: scroll",
+      "page": "/soup.html",
+      "grade": "Good",
+      "action": "scroll"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: click",
+      "page": "/cognitive-passport/index.html",
+      "grade": "Good",
+      "action": "click"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: scroll",
+      "page": "/glass-box.html",
+      "grade": "Excellent",
+      "action": "scroll"
+    },
+    {
+      "id": "step_4",
+      "label": "Step 5: scroll",
+      "page": "/delta.html",
+      "grade": "Excellent",
+      "action": "scroll"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 794ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 663ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 643ms"
+    },
+    {
+      "from": "step_3",
+      "to": "step_4",
+      "label": "→ 685ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 5,
+    "averageScore": 94
+  }
+}

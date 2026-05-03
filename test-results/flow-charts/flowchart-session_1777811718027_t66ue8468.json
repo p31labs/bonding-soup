@@ -1,0 +1,55 @@
+{
+  "personality": "Power User (methodical)",
+  "sessionId": "session_1777811718027_t66ue8468",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: click",
+      "page": "/fleet-portal.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: click",
+      "page": "/docs/doc-library/index.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: click",
+      "page": "/docs/doc-library/index.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: click",
+      "page": "/delta.html",
+      "grade": "Excellent",
+      "action": "click"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 1043ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 597ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 1064ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 4,
+    "averageScore": 100
+  }
+}

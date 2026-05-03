@@ -1,0 +1,79 @@
+{
+  "personality": "Methodical User (impatient)",
+  "sessionId": "session_1777810363905_uqegvhpjj",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: read",
+      "page": "/delta.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: read",
+      "page": "/p31-personal-howto.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: read",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: read",
+      "page": "/cognitive-passport/index.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_4",
+      "label": "Step 5: read",
+      "page": "/p31-personal-howto.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_5",
+      "label": "Step 6: read",
+      "page": "/planetary-onboard.html",
+      "grade": "Excellent",
+      "action": "read"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 5678ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 5236ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 5209ms"
+    },
+    {
+      "from": "step_3",
+      "to": "step_4",
+      "label": "→ 6043ms"
+    },
+    {
+      "from": "step_4",
+      "to": "step_5",
+      "label": "→ 6548ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 6,
+    "averageScore": 100
+  }
+}

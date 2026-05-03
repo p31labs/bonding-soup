@@ -1,0 +1,55 @@
+{
+  "personality": "Screen Reader User (methodical)",
+  "sessionId": "session_1777810884368_wk5qxa7oc",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: tab-nav",
+      "page": "/delta.html",
+      "grade": "Excellent",
+      "action": "tab-nav"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: tab-nav",
+      "page": "/docs/doc-library/index.html",
+      "grade": "Excellent",
+      "action": "tab-nav"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: tab-nav",
+      "page": "/docs/doc-library/index.html",
+      "grade": "Excellent",
+      "action": "tab-nav"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: tab-nav",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "tab-nav"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 1628ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 1344ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 1369ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 4,
+    "averageScore": 100
+  }
+}

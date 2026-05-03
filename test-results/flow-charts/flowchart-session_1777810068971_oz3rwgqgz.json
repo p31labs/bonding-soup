@@ -1,0 +1,43 @@
+{
+  "personality": "ADHD User (methodical)",
+  "sessionId": "session_1777810068971_oz3rwgqgz",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: scroll",
+      "page": "/fleet-portal.html",
+      "grade": "Good",
+      "action": "scroll"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: click",
+      "page": "/tomography.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: click",
+      "page": "/delta.html",
+      "grade": "Excellent",
+      "action": "click"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 843ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 306ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 3,
+    "averageScore": 95
+  }
+}

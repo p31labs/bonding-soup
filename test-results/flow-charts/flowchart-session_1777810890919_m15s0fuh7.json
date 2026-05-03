@@ -1,0 +1,67 @@
+{
+  "personality": "Elderly User (methodical)",
+  "sessionId": "session_1777810890919_m15s0fuh7",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: read",
+      "page": "/demos/index.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: read",
+      "page": "/fleet-portal.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: read",
+      "page": "/fleet-portal.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: read",
+      "page": "/glass-box.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_4",
+      "label": "Step 5: read",
+      "page": "/cognitive-passport/index.html",
+      "grade": "Excellent",
+      "action": "read"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 2887ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 3005ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 2946ms"
+    },
+    {
+      "from": "step_3",
+      "to": "step_4",
+      "label": "→ 2246ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 5,
+    "averageScore": 90
+  }
+}

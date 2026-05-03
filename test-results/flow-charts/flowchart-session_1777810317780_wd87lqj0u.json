@@ -1,0 +1,67 @@
+{
+  "personality": "Methodical User (exploratory)",
+  "sessionId": "session_1777810317780_wd87lqj0u",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: read",
+      "page": "/docs/doc-library/index.html?a=child",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: read",
+      "page": "/delta.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: read",
+      "page": "/cognitive-passport/index.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: read",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_4",
+      "label": "Step 5: read",
+      "page": "/cognitive-passport/index.html",
+      "grade": "Excellent",
+      "action": "read"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 6934ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 6701ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 3193ms"
+    },
+    {
+      "from": "step_3",
+      "to": "step_4",
+      "label": "→ 3927ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 5,
+    "averageScore": 100
+  }
+}

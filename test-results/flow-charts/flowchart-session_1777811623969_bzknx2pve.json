@@ -1,0 +1,67 @@
+{
+  "personality": "ADHD User (impatient)",
+  "sessionId": "session_1777811623969_bzknx2pve",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: scroll",
+      "page": "/soup.html",
+      "grade": "Good",
+      "action": "scroll"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: scroll",
+      "page": "/planetary-onboard.html",
+      "grade": "Excellent",
+      "action": "scroll"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: click",
+      "page": "/planetary-onboard.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: click",
+      "page": "/delta.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_4",
+      "label": "Step 5: scroll",
+      "page": "/p31-device-setup.html",
+      "grade": "Good",
+      "action": "scroll"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 698ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 638ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 215ms"
+    },
+    {
+      "from": "step_3",
+      "to": "step_4",
+      "label": "→ 456ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 5,
+    "averageScore": 94
+  }
+}

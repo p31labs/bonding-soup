@@ -1,0 +1,55 @@
+{
+  "personality": "Power User (impatient)",
+  "sessionId": "session_1777811627007_0gbxw0n2v",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: click",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: click",
+      "page": "/fleet-portal.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: click",
+      "page": "/p31-device-setup.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: click",
+      "page": "/soup.html",
+      "grade": "Excellent",
+      "action": "click"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 1029ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 1218ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 597ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 4,
+    "averageScore": 100
+  }
+}

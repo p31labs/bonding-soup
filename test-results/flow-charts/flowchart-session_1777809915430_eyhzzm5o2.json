@@ -1,0 +1,55 @@
+{
+  "personality": "ADHD User (cautious)",
+  "sessionId": "session_1777809915430_eyhzzm5o2",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: click",
+      "page": "/delta.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: scroll",
+      "page": "/p31-personal-howto.html",
+      "grade": "Good",
+      "action": "scroll"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: scroll",
+      "page": "/connect.html",
+      "grade": "Excellent",
+      "action": "scroll"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: click",
+      "page": "/soup.html",
+      "grade": "Excellent",
+      "action": "click"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 551ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 893ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 440ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 4,
+    "averageScore": 96.25
+  }
+}

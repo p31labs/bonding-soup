@@ -1,0 +1,43 @@
+{
+  "personality": "Child User (cautious)",
+  "sessionId": "session_1777788277326_wcaf9v3rv",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: click",
+      "page": "/p31-device-setup.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: click",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: scroll",
+      "page": "/tomography.html",
+      "grade": "Excellent",
+      "action": "scroll"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 1121ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 1906ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 3,
+    "averageScore": 100
+  }
+}

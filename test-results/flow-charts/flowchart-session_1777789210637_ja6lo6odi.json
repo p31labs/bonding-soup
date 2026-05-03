@@ -1,0 +1,91 @@
+{
+  "personality": "Elderly User (impatient)",
+  "sessionId": "session_1777789210637_ja6lo6odi",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: read",
+      "page": "/delta.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: read",
+      "page": "/glass-box.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: read",
+      "page": "/p31-personal-howto.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: read",
+      "page": "/cognitive-passport/index.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_4",
+      "label": "Step 5: read",
+      "page": "/cognitive-passport/index.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_5",
+      "label": "Step 6: read",
+      "page": "/glass-box.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_6",
+      "label": "Step 7: read",
+      "page": "/fleet-portal.html",
+      "grade": "Excellent",
+      "action": "read"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 2961ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 2101ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 3799ms"
+    },
+    {
+      "from": "step_3",
+      "to": "step_4",
+      "label": "→ 4144ms"
+    },
+    {
+      "from": "step_4",
+      "to": "step_5",
+      "label": "→ 2333ms"
+    },
+    {
+      "from": "step_5",
+      "to": "step_6",
+      "label": "→ 2263ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 7,
+    "averageScore": 91.42857142857143
+  }
+}

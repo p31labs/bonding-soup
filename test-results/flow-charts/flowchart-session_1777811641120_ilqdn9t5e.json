@@ -1,0 +1,43 @@
+{
+  "personality": "Elderly User (exploratory)",
+  "sessionId": "session_1777811641120_ilqdn9t5e",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: read",
+      "page": "/p31-personal-howto.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: read",
+      "page": "/demos/index.html",
+      "grade": "Excellent",
+      "action": "read"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: read",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "read"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 4682ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 3684ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 3,
+    "averageScore": 90
+  }
+}

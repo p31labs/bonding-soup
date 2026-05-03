@@ -1,0 +1,55 @@
+{
+  "personality": "ADHD User (impatient)",
+  "sessionId": "session_1777810866893_g62f37vs9",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: click",
+      "page": "/soup.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: scroll",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "scroll"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: scroll",
+      "page": "/demos/index.html",
+      "grade": "Excellent",
+      "action": "scroll"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: scroll",
+      "page": "/soup.html",
+      "grade": "Good",
+      "action": "scroll"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 696ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 648ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 415ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 4,
+    "averageScore": 96.25
+  }
+}

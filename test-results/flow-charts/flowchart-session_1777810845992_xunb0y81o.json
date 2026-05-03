@@ -1,0 +1,43 @@
+{
+  "personality": "Screen Reader User (impatient)",
+  "sessionId": "session_1777810845992_xunb0y81o",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: tab-nav",
+      "page": "/delta.html",
+      "grade": "Excellent",
+      "action": "tab-nav"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: tab-nav",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "tab-nav"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: tab-nav",
+      "page": "/planetary-onboard.html",
+      "grade": "Excellent",
+      "action": "tab-nav"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 1044ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 1103ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 3,
+    "averageScore": 100
+  }
+}

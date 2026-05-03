@@ -1,0 +1,43 @@
+{
+  "personality": "Impatient User (methodical)",
+  "sessionId": "session_1777810808401_h3clvquzu",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: scan",
+      "page": "/docs/doc-library/index.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: scan",
+      "page": "/p31-device-setup.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: scan",
+      "page": "/tomography.html",
+      "grade": "Excellent",
+      "action": "scan"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 928ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 682ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 3,
+    "averageScore": 100
+  }
+}

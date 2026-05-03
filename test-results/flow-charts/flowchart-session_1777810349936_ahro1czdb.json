@@ -1,0 +1,79 @@
+{
+  "personality": "Impatient User (methodical)",
+  "sessionId": "session_1777810349936_ahro1czdb",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: scan",
+      "page": "/delta.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: scan",
+      "page": "/cognitive-passport/index.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: scan",
+      "page": "/delta.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: scan",
+      "page": "/glass-box.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_4",
+      "label": "Step 5: scan",
+      "page": "/soup.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_5",
+      "label": "Step 6: scan",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "scan"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 310ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 465ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 800ms"
+    },
+    {
+      "from": "step_3",
+      "to": "step_4",
+      "label": "→ 473ms"
+    },
+    {
+      "from": "step_4",
+      "to": "step_5",
+      "label": "→ 459ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 6,
+    "averageScore": 100
+  }
+}

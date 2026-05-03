@@ -1,0 +1,67 @@
+{
+  "personality": "Impatient User (cautious)",
+  "sessionId": "session_1777788270470_fbekbcgzo",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: scan",
+      "page": "/glass-box.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: scan",
+      "page": "/connect.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: scan",
+      "page": "/connect.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: scan",
+      "page": "/glass-box.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_4",
+      "label": "Step 5: scan",
+      "page": "/demos/index.html",
+      "grade": "Excellent",
+      "action": "scan"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 721ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 353ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 943ms"
+    },
+    {
+      "from": "step_3",
+      "to": "step_4",
+      "label": "→ 777ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 5,
+    "averageScore": 100
+  }
+}

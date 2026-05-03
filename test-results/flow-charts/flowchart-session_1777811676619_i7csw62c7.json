@@ -1,0 +1,43 @@
+{
+  "personality": "Impatient User (exploratory)",
+  "sessionId": "session_1777811676619_i7csw62c7",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: scan",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: scan",
+      "page": "/glass-box.html",
+      "grade": "Excellent",
+      "action": "scan"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: scan",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "scan"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 868ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 338ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 3,
+    "averageScore": 100
+  }
+}

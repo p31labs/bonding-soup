@@ -2,11 +2,22 @@
 <html lang="en" data-p31-appearance="hub">
 <head>
   <meta charset="UTF-8" />
+  <script>
+    (function () {
+      var r = document.documentElement;
+      if (/[?&]alive=1(?:&|$)/.test(location.search)) return;
+      r.classList.add("p31-gray-rock");
+      function wake() { r.classList.remove("p31-gray-rock"); }
+      document.addEventListener("pointerdown", wake, { once: true, capture: true });
+      document.addEventListener("keydown", wake, { once: true, capture: true });
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
   <meta name="color-scheme" content="dark" />
   <title>P31 — live fleet & pages</title>
   <meta name="description" content="Operator index of live URLs — rolled up from JSON in the repo (p31-live-fleet, ecosystem glass, constants). Not marketing copy; regenerate after deploy lists change." />
   <meta name="theme-color" content="#0f1115" />
+  <link rel="manifest" href="p31-bonding.webmanifest" crossorigin="anonymous" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700&family=JetBrains+Mono:ital,wght@0,400;0,600&display=swap" rel="stylesheet" />

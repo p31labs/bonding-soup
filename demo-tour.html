@@ -2,6 +2,16 @@
 <html lang="en" data-p31-appearance="hub">
 <head>
   <meta charset="utf-8" />
+  <script>
+    (function () {
+      var r = document.documentElement;
+      if (/[?&]alive=1(?:&|$)/.test(location.search)) return;
+      r.classList.add("p31-gray-rock");
+      function wake() { r.classList.remove("p31-gray-rock"); }
+      document.addEventListener("pointerdown", wake, { once: true, capture: true });
+      document.addEventListener("keydown", wake, { once: true, capture: true });
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>P31 Labs — come in</title>
   <meta
@@ -9,6 +19,7 @@
     content="A guided walk through the P31 Labs ecosystem running locally — a small lab building free, open-source tools for families whose brains work differently."
   />
   <meta name="theme-color" content="#0f1115" />
+  <meta name="color-scheme" content="dark" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,7 +28,10 @@
     rel="stylesheet"
   />
   <link rel="stylesheet" href="cognitive-passport/p31-style.css" />
+  <link rel="stylesheet" href="cognitive-passport/p31-responsive-surface.css" />
+  <script src="cognitive-passport/lib/p31-subject-prefs.js"></script>
   <link rel="stylesheet" href="p31-shared-surface.css" />
+  <link rel="manifest" href="p31-bonding.webmanifest" crossorigin="anonymous" />
 
   <link
     rel="icon"
@@ -512,6 +526,7 @@
   </style>
 </head>
 <body class="p31-mesh-m-first">
+  <a class="p31-doc-skip" href="#main" style="position:absolute;left:-9999px;top:0;padding:0.5rem 1rem;background:#0f1115;color:#4db8a8;font-size:0.875rem;z-index:9999;border-radius:0 0 4px 4px;text-decoration:none" onfocus="this.style.left='0'" onblur="this.style.left='-9999px'">Skip to main content</a>
 
   <canvas class="lobby-starfield" id="lobby-starfield" aria-hidden="true"></canvas>
   <div class="lobby-hearth" aria-hidden="true"></div>
@@ -527,7 +542,7 @@
     <a class="lobby-rail__dot" href="#step-7" data-track="operator" title="Operator desk"></a>
   </nav>
 
-  <main class="lobby-shell" aria-labelledby="lobby-title">
+  <main id="main" class="lobby-shell" aria-labelledby="lobby-title">
     <section class="lobby-hero">
       <svg class="lobby-k4" viewBox="0 0 100 100" role="img" aria-label="P31 K-four mark">
         <g class="lobby-k4__group">

@@ -29,6 +29,7 @@ function hubPatch(html) {
 }
 
 const sovereignSrc = path.join(root, "p31-sovereign-lab.html");
+const sovereignV2Src = path.join(root, "p31-sovereign-lab-v2.html");
 const slicerSrc = path.join(root, "p31-slicer.html");
 const stlSrc = path.join(root, "design-assets", "stl");
 
@@ -43,6 +44,12 @@ fs.writeFileSync(
   path.join(p31caPublic, "p31-sovereign-lab.html"),
   hubPatch(fs.readFileSync(sovereignSrc, "utf8")),
 );
+if (fs.existsSync(sovereignV2Src)) {
+  fs.writeFileSync(
+    path.join(p31caPublic, "p31-sovereign-lab-v2.html"),
+    hubPatch(fs.readFileSync(sovereignV2Src, "utf8")),
+  );
+}
 fs.writeFileSync(path.join(p31caPublic, "p31-slicer.html"), hubPatch(fs.readFileSync(slicerSrc, "utf8")));
 
 if (!fs.existsSync(stlSrc)) {

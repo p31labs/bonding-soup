@@ -2,6 +2,16 @@
 <html lang="en" data-p31-appearance="hub">
 <head>
   <meta charset="UTF-8" />
+  <script>
+    (function () {
+      var r = document.documentElement;
+      if (/[?&]alive=1(?:&|$)/.test(location.search)) return;
+      r.classList.add("p31-gray-rock");
+      function wake() { r.classList.remove("p31-gray-rock"); }
+      document.addEventListener("pointerdown", wake, { once: true, capture: true });
+      document.addEventListener("keydown", wake, { once: true, capture: true });
+    })();
+  </script>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="P31 home" />
   <link rel="manifest" href="p31-bonding.webmanifest" crossorigin="anonymous" />

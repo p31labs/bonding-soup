@@ -2,6 +2,16 @@
 <html class="p31-slicer-root" lang="en" data-p31-appearance="hub">
 <head>
   <meta charset="UTF-8" />
+  <script>
+    (function () {
+      var r = document.documentElement;
+      if (/[?&]alive=1(?:&|$)/.test(location.search)) return;
+      r.classList.add("p31-gray-rock");
+      function wake() { r.classList.remove("p31-gray-rock"); }
+      document.addEventListener("pointerdown", wake, { once: true, capture: true });
+      document.addEventListener("keydown", wake, { once: true, capture: true });
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
   <meta name="color-scheme" content="dark" />
   <meta name="description" content="P31 — in-browser 3D print slicer shell (Kiri:Moto). FDM G-code locally in the browser; optional grid.space embed." />
@@ -131,6 +141,7 @@
   </style>
 </head>
 <body class="p31-mesh-m-first p31-responsive-surface p31-slicer-body">
+  <a class="p31-doc-skip" href="#main" style="position:absolute;left:-9999px;top:0;padding:0.5rem 1rem;background:#0f1115;color:#4db8a8;font-size:0.875rem;z-index:9999;border-radius:0 0 4px 4px;text-decoration:none" onfocus="this.style.left='0'" onblur="this.style.left='-9999px'">Skip to main content</a>
   <a href="#p31-slicer-main" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">Skip to slicer</a>
   <div class="p31-slicer-wrap" id="p31-slicer-main">
     <header class="p31-slicer-head">

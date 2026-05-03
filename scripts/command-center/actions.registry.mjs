@@ -452,6 +452,22 @@ export const ACTIONS = {
     cmd: "npm",
     args: ["run", "launch:status"],
   },
+  "home-launch-full": {
+    title: "launch --full (rainbows: 10 extra builds + 6 service probes + deliverable inventory)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "launch:full"],
+    slow: true,
+    hitl: true,
+    confirm:
+      "Runs FULL assembly (~2-3min): standard 14 + 10 extra deliverables (fleet portal, contract registry, smart-evm, phos voice, wiring ladder, verify pipeline, nav tree, glass box, shipbox, MCP verify, fleet-ten verify) + 6 local service probes (ollama, mcp bridge, command center, demo server, tailscale, ecosystem glass). Local-only \u2014 no remote pushes. Continue?",
+  },
+  "home-launch-full-dry": {
+    title: "launch --full --dry-run (preview every step in full mode, no execution)",
+    cwd: repoRoot,
+    cmd: "npm",
+    args: ["run", "launch:full:dry"],
+  },
   "home-build-pwa": {
     title: "build:pwa (mirror SW + script + icon into all 4 PWA-installable surfaces; verify:pwa runs the gate)",
     cwd: repoRoot,
@@ -1387,6 +1403,8 @@ export const SECTIONS_RAW = [
       "home-launch-status",
       "home-launch-dry",
       "home-launch",
+      "home-launch-full-dry",
+      "home-launch-full",
       "home-build-pwa",
     ],
     links: [

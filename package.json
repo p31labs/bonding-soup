@@ -364,6 +364,8 @@
     "launch": "node scripts/p31-launch.mjs",
     "launch:dry": "node scripts/p31-launch.mjs --dry-run",
     "launch:status": "node scripts/p31-launch.mjs --status",
+    "launch:full": "node scripts/p31-launch.mjs --full",
+    "launch:full:dry": "node scripts/p31-launch.mjs --full --dry-run",
     "pulse": "node scripts/record-verify-pulse.mjs",
     "verify:pulse": "node scripts/p31-verify-with-pulse.mjs",
     "verify:verify-pulse": "node scripts/verify-verify-pulse.mjs",

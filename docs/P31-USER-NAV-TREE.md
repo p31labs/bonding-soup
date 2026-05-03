@@ -1,6 +1,6 @@
 # P31 user navigation tree & link audit
 
-**Generated:** 2026-04-28T02:28:00.511Z — rerun `npm run nav:report`.
+**Generated:** 2026-05-03T02:10:16.912Z — rerun `npm run nav:report`.
 
 | Artifact | Purpose |
 |----------|---------|
@@ -17,7 +17,7 @@
 | **Jitterbug traversal** | Any user session = a walk along directed edges — Fuller's jitterbug unfolds the same polyhedron combinatorially; here we unfold *every* instantaneous choice per page.
 | **Orphans** | Files in crawl universe whose graph has no inbound path from seeded entry points |
 
-## C.A.R.S. (repo root demo server)
+## C.A.R.S. / bonding-soup (repo root demo server)
 
 **Filesystem root:** `.`
 
@@ -27,47 +27,93 @@
 
 | Metric | Count | Notes |
 |--------|------:|-------|
-| HTML in crawl universe | 12 | |
-| Reachable internally | 13 | BFS from seeds |
-| Orphans | 4 | in universe only |
-| Broken (no file after redirects) | 0 | |
-| Outbound https / other hosts | 126 | |
-| `/` SPA home links | 6 | not missing — deploy root |
-| `.md` anchors | 43 | prose, not shipped HTML routes |
-| Non-HTML file links | 1 | e.g. `.nvmrc`, config |
+| HTML in crawl universe | 27 | |
+| Reachable internally | 25 | BFS from seeds |
+| Orphans | 12 | in universe only |
+| Broken (no file after redirects) | 7 | |
+| Outbound https / other hosts | 221 | |
+| `/` SPA home links | 12 | not missing — deploy root |
+| `.md` anchors | 48 | prose, not shipped HTML routes |
+| Non-HTML file links | 3 | e.g. `.nvmrc`, config |
 | `_redirects` entries loaded | 0 | |
 
-### Orphan HTML (4) — not reached from seeds
+### Orphan HTML (12) — not reached from seeds
 
+- `agents.html`
+- `command-center-cli.html`
+- `command-center-terminal.html`
+- `demo-tour.html`
+- `launch-readiness.html`
+- `p31-quantum-material-u.html`
+- `docs/p31-delta-glossary.html`
 - `spikes/d20-geodesic-icosahedron/omnibus-icosa-three-r128.html`
 - `spikes/d20-geodesic-icosahedron/react/index.html`
 - `spikes/posner-stable/index.html`
+- `spikes/sovereign-geodesic-preview/index.html`
 - `spikes/spatial-chat/spike-02-demo.html`
 
-### Markdown-linked: 43 anchors (skipped for HTML QA)
+### Markdown-linked: 48 anchors (skipped for HTML QA)
+
+### Broken filesystem targets
+
+| From | href | note |
+|------|------|------|
+| `launch.html` | `./` | missing |
+| `demos/index.html` | `../` | missing |
+| `demos/index.html` | `/connect` | unresolved / path |
+| `glass-box.html` | `/reports/index.json` | unresolved / path |
+| `glass-box.html` | `/verify-pulse.json` | unresolved / path |
+| `glass-box.html` | `/reports/promoted/index.json` | unresolved / path |
+| `demos/the-pulse.html` | `../` | missing |
 
 ### Fan-out (distinct internal `.html` targets)
 
 | Page | Out-degree |
 |------|------------|
-| `soup.html` | 12 |
-| `p31-personal-howto.html` | 9 |
-| `poets-room.html` | 8 |
+| `soup.html` | 19 |
+| `p31-personal-howto.html` | 13 |
+| `p31-device-setup.html` | 8 |
 | `docs/doc-library/index.html` | 7 |
+| `docs/physics-learn/labs.html` | 6 |
+| `launch.html` | 6 |
+| `cognitive-passport/index.html` | 5 |
 | `docs/physics-learn/index.html` | 5 |
-| `p31-device-setup.html` | 4 |
+| `demos/index.html` | 4 |
+| `poets-room.html` | 4 |
+| `demos/the-pulse.html` | 3 |
+| `p31-slicer.html` | 3 |
+| `demos/the-same-shape.html` | 2 |
+| `glass-box-widget.html` | 2 |
+| `glass-box.html` | 2 |
+| `p31-sovereign-lab.html` | 2 |
 | `andromeda/04_SOFTWARE/p31ca/public/connect.html` | 0 |
 | `andromeda/04_SOFTWARE/p31ca/public/initial-build.html` | 0 |
 | `andromeda/04_SOFTWARE/p31ca/public/k4market.html` | 0 |
 | `andromeda/04_SOFTWARE/p31ca/public/mesh-start.html` | 0 |
 | `andromeda/04_SOFTWARE/p31ca/public/planetary-onboard.html` | 0 |
-| `cognitive-passport/index.html` | 0 |
+| `andromeda/04_SOFTWARE/p31ca/public/vibe.html` | 0 |
 | `fleet-portal.html` | 0 |
+| `garden-phos-probe.html` | 0 |
+| `social-cards/index.html` | 0 |
 
 ### Edge sample (140 rows; full dump → generated TSV)
 
 | From | href | → |
 |------|------|---|
+| `cognitive-passport/index.html` | ../andromeda/04_SOFTWARE/p31ca/public/vibe.html | `andromeda/04_SOFTWARE/p31ca/public/vibe.html` |
+| `cognitive-passport/index.html` | ../demos/index.html | `demos/index.html` |
+| `cognitive-passport/index.html` | ../glass-box.html | `glass-box.html` |
+| `cognitive-passport/index.html` | ../p31-sovereign-lab.html | `p31-sovereign-lab.html` |
+| `cognitive-passport/index.html` | ../soup.html | `soup.html` |
+| `demos/index.html` | ./the-pulse.html | `demos/the-pulse.html` |
+| `demos/index.html` | ./the-same-shape.html | `demos/the-same-shape.html` |
+| `demos/index.html` | ../glass-box-widget.html | `glass-box-widget.html` |
+| `demos/index.html` | ../glass-box.html | `glass-box.html` |
+| `demos/the-pulse.html` | ./ | `demos/index.html` |
+| `demos/the-pulse.html` | ./the-same-shape.html | `demos/the-same-shape.html` |
+| `demos/the-pulse.html` | ../glass-box.html | `glass-box.html` |
+| `demos/the-same-shape.html` | ./ | `demos/index.html` |
+| `demos/the-same-shape.html` | ./the-pulse.html | `demos/the-pulse.html` |
 | `docs/doc-library/index.html` | ../../andromeda/04_SOFTWARE/p31ca/public/connect.html | `andromeda/04_SOFTWARE/p31ca/public/connect.html` |
 | `docs/doc-library/index.html` | ../../andromeda/04_SOFTWARE/p31ca/public/initial-build.html | `andromeda/04_SOFTWARE/p31ca/public/initial-build.html` |
 | `docs/doc-library/index.html` | ../../andromeda/04_SOFTWARE/p31ca/public/k4market.html | `andromeda/04_SOFTWARE/p31ca/public/k4market.html` |
@@ -75,43 +121,75 @@
 | `docs/doc-library/index.html` | ../../p31-personal-howto.html | `p31-personal-howto.html` |
 | `docs/doc-library/index.html` | ../../poets-room.html | `poets-room.html` |
 | `docs/doc-library/index.html` | ../../soup.html | `soup.html` |
-| `docs/physics-learn/index.html` | ../../andromeda/04_SOFTWARE/p31ca/public/k4market.html | `andromeda/04_SOFTWARE/p31ca/public/k4market.html` |
+| `docs/physics-learn/index.html` | ../../cognitive-passport/index.html | `cognitive-passport/index.html` |
 | `docs/physics-learn/index.html` | ../doc-library/index.html | `docs/doc-library/index.html` |
-| `docs/physics-learn/index.html` | ../../p31-personal-howto.html | `p31-personal-howto.html` |
+| `docs/physics-learn/index.html` | labs.html | `docs/physics-learn/labs.html` |
 | `docs/physics-learn/index.html` | ../../poets-room.html | `poets-room.html` |
 | `docs/physics-learn/index.html` | ../../soup.html | `soup.html` |
+| `docs/physics-learn/labs.html` | ../../andromeda/04_SOFTWARE/p31ca/public/k4market.html | `andromeda/04_SOFTWARE/p31ca/public/k4market.html` |
+| `docs/physics-learn/labs.html` | ../doc-library/index.html | `docs/doc-library/index.html` |
+| `docs/physics-learn/labs.html` | index.html | `docs/physics-learn/index.html` |
+| `docs/physics-learn/labs.html` | ../../p31-personal-howto.html | `p31-personal-howto.html` |
+| `docs/physics-learn/labs.html` | ../../poets-room.html | `poets-room.html` |
+| `docs/physics-learn/labs.html` | ../../soup.html | `soup.html` |
+| `glass-box-widget.html` | /demos/index.html | `demos/index.html` |
+| `glass-box-widget.html` | /glass-box.html | `glass-box.html` |
+| `glass-box.html` | /demos/index.html | `demos/index.html` |
+| `glass-box.html` | /glass-box-widget.html | `glass-box-widget.html` |
+| `launch.html` | cognitive-passport/ | `cognitive-passport/index.html` |
+| `launch.html` | demos/ | `demos/index.html` |
+| `launch.html` | demos/the-pulse.html | `demos/the-pulse.html` |
+| `launch.html` | demos/the-same-shape.html | `demos/the-same-shape.html` |
+| `launch.html` | glass-box.html | `glass-box.html` |
+| `launch.html` | social-cards/ | `social-cards/index.html` |
+| `p31-device-setup.html` | demos/index.html | `demos/index.html` |
 | `p31-device-setup.html` | docs/doc-library/index.html | `docs/doc-library/index.html` |
 | `p31-device-setup.html` | fleet-portal.html | `fleet-portal.html` |
+| `p31-device-setup.html` | glass-box.html | `glass-box.html` |
 | `p31-device-setup.html` | p31-personal-howto.html | `p31-personal-howto.html` |
+| `p31-device-setup.html` | p31-slicer.html | `p31-slicer.html` |
+| `p31-device-setup.html` | p31-sovereign-lab.html | `p31-sovereign-lab.html` |
 | `p31-device-setup.html` | soup.html | `soup.html` |
-| `p31-personal-howto.html` | andromeda/04_SOFTWARE/p31ca/public/connect.html | `andromeda/04_SOFTWARE/p31ca/public/connect.html` |
-| `p31-personal-howto.html` | andromeda/04_SOFTWARE/p31ca/public/initial-build.html | `andromeda/04_SOFTWARE/p31ca/public/initial-build.html` |
 | `p31-personal-howto.html` | andromeda/04_SOFTWARE/p31ca/public/k4market.html | `andromeda/04_SOFTWARE/p31ca/public/k4market.html` |
+| `p31-personal-howto.html` | andromeda/04_SOFTWARE/p31ca/public/vibe.html | `andromeda/04_SOFTWARE/p31ca/public/vibe.html` |
+| `p31-personal-howto.html` | cognitive-passport/index.html | `cognitive-passport/index.html` |
+| `p31-personal-howto.html` | demos/index.html | `demos/index.html` |
 | `p31-personal-howto.html` | docs/doc-library/index.html | `docs/doc-library/index.html` |
 | `p31-personal-howto.html` | docs/physics-learn/index.html | `docs/physics-learn/index.html` |
 | `p31-personal-howto.html` | fleet-portal.html | `fleet-portal.html` |
+| `p31-personal-howto.html` | glass-box.html | `glass-box.html` |
 | `p31-personal-howto.html` | p31-device-setup.html | `p31-device-setup.html` |
+| `p31-personal-howto.html` | p31-slicer.html | `p31-slicer.html` |
+| `p31-personal-howto.html` | p31-sovereign-lab.html | `p31-sovereign-lab.html` |
 | `p31-personal-howto.html` | poets-room.html | `poets-room.html` |
 | `p31-personal-howto.html` | soup.html | `soup.html` |
-| `poets-room.html` | andromeda/04_SOFTWARE/p31ca/public/connect.html | `andromeda/04_SOFTWARE/p31ca/public/connect.html` |
-| `poets-room.html` | andromeda/04_SOFTWARE/p31ca/public/initial-build.html | `andromeda/04_SOFTWARE/p31ca/public/initial-build.html` |
-| `poets-room.html` | andromeda/04_SOFTWARE/p31ca/public/k4market.html | `andromeda/04_SOFTWARE/p31ca/public/k4market.html` |
-| `poets-room.html` | cognitive-passport/index.html | `cognitive-passport/index.html` |
-| `poets-room.html` | docs/doc-library/index.html | `docs/doc-library/index.html` |
+| `p31-slicer.html` | docs/doc-library/index.html | `docs/doc-library/index.html` |
+| `p31-slicer.html` | p31-sovereign-lab.html | `p31-sovereign-lab.html` |
+| `p31-slicer.html` | soup.html | `soup.html` |
+| `p31-sovereign-lab.html` | p31-slicer.html | `p31-slicer.html` |
+| `p31-sovereign-lab.html` | soup.html | `soup.html` |
 | `poets-room.html` | docs/physics-learn/index.html | `docs/physics-learn/index.html` |
-| `poets-room.html` | p31-personal-howto.html | `p31-personal-howto.html` |
+| `poets-room.html` | p31-slicer.html | `p31-slicer.html` |
+| `poets-room.html` | p31-sovereign-lab.html | `p31-sovereign-lab.html` |
 | `poets-room.html` | soup.html | `soup.html` |
 | `soup.html` | andromeda/04_SOFTWARE/p31ca/public/connect.html | `andromeda/04_SOFTWARE/p31ca/public/connect.html` |
 | `soup.html` | andromeda/04_SOFTWARE/p31ca/public/initial-build.html | `andromeda/04_SOFTWARE/p31ca/public/initial-build.html` |
 | `soup.html` | andromeda/04_SOFTWARE/p31ca/public/k4market.html | `andromeda/04_SOFTWARE/p31ca/public/k4market.html` |
 | `soup.html` | andromeda/04_SOFTWARE/p31ca/public/mesh-start.html | `andromeda/04_SOFTWARE/p31ca/public/mesh-start.html` |
 | `soup.html` | andromeda/04_SOFTWARE/p31ca/public/planetary-onboard.html | `andromeda/04_SOFTWARE/p31ca/public/planetary-onboard.html` |
+| `soup.html` | andromeda/04_SOFTWARE/p31ca/public/vibe.html | `andromeda/04_SOFTWARE/p31ca/public/vibe.html` |
 | `soup.html` | cognitive-passport/index.html | `cognitive-passport/index.html` |
+| `soup.html` | demos/index.html | `demos/index.html` |
 | `soup.html` | docs/doc-library/index.html | `docs/doc-library/index.html` |
 | `soup.html` | docs/physics-learn/index.html | `docs/physics-learn/index.html` |
 | `soup.html` | fleet-portal.html | `fleet-portal.html` |
+| `soup.html` | garden-phos-probe.html | `garden-phos-probe.html` |
+| `soup.html` | glass-box.html | `glass-box.html` |
+| `soup.html` | launch.html | `launch.html` |
 | `soup.html` | p31-device-setup.html | `p31-device-setup.html` |
 | `soup.html` | p31-personal-howto.html | `p31-personal-howto.html` |
+| `soup.html` | p31-slicer.html | `p31-slicer.html` |
+| `soup.html` | p31-sovereign-lab.html | `p31-sovereign-lab.html` |
 | `soup.html` | poets-room.html | `poets-room.html` |
 
 ### Mermaid (reachable spine excerpt — readability)
@@ -123,26 +201,50 @@ flowchart LR
   ne94a8f9605["andromeda/04_SOFTWARE/p31ca/public/k4market.ht…"]
   n1cae61e20e["andromeda/04_SOFTWARE/p31ca/public/mesh-start.…"]
   n7c80b15a01["andromeda/04_SOFTWARE/p31ca/public/planetary-o…"]
+  n63b5e07347["andromeda/04_SOFTWARE/p31ca/public/vibe.html…"]
   nd010492873["cognitive-passport/index.html…"]
+  n4958e6ad8f["demos/index.html…"]
+  n9e6f82be7b["demos/the-pulse.html…"]
+  nbe7ad6b866["demos/the-same-shape.html…"]
   n646d9281bb["docs/doc-library/index.html…"]
   n802af462c9["docs/physics-learn/index.html…"]
+  nf70f0b8c57["docs/physics-learn/labs.html…"]
   nec1d1c34b5["fleet-portal.html…"]
+  n5b0f4c9016["garden-phos-probe.html…"]
+  nc1f0ffb738["glass-box-widget.html…"]
+  n0f7eccba3e["glass-box.html…"]
+  n98e73ccc99["launch.html…"]
   nd9acc59220["p31-device-setup.html…"]
   n3bff1e10dd["p31-personal-howto.html…"]
+  ne4bbd69c06["p31-slicer.html…"]
+  na2ae092104["p31-sovereign-lab.html…"]
   na2975ab07d["poets-room.html…"]
+  n7e44471659["social-cards/index.html…"]
   n593b681a87["soup.html…"]
   n593b681a87 --> n646d9281bb
   n593b681a87 --> n802af462c9
+  n593b681a87 --> ne4bbd69c06
+  n593b681a87 --> na2ae092104
   n593b681a87 --> ne94a8f9605
+  n593b681a87 --> n98e73ccc99
   n593b681a87 --> nec1d1c34b5
   n593b681a87 --> n3bff1e10dd
   n593b681a87 --> nd9acc59220
   n593b681a87 --> na2975ab07d
+  n593b681a87 --> n5b0f4c9016
   n593b681a87 --> nd010492873
+  n593b681a87 --> n4958e6ad8f
+  n593b681a87 --> n0f7eccba3e
+  n593b681a87 --> n63b5e07347
   n593b681a87 --> n7c80b15a01
   n593b681a87 --> n1cae61e20e
   n593b681a87 --> nbef7411702
   n593b681a87 --> n65061aec09
+  nd010492873 --> n593b681a87
+  nd010492873 --> na2ae092104
+  nd010492873 --> n4958e6ad8f
+  nd010492873 --> n0f7eccba3e
+  nd010492873 --> n63b5e07347
   n646d9281bb --> n802af462c9
   n646d9281bb --> ne94a8f9605
   n646d9281bb --> na2975ab07d
@@ -150,32 +252,66 @@ flowchart LR
   n646d9281bb --> n65061aec09
   n646d9281bb --> nbef7411702
   n646d9281bb --> n3bff1e10dd
+  n802af462c9 --> nf70f0b8c57
   n802af462c9 --> na2975ab07d
   n802af462c9 --> n593b681a87
   n802af462c9 --> n646d9281bb
-  n802af462c9 --> ne94a8f9605
-  n802af462c9 --> n3bff1e10dd
+  n802af462c9 --> nd010492873
+  n3bff1e10dd --> nd9acc59220
   n3bff1e10dd --> n593b681a87
   n3bff1e10dd --> n646d9281bb
   n3bff1e10dd --> n802af462c9
+  n3bff1e10dd --> ne4bbd69c06
+  n3bff1e10dd --> na2ae092104
   n3bff1e10dd --> ne94a8f9605
   n3bff1e10dd --> nec1d1c34b5
   n3bff1e10dd --> na2975ab07d
-  n3bff1e10dd --> nd9acc59220
-  n3bff1e10dd --> n65061aec09
-  n3bff1e10dd --> nbef7411702
+  n3bff1e10dd --> n4958e6ad8f
+  n3bff1e10dd --> n0f7eccba3e
+  n3bff1e10dd --> nd010492873
+  n3bff1e10dd --> n63b5e07347
+  nd9acc59220 --> na2ae092104
+  nd9acc59220 --> ne4bbd69c06
   nd9acc59220 --> n3bff1e10dd
   nd9acc59220 --> n593b681a87
   nd9acc59220 --> n646d9281bb
   nd9acc59220 --> nec1d1c34b5
-  na2975ab07d --> n593b681a87
-  na2975ab07d --> n646d9281bb
+  nd9acc59220 --> n4958e6ad8f
+  nd9acc59220 --> n0f7eccba3e
   na2975ab07d --> n802af462c9
-  na2975ab07d --> ne94a8f9605
-  na2975ab07d --> n3bff1e10dd
-  na2975ab07d --> nd010492873
-  na2975ab07d --> n65061aec09
-  na2975ab07d --> nbef7411702
+  na2975ab07d --> n593b681a87
+  na2975ab07d --> na2ae092104
+  na2975ab07d --> ne4bbd69c06
+  ne4bbd69c06 --> n593b681a87
+  ne4bbd69c06 --> na2ae092104
+  ne4bbd69c06 --> n646d9281bb
+  na2ae092104 --> ne4bbd69c06
+  na2ae092104 --> n593b681a87
+  n98e73ccc99 --> nbe7ad6b866
+  n98e73ccc99 --> n9e6f82be7b
+  n98e73ccc99 --> n7e44471659
+  n98e73ccc99 --> n4958e6ad8f
+  n98e73ccc99 --> nd010492873
+  n98e73ccc99 --> n0f7eccba3e
+  n4958e6ad8f --> nbe7ad6b866
+  n4958e6ad8f --> n9e6f82be7b
+  n4958e6ad8f --> n0f7eccba3e
+  n4958e6ad8f --> nc1f0ffb738
+  n0f7eccba3e --> n4958e6ad8f
+  n0f7eccba3e --> nc1f0ffb738
+  nf70f0b8c57 --> n802af462c9
+  nf70f0b8c57 --> na2975ab07d
+  nf70f0b8c57 --> n593b681a87
+  nf70f0b8c57 --> n646d9281bb
+  nf70f0b8c57 --> ne94a8f9605
+  nf70f0b8c57 --> n3bff1e10dd
+  nbe7ad6b866 --> n9e6f82be7b
+  nbe7ad6b866 --> n4958e6ad8f
+  n9e6f82be7b --> nbe7ad6b866
+  n9e6f82be7b --> n4958e6ad8f
+  n9e6f82be7b --> n0f7eccba3e
+  nc1f0ffb738 --> n0f7eccba3e
+  nc1f0ffb738 --> n4958e6ad8f
 ```
 
 ## p31ca.org Pages build (`public/` as served root)
@@ -186,19 +322,20 @@ flowchart LR
 
 | Metric | Count | Notes |
 |--------|------:|-------|
-| HTML in crawl universe | 214 | |
-| Reachable internally | 123 | BFS from seeds |
-| Orphans | 91 | in universe only |
-| Broken (no file after redirects) | 36 | |
-| Outbound https / other hosts | 291 | |
-| `/` SPA home links | 278 | not missing — deploy root |
-| `.md` anchors | 0 | prose, not shipped HTML routes |
-| Non-HTML file links | 2 | e.g. `.nvmrc`, config |
-| `_redirects` entries loaded | 37 | |
+| HTML in crawl universe | 291 | |
+| Reachable internally | 151 | BFS from seeds |
+| Orphans | 140 | in universe only |
+| Broken (no file after redirects) | 46 | |
+| Outbound https / other hosts | 607 | |
+| `/` SPA home links | 305 | not missing — deploy root |
+| `.md` anchors | 1 | prose, not shipped HTML routes |
+| Non-HTML file links | 4 | e.g. `.nvmrc`, config |
+| `_redirects` entries loaded | 73 | |
 
-### Orphan HTML (91) — not reached from seeds
+### Orphan HTML (140) — not reached from seeds
 
 - `agent/bonding-relay/index.html`
+- `agent/cf-edge-lab/index.html`
 - `agent/command-center/index.html`
 - `agent/cortex-benefits/index.html`
 - `agent/cortex-content/index.html`
@@ -210,6 +347,7 @@ flowchart LR
 - `agent/donate-api/index.html`
 - `agent/genesis-gate/index.html`
 - `agent/geodesic-room/index.html`
+- `agent/k4-agent-hub/index.html`
 - `agent/k4-cage/index.html`
 - `agent/k4-hubs/index.html`
 - `agent/k4-personal/index.html`
@@ -232,6 +370,7 @@ flowchart LR
 - `agent/p31-workers/index.html`
 - `agent/p31ca/index.html`
 - `agent/spaceship-relay/index.html`
+- `agent/tetra-hub/index.html`
 - `alchemy-about.html`
 - `appointment-tracker-about.html`
 - `book-about.html`
@@ -239,46 +378,47 @@ flowchart LR
 - `builder.html`
 - `canon-demo-about.html`
 - `cockpit.html`
+- `cogpass-bridge.html`
 - `contact-locker-about.html`
 - `content-forge-about.html`
 - `content-forge.html`
+- `contract-builder-about.html`
+- `contract-builder.html`
 - `d20-omnibus-icosa.html`
-- `delta-hiring/index.html`
-- `dev-workbench.html`
+- `demo-labs.html`
+- `demos/alignment-graph.html`
+- `demos/k4-mesh.html`
+- `demos/larmor-pulse.html`
 - `discord-bot-about.html`
-- `doc-library/index.html`
 - `economy.html`
 - `ecosystem.html`
 - `editor.html`
-- `fleet-portal.html`
+- `fleet-agents.html`
 - `fluid.html`
 - `forge-about.html`
 - `forge.html`
 - `health.html`
 - `ide.html`
+- `k4-agent-hubs-about.html`
 - `kids-growth-about.html`
 - `larmor.html`
 - `lattice.html`
+- `launch-readiness.html`
+- `launch.html`
 - `legal-evidence-about.html`
+- `lib/starfield-demo.html`
 - `liminal-about.html`
 - `liminal.html`
 - `looper.html`
-- `magic-crystal.html`
 - `medical-tracker-about.html`
 - `movement.html`
 - `node-one-about.html`
 - `node-zero-about.html`
-- `oqe-icosa-about.html`
-- `oqe-icosa.html`
-- `orbits.html`
-- `p31-delta-hiring-about.html`
-- `particles.html`
-- `poetry.html`
-- `qg-ide-about.html`
-- `qg-ide.html`
-- `quantum-core-about.html`
-- `quantum-life-os-about.html`
-- … *11 more (see crawl universe glob)*
+- … *60 more (see crawl universe glob)*
+
+### Markdown-linked (not counted as broken)
+
+- `p31-slicer.html` → `design-assets/stl/README.md`
 
 ### Broken filesystem targets
 
@@ -287,17 +427,31 @@ flowchart LR
 | `family-sovereign-pack.html` | `/p31-super-centaur-pack.json` | unresolved / path |
 | `family-sovereign-pack.html` | `/creator-economy.json` | unresolved / path |
 | `family-sovereign-pack.html` | `/p31-welcome-packages.json` | unresolved / path |
+| `demos/index.html` | `../` | missing |
 | `p31-super-centaur-starter.html` | `/p31-super-centaur-pack.json` | unresolved / path |
 | `p31-super-centaur-starter.html` | `/p31-super-centaur-pack.json` | unresolved / path |
 | `p31-super-centaur-starter.html` | `/p31-welcome-packages.json` | unresolved / path |
 | `p31-super-centaur-starter.html` | `/creator-economy.json` | unresolved / path |
+| `glass-box.html` | `/reports/index.json` | unresolved / path |
+| `glass-box.html` | `/verify-pulse.json` | unresolved / path |
+| `glass-box.html` | `/reports/promoted/index.json` | unresolved / path |
+| `security-disclosure.html` | `/.well-known/security.txt` | unresolved / path |
+| `security-disclosure.html` | `/.well-known/security.txt` | unresolved / path |
 | `security-disclosure.html` | `/.well-known/security.txt` | unresolved / path |
 | `quantum-clock.html` | `/dome/` | unresolved / path |
-| `privacy.html` | `/creator-economy.json` | unresolved / path |
-| `donate.html` | `STRIPE_LINK_10` | missing |
-| `donate.html` | `STRIPE_LINK_25` | missing |
-| `donate.html` | `STRIPE_LINK_50` | missing |
-| `donate.html` | `STRIPE_LINK_CUSTOM` | missing |
+| `messaging-hub.html` | `/integrations/` | missing |
+| `messaging-hub.html` | `/ops/` | unresolved / path |
+| `messaging-hub.html` | `/integrations/` | missing |
+| `messaging-hub.html` | `/appointment-tracker` | unresolved / path |
+| `messaging-hub.html` | `/love-ledger` | unresolved / path |
+| `messaging-hub.html` | `/medical-tracker` | unresolved / path |
+| `messaging-hub.html` | `/somatic-anchor` | unresolved / path |
+| `messaging-hub.html` | `/legal-evidence` | unresolved / path |
+| `messaging-hub.html` | `/contact-locker` | unresolved / path |
+| `messaging-hub.html` | `/sleep-tracker` | unresolved / path |
+| `messaging-hub.html` | `/budget-tracker` | unresolved / path |
+| `messaging-hub.html` | `/p31-mesh-constants.json` | unresolved / path |
+| `demos/the-pulse.html` | `../` | missing |
 | `p31-canon-demo.html` | `/p31-style.css` | unresolved / path |
 | `open-source.html` | `/creator-economy.json` | unresolved / path |
 | `open-source.html` | `/p31-super-centaur-pack.json` | unresolved / path |
@@ -308,35 +462,42 @@ flowchart LR
 | `integrations-about.html` | `/integrations/index.html` | unresolved / path |
 | `integrations-about.html` | `/integrations/index.html` | unresolved / path |
 | `integrations-about.html` | `/integrations/index.html` | unresolved / path |
-| `demo-labs.html` | `/p31-public-surface.json` | unresolved / path |
-| `demo-labs.html` | `/p31-live-fleet.json` | unresolved / path |
-| `demo-labs.html` | `/ops/` | unresolved / path |
+| `dev-workbench.html` | `/orchestrator` | unresolved / path |
+| `financials.html` | `/creator-economy.json` | unresolved / path |
 | `live-fleet-demo.html` | `/ops/` | unresolved / path |
 | `live-fleet-demo.html` | `/p31-live-fleet.json` | unresolved / path |
 | `live-fleet-demo.html` | `/ops/` | unresolved / path |
-| `fleet-agents.html` | `/p31-fleet-entities.json` | unresolved / path |
-| `fleet-agents.html` | `/ops/` | unresolved / path |
-| `fleet-agents.html` | `/ops/` | unresolved / path |
-| `fleet-agents.html` | `/ops/` | unresolved / path |
 | `vision.html` | `/dome/` | unresolved / path |
 | `vision.html` | `/ops/` | unresolved / path |
+| `quantum-family.html` | `/garden-zone-8b.json` | unresolved / path |
 
 ### Fan-out (distinct internal `.html` targets)
 
 | Page | Out-degree |
 |------|------------|
-| `demo-labs.html` | 18 |
-| `education/index.html` | 17 |
-| `vision.html` | 14 |
-| `family-sovereign-pack.html` | 11 |
+| `education/index.html` | 18 |
+| `vision.html` | 17 |
+| `delta.html` | 14 |
+| `family-sovereign-pack.html` | 14 |
+| `mesh-start.html` | 13 |
+| `kids-home.html` | 11 |
+| `messaging-hub.html` | 11 |
+| `vibe.html` | 10 |
+| `education-about.html` | 9 |
 | `education/about.html` | 9 |
 | `education/modules/index.html` | 9 |
-| `kids-home.html` | 9 |
-| `mesh-start.html` | 9 |
+| `financials.html` | 9 |
 | `p31-super-centaur-starter.html` | 9 |
-| `delta.html` | 8 |
-| `education-about.html` | 8 |
-| `accessibility.html` | 7 |
+| `status.html` | 9 |
+| `welcome.html` | 9 |
+| `code-of-conduct.html` | 8 |
+| `connect.html` | 8 |
+| `manifesto.html` | 8 |
+| `planetary-onboard.html` | 8 |
+| `roadmap.html` | 8 |
+| `security.html` | 8 |
+| `telemetry-policy.html` | 8 |
+| `transparency.html` | 8 |
 | `attractor-about.html` | 7 |
 | `axiom-about.html` | 7 |
 | `bridge-about.html` | 7 |
@@ -355,31 +516,22 @@ flowchart LR
 | `observatory-about.html` | 7 |
 | `phenix-os-about.html` | 7 |
 | `planetary-onboard-about.html` | 7 |
-| `prism-about.html` | 7 |
-| `quantum-family-about.html` | 7 |
-| `resonance-about.html` | 7 |
-| `signal-about.html` | 7 |
-| `simple-sovereignty.html` | 7 |
-| `sovereign-about.html` | 7 |
-| `spaceship-earth-about.html` | 7 |
-| `tether-about.html` | 7 |
-| `tomography-about.html` | 7 |
-| `bonding-about.html` | 6 |
-| `connect-about.html` | 6 |
-| `education/modules/mesh-maps.html` | 6 |
+| `poets-about.html` | 7 |
 | … | *see TSV* |
 
 ### Edge sample (140 rows; full dump → generated TSV)
 
 | From | href | → |
 |------|------|---|
+| `accessibility.html` | /accessibility | `accessibility.html` |
 | `accessibility.html` | /contact | `contact.html` |
-| `accessibility.html` | /family-pack | `family-sovereign-pack.html` |
 | `accessibility.html` | /oss | `open-source.html` |
-| `accessibility.html` | /p31-canon-demo.html | `p31-canon-demo.html` |
 | `accessibility.html` | /privacy | `privacy.html` |
-| `accessibility.html` | /security | `security-disclosure.html` |
+| `accessibility.html` | /security | `security.html` |
 | `accessibility.html` | /terms | `terms.html` |
+| `agents.html` | agents.html?alive=1 | `agents.html` |
+| `agents.html` | fleet-portal.html | `fleet-portal.html` |
+| `agents.html` | /passport-generator.html | `passport-generator.html` |
 | `alchemy.html` | bonding.html | `bonding.html` |
 | `alchemy.html` | kenosis.html | `kenosis.html` |
 | `alchemy.html` | node-one.html | `node-one.html` |
@@ -435,6 +587,14 @@ flowchart LR
 | `buffer.html` | guardian.html | `guardian.html` |
 | `buffer.html` | node-one.html | `node-one.html` |
 | `buffer.html` | spaceship-earth.html | `spaceship-earth.html` |
+| `code-of-conduct.html` | /accessibility | `accessibility.html` |
+| `code-of-conduct.html` | /code-of-conduct | `code-of-conduct.html` |
+| `code-of-conduct.html` | /financials | `financials.html` |
+| `code-of-conduct.html` | /manifesto | `manifesto.html` |
+| `code-of-conduct.html` | /privacy | `privacy.html` |
+| `code-of-conduct.html` | /roadmap | `roadmap.html` |
+| `code-of-conduct.html` | /security | `security.html` |
+| `code-of-conduct.html` | /status | `status.html` |
 | `collider-about.html` | /attractor-about.html | `attractor-about.html` |
 | `collider-about.html` | /axiom-about.html | `axiom-about.html` |
 | `collider-about.html` | /bonding-about.html | `bonding-about.html` |
@@ -448,13 +608,18 @@ flowchart LR
 | `connect-about.html` | /k4market-about.html | `k4market-about.html` |
 | `connect-about.html` | /observatory-about.html | `observatory-about.html` |
 | `connect-about.html` | /planetary-onboard-about.html | `planetary-onboard-about.html` |
+| `connect.html` | /visuals | `demos/index.html` |
 | `connect.html` | /geodesic.html | `geodesic.html` |
+| `connect.html` | /glass-box | `glass-box.html` |
 | `connect.html` | /build | `initial-build.html` |
+| `connect.html` | /slicer | `p31-slicer.html` |
+| `connect.html` | /lab | `p31-sovereign-lab.html` |
 | `connect.html` | /centaur | `p31-super-centaur-starter.html` |
+| `connect.html` | /cars | `social-molecules.html` |
 | `contact.html` | /accessibility | `accessibility.html` |
 | `contact.html` | /oss | `open-source.html` |
 | `contact.html` | /privacy | `privacy.html` |
-| `contact.html` | /security | `security-disclosure.html` |
+| `contact.html` | /security | `security.html` |
 | `contact.html` | /terms | `terms.html` |
 | `cortex-about.html` | /mesh | `connect.html` |
 | `cortex-about.html` | /cortex.html | `cortex.html` |
@@ -467,58 +632,44 @@ flowchart LR
 | `cortex.html` | donate.html | `donate.html` |
 | `cortex.html` | genesis-gate.html | `genesis-gate.html` |
 | `cortex.html` | kenosis.html | `kenosis.html` |
+| `delta-language.html` | /delta.html | `delta.html` |
 | `delta.html` | /connect.html | `connect.html` |
+| `delta.html` | /delta-language.html | `delta-language.html` |
 | `delta.html` | /delta.html | `delta.html` |
+| `delta.html` | /visuals | `demos/index.html` |
 | `delta.html` | /family-sovereign-pack.html | `family-sovereign-pack.html` |
 | `delta.html` | /geodesic.html | `geodesic.html` |
+| `delta.html` | /glass-box | `glass-box.html` |
 | `delta.html` | /build | `initial-build.html` |
 | `delta.html` | /mesh-start.html | `mesh-start.html` |
+| `delta.html` | /slicer | `p31-slicer.html` |
+| `delta.html` | /lab | `p31-sovereign-lab.html` |
 | `delta.html` | /p31-super-centaur-starter.html | `p31-super-centaur-starter.html` |
 | `delta.html` | /planetary-onboard.html | `planetary-onboard.html` |
-| `demo-labs.html` | /accessibility | `accessibility.html` |
-| `demo-labs.html` | /mesh | `connect.html` |
-| `demo-labs.html` | /contact | `contact.html` |
-| `demo-labs.html` | /delta | `delta.html` |
-| `demo-labs.html` | /agents | `fleet-agents.html` |
-| `demo-labs.html` | /geodesic.html | `geodesic.html` |
-| `demo-labs.html` | /build | `initial-build.html` |
-| `demo-labs.html` | /growth | `kids-growth.html` |
-| `demo-labs.html` | /kids | `kids-home.html` |
-| `demo-labs.html` | /fleet | `live-fleet-demo.html` |
-| `demo-labs.html` | /oss | `open-source.html` |
-| `demo-labs.html` | /canon | `p31-canon-demo.html` |
-| `demo-labs.html` | /centaur | `p31-super-centaur-starter.html` |
-| `demo-labs.html` | /onboard | `planetary-onboard.html` |
-| `demo-labs.html` | /privacy | `privacy.html` |
-| `demo-labs.html` | /security | `security-disclosure.html` |
-| `demo-labs.html` | /terms | `terms.html` |
-| `demo-labs.html` | /journey | `vision.html` |
+| `delta.html` | /cars | `social-molecules.html` |
+| `demos/index.html` | /connect | `connect.html` |
+| `demos/index.html` | ./the-pulse.html | `demos/the-pulse.html` |
+| `demos/index.html` | ./the-same-shape.html | `demos/the-same-shape.html` |
+| `demos/index.html` | ../glass-box-widget.html | `glass-box-widget.html` |
+| `demos/index.html` | ../glass-box.html | `glass-box.html` |
+| `demos/the-pulse.html` | ./ | `demos/index.html` |
+| `demos/the-pulse.html` | ./the-same-shape.html | `demos/the-same-shape.html` |
+| `demos/the-pulse.html` | ../glass-box.html | `glass-box.html` |
+| `demos/the-same-shape.html` | ./ | `demos/index.html` |
+| `demos/the-same-shape.html` | ./the-pulse.html | `demos/the-pulse.html` |
+| `dev-workbench.html` | /mesh-start.html | `mesh-start.html` |
 | `discord-bot.html` | bonding.html | `bonding.html` |
 | `discord-bot.html` | book.html | `book.html` |
 | `discord-bot.html` | cortex.html | `cortex.html` |
 | `discord-bot.html` | donate.html | `donate.html` |
-| `donate-about.html` | /mesh | `connect.html` |
-| `donate-about.html` | /cortex-about.html | `cortex-about.html` |
-| `donate-about.html` | /donate.html | `donate.html` |
-| `donate-about.html` | /genesis-gate-about.html | `genesis-gate-about.html` |
-| `donate-about.html` | /geodesic.html | `geodesic.html` |
-| `donate-about.html` | /build | `initial-build.html` |
-| `donate-about.html` | /spaceship-earth-about.html | `spaceship-earth-about.html` |
-| `echo-about.html` | /mesh | `connect.html` |
-| `echo-about.html` | /echo.html | `echo.html` |
-| `echo-about.html` | /geodesic.html | `geodesic.html` |
-| `echo-about.html` | /build | `initial-build.html` |
-| `echo-about.html` | /prism-about.html | `prism-about.html` |
-| `echo-about.html` | /resonance-about.html | `resonance-about.html` |
-| `echo-about.html` | /signal-about.html | `signal-about.html` |
-| `ede-about.html` | /buffer-about.html | `buffer-about.html` |
-| `ede-about.html` | /mesh | `connect.html` |
+| `doc-library/index.html` | /connect.html | `connect.html` |
 
 ### Mermaid (reachable spine excerpt — readability)
 
 ```mermaid
 flowchart LR
   n5d48ed3031["accessibility.html…"]
+  n4614233f98["agents.html…"]
   n62141ef5d0["alchemy.html…"]
   n546f1d8400["attractor-about.html…"]
   nb6969cb331["attractor-sim.html…"]
@@ -533,6 +684,7 @@ flowchart LR
   n1c72b26f4a["bridge.html…"]
   nd74242dcd1["buffer-about.html…"]
   n26275e526f["buffer.html…"]
+  n492d4db1c8["code-of-conduct.html…"]
   n1e835df47f["collider-about.html…"]
   n86a5707c75["collider.html…"]
   n51adc3c85e["connect-about.html…"]
@@ -540,9 +692,15 @@ flowchart LR
   n1436176043["contact.html…"]
   n4b6daf067f["cortex-about.html…"]
   n6af323b574["cortex.html…"]
+  ned0e96761f["delta-hiring/index.html…"]
+  ne9f19e31d2["delta-language.html…"]
   n4d8ec14cf0["delta.html…"]
-  ndcfe271e0b["demo-labs.html…"]
+  n4958e6ad8f["demos/index.html…"]
+  n9e6f82be7b["demos/the-pulse.html…"]
+  nbe7ad6b866["demos/the-same-shape.html…"]
+  ne0d9e897c5["dev-workbench.html…"]
   n2d2bbd46b4["discord-bot.html…"]
+  n2bf83402de["doc-library/index.html…"]
   n152bd4229a["donate-about.html…"]
   n673fd6c69e["donate.html…"]
   n55c865f539["echo-about.html…"]
@@ -558,51 +716,34 @@ flowchart LR
   na256fb0921["education/labs/geodesic-first-room.html…"]
   n0cb5b19bfb["education/labs/index.html…"]
   n29145e53b2["education/labs/mesh-snapshot.html…"]
-  ne999810348["education/modules/index.html…"]
-  nfe73a3ff85["education/modules/integrity-basics.html…"]
-  n008a6e7425["education/modules/local-first-setup.html…"]
-  na320096805["education/modules/mesh-maps.html…"]
-  n47345ac14f["education/modules/mission-arc.html…"]
-  n4bd2be0495["education/modules/tools-map.html…"]
-  na8205035c5["education/modules/when-workers.html…"]
-  nbd43cf85ec["education/parent-faq.html…"]
   nfa9a9e7f1a --> n6af323b574
   nfa9a9e7f1a --> n62141ef5d0
+  n59542675d9 --> n4958e6ad8f
+  nce0df18f86 --> n59542675d9
   nce0df18f86 --> naf37f5f4e6
   nce0df18f86 --> nbacff9f860
-  nce0df18f86 --> nbd43cf85ec
-  nce0df18f86 --> ne999810348
   nce0df18f86 --> n0cb5b19bfb
   nce0df18f86 --> naaa4d2d638
   nce0df18f86 --> na65219a5d1
   nce0df18f86 --> n1436176043
+  n4d8ec14cf0 --> ne9f19e31d2
   n4d8ec14cf0 --> n4d8ec14cf0
   n4d8ec14cf0 --> n59542675d9
+  n4d8ec14cf0 --> n4958e6ad8f
+  n4958e6ad8f --> nbe7ad6b866
+  n4958e6ad8f --> n9e6f82be7b
+  n4958e6ad8f --> n59542675d9
   n6af323b574 --> n2d2bbd46b4
   n6af323b574 --> n673fd6c69e
   n62141ef5d0 --> nfa9a9e7f1a
   naf37f5f4e6 --> nce0df18f86
   naf37f5f4e6 --> naf37f5f4e6
   naf37f5f4e6 --> nbacff9f860
-  naf37f5f4e6 --> nbd43cf85ec
-  naf37f5f4e6 --> ne999810348
   naf37f5f4e6 --> n0cb5b19bfb
   nbacff9f860 --> nce0df18f86
   nbacff9f860 --> naf37f5f4e6
   nbacff9f860 --> nbacff9f860
-  nbacff9f860 --> nbd43cf85ec
   nbacff9f860 --> n0cb5b19bfb
-  nbd43cf85ec --> nce0df18f86
-  nbd43cf85ec --> naf37f5f4e6
-  nbd43cf85ec --> nbacff9f860
-  ne999810348 --> nce0df18f86
-  ne999810348 --> n0cb5b19bfb
-  ne999810348 --> n008a6e7425
-  ne999810348 --> na320096805
-  ne999810348 --> n47345ac14f
-  ne999810348 --> n4bd2be0495
-  ne999810348 --> nfe73a3ff85
-  ne999810348 --> na8205035c5
   n0cb5b19bfb --> n29145e53b2
   n0cb5b19bfb --> n38023fd53e
   n0cb5b19bfb --> n60610310cb
@@ -612,10 +753,16 @@ flowchart LR
   naaa4d2d638 --> n51adc3c85e
   naaa4d2d638 --> n59542675d9
   n1436176043 --> n5d48ed3031
+  ne9f19e31d2 --> n4d8ec14cf0
   n9d22263065 --> na65219a5d1
   n9d22263065 --> nd74242dcd1
   n9d22263065 --> n4b6daf067f
   n9d22263065 --> n59542675d9
+  nbe7ad6b866 --> n9e6f82be7b
+  nbe7ad6b866 --> n4958e6ad8f
+  n9e6f82be7b --> nbe7ad6b866
+  n9e6f82be7b --> n4958e6ad8f
+  n2bf83402de --> n59542675d9
   n1ea6a3e1b6 --> nb6969cb331
   n1ea6a3e1b6 --> n62141ef5d0
   n26275e526f --> n6af323b574
@@ -624,18 +771,7 @@ flowchart LR
   n2d2bbd46b4 --> nfa9a9e7f1a
   n2d2bbd46b4 --> nf945b4abd7
   n5d48ed3031 --> n1436176043
-  n008a6e7425 --> ne999810348
-  n008a6e7425 --> n60610310cb
-  na320096805 --> ne999810348
-  na320096805 --> n59542675d9
-  na320096805 --> n29145e53b2
-  na320096805 --> na256fb0921
-  n47345ac14f --> ne999810348
-  n47345ac14f --> n4d8ec14cf0
-  n47345ac14f --> n38023fd53e
-  n4bd2be0495 --> ne999810348
-  nfe73a3ff85 --> ne999810348
-  na8205035c5 --> ne999810348
+  n5d48ed3031 --> n5d48ed3031
   n29145e53b2 --> n0cb5b19bfb
   n38023fd53e --> n0cb5b19bfb
   n60610310cb --> n0cb5b19bfb
@@ -649,10 +785,12 @@ flowchart LR
   nb6969cb331 --> n1ea6a3e1b6
   nf945b4abd7 --> nfa9a9e7f1a
   nf945b4abd7 --> n2d2bbd46b4
-  ndcfe271e0b --> n1436176043
-  ndcfe271e0b --> n5d48ed3031
-  ndcfe271e0b --> n4d8ec14cf0
-  ndcfe271e0b --> n59542675d9
+  nb80e61c268 --> n546f1d8400
+  nb80e61c268 --> n1e835df47f
+  nb80e61c268 --> nf7279271a3
+  nb80e61c268 --> n59542675d9
+  n492d4db1c8 --> n492d4db1c8
+  n492d4db1c8 --> n5d48ed3031
   n1e835df47f --> n86a5707c75
   n1e835df47f --> nf7279271a3
   n1e835df47f --> nb80e61c268
@@ -665,13 +803,10 @@ flowchart LR
   ndbb1c2c55e --> n1c72b26f4a
   ndbb1c2c55e --> n152bd4229a
   ndbb1c2c55e --> n59542675d9
-  nb80e61c268 --> n546f1d8400
-  nb80e61c268 --> n1e835df47f
-  nb80e61c268 --> nf7279271a3
-  nb80e61c268 --> n59542675d9
   n546f1d8400 --> n1ea6a3e1b6
   n546f1d8400 --> n1e835df47f
   n546f1d8400 --> n59542675d9
+  n4614233f98 --> n4614233f98
   n152bd4229a --> n673fd6c69e
   n152bd4229a --> n4b6daf067f
   n152bd4229a --> n59542675d9
@@ -683,7 +818,7 @@ flowchart LR
 
 | Zone | Universe | Reachable | Orphans | Broken | External hosts | SPA `/` refs | `.md` hrefs |
 |------|----------|-----------|---------|--------|----------------|-------------|-----------|
-| Bonding static | 12 | 13 | 4 | 0 | 126 | 6 | 43 |
-| p31ca Pages | 214 | 123 | 91 | 36 | 291 | 278 | 0 |
+| Bonding static | 27 | 25 | 12 | 7 | 221 | 12 | 48 |
+| p31ca Pages | 291 | 151 | 140 | 46 | 607 | 305 | 1 |
 
 *CI exit code follows script: warnings only (`npm run nav:report` exits 0). Use manual review of Broken table.*

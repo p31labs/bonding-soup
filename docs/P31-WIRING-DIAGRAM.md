@@ -890,6 +890,7 @@ npm run verify  (root, ordered)
 ├── verify:reports-promoted
 ├── verify:glass-box                    ← public transparency
 ├── verify:demos
+├── verify:pwa
 ├── verify:facts                        ← p31-facts.json invariants
 ├── verify:subscriptions                ← AI subscription stack
 ├── verify:p31-env                      ← env catalog

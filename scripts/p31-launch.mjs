@@ -28,12 +28,16 @@ import { existsSync, readFileSync, writeFileSync, mkdirSync, statSync } from "no
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { homedir } from "node:os";
+import http from "node:http";
+
+import { rainbowText, rainbowLine, celebrate, isRainbowEnabled } from "./lib/rainbow.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
 const args = new Set(process.argv.slice(2));
 const DRY_RUN = args.has("--dry-run") || args.has("-n");
 const STATUS_ONLY = args.has("--status");
+const FULL = args.has("--full") || process.env.P31_LAUNCH_FULL === "1";
 const PUBLISH = process.env.P31_LAUNCH_PUBLISH === "I_UNDERSTAND";
 const VERBOSE = args.has("--verbose") || args.has("-v");
 const NO_COLOR = !!process.env.NO_COLOR || !process.stdout.isTTY;
@@ -71,25 +75,52 @@ if (STATUS_ONLY) {
   console.log("");
   console.log("  " + C.muted("at:        ") + last.at);
   console.log("  " + C.muted("commit:    ") + (last.commit || "—"));
+  console.log("  " + C.muted("mode:      ") + (last.mode || "standard"));
   console.log("  " + C.muted("dry-run:   ") + (last.dryRun ? "yes" : "no"));
   console.log("  " + C.muted("publish:   ") + (last.publish ? C.butter("yes") : "no"));
+  if (last.elapsedMs != null) console.log("  " + C.muted("elapsed:   ") + `${(last.elapsedMs/1000).toFixed(1)}s`);
   console.log("");
   console.log(C.bold("  step results"));
+  const phaseLabel = (p) => p === "full-build" ? C.muted(" [build]")
+                    : p === "full-probe" ? C.muted(" [probe]")
+                    : "";
   for (const s of last.steps) {
-    const mark = s.ok ? C.phos("✓") : C.coral("✗");
-    console.log(`    ${mark} ${s.name.padEnd(30)} ${C.muted("(" + (s.durationMs || 0) + "ms)")}`);
+    const mark = s.ok ? C.phos("✓") : (s.critical === false ? C.butter("⚠") : C.coral("✗"));
+    const detail = s.detail ? C.muted(" — " + s.detail) : "";
+    console.log(`    ${mark} ${s.name.padEnd(30)} ${C.muted("(" + (s.durationMs || 0) + "ms)")}${phaseLabel(s.phase)}${detail}`);
+  }
+  if (last.deliverables?.length) {
+    console.log("");
+    console.log(C.bold("  deliverables present"));
+    for (const d of last.deliverables) {
+      const mark = d.present ? C.phos("✓") : C.coral("✗");
+      const size = d.present ? C.muted(`(${(d.bytes || 0).toLocaleString()} bytes)`) : "";
+      console.log(`    ${mark} ${d.label.padEnd(34)} ${size}`);
+    }
   }
   console.log("");
   console.log("  " + C.muted("dashboard: ") + "open launch.html");
   console.log("  " + C.muted("runbook:   ") + "docs/LAUNCH-PACKAGE-2026-05.md");
+  if (last.allFullGreen && last.mode === "full") {
+    console.log("  " + rainbowText("  rainbows: ON · everything green"));
+  }
   process.exit(last.allGreen ? 0 : 1);
 }
 
-/* ───── canonical pipeline ───── */
+/* ───── canonical pipeline ─────
+ *
+ * STANDARD pipeline (15 steps): public-surface assembly + verify gates.
+ * --full mode (+18): adds 10 extra deliverable builds, then 5 service
+ * probes, then 3 wide-net soft verifies (ecosystem glass, fleet probe,
+ * MCP bridge static check). Total 33 steps in --full mode.
+ *
+ * Order rules:
+ *   1. Builds run before any verify gate that consumes them.
+ *   2. Soft probes run last (after readiness so failures don't mask real
+ *      assembly issues).
+ */
 const PIPELINE = [
-  // ─── Build phase: regenerate every derived artifact BEFORE verifying anything.
-  // Order matters: PWA mirroring can change cognitive-passport/, social-cards/, demos/
-  // contents (sw.js + p31-pwa.js drop), so it runs first.
+  // ─── Build phase (standard): public-facing assembly only.
   { name: "build:pwa",                cmd: "npm run build:pwa",               critical: true,  reason: "mirror SW + script into all installable surfaces" },
   { name: "build:demos",              cmd: "npm run build:demos",             critical: true,  reason: "mirror two consolidated artifacts into p31ca" },
   { name: "build:social-cards",       cmd: "npm run build:social-cards",      critical: false, reason: "mirror 10-card kit into p31ca/public/social-cards/ (skip if no andromeda)" },
@@ -108,6 +139,33 @@ const PIPELINE = [
   { name: "verify:public-sanitization", cmd: "npm run verify:public-sanitization", critical: true, reason: "no kid names, no PII on public surfaces" },
 ];
 
+/* ───── --full extras: every other deliverable + service probe ─────
+ * Each is non-critical so a single failure doesn't block ship readiness;
+ * the readiness JSON records every result so the operator sees the real
+ * picture in launch.html and `npm run launch:status`.
+ */
+const FULL_BUILDS = [
+  { name: "build:fleet-portal",       cmd: "npm run build:fleet-portal",      critical: false, reason: "fleet URL index → fleet-portal.html (mirrored to p31ca)" },
+  { name: "build:contract-registry",  cmd: "npm run build:contract-registry", critical: false, reason: "62-contract registry JSON (also produces smart-evm manifest)" },
+  { name: "build:phos-voice",         cmd: "npm run build:phos-voice",        critical: false, reason: "PHOS voice JSON for the children's companion lib" },
+  { name: "build:wiring-ci-ladder",   cmd: "npm run build:wiring-ci-ladder",  critical: false, reason: "regenerate the verify-pipeline ladder doc (84 gates)" },
+  { name: "build:verify-pipeline",    cmd: "npm run build:verify-pipeline",   critical: false, reason: "regenerate verifyPipeline.scripts in alignment registry" },
+  { name: "build:nav-tree",           cmd: "npm run build:nav-tree",          critical: false, reason: "operator-facing user-nav-tree report" },
+  { name: "build:glass-box",          cmd: "npm run build:glass-box",         critical: false, reason: "glass box transparency surface (also rebuilds promoted reports index)" },
+  { name: "p31:shipbox",              cmd: "npm run --silent p31:shipbox > p31-shipbox.json", critical: false, reason: "p31.shipbox/1.0.0 JSON handoff snapshot (captured to p31-shipbox.json)" },
+  { name: "ollama:mcp:verify",        cmd: "npm run ollama:mcp:verify",       critical: false, reason: "MCP bridge static config check (10 personas exposed as tools)" },
+  { name: "verify:fleet-ten",         cmd: "npm run verify:fleet-ten",        critical: false, reason: "10-persona Ollama fleet bundle still consistent" },
+];
+
+const FULL_PROBES = [
+  { name: "probe:ollama",             critical: false, reason: "local Ollama daemon health (:11434)" },
+  { name: "probe:mcp-bridge",         critical: false, reason: "MCP bridge process alive (ollama-mcp/server.mjs)" },
+  { name: "probe:command-center",     critical: false, reason: "local command center health (:3131)" },
+  { name: "probe:demo-server",        critical: false, reason: "static demo server (:8080)" },
+  { name: "probe:tailscale",          critical: false, reason: "Tailscale mesh status (if installed)" },
+  { name: "probe:ecosystem-glass",    critical: false, reason: "live HTTP probes against p31-ecosystem.json deployables" },
+];
+
 const PUBLISH_PIPELINE = [
   { name: "git push (home)",          cmd: "git push origin main",            critical: false, reason: "ship the home repo" },
   // Andromeda + p31ca deploy left to operator's existing CI workflow on push.
@@ -115,7 +173,96 @@ const PUBLISH_PIPELINE = [
   // requires Cloudflare API token in env; document in launch package §3 instead.
 ];
 
-const TOTAL_STEPS = PIPELINE.length + (PUBLISH ? PUBLISH_PIPELINE.length : 0) + 1; // +1 = readiness write
+/* ───── deliverable inventory: what's assembled and where it lives ───── */
+const DELIVERABLES = [
+  { id: "pwa-cogpass",         label: "PWA — Cognitive Passport",   path: "cognitive-passport/index.html" },
+  { id: "pwa-social-cards",    label: "PWA — Social Cards (10)",    path: "social-cards/index.html" },
+  { id: "pwa-same-shape",      label: "PWA — The Same Shape demo",  path: "demos/the-same-shape.html" },
+  { id: "pwa-the-pulse",       label: "PWA — The Pulse demo",       path: "demos/the-pulse.html" },
+  { id: "doc-library",         label: "Doc library index",          path: "docs/doc-library/index.json" },
+  { id: "launch-html",         label: "Launch readiness dashboard", path: "launch.html" },
+  { id: "fleet-portal",        label: "Fleet URL portal",           path: "fleet-portal.html",                                fullOnly: true },
+  { id: "contract-registry",   label: "Smart contract registry",    path: "contracts/p31-contract-registry.json",             fullOnly: true },
+  { id: "smart-evm",           label: "Smart EVM manifest",         path: "contracts/p31-smart-evm.json",                     fullOnly: true },
+  { id: "phos-voice",          label: "PHOS voice JSON",            path: "andromeda/04_SOFTWARE/p31ca/public/lib/p31-phos-voice.json", fullOnly: true },
+  { id: "glass-box",           label: "Glass box transparency",     path: "glass-box.html",                                   fullOnly: true },
+  { id: "shipbox",             label: "Shipbox handoff JSON",       path: "p31-shipbox.json",                                 fullOnly: true },
+  { id: "nav-tree",            label: "User navigation tree",       path: "docs/P31-USER-NAV-TREE.md",                        fullOnly: true },
+  { id: "promoted-reports",    label: "Promoted reports index",     path: "docs/reports/promoted/index.json",                 fullOnly: true },
+  { id: "alignment-registry",  label: "Alignment registry",         path: "p31-alignment.json" },
+  { id: "constants",           label: "P31 constants canon",        path: "p31-constants.json" },
+];
+
+/* ───── service probes ───── */
+function httpProbe(host, port, path = "/", timeoutMs = 1500, maxBytes = 65536) {
+  return new Promise((resolve) => {
+    const req = http.request({ host, port, path, method: "GET", timeout: timeoutMs }, (res) => {
+      let body = "";
+      res.on("data", (c) => { body += c.toString(); if (body.length > maxBytes) req.destroy(); });
+      res.on("end", () => resolve({ ok: res.statusCode < 400, status: res.statusCode, body }));
+    });
+    req.on("error", () => resolve({ ok: false, error: "ECONN" }));
+    req.on("timeout", () => { req.destroy(); resolve({ ok: false, error: "TIMEOUT" }); });
+    req.end();
+  });
+}
+
+async function runProbe(name) {
+  const t0 = Date.now();
+  let result = { ok: false };
+  try {
+    if (name === "probe:ollama") {
+      const r = await httpProbe("127.0.0.1", 11434, "/api/tags");
+      let modelCount = null;
+      try { modelCount = JSON.parse(r.body || "{}").models?.length ?? null; } catch {}
+      result = { ok: r.ok, detail: r.ok ? `${modelCount ?? "?"} models loaded` : `unreachable (${r.error || r.status})` };
+    } else if (name === "probe:mcp-bridge") {
+      const r = spawnSync("pgrep", ["-f", "ollama-mcp/server.mjs"], { encoding: "utf8" });
+      const pids = (r.stdout || "").trim().split("\n").filter(Boolean);
+      result = { ok: pids.length > 0, detail: pids.length > 0 ? `pid ${pids[0]}` : "no process matching ollama-mcp/server.mjs" };
+    } else if (name === "probe:command-center") {
+      const r = await httpProbe("127.0.0.1", 3131, "/api/health");
+      result = { ok: r.ok, detail: r.ok ? `:3131 health OK` : `not running (run: npm run command-center)` };
+    } else if (name === "probe:demo-server") {
+      const r = await httpProbe("127.0.0.1", 8080, "/");
+      result = { ok: r.ok, detail: r.ok ? `:8080 serving` : `not running (run: npm run demo)` };
+    } else if (name === "probe:tailscale") {
+      const r = spawnSync("tailscale", ["status", "--json"], { encoding: "utf8" });
+      if (r.status === 0) {
+        try {
+          const ts = JSON.parse(r.stdout);
+          const peers = Object.values(ts.Peer || {}).filter((p) => p.Online).length;
+          result = { ok: true, detail: `${peers} peer(s) online; self ${ts.Self?.HostName || "?"}` };
+        } catch { result = { ok: true, detail: "tailscale running (json parse failed)" }; }
+      } else {
+        result = { ok: false, detail: "tailscale CLI not installed or not logged in (optional)" };
+      }
+    } else if (name === "probe:ecosystem-glass") {
+      const r = spawnSync("npm", ["run", "ecosystem:glass"], { cwd: root, encoding: "utf8" });
+      result = { ok: r.status === 0, detail: r.status === 0 ? "all configured live URLs reachable" : `glass probe exit ${r.status}` };
+    }
+  } catch (e) {
+    result = { ok: false, detail: "probe crashed: " + e.message };
+  }
+  return { ...result, durationMs: Date.now() - t0 };
+}
+
+function deliverableInventory() {
+  return DELIVERABLES.filter(d => FULL || !d.fullOnly).map(d => {
+    try {
+      const stat = statSync(join(root, d.path));
+      return { ...d, present: true, bytes: stat.size, modifiedAt: stat.mtime.toISOString() };
+    } catch {
+      return { ...d, present: false };
+    }
+  });
+}
+
+const TOTAL_STEPS =
+  PIPELINE.length
+  + (FULL ? FULL_BUILDS.length + FULL_PROBES.length : 0)
+  + (PUBLISH ? PUBLISH_PIPELINE.length : 0)
+  + 1; // +1 = readiness write
 
 /* ───── runner ───── */
 function run(cmd) {
@@ -128,9 +275,14 @@ function run(cmd) {
 }
 
 async function main() {
-  banner("P31 LAUNCH — assembly sequence" + (DRY_RUN ? C.butter("  (DRY-RUN)") : "") + (PUBLISH ? C.butter("  (PUBLISH-ENABLED)") : ""));
+  const t0 = Date.now();
+  const modeTag = FULL
+    ? (isRainbowEnabled() ? "  " + rainbowText("[ FULL ASSEMBLY · rainbows ON ]") : "  [ FULL ASSEMBLY ]")
+    : "";
+  banner("P31 LAUNCH — assembly sequence" + modeTag + (DRY_RUN ? C.butter("  (DRY-RUN)") : "") + (PUBLISH ? C.butter("  (PUBLISH-ENABLED)") : ""));
   console.log(C.muted("  runbook: docs/LAUNCH-PACKAGE-2026-05.md   dashboard: launch.html"));
   console.log(C.muted("  source:  scripts/p31-launch.mjs           audit log: ~/.p31/launch-log.jsonl"));
+  if (FULL) console.log(C.muted("  mode:    --full (10 extra builds + 6 service probes + rainbow finale)"));
   console.log("");
 
   // Operator self-care reminder (printed every run; cannot be silenced)
@@ -144,7 +296,7 @@ async function main() {
     n++;
     step(n, stage.name + C.muted("  — " + stage.reason));
     const r = run(stage.cmd);
-    results.push({ name: stage.name, ok: r.ok, durationMs: r.durationMs, dryRun: !!r.dryRun, critical: stage.critical });
+    results.push({ name: stage.name, ok: r.ok, durationMs: r.durationMs, dryRun: !!r.dryRun, critical: stage.critical, phase: "standard" });
     if (r.ok) ok(stage.name + (r.dryRun ? C.muted(" [dry-run]") : C.muted(` (${r.durationMs}ms)`)));
     else if (stage.critical) {
       err(stage.name + C.muted(` failed after ${r.durationMs}ms`));
@@ -152,6 +304,38 @@ async function main() {
       // Continue collecting for full report, but exit non-zero at end
     } else {
       warn(stage.name + C.muted(" failed (non-critical)"));
+    }
+  }
+
+  // ─── --full extras: extra deliverable builds + service probes ───
+  if (FULL) {
+    console.log("");
+    if (isRainbowEnabled()) console.log("  " + rainbowLine(60));
+    banner("FULL ASSEMBLY — extra deliverables");
+    for (const stage of FULL_BUILDS) {
+      n++;
+      step(n, stage.name + C.muted("  — " + stage.reason));
+      const r = run(stage.cmd);
+      results.push({ name: stage.name, ok: r.ok, durationMs: r.durationMs, dryRun: !!r.dryRun, critical: stage.critical, phase: "full-build" });
+      if (r.ok) ok(stage.name + (r.dryRun ? C.muted(" [dry-run]") : C.muted(` (${r.durationMs}ms)`)));
+      else warn(stage.name + C.muted(` failed after ${r.durationMs}ms (non-critical)`));
+    }
+
+    console.log("");
+    if (isRainbowEnabled()) console.log("  " + rainbowLine(60));
+    banner("FULL ASSEMBLY — local service probes");
+    for (const stage of FULL_PROBES) {
+      n++;
+      step(n, stage.name + C.muted("  — " + stage.reason));
+      if (DRY_RUN) {
+        results.push({ name: stage.name, ok: true, durationMs: 0, dryRun: true, critical: false, phase: "full-probe", detail: "(dry-run)" });
+        ok(stage.name + C.muted(" [dry-run]"));
+        continue;
+      }
+      const r = await runProbe(stage.name);
+      results.push({ name: stage.name, ok: r.ok, durationMs: r.durationMs, critical: false, phase: "full-probe", detail: r.detail });
+      if (r.ok) ok(stage.name + C.muted(` (${r.durationMs}ms · ${r.detail})`));
+      else warn(stage.name + C.muted(` ${r.detail || "down"} (non-critical)`));
     }
   }
 
@@ -173,18 +357,30 @@ async function main() {
 
   // Compute readiness state
   const allGreen = results.every(r => r.ok || !r.critical);
+  // Assembly-complete: all critical + all full-builds green. Probes are
+  // informational (operator may not have command-center running on the
+  // current machine; tailscale is optional). The rainbow fires when the
+  // SHIP is complete, not when every ancillary local service is up.
+  const assemblyComplete = results.every(r => r.ok || r.phase === "full-probe");
+  const allFullGreen = results.every(r => r.ok); // strictest: every step green
   const commit = (() => {
     const r = spawnSync("git", ["rev-parse", "--short", "HEAD"], { cwd: root, encoding: "utf8" });
     return r.status === 0 ? r.stdout.trim() : null;
   })();
+  const deliverables = deliverableInventory();
   const snapshot = {
     schema: "p31.launchReadiness/1.0.0",
     at: new Date().toISOString(),
     commit,
+    mode: FULL ? "full" : "standard",
     dryRun: DRY_RUN,
     publish: PUBLISH,
     allGreen,
+    allFullGreen,
+    assemblyComplete,
+    deliverables,
     steps: results,
+    elapsedMs: Date.now() - t0,
   };
 
   // Write readiness snapshot (skip on dry-run)
@@ -206,7 +402,33 @@ async function main() {
 
   console.log("");
   if (allGreen) {
-    banner("LAUNCH PACKAGE READY " + C.phos("✓"));
+    if (FULL && assemblyComplete) {
+      // RAINBOW FINALE — every standard step + every extra deliverable build green.
+      // Probes are reported but don't gate the celebration: a missing local
+      // command-center on this machine doesn't mean the ship isn't ready.
+      celebrate({
+        steps: results.length,
+        deliverables: deliverables.filter(d => d.present).length,
+        services: results.filter(r => r.phase === "full-probe" && r.ok).length,
+        ms: snapshot.elapsedMs,
+        commit,
+      });
+      const probesUp = results.filter(r => r.phase === "full-probe" && r.ok);
+      const probesDown = results.filter(r => r.phase === "full-probe" && !r.ok);
+      if (probesDown.length) {
+        console.log("  " + C.muted("local services this run:"));
+        for (const p of probesUp) console.log("    " + C.phos("✓ ") + p.name + C.muted(" — " + (p.detail || "ok")));
+        for (const p of probesDown) console.log("    " + C.butter("⚠ ") + p.name + C.muted(" — " + (p.detail || "down")));
+        console.log("");
+      }
+      console.log("  " + C.bold("next:"));
+      console.log("    1. open " + C.teal("launch.html") + " — Deliverables + Services panels are live");
+      console.log("    2. install the PWAs on a phone (4 installable surfaces)");
+      console.log("    3. when ready to publish: " + C.coral("P31_LAUNCH_PUBLISH=I_UNDERSTAND npm run launch -- --full"));
+      console.log("");
+      process.exit(0);
+    }
+    banner("LAUNCH PACKAGE READY " + C.phos("✓") + (FULL ? C.butter("  (full mode, some non-critical probes amber)") : ""));
     console.log("");
     console.log("  " + C.bold("next:"));
     console.log("    1. open " + C.teal("launch.html") + " in browser → review readiness dashboard");
@@ -217,8 +439,16 @@ async function main() {
     console.log("       " + C.muted("- ") + "demos/the-pulse.html");
     console.log("       " + C.muted("- ") + "social-cards/index.html");
     console.log("    4. read " + C.teal("docs/LAUNCH-PACKAGE-2026-05.md") + " end-to-end one more time");
-    console.log("    5. when ready: " + C.coral("P31_LAUNCH_PUBLISH=I_UNDERSTAND npm run launch"));
+    console.log("    5. when ready: " + C.coral("P31_LAUNCH_PUBLISH=I_UNDERSTAND npm run launch") + (FULL ? " -- --full" : ""));
     console.log("");
+    if (FULL) {
+      const amber = results.filter(r => !r.ok && !r.critical);
+      if (amber.length) {
+        console.log("  " + C.butter("amber probes/builds:"));
+        for (const a of amber) console.log("    " + C.butter("⚠ ") + a.name + (a.detail ? C.muted("  — " + a.detail) : ""));
+        console.log("");
+      }
+    }
     console.log("  " + C.muted("the phosphorus is for all of us · the cage holds · the geometry holds"));
     console.log("");
     process.exit(0);

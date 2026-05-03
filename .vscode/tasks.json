@@ -82,6 +82,22 @@
       "presentation": { "reveal": "always", "panel": "shared" }
     },
     {
+      "label": "P31: launch — FULL ASSEMBLY (rainbows, ~2-3min)",
+      "type": "shell",
+      "command": "npm run launch:full",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true }
+    },
+    {
+      "label": "P31: launch — FULL dry-run (preview every step in full mode)",
+      "type": "shell",
+      "command": "npm run launch:full:dry",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" }
+    },
+    {
       "label": "P31: build PWA layer (mirror SW + script + icon to all 4 surfaces)",
       "type": "shell",
       "command": "npm run build:pwa",

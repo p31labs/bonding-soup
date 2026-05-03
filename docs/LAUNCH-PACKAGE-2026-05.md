@@ -94,7 +94,88 @@ Same chain, no writes. Tells you what it WOULD do.
 ### `npm run launch -- --status`
 
 Read-only. Prints the current launch readiness report from
-`launch.html` data without re-running any gate.
+`launch.html` data without re-running any gate. In `--full` mode the
+report adds a deliverables-present table and per-probe service detail.
+
+### `npm run launch -- --full` *(rainbow tier — assemble everything)*
+
+The standard 14-step pipeline assembles the **public-facing surface**
+(PWAs, social cards, demos, doc library, launch dashboard). It does
+**not** touch other ship-relevant artifacts (fleet portal, contract
+registry, smart-EVM manifest, PHOS voice JSON, glass box, shipbox)
+and it does **not** probe local services (Ollama daemon, MCP bridge,
+command-center, demo server, Tailscale, Cloudflare ecosystem).
+
+`--full` extends the pipeline to do all of it in one verb:
+
+**Standard phase** (14 steps): the same as `npm run launch`.
+
+**Full-build phase** (10 extra non-critical steps):
+
+| step                        | output                                              |
+|-----------------------------|-----------------------------------------------------|
+| `build:fleet-portal`        | `fleet-portal.html` (mirrored to p31ca)             |
+| `build:contract-registry`   | `contracts/p31-contract-registry.json` (62 entries) |
+| `build:phos-voice`          | `andromeda/.../public/lib/p31-phos-voice.json`      |
+| `build:wiring-ci-ladder`    | regenerates §9 of the verify pipeline doc (84 gates)|
+| `build:verify-pipeline`     | regenerates `verifyPipeline.scripts` in alignment   |
+| `build:nav-tree`            | `docs/P31-USER-NAV-TREE.md`                         |
+| `build:glass-box`           | `glass-box.html` + promoted reports index           |
+| `p31:shipbox`               | `p31-shipbox.json` (peer-review handoff snapshot)   |
+| `ollama:mcp:verify`         | static check of MCP bridge config (10 personas)     |
+| `verify:fleet-ten`          | 10-persona Ollama fleet bundle still consistent     |
+
+**Service-probe phase** (6 non-critical probes):
+
+| probe                  | what it checks                                       |
+|------------------------|------------------------------------------------------|
+| `probe:ollama`         | `127.0.0.1:11434/api/tags` — daemon up + model count |
+| `probe:mcp-bridge`     | `pgrep -f ollama-mcp/server.mjs`                     |
+| `probe:command-center` | `127.0.0.1:3131/api/health`                          |
+| `probe:demo-server`    | `127.0.0.1:8080/`                                    |
+| `probe:tailscale`      | `tailscale status --json` (optional binary)          |
+| `probe:ecosystem-glass`| live HTTP probes against `p31-ecosystem.json`        |
+
+**Total: 31 steps** (14 standard + 10 builds + 6 probes + 1 readiness write).
+
+**The rainbow finale.** When every standard step + every full-build
+step is green (probes are informational and don't gate it), the
+terminal prints a six-color ANSI rainbow celebration with totals
+(steps, deliverables, services, elapsed time, commit). The
+celebration is suppressed when `NO_COLOR` is set or stdout is not a
+TTY (CI gets clean output).
+
+The same celebration condition surfaces on `launch.html` as a
+gradient-bordered banner at the top of the page when the readiness
+JSON shows `mode === "full"` and `assemblyComplete === true`.
+
+`launch.html` itself gains two new panels in `--full` mode:
+
+- **§06 deliverables present** — every artifact in the inventory with
+  size, modified time, and present/missing status.
+- **§07 local services (probed)** — per-service up/down with detail
+  lines (e.g. "23 models loaded", "pid 1110830", "not running (run:
+  npm run command-center)").
+
+**What `--full` still doesn't do** (kept explicit, deliberate):
+
+- It does **not** start any local service. If `command-center` is
+  down, the probe reports it down; the operator decides whether to
+  start it. `launch` is not a service supervisor.
+- It does **not** deploy. Cloudflare Pages / Workers deploy via the
+  existing `release:public` / `deploy:p31ca` / `ecosystem:deploy`
+  verbs and remain operator-gated.
+- It does **not** push to remotes unless `P31_LAUNCH_PUBLISH=I_UNDERSTAND`
+  is set in the shell (same as standard mode).
+
+Five entry points all support `--full`:
+
+- `npm run launch -- --full` (or `npm run launch:full`)
+- `p31 launch --full`
+- *P31: launch — FULL ASSEMBLY (rainbows, ~2-3min)* VS Code task
+- `home-launch-full` button on the local command-center
+- `npm run launch:status` (after a full run) shows the deliverables
+  + per-probe detail in the terminal
 
 ### Why five entry points to one pipeline (the accommodation, not redundancy)
 

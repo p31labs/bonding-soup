@@ -96,13 +96,12 @@
     },
     {
       "path": "/research",
-      "resolves": null,
-      "gate": "gate1",
-      "phosSlot": null,
-      "phosReady": false,
+      "resolves": "research.html",
+      "gate": "live",
+      "phosSlot": "research",
+      "phosReady": true,
       "lastVerified": "2026-05-03",
-      "p0Gap": true,
-      "notes": "P0 GAP — PHOS bus bar slot 5 has no page. /research returns 404. Build research index page or add _redirects → /lab as interim. Blocks release:check."
+      "notes": "PHOS bus bar slot 5. Research index page. Links to architecture docs, cognitive science, and Glass Box."
     },
     {
       "path": "/ops/",

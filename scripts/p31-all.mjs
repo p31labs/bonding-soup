@@ -137,6 +137,18 @@ function main() {
           { cwd: root }
         );
       }
+      // Psychological E2E - tests different personality types with random paths
+      const psychE2e = fs.existsSync(path.join(root, "scripts", "psychological-e2e.mjs"));
+      if (psychE2e) {
+        run(
+          "Psychological E2E (personality types + flow charts + grading)",
+          "npm run test:psychological-e2e",
+          {
+            cwd: root,
+            env: { ...process.env, CI: "true", PSYCH_SESSIONS: "3" },
+          }
+        );
+      }
     }
     if (p31caE2e) {
       run("Playwright E2E (p31ca preview + tests)", "npm run test:e2e", {

@@ -24,7 +24,7 @@ if (typeof j.count !== "number") fail("count required");
 if (!Array.isArray(j.recent)) fail("recent[] required");
 
 const seen = new Set();
-const allowedKinds = new Set(["morning", "midday", "evening", "urgent", "weekly", "custom"]);
+const allowedKinds = new Set(["morning", "midday", "evening", "urgent", "weekly", "custom", "psych-e2e"]);
 for (const r of j.recent) {
   if (!r.id || !r.kind || !r.ts) fail(`recent row missing id/kind/ts: ${JSON.stringify(r)}`);
   if (!allowedKinds.has(r.kind)) fail(`recent row bad kind: ${r.kind}`);

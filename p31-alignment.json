@@ -2864,7 +2864,8 @@
       "verify:edge-lab",
       "build",
       "soup:prep:check",
-      "verify:triper"
+      "verify:triper",
+      "verify:public-line"
     ]
   },
   "canonLocks": {

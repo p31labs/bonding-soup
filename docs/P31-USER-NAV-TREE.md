@@ -1,6 +1,6 @@
 # P31 user navigation tree & link audit
 
-**Generated:** 2026-05-03T02:10:16.912Z — rerun `npm run nav:report`.
+**Generated:** 2026-05-03T02:28:43.926Z — rerun `npm run nav:report`.
 
 | Artifact | Purpose |
 |----------|---------|

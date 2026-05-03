@@ -772,6 +772,7 @@
     "solidity": "0.8.24",
     "package": "packages/p31-sovereign-chain",
     "verifyScript": "verify:sovereign-chain",
+    "sourceFingerprint": "d0ef0cee7840dd85a2c93f56abbe7e2f57a4d8e613e611e99adf08c1256b1472",
     "contracts": [
       {
         "letter": "S",

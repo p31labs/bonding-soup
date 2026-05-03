@@ -8,6 +8,7 @@
  * Full compile + tests: npm run verify:sovereign-chain (needs `forge`).
  */
 import { spawnSync } from "node:child_process";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -60,12 +61,64 @@ function abiViaSolc(solPath, contractName) {
   }
 }
 
+/**
+ * Source fingerprint = sha256 over (suite version + solidity pin + ordered .sol contents).
+ * Stable for a given source set, so we can skip the 5× `npx solc@0.8.24` invocations
+ * (~30-40s total) when nothing changed. Cached output stays bit-identical because the
+ * generation is already deterministic (no generatedAt field).
+ *
+ * Bypass with P31_FORCE_SMART_EVM_BUILD=1 (forces full solc run regardless of cache).
+ *
+ * @param {string} rootDir
+ * @returns {string}
+ */
+function computeSourceFingerprint(rootDir) {
+  const h = crypto.createHash("sha256");
+  h.update("p31.evmContractSuite/0.1.0\0");
+  h.update("solidity:0.8.24\0");
+  for (const row of SUITE) {
+    const solPath = path.join(rootDir, "packages", "p31-sovereign-chain", "src", `${row.name}.sol`);
+    if (!fs.existsSync(solPath)) {
+      throw new Error(`build-smart-evm: missing ${path.relative(rootDir, solPath)}`);
+    }
+    h.update(row.letter + "\0" + row.name + "\0" + row.role + "\0");
+    h.update(fs.readFileSync(solPath));
+    h.update("\0");
+  }
+  return h.digest("hex");
+}
+
 export function regenerateSmartEvmManifest(rootDir = root) {
   if (process.env.P31_SKIP_SMART_EVM_BUILD === "1") {
     console.log("build-smart-evm: skip (P31_SKIP_SMART_EVM_BUILD=1)");
     return;
   }
   const outPath = path.join(rootDir, "contracts", "p31-smart-evm.json");
+  const force = process.env.P31_FORCE_SMART_EVM_BUILD === "1";
+  const sourceFingerprint = computeSourceFingerprint(rootDir);
+
+  // Fast path: cached output present + fingerprint matches → skip the 5× npx solc calls.
+  // This cut warm `npm run launch -- --full` from ~110s to ~70s (the build was a third of total).
+  if (!force && fs.existsSync(outPath)) {
+    try {
+      const prev = JSON.parse(fs.readFileSync(outPath, "utf8"));
+      if (
+        prev &&
+        prev.schema === "p31.evmContractSuite/0.1.0" &&
+        prev.sourceFingerprint === sourceFingerprint &&
+        Array.isArray(prev.contracts) &&
+        prev.contracts.length === SUITE.length
+      ) {
+        console.log(
+          "build-smart-evm: skip — fingerprint unchanged (" + prev.contracts.length + " contracts) → contracts/p31-smart-evm.json",
+        );
+        return;
+      }
+    } catch {
+      // fall through and rebuild
+    }
+  }
+
   const contracts = [];
   for (const row of SUITE) {
     const solPath = path.join(srcDir, `${row.name}.sol`);
@@ -90,7 +143,8 @@ export function regenerateSmartEvmManifest(rootDir = root) {
     package: "packages/p31-sovereign-chain",
     verifyScript: "verify:sovereign-chain",
     // No generatedAt: deterministic build for drift detection; git log is the audit trail.
-    // (Same pattern as scripts/build-phos-voice-json.mjs line 205.)
+    // sourceFingerprint enables the cache skip above (avoids 5× npx solc on every launch run).
+    sourceFingerprint,
     contracts,
   };
   fs.mkdirSync(path.dirname(outPath), { recursive: true });

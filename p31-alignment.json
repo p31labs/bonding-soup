@@ -1582,7 +1582,7 @@
       ],
       "apply": "npm run launch -- --full   (or: npm run launch:full \u00b7 p31 launch --full \u00b7 VS Code task \u201cP31: launch \u2014 FULL ASSEMBLY (rainbows, ~2-3min)\u201d \u00b7 command-center button home-launch-full)",
       "verify": "npm run launch:status  (read-only \u2014 shows deliverables panel + per-probe detail when last sweep ran in full mode)",
-      "note": "Extends p31-launch-package-pipeline with 10 extra non-critical deliverable builds (fleet-portal, contract-registry, smart-evm, phos-voice, wiring-ci-ladder, verify-pipeline, nav-tree, glass-box, shipbox, mcp-verify, fleet-ten verify) and 6 local service probes (ollama :11434, mcp-bridge pgrep, command-center :3131, demo-server :8080, tailscale, ecosystem-glass). Total 31 steps. Probes are informational and do not gate ship readiness; they surface in launch.html \u00a707 + launch:status. The ANSI rainbow celebration fires in the terminal when every standard step + every full-build step is green; same condition triggers the gradient-bordered banner on launch.html. Does NOT start any local service. Does NOT deploy. Does NOT push remotes (still gated by P31_LAUNCH_PUBLISH=I_UNDERSTAND)."
+      "note": "Extends p31-launch-package-pipeline with 10 extra non-critical deliverable builds (fleet-portal, contract-registry, smart-evm, phos-voice, wiring-ci-ladder, verify-pipeline, nav-tree, glass-box, shipbox, mcp-verify, fleet-ten verify) and 6 local service probes (ollama :11434, mcp-bridge pgrep, command-center :3131, demo-server :8080, tailscale, ecosystem-glass). Total 31 steps. Warm time ~85s (build:smart-evm fingerprint-cache via contracts/p31-smart-evm.json `sourceFingerprint` cuts the 5\u00d7 npx solc step from ~30-40s to <1s when .sol sources unchanged \u2014 see p31-contract-registry-from-alignment derivation). Probes are informational and do not gate ship readiness; they surface in launch.html \u00a707 + launch:status. The ANSI rainbow celebration fires in the terminal when every standard step + every full-build step is green; same condition triggers the gradient-bordered banner on launch.html. Does NOT start any local service. Does NOT deploy. Does NOT push remotes (still gated by P31_LAUNCH_PUBLISH=I_UNDERSTAND)."
     },
     {
       "id": "p31ca-design-spec-bundle",
@@ -2628,15 +2628,21 @@
     {
       "id": "p31-contract-registry-from-alignment",
       "from": [
-        "p31-alignment.json"
+        "p31-alignment.json",
+        "packages/p31-sovereign-chain/src/P31TransparencyAnchor.sol",
+        "packages/p31-sovereign-chain/src/P31ManifestRegistry.sol",
+        "packages/p31-sovereign-chain/src/P31AccessAllowlist.sol",
+        "packages/p31-sovereign-chain/src/P31ContentRoot.sol",
+        "packages/p31-sovereign-chain/src/P31TreasuryConfig.sol"
       ],
       "to": [
         "contracts/p31-contract-registry.json",
+        "contracts/p31-smart-evm.json",
         "andromeda/04_SOFTWARE/p31ca/public/p31-contract-registry.json"
       ],
       "apply": "npm run build:contract-registry",
       "verify": "npm run verify:contract-registry",
-      "note": "Hub mirror is written only when andromeda/04_SOFTWARE/p31ca/public exists. Static UI: contract-builder.html; short /contracts."
+      "note": "Hub mirror is written only when andromeda/04_SOFTWARE/p31ca/public exists. Static UI: contract-builder.html; short /contracts. The SMART EVM step (5 \u00d7 npx solc@0.8.24) is fingerprint-cached via contracts/p31-smart-evm.json `sourceFingerprint` (sha256 over suite version + solidity pin + ordered .sol contents) \u2014 cache hit drops from ~30-40s to <1s. Bypass: P31_FORCE_SMART_EVM_BUILD=1. Skip entirely: P31_SKIP_SMART_EVM_BUILD=1. This makes warm `npm run launch -- --full` ~85s (was ~110-225s)."
     },
     {
       "id": "p31-peer-comp-trust-transparency-layer",

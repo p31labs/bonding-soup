@@ -194,6 +194,16 @@
       "role": "p31.rainbow/1.0.0 \u2014 ANSI 256-color rainbow utility used by scripts/p31-launch.mjs --full to print the assembly-complete celebration. Six-hue palette (red/orange/yellow/green/cyan/violet). Respects NO_COLOR + non-TTY (degrades to plain text). Self-contained, zero dependencies. Public API: rainbowText, rainbowLine, rainbowBanner, celebrate, isRainbowEnabled."
     },
     {
+      "id": "p31-cheat-sheet-html",
+      "path": "p31-cheat-sheet.html",
+      "role": "Operator command cheat sheet \u2014 single page covering every npm script + every `p31` CLI verb + every entry point (boot, verify, launch:full rainbow tier, connect, command-center, local services, CLI, office/foundry, git/PR, build/deploy, TRIPER, joy/self-care, 911 e-stop, canonical numbers). Same p31-doc-* canon as p31-personal-howto.html / p31-device-setup.html. data-p31-appearance=hub. Loaded via `npm run demo` at http://127.0.0.1:8080/p31-cheat-sheet.html. Sister markdown for doc-library indexing: docs/P31-CHEAT-SHEET.md."
+    },
+    {
+      "id": "p31-cheat-sheet-md",
+      "path": "docs/P31-CHEAT-SHEET.md",
+      "role": "Markdown counterpart of p31-cheat-sheet.html \u2014 same 15 sections, indexed in docs/doc-library/index.json (verify:doc-index). Use the HTML for daily reference; this file is for searchable doc-library + offline / non-graphical contexts."
+    },
+    {
       "id": "p31-deep-dive-doc",
       "path": "docs/P31-DEEP-DIVE.md",
       "role": "Curator's walk through the codebase highlighting the mind-bending primitives (K\u2084, ephemeralization, Larmor canon, sovereign layers, glass box, SMART suite, reports). Anchor doc for journalists, grants, future operators."

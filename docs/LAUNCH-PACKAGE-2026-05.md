@@ -56,24 +56,36 @@ to ship.
 
 ### `npm run launch` *(canonical)*
 
-Single command. Chains:
+Single command. 15 steps. Build phase first, verify phase second, snapshot last:
 
 ```
-1. verify          → npm run verify          (83 gates must be green)
-2. build:pwa       → mirror SW + script into all installable surfaces
-3. build:demos     → mirror two consolidated artifacts into p31ca
-4. build:fleet-portal → regenerate the URL index
-5. apply:constants → regenerate constants in derived files
-6. sync:passport   → mirror cognitive-passport to p31ca
-7. verify:public-voice / verify:public-sanitization → no kid names, no PII leaks
-8. release:public  → strict mesh + hub:ci + security:check (in p31ca)
-9. write launch.html → static readiness dashboard
-10. print launch banner with next-step instructions
+build phase
+   1. build:pwa             mirror SW + script into all installable surfaces
+   2. build:demos           mirror two consolidated artifacts into p31ca
+   3. build:social-cards    mirror 10-card kit into p31ca/public/social-cards/
+   4. build:launch-page     mirror launch.html into p31ca/public/launch.html
+   5. sync:passport         regenerate cognitive-passport p31ca mirror
+   6. build:doc-index       rebuild searchable doc library
+
+verify phase  (84-gate ship bar subset relevant to launch readiness)
+   7.  verify:alignment            271 sources × 75 derivations
+   8.  verify:facts                structural invariants
+   9.  verify:passport             p31ca passport mirror byte-match
+   10. verify:constants            Larmor / K₄ / ³¹P canon
+   11. verify:demos                schema markers + required tokens
+   12. verify:pwa                  4 manifests + 4 surfaces + per-app mirrors
+   13. verify:public-voice         identity-first guardrails (S.J. / W.J.)
+   14. verify:public-sanitization  no PII on public surfaces
+
+snapshot
+   15. write .p31-launch-readiness.json (gitignored; consumed by launch.html)
 ```
 
 The verb is **idempotent** — run it ten times in a row, get the same result.
 The verb is **safe** — it does NOT push, deploy, or notify external services
 unless `P31_LAUNCH_PUBLISH=I_UNDERSTAND` is set.
+
+The verb is **fast** — ~8.4s warm. No network calls in the standard pipeline.
 
 ### `npm run launch -- --dry-run`
 
@@ -83,6 +95,34 @@ Same chain, no writes. Tells you what it WOULD do.
 
 Read-only. Prints the current launch readiness report from
 `launch.html` data without re-running any gate.
+
+### Why five entry points to one pipeline (the accommodation, not redundancy)
+
+The same `npm run launch` pipeline is reachable five different ways:
+
+1. **Terminal** — `npm run launch` / `npm run launch:dry` / `npm run launch:status`
+2. **Global CLI on PATH** — `p31 launch [--dry-run|--status]`
+3. **Cursor / VS Code task** — Cmd-Shift-P → *Tasks: Run Task* → *P31: launch — full assembly*
+4. **Local command-center** — browser at `:3131` → **Launch** section → click `home-launch` (HITL-gated)
+5. **Read-only status verb** — `npm run launch:status` (cron-safe, 580ms)
+
+This is **coherence**, not redundancy. Per the monotropism + Shannon
+synthesis (`docs/operator/PHOS-TRAINING-DOCTRINE-2026-05-02.md`):
+attention allocation is monotropic — wherever the operator's focus
+already is, that's where the tool needs to be. Asking a person with
+executive dysfunction to context-switch to a specific surface before
+they can act is a tax the system should absorb, not impose.
+
+If the operator is in the terminal, `npm run launch` is zero-context-switch.
+If in Cursor, Cmd-Shift-P is zero-context-switch. If in the browser
+checking fleet status, the command-center button is zero-context-switch.
+If on a phone, the CLI on PATH is zero-context-switch. If in
+check-not-do mode (low-spoon window), `launch:status` is a read-only
+observation that doesn't risk triggering action.
+
+Five doors, one pipeline. The 15 steps run identically regardless of
+which door you walked through. The doors are different because the
+operator's cognitive state is different at different moments.
 
 ---
 
@@ -240,14 +280,26 @@ P31_LAUNCH_PUBLISH=I_UNDERSTAND npm run launch
 
 (Or stop here and let the existing `p31-automation` workflows auto-deploy on push.)
 
-### Phase 4 — share (operator-paced)
+### Phase 4 — share (operator-paced, sequenced)
 
 Manual. No automation pushes content to social platforms — the
-operator decides what goes when. Three suggested first posts:
+operator decides what goes when. **Sequence matters** (per peer review,
+Opus 4.6, 2026-05-02): the work earns the right to tell the fight
+story, not the other way around. Lead with what P31 *is*; let what it
+*isn't* arrive after the work is established.
 
-1. **Card 06 (the closer)** to family / personal network → tells them what you built
-2. **Card 02 (fleet status)** to dev networks → tells engineers what you built
-3. **Card 04 (perception vs reality)** to disability / AuDHD community → tells them they're not alone
+**Day 1 — establish what P31 is.** No adversary, no defense, just the work.
+1. **Card 06 (the closer)** → family / personal network. *"A father built an entire ecosystem to play chemistry with his kids on a tablet."* The viewer's heart breaks without knowing about the court case.
+2. **Card 02 (fleet status terminal)** → dev networks. *"83 gates green on a Chromebook."* The viewer's jaw drops without knowing who the adversary is.
+
+**Week 1 — deepen technical credibility + the "wait, on WHAT?" factor.**
+3. **Card 05 (ethics as architecture)** → product / UX / accessibility-curious eng. The verify gate that fails on `streak` or `leaderboard`.
+4. **Card 07 (built on what)** → HN / Lobsters / dev Twitter. SNAP benefits, Medicaid, pro se, 22 papers, $50/mo infra. The "wait, on WHAT?" shock.
+
+**Week 2+ — only after the work is established.** Operator's choice.
+5. **Card 04 (perception vs reality diptych)** → AuDHD / disability community. *Stays in the kit; doesn't lead.* By the time anyone sees this card, they already know the work is real, so the contrast lands as *"can you believe the gap between how this person was seen and what they actually built?"* instead of *"this person is angry at a court and wants validation."*
+
+**The other 5 cards** (01 stat flex, 03 quote, 08 K₄ SVG, 09 trim tab, 10 ASCII tetra) are platform/audience matched — see §4 for the full table. Operator picks.
 
 Caption block + image. Done. No threads, no engagement bait, no
 "smash that subscribe button." The work speaks.
@@ -273,24 +325,34 @@ Caption block + image. Done. No threads, no engagement bait, no
 
 ---
 
-## §8 The "anything they can do, WE can do better" matrix
+## §8 The choices we made and why
 
-| What "they" do | What WE do |
+This section was originally framed as "anything they can do, WE can do
+better" — that framing was reactive by construction. Reframed per peer
+review (Opus 4.6, 2026-05-02): the left column describes the common
+industry pattern in neutral terms; the right column states P31's choice
+affirmatively. Each row should make sense even if you cover the left
+column. Rows that only carry meaning as negation were cut.
+
+| Common industry pattern | P31's choice |
 |---|---|
-| Track users across the web | No analytics anywhere |
-| Variable-ratio reward loops to maximize engagement | Earned-not-extracted L.O.V.E. ledger, soulbound, no streaks |
-| Closed-source proprietary stack | 100% open source, CC-BY 4.0 + AGPL where appropriate |
-| Influencer marketing budgets | Operator + cognitive passport + the work itself |
-| "AI safety" as marketing | AI safety as `npm run verify:ethical-rewards` (grep-fails-the-build) |
-| Centralized identity (Google/Apple/Meta sign-in) | WebAuthn passkeys + Cognitive Passport + DID (when standard catches up) |
-| Charge platform fees on creator income | 0% platform fee, contract is public + CI-verified |
-| Engagement metrics on dashboards | `glass-box.html` shows verify-pulse + real reports |
-| Closed beta wait-lists | Public repo, public deploy, public deploy URL, anyone forks |
-| "Scale" as ideology | Ephemeralization (one source, many derivations) |
-| Streak counters | The flowers don't wilt |
-| Naval metaphors and military language | Tetrahedra, K₄, Posner clusters, trim tabs, the cage that holds |
+| Cross-site analytics | No analytics on any P31 surface |
+| Variable-ratio reward loops | Earned L.O.V.E. ledger; soulbound; no streaks |
+| Proprietary closed source | 100% open source — CC-BY 4.0 / AGPL |
+| Influencer marketing budgets | Cognitive Passport + the work itself |
+| "AI safety" as marketing copy | AI safety as `npm run verify:ethical-rewards` (grep-fails the build) |
+| Centralized SSO (Google / Apple / Meta) | WebAuthn passkeys + Cognitive Passport + DID |
+| Platform fees on creator income | 0% platform fee · public + CI-verified contract |
+| Engagement-metrics dashboards | `glass-box.html` — verify-pulse + real reports |
+| Closed-beta wait-lists | Public repo, public deploy URL, anyone forks |
+| "Scale" as ideology | Ephemeralization — one source, many derivations |
+| Naval / military framing | Tetrahedra · K₄ · Posner clusters · trim tabs · the cage that holds |
 
-The contrast IS the marketing. We don't have to argue. The thesis is the demo.
+11 rows (one purely-reactive row was cut: "streak counters → the flowers
+don't wilt" — the right side carried no meaning without the left).
+
+The data is real. The engineering is earned. The contrast doesn't need
+to be adversarial to be obvious. The receipts speak for themselves.
 
 ---
 

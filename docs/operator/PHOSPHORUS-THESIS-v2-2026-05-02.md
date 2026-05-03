@@ -192,7 +192,7 @@ As of May 2, 2026, P31 Labs has shipped:
 | Component | Evidence | Metric |
 |-----------|----------|--------|
 | Cloud infrastructure | 10 Cloudflare Workers + KV status dashboard | Production fleet, zero-downtime |
-| Automated verification | `npm run verify` | 83 gates green |
+| Automated verification | `npm run verify` | 83 gates green at time of authoring [^gates-2026-05-02] |
 | Chemistry education game | BONDING at bonding.p31ca.org | 62-molecule dictionary, 424 tests, multiplayer |
 | Publication series | Zenodo DOIs, ORCID-linked | 22 papers (Papers I–XX + 2 standalone) |
 | Institutional website | phosphorus31.org | Astro 5, CF Pages, live |
@@ -322,7 +322,7 @@ Node Zero (ESP32-S3 hardware) ships as a palm-sized device with haptic feedback,
 
 The endgame is not a product. The endgame is a proof.
 
-The proof that a disabled person — with the right tools, the right context, and the right cage — can build systems of extraordinary complexity and coherence. That the output gap between neurodivergent and neurotypical professionals is not a gap in capability but a gap in accommodation. That the same brain the court called "manic" produced 22 publications, a 10-worker cloud fleet, 83 automated verification gates, and a chemistry game that teaches his daughter what water is made of.
+The proof that a disabled person — with the right tools, the right context, and the right cage — can build systems of extraordinary complexity and coherence. That the output gap between neurodivergent and neurotypical professionals is not a gap in capability but a gap in accommodation. That the same brain the court called "manic" produced 22 publications, a 10-worker cloud fleet, 83 automated verification gates [^gates-2026-05-02], and a chemistry game that teaches his daughter what water is made of.
 
 The proof that the minimum structure holds. That four vertices and six edges are enough. That the cage protects the phosphorus. That the tetrahedron is the answer to every question the operator has ever asked, because every question the operator has ever asked is the same question:
 
@@ -409,6 +409,10 @@ Johnson, W. R. (2026). The Phosphorus Thesis: How a Nonprofit for Neurodivergent
 |---------|------|---------|
 | 1.0 | February 2026 | Initial Tetrahedron Protocol paper (Zenodo) |
 | 2.0 | May 2, 2026 | Complete rewrite incorporating: ethical gamification framework, crypto/blockchain positioning, SIC-POVM agent training doctrine, Root Authority self-determination guide, full engineering evidence chain, monotropism-Shannon synthesis, transducer error as rate-distortion |
+
+---
+
+[^gates-2026-05-02]: Verify-gate count was **83 at time of authoring** (2026-05-02, morning). Later the same day a market-launch automation arc added `verify:pwa` (gate 84) which proves the 4 PWA-installable surfaces, their manifests, and their per-app service-worker mirrors. The gate count drifts forward as new ship-bar invariants land; the live count is whatever `npm run verify` emits when this paper is read. Treat **"83"** as a snapshot, not a permanent claim. Before any Zenodo deposit, the operator updates this footnote to the current gate count and notes the deposit timestamp.
 
 ---
 

@@ -107,6 +107,12 @@ playwright/test-results/
 playwright/report/
 coverage/
 
+# Psych E2E — runtime-only (regenerated each run)
+docs/psych-e2e-live.json
+# Page audit — generated output, not source of truth
+docs/page-audit.json
+test-results/psych-e2e/
+
 # Stray local Playwright tree (e2e lives under andromeda/04_SOFTWARE/p31ca)
 /playwright/
 

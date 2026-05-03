@@ -1,0 +1,297 @@
+{
+  "schema": "p31.publicLine/1.0.0",
+  "note": "Production gate registry. Every entry with gate=live must pass verify:public-line. Surfaces not listed are unaudited — add them via npm run audit:pages.",
+  "updatedAt": "2026-05-03T14:21:52.819Z",
+  "gates": {
+    "live": "Past Gate 3. Public. Meets all standards.",
+    "gate3": "Implementation complete + in 7-day staging soak. Not yet public.",
+    "gate2": "Implementation complete. Lighthouse + a11y + screen reader pass. Awaiting Gate 3 review.",
+    "gate1": "Design complete. Not yet fully implemented or missing standards.",
+    "maintenance": "Temporarily withdrawn. Routed to /maintenance.html. Under active repair.",
+    "alpha": "Operator-only. Not linked publicly. Never appears in PHOS nav.",
+    "external": "External product (different origin). Not managed by this gate.",
+    "gap": "Slot defined in PHOS bus bar but no page exists yet. P0 to build."
+  },
+  "pages": [
+    {
+      "path": "/welcome",
+      "resolves": "welcome.html",
+      "gate": "live",
+      "phosSlot": "welcome",
+      "phosReady": true,
+      "lastVerified": "2026-05-03",
+      "notes": "PHOS bus bar slot 1. Auto-expands PHOS on first visit."
+    },
+    {
+      "path": "/passport",
+      "resolves": "passport-generator.html",
+      "gate": "live",
+      "phosSlot": "passport",
+      "phosReady": true,
+      "lastVerified": "2026-05-03",
+      "notes": "PHOS bus bar slot 2. _redirects: /passport → /passport-generator.html 301."
+    },
+    {
+      "path": "/glass-box",
+      "resolves": "glass-box.html",
+      "gate": "live",
+      "phosSlot": "glass-box",
+      "phosReady": true,
+      "lastVerified": "2026-05-03",
+      "notes": "PHOS bus bar slot 11. Live transparency terminal."
+    },
+    {
+      "path": "/lab",
+      "resolves": "p31-sovereign-lab.html",
+      "gate": "live",
+      "phosSlot": "lab",
+      "phosReady": true,
+      "lastVerified": "2026-05-03",
+      "notes": "PHOS bus bar slot 4. _redirects: /lab → /p31-sovereign-lab.html 301."
+    },
+    {
+      "path": "/support",
+      "resolves": "support.html",
+      "gate": "live",
+      "phosSlot": "support",
+      "phosReady": true,
+      "lastVerified": "2026-05-03",
+      "notes": "PHOS bus bar slot 6. §4 copy: DRAFT-AGENT-SIMULATED. Operator to promote to OPERATOR-VOICE."
+    },
+    {
+      "path": "/stylebook/",
+      "resolves": "stylebook/index.html",
+      "gate": "live",
+      "phosSlot": "stylebook",
+      "phosReady": true,
+      "lastVerified": "2026-05-03",
+      "notes": "PHOS bus bar slot 7. Design system reference."
+    },
+    {
+      "path": "/ede",
+      "resolves": "ede.html",
+      "gate": "live",
+      "phosSlot": "ede",
+      "phosReady": true,
+      "lastVerified": "2026-05-03",
+      "notes": "PHOS bus bar slot 9. §4 copy: DRAFT-AGENT-SIMULATED. Operator surface."
+    },
+    {
+      "path": "/buffer",
+      "resolves": "buffer.html",
+      "gate": "live",
+      "phosSlot": "buffer",
+      "phosReady": true,
+      "lastVerified": "2026-05-03",
+      "notes": "PHOS bus bar slot 10. §4 copy: DRAFT-AGENT-SIMULATED."
+    },
+    {
+      "path": "/bonding",
+      "resolves": "https://bonding.p31ca.org",
+      "gate": "external",
+      "phosSlot": "bonding",
+      "phosReady": true,
+      "lastVerified": "2026-05-03",
+      "notes": "PHOS bus bar slot 3. External product on bonding.p31ca.org — not gated here."
+    },
+    {
+      "path": "/research",
+      "resolves": null,
+      "gate": "gate1",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "p0Gap": true,
+      "notes": "P0 GAP — PHOS bus bar slot 5 has no page. /research returns 404. Build research index page or add _redirects → /lab as interim. Blocks release:check."
+    },
+    {
+      "path": "/ops/",
+      "resolves": "Astro route",
+      "gate": "alpha",
+      "phosSlot": "ops",
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "PHOS bus bar slot 8. Operator-only. Not publicly linked. CWP-P31-UI-2026-01 surface."
+    },
+    {
+      "path": "/social-molecules",
+      "resolves": "social-molecules.html",
+      "gate": "live",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "C.A.R.S. — live in cockpit grid."
+    },
+    {
+      "path": "/spaceship-earth",
+      "resolves": "spaceship-earth.html",
+      "gate": "live",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "Live in cockpit grid."
+    },
+    {
+      "path": "/axiom",
+      "resolves": "axiom.html",
+      "gate": "live",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "Interactive physics lab. Live in cockpit grid."
+    },
+    {
+      "path": "/bridge",
+      "resolves": "bridge.html",
+      "gate": "live",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "LOVE Economy Dashboard. Live in cockpit grid."
+    },
+    {
+      "path": "/glass-box-widget",
+      "resolves": "glass-box-widget.html",
+      "gate": "live",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "Embed widget — sister page to /glass-box. Intentionally small."
+    },
+    {
+      "path": "/fleet-portal",
+      "resolves": "fleet-portal.html",
+      "gate": "live",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "Operator fleet index. Live."
+    },
+    {
+      "path": "/education/",
+      "resolves": "education/index.html",
+      "gate": "live",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "Education portal E0-E3+. Live."
+    },
+    {
+      "path": "/sovereign",
+      "resolves": "sovereign.html",
+      "gate": "live",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "Quantum Geometry Cockpit. Live."
+    },
+    {
+      "path": "/delta-language",
+      "resolves": "delta-language.html",
+      "gate": "live",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "P31 glossary. Live."
+    },
+    {
+      "path": "/fluid",
+      "resolves": "fluid.html",
+      "gate": "gate1",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "STUB — 6 KB. Not production-ready. Remove from any public nav until promoted."
+    },
+    {
+      "path": "/kids-home",
+      "resolves": "kids-home.html",
+      "gate": "gate1",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "STUB — 8 KB. Not production-ready."
+    },
+    {
+      "path": "/open-doc-suite",
+      "resolves": "open-doc-suite.html",
+      "gate": "gate1",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "STUB — 6 KB. Not production-ready."
+    },
+    {
+      "path": "/open-source",
+      "resolves": "open-source.html",
+      "gate": "gate1",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "STUB — 4 KB. Not production-ready."
+    },
+    {
+      "path": "/security",
+      "resolves": "security.html",
+      "gate": "gate1",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "STUB — 8 KB. Not production-ready."
+    },
+    {
+      "path": "/contact",
+      "resolves": "contact.html",
+      "gate": "gate1",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "STUB — 4 KB. Needs real contact form or routing."
+    },
+    {
+      "path": "/oqe-icosa",
+      "resolves": "oqe-icosa.html",
+      "gate": "gate1",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "STUB — 9 KB. Quantum geometry demo, not production-ready."
+    },
+    {
+      "path": "/orbits",
+      "resolves": "orbits.html",
+      "gate": "gate1",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "STUB — 9 KB. Not production-ready."
+    },
+    {
+      "path": "/cogpass-bridge",
+      "resolves": "cogpass-bridge.html",
+      "gate": "gate1",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "STUB — 6 KB. CogPass relay/bridge. Not production-ready."
+    },
+    {
+      "path": "/quantum-clock",
+      "resolves": "quantum-clock.html",
+      "gate": "gate1",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "STUB — 4 KB despite 'live' in registry. Needs real implementation before public nav."
+    },
+    {
+      "path": "/initial-build",
+      "resolves": "initial-build.html",
+      "gate": "gate1",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-03",
+      "notes": "Onboarding entry. 12 KB. Needs audit."
+    }
+  ]
+}

@@ -1438,6 +1438,11 @@
       "id": "p31-cogpass-v4-public",
       "path": "docs/P31-COGNITIVE-PASSPORT-v4-PUBLIC.md",
       "role": "Public-safe cognitive passport (v4.0) \u2014 children referenced as S.J./W.J. only; address/phone/case-number/financial specifics redacted. Folds in codebase corrections Opus 4.6 web missed (sources 273\u2192275; workers 14 verified / 18 allowlisted; local Ollama fleet 10 personas; GEODESIC Phase 1 shipped; C.A.R.S. shipped as bonding-soup; etc.). Safe to attach to any AI handoff outside operator-controlled instances."
+    },
+    {
+      "id": "p31-session-memory-failure-mode-2026-05-02",
+      "path": "docs/operator/SESSION-MEMORY-FAILURE-MODE-2026-05-02.md",
+      "role": "p31.operatorReflection/1.0.0 \u2014 operator-voice reflection captured immediately after the second Triad loop close of 2026-05-02 (CogPass v4.0). Names the failure mode the Triad catches: a model with context but without file access produces confident, internally consistent, structurally plausible output that is wrong in specific, verifiable ways. Lists the six concrete misses that prompted the reflection (workers 10\u219214/18, invented local-fleet names, GEODESIC stale status, C.A.R.S. stale status, sources 271\u2192273) and traces each to its canonical file. Generalizes the pattern (when this failure mode appears, how to detect it, how to fix it for both writer and system) so the 'Verify before you cite' line in the CogPass Output Preferences has a documented origin. Reference pattern, not a template to re-enact."
     }
   ],
   "derivations": [

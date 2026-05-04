@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Geodesic Builder</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --p31-void: #0f1115;  /* CORRECTED per canon */ --p31-surface: #161920; --p31-surface2: #1c2028;
+      --p31-teal: var(--p31-cyan);  /* CORRECTED per canon: shared surface aliases teal to cyan */ --p31-coral: #cc6247; --p31-butter: #cda852;
+      --p31-lavender: #8b7cc9; --p31-phosphorus: #3ba372; --p31-cyan: #4db8a8;
+      --p31-cloud: #d8d6d0; --p31-muted: #6b7280;
+      --p31-glass-border: rgba(255, 255, 255, 0.08);
+      --p31-font-sans: "Atkinson Hyperlegible", system-ui, sans-serif;
+      --p31-font-mono: "JetBrains Mono", monospace;
+      --p31-font-serif: "Playfair Display", serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--p31-void); color: var(--p31-cloud); font-family: var(--p31-font-sans); display: flex; flex-direction: column; min-height: 100vh; -webkit-font-smoothing: antialiased; line-height: 1.6; }
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 2px solid var(--p31-teal); outline-offset: 2px; border-radius: 4px; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+    body.safe-mode { --p31-void: #000; --p31-surface: #0a0a0a; --p31-surface2: #111; --p31-cloud: #fff; --p31-muted: #888; }
+    body.safe-mode * { animation: none !important; transition: none !important; }
+    body.safe-mode canvas, body.safe-mode .hide-safe { display: none !important; }
+    .btn-safe { padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; z-index: 100; transition: all 150ms; }
+    .btn-safe:hover { background: rgba(204,98,71,0.15); }
+    .skip-link { position: absolute; top: -40px; left: 0; background: var(--p31-teal); color: #000; padding: 8px 16px; z-index: 1000; font-weight: 700; transition: top 0.2s; }
+    .skip-link:focus { top: 0; }
+    .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--p31-glass-border); background: rgba(11,13,16,0.8); z-index: 50; backdrop-filter: blur(10px); }
+    .nav-brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--p31-cloud); font-size: 0.9rem; }
+    body { overflow: hidden; padding: 0; }
+    #glContainer { position: absolute; inset: 0; z-index: 0; }
+    .hud { position: absolute; bottom: 2rem; left: 2rem; z-index: 10; background: rgba(28, 32, 40, 0.9); border: 1px solid var(--p31-glass-border); padding: 1.5rem; border-radius: 12px; backdrop-filter: blur(10px); }
+    .hud-title { font-weight: 700; margin-bottom: 0.5rem; color: var(--p31-cloud); }
+    .hud-subtitle { font-family: var(--p31-font-mono); color: var(--p31-muted); font-size: 0.85rem; }
+    .rigidity-badge { padding: 0.5rem 1rem; border: 1px solid currentColor; border-radius: 6px; display: inline-block; margin-top: 1rem; font-weight: 700; font-family: var(--p31-font-mono); font-size: 0.85rem;}
+    .add-btn { margin-top: 1rem; background: var(--p31-teal); border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; color: #000; font-weight: 700; font-family: var(--p31-font-sans); width: 100%; transition: filter 150ms;}
+    .add-btn:hover { filter: brightness(1.1); }
+  </style>
+</head>
+<body>
+  <nav class="top-nav" style="position:relative;">
+    <a href="/" class="nav-brand">
+      <svg viewBox="0 0 100 100" width="24" height="24" fill="none">
+        <path d="M50 10 L90 85 L10 85 Z" stroke="var(--p31-teal)" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M50 10 L50 60 L90 85" stroke="var(--p31-coral)" stroke-width="5" stroke-linejoin="round" opacity="0.8"/>
+        <path d="M50 60 L10 85" stroke="var(--p31-butter)" stroke-width="5" stroke-linejoin="round" opacity="0.6"/>
+      </svg>
+      GEODESIC BUILDER
+    </a>
+    <button id="safeModeBtn" class="btn-safe">Safe Mode</button>
+  </nav>
+  <div id="glContainer"></div>
+  <div class="hud">
+    <div class="hud-title">Maxwell Constraint Check</div>
+    <div class="hud-subtitle" id="mathReadout">V: 4 | E: 6 (Req: 6)</div>
+    <div class="rigidity-badge" id="rigidityBadge" style="color: var(--p31-phosphorus);">RIGID (Isostatic)</div>
+    <button class="add-btn" onclick="addShape()">+ Add Tetrahedron</button>
+  </div>
+  <script src="/lib/p31-atmosphere-core.js"></script>
+  <!-- MIGRATION TODO: Convert to .astro component with BaseLayout -->
+  <!-- MIGRATION TODO: Import Three.js via npm, not CDN -->
+  <script>
+    const safeBtn = document.getElementById('safeModeBtn');
+    if(safeBtn) safeBtn.addEventListener('click', () => document.body.classList.toggle('safe-mode'));
+  </script>
+  <script>
+    let isSafe = false;
+    let animationId = null;
+    let renderer = null;
+    let scene = null;
+    let controls = null;
+    
+    // CANONICAL SAFE MODE: Full WebGL teardown (not just display:none)
+    function engageSafeMode() {
+      isSafe = true;
+      if (animationId) cancelAnimationFrame(animationId);
+      if (renderer) {
+        renderer.dispose();
+        renderer.forceContextLoss();
+        renderer.domElement.remove();
+      }
+      if (scene) scene.clear();
+      if (controls) controls.dispose();
+      document.body.classList.add('safe-mode');
+      document.getElementById('glContainer').style.display = 'none';
+    }
+    
+    function disengageSafeMode() {
+      isSafe = false;
+      document.body.classList.remove('safe-mode');
+      document.getElementById('glContainer').style.display = 'block';
+      // Re-initialize WebGL context here if needed
+      location.reload(); // Simplest recovery for standalone HTML
+    }
+    
+    const safeBtnOverlay = document.getElementById('safeModeBtn');
+    safeBtnOverlay.addEventListener('click', () => { 
+      if (document.body.classList.contains('safe-mode')) {
+        disengageSafeMode();
+      } else {
+        engageSafeMode();
+      }
+    });
+    
+    let V = 4, E = 6;
+    function validateMaxwell() {
+      const req = (3 * V) - 6;
+      const badge = document.getElementById('rigidityBadge');
+      document.getElementById('mathReadout').textContent = `V: ${V} | E: ${E} (Req: ${req})`;
+      if (E >= req) {
+        badge.textContent = "RIGID (Isostatic)";
+        badge.style.color = "var(--p31-phosphorus)";
+        badge.style.borderColor = "var(--p31-phosphorus)";
+      } else {
+        badge.textContent = "WARNING: Mechanism";
+        badge.style.color = "var(--p31-coral)";
+        badge.style.borderColor = "var(--p31-coral)";
+      }
+    }
+
+    scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('glContainer').appendChild(renderer.domElement);
+
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    camera.position.z = 15;
+    controls.enableDamping = true;
+
+    const tet = new THREE.Mesh(new THREE.TetrahedronGeometry(3), new THREE.MeshBasicMaterial({ color: 0x25897d, wireframe: true }));
+    scene.add(tet);
+
+    function addShape() {
+      V += 4; E += 6;
+      const mesh = new THREE.Mesh(new THREE.TetrahedronGeometry(2), new THREE.MeshBasicMaterial({ color: 0x4db8a8, wireframe: true }));
+      mesh.position.set((Math.random() - 0.5)*10, (Math.random() - 0.5)*10, (Math.random() - 0.5)*10);
+      scene.add(mesh);
+      validateMaxwell();
+    }
+
+    function animate() {
+      if (!isSafe && !document.body.classList.contains('safe-mode')) {
+        tet.rotation.x += 0.005;
+        tet.rotation.y += 0.005;
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      animationId = requestAnimationFrame(animate);
+    }
+    animate();
+    
+    // Respect prefers-reduced-motion even before Safe Mode toggle
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      engageSafeMode();
+    }
+  </script>
+</body>
+</html>

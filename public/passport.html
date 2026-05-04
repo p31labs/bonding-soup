@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Cognitive Passport - P31</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --p31-void: #0f1115;  /* CORRECTED per canon */ --p31-surface: #161920; --p31-surface2: #1c2028;
+      --p31-teal: #25897d; --p31-coral: #cc6247; --p31-butter: #cda852;
+      --p31-lavender: #8b7cc9; --p31-phosphorus: #3ba372; --p31-cyan: #4db8a8;
+      --p31-cloud: #d8d6d0; --p31-muted: #6b7280;
+      --p31-glass-border: rgba(255, 255, 255, 0.08);
+      --p31-font-sans: "Atkinson Hyperlegible", system-ui, sans-serif;
+      --p31-font-mono: "JetBrains Mono", monospace;
+      --p31-font-serif: "Playfair Display", serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--p31-void); color: var(--p31-cloud); font-family: var(--p31-font-sans); display: flex; flex-direction: column; min-height: 100vh; -webkit-font-smoothing: antialiased; line-height: 1.6; }
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 2px solid var(--p31-teal); outline-offset: 2px; border-radius: 4px; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+    body.safe-mode { --p31-void: #000; --p31-surface: #0a0a0a; --p31-surface2: #111; --p31-cloud: #fff; --p31-muted: #888; }
+    body.safe-mode * { animation: none !important; transition: none !important; }
+    body.safe-mode canvas, body.safe-mode .hide-safe { display: none !important; }
+    .btn-safe { padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; z-index: 100; transition: all 150ms; }
+    .btn-safe:hover { background: rgba(204,98,71,0.15); }
+    .skip-link { position: absolute; top: -40px; left: 0; background: var(--p31-teal); color: #000; padding: 8px 16px; z-index: 1000; font-weight: 700; transition: top 0.2s; }
+    .skip-link:focus { top: 0; }
+    .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--p31-glass-border); background: rgba(11,13,16,0.8); z-index: 50; backdrop-filter: blur(10px); }
+    .nav-brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--p31-cloud); font-size: 0.9rem; }
+    .page-wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem 2rem; width: 100%; flex-grow: 1; display: flex; flex-direction: column; }
+    .glass-card { background: color-mix(in srgb, var(--p31-surface2) 60%, transparent); border: 1px solid var(--p31-glass-border); border-radius: 12px; padding: 2rem; backdrop-filter: blur(20px); }
+    .header-row { display: flex; justify-content: space-between; align-items: flex-end; margin: 2rem 0; flex-wrap: wrap; gap: 1rem; }
+    .title-group h1 { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+    .tagline { color: var(--p31-muted); font-size: 1.1rem; max-width: 600px; }
+    input[type=range] { width: 100%; margin: 1rem 0; accent-color: var(--p31-teal); cursor: pointer; }
+    pre { background: var(--p31-void); padding: 1.5rem; border-radius: 8px; font-family: var(--p31-font-mono); font-size: 0.85rem; overflow-x: auto; color: var(--p31-teal); border: 1px solid var(--p31-glass-border); }
+    .btn-primary { background: var(--p31-teal); color: #000; padding: 0.8rem 1.5rem; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-family: var(--p31-font-sans); }
+    .btn-primary:hover { filter: brightness(1.1); }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="/" class="nav-brand">
+      <svg viewBox="0 0 100 100" width="24" height="24" fill="none">
+        <path d="M50 10 L90 85 L10 85 Z" stroke="var(--p31-teal)" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M50 10 L50 60 L90 85" stroke="var(--p31-coral)" stroke-width="5" stroke-linejoin="round" opacity="0.8"/>
+        <path d="M50 60 L10 85" stroke="var(--p31-butter)" stroke-width="5" stroke-linejoin="round" opacity="0.6"/>
+      </svg>
+      P31 Labs
+    </a>
+    <button id="safeModeBtn" class="btn-safe">Safe Mode</button>
+  </nav>
+  <!-- MIGRATION TODO: Convert to .astro component with BaseLayout -->
+<!-- MIGRATION TODO: Wire into public-line.json as draft -->
+<main class="page-wrapper">
+    <div class="header-row">
+      <div class="title-group">
+        <h1><span aria-hidden="true">🧬</span> Cognitive Passport</h1>
+      </div>
+      <p class="tagline">Your local identity context card.</p>
+    </div>
+    <div class="glass-card" style="margin-bottom: 2rem;">
+      <h3 style="margin-bottom:1rem; color: var(--p31-cloud);">Information Density Target</h3>
+      <input type="range" id="densitySlider" min="0" max="100" value="80">
+      <div style="display:flex; justify-content:space-between; color:var(--p31-muted); font-size:0.85rem; font-family: var(--p31-font-mono);">
+        <span>0 (Gray Rock)</span><span id="densityVal" style="color:var(--p31-teal); font-weight:700;">80</span><span>100 (High Ops)</span>
+      </div>
+    </div>
+    <div class="glass-card">
+      <h3 style="margin-bottom:1rem; color: var(--p31-cloud);">Generated Schema (p31.cognitivePassport/1.1.0)</h3>
+      <pre id="jsonOutput"></pre>
+      <button class="btn-primary" id="saveBtn" style="margin-top:1.5rem;">Save to Device LocalStorage</button>
+    </div>
+  </main>
+  <script src="/lib/p31-atmosphere-core.js"></script>
+  <script>
+    const safeBtn = document.getElementById('safeModeBtn');
+    if(safeBtn) safeBtn.addEventListener('click', () => document.body.classList.toggle('safe-mode'));
+  </script>
+  <script>
+    const slider = document.getElementById('densitySlider');
+    const out = document.getElementById('jsonOutput');
+    const update = () => {
+      const val = parseInt(slider.value);
+      document.getElementById('densityVal').textContent = val;
+      out.textContent = JSON.stringify({
+        $schema: "p31.cognitivePassport/1.1.0",
+        preferences: { informationDensity: val, screenComfort: val > 20 ? 100 : 0 },
+        routing: { safeModeTrigger: val === 0 }
+      }, null, 2);
+    };
+    slider.addEventListener('input', update);
+    document.getElementById('saveBtn').addEventListener('click', (e) => {
+      localStorage.setItem('p31_cognitive_passport', out.textContent);
+      const o = e.target.textContent;
+      e.target.textContent = "✓ Saved";
+      setTimeout(() => e.target.textContent = o, 2000);
+    });
+    update();
+  </script>
+</body>
+</html>

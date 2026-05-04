@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>P31 Labs | Open-source assistive technology</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --p31-void: #0b0d10; --p31-surface: #161920; --p31-surface2: #1c2028;
+      --p31-teal: #25897d; --p31-coral: #cc6247; --p31-butter: #cda852;
+      --p31-lavender: #8b7cc9; --p31-phosphorus: #3ba372; --p31-cyan: #4db8a8;
+      --p31-cloud: #d8d6d0; --p31-muted: #6b7280;
+      --p31-glass-border: rgba(255, 255, 255, 0.08);
+      --p31-font-sans: "Atkinson Hyperlegible", system-ui, sans-serif;
+      --p31-font-mono: "JetBrains Mono", monospace;
+      --p31-font-serif: "Playfair Display", serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--p31-void); color: var(--p31-cloud); font-family: var(--p31-font-sans); display: flex; flex-direction: column; min-height: 100vh; -webkit-font-smoothing: antialiased; line-height: 1.6; }
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 2px solid var(--p31-teal); outline-offset: 2px; border-radius: 4px; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+    body.safe-mode { --p31-void: #000; --p31-surface: #0a0a0a; --p31-surface2: #111; --p31-cloud: #fff; --p31-muted: #888; }
+    body.safe-mode * { animation: none !important; transition: none !important; }
+    body.safe-mode canvas, body.safe-mode .hide-safe { display: none !important; }
+    .btn-safe { padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; z-index: 100; transition: all 150ms; }
+    .btn-safe:hover { background: rgba(204,98,71,0.15); }
+    .skip-link { position: absolute; top: -40px; left: 0; background: var(--p31-teal); color: #000; padding: 8px 16px; z-index: 1000; font-weight: 700; transition: top 0.2s; }
+    .skip-link:focus { top: 0; }
+    .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--p31-glass-border); background: rgba(11,13,16,0.8); z-index: 50; backdrop-filter: blur(10px); }
+    .nav-brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--p31-cloud); font-size: 0.9rem; }
+    .page-wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem 2rem; width: 100%; flex-grow: 1; display: flex; flex-direction: column; }
+    .glass-card { background: color-mix(in srgb, var(--p31-surface2) 60%, transparent); border: 1px solid var(--p31-glass-border); border-radius: 12px; padding: 2rem; backdrop-filter: blur(20px); }
+    .header-row { display: flex; justify-content: space-between; align-items: flex-end; margin: 2rem 0; flex-wrap: wrap; gap: 1rem; }
+    .title-group h1 { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+    .tagline { color: var(--p31-muted); font-size: 1.1rem; max-width: 600px; }
+    .ebc-footer { margin-top: auto; padding: 1.5rem; display: flex; justify-content: center; gap: 2rem; border-top: 1px solid var(--p31-glass-border); background: var(--p31-surface); font-family: var(--p31-font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--p31-muted); }
+    .ebc-footer a:hover { color: var(--p31-cloud); }
+    .hero { padding: 5rem 0 3rem; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .hero-title { font-family: var(--p31-font-serif); font-size: 3.5rem; font-style: italic; margin-bottom: 0.5rem; }
+    .hero-subtitle { font-size: 1.15rem; color: var(--p31-muted); max-width: 500px; margin: 0 auto 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; padding-bottom: 4rem;}
+    .card-link { padding: 1.5rem; border: 1px solid var(--p31-glass-border); border-radius: 12px; background: rgba(255,255,255,0.03); display: flex; flex-direction: column; transition: all 200ms; }
+    .card-link:hover { transform: translateY(-4px); border-color: var(--p31-teal); background: rgba(255,255,255,0.05); }
+    .card-link h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--p31-cloud); display: flex; justify-content: space-between;}
+    .card-link p { font-size: 0.9rem; color: var(--p31-muted); flex-grow: 1; margin-bottom: 1rem;}
+    .badge-live { display: inline-block; background: rgba(59,163,114,0.12); color: var(--p31-phosphorus); border: 1px solid rgba(59,163,114,0.3); font-family: var(--p31-font-mono); font-size: 10px; padding: 4px 8px; border-radius: 4px; align-self: flex-start;}
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <nav class="top-nav">
+    <a href="/" class="nav-brand">
+      <svg viewBox="0 0 100 100" width="24" height="24" fill="none">
+        <path d="M50 10 L90 85 L10 85 Z" stroke="var(--p31-teal)" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M50 10 L50 60 L90 85" stroke="var(--p31-coral)" stroke-width="5" stroke-linejoin="round" opacity="0.8"/>
+        <path d="M50 60 L10 85" stroke="var(--p31-butter)" stroke-width="5" stroke-linejoin="round" opacity="0.6"/>
+      </svg>
+      P31 Labs
+    </a>
+    <button id="safeModeBtn" class="btn-safe">Safe Mode</button>
+  </nav>
+  <main class="page-wrapper" id="main">
+    <header class="hero">
+      <svg viewBox="0 0 100 100" width="100" height="100" fill="none" style="color:var(--p31-teal); margin-bottom:1.5rem;" class="hide-safe">
+        <circle cx="50" cy="15" r="4" fill="currentColor"/>
+        <circle cx="15" cy="80" r="4" fill="currentColor"/>
+        <circle cx="85" cy="80" r="4" fill="currentColor"/>
+        <circle cx="50" cy="55" r="4" fill="currentColor"/>
+        <path d="M50 15 L15 80 L85 80 Z M50 15 L50 55 M15 80 L50 55 M85 80 L50 55" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      <h1 class="hero-title">P31 Labs</h1>
+      <p class="hero-subtitle">Open-source assistive technology for neurodivergent individuals. The interface adapts to the human.</p>
+    </header>
+    <section class="grid-3">
+      <a href="/passport.html" class="card-link">
+        <h3>Cognitive Passport <span>→</span></h3>
+        <p>Your identity context card. Bridging schemas and gray rock enforcement.</p>
+        <span class="badge-live">LIVE</span>
+      </a>
+      <a href="/ops.html" class="card-link">
+        <h3>Operator Shell <span>→</span></h3>
+        <p>Grounded Operator Deck. Breaker panel and automation gate.</p>
+        <span class="badge-live">LIVE</span>
+      </a>
+      <a href="/vibe.html" class="card-link">
+        <h3>Vibe Environment <span>→</span></h3>
+        <p>9-level progressive disclosure coding substrate. Zero npm.</p>
+        <span class="badge-live">LIVE</span>
+      </a>
+      <a href="/geodesic.html" class="card-link">
+        <h3>Geodesic Builder <span>→</span></h3>
+        <p>Collaborative 3D mesh building. K4 rigidity math visualized.</p>
+        <span class="badge-live">LIVE</span>
+      </a>
+      <a href="/buffer.html" class="card-link">
+        <h3>The Buffer <span>→</span></h3>
+        <p>Message guardian and Fawn Guard detector for high-voltage comms.</p>
+        <span class="badge-live">LIVE</span>
+      </a>
+      <a href="/command-center-terminal.html" class="card-link">
+        <h3>PiP CLI <span>→</span></h3>
+        <p>Triad Fleet Command. Local Ollama integration.</p>
+        <span class="badge-live">LIVE</span>
+      </a>
+    </section>
+  </main>
+  <footer class="ebc-footer">
+    <a href="/build.html">Build</a>
+    <a href="/geodesic.html">Create</a>
+    <a href="/connect.html">Connect</a>
+  </footer>
+  <script src="/lib/p31-atmosphere-core.js"></script>
+  <script>
+    const safeBtn = document.getElementById('safeModeBtn');
+    if(safeBtn) safeBtn.addEventListener('click', () => document.body.classList.toggle('safe-mode'));
+  </script>
+</body>
+</html>

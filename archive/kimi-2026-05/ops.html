@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Operator Shell - G.O.D.</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --p31-void: #0b0d10; --p31-surface: #161920; --p31-surface2: #1c2028;
+      --p31-teal: #25897d; --p31-coral: #cc6247; --p31-butter: #cda852;
+      --p31-lavender: #8b7cc9; --p31-phosphorus: #3ba372; --p31-cyan: #4db8a8;
+      --p31-cloud: #d8d6d0; --p31-muted: #6b7280;
+      --p31-glass-border: rgba(255, 255, 255, 0.08);
+      --p31-font-sans: "Atkinson Hyperlegible", system-ui, sans-serif;
+      --p31-font-mono: "JetBrains Mono", monospace;
+      --p31-font-serif: "Playfair Display", serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--p31-void); color: var(--p31-cloud); font-family: var(--p31-font-sans); display: flex; flex-direction: column; min-height: 100vh; -webkit-font-smoothing: antialiased; line-height: 1.6; }
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 2px solid var(--p31-teal); outline-offset: 2px; border-radius: 4px; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+    body.safe-mode { --p31-void: #000; --p31-surface: #0a0a0a; --p31-surface2: #111; --p31-cloud: #fff; --p31-muted: #888; }
+    body.safe-mode * { animation: none !important; transition: none !important; }
+    body.safe-mode canvas, body.safe-mode .hide-safe { display: none !important; }
+    .btn-safe { padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; z-index: 100; transition: all 150ms; }
+    .btn-safe:hover { background: rgba(204,98,71,0.15); }
+    .skip-link { position: absolute; top: -40px; left: 0; background: var(--p31-teal); color: #000; padding: 8px 16px; z-index: 1000; font-weight: 700; transition: top 0.2s; }
+    .skip-link:focus { top: 0; }
+    .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--p31-glass-border); background: rgba(11,13,16,0.8); z-index: 50; backdrop-filter: blur(10px); }
+    .nav-brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--p31-cloud); font-size: 0.9rem; }
+    .page-wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem 2rem; width: 100%; flex-grow: 1; display: flex; flex-direction: column; }
+    .glass-card { background: color-mix(in srgb, var(--p31-surface2) 60%, transparent); border: 1px solid var(--p31-glass-border); border-radius: 12px; padding: 2rem; backdrop-filter: blur(20px); }
+    .header-row { display: flex; justify-content: space-between; align-items: flex-end; margin: 2rem 0; flex-wrap: wrap; gap: 1rem; }
+    .title-group h1 { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;}
+    .glass-card h3 { color: var(--p31-teal); margin-bottom: 1rem; font-family: var(--p31-font-mono); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em;}
+    .btn-act { background: transparent; border: 1px solid var(--p31-glass-border); color: var(--p31-cloud); padding: 0.8rem 1rem; border-radius: 6px; cursor: pointer; font-family: var(--p31-font-mono); width: 100%; text-align: left; margin-bottom: 0.5rem; transition: all 150ms;}
+    .btn-act:hover { border-color: var(--p31-teal); background: rgba(37, 137, 125, 0.1); color: var(--p31-teal);}
+    .log-window { background: var(--p31-void); border: 1px solid var(--p31-glass-border); padding: 1.5rem; font-size: 0.85rem; height: 300px; overflow-y: auto; color: var(--p31-phosphorus); border-radius: 12px; font-family: var(--p31-font-mono);}
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="/" class="nav-brand">
+      <svg viewBox="0 0 100 100" width="24" height="24" fill="none">
+        <path d="M50 10 L90 85 L10 85 Z" stroke="var(--p31-teal)" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M50 10 L50 60 L90 85" stroke="var(--p31-coral)" stroke-width="5" stroke-linejoin="round" opacity="0.8"/>
+        <path d="M50 60 L10 85" stroke="var(--p31-butter)" stroke-width="5" stroke-linejoin="round" opacity="0.6"/>
+      </svg>
+      G.O.D. // Grounded Operator Deck
+    </a>
+    <button id="safeModeBtn" class="btn-safe">Safe Mode</button>
+  </nav>
+  <main class="page-wrapper">
+    <div class="header-row">
+      <div class="title-group">
+        <h1><span aria-hidden="true">⚙️</span> Operator Shell</h1>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="glass-card" style="padding: 1.5rem;">
+        <h3>Triad Fleet Status</h3>
+        <div style="margin-bottom: 0.5rem; color: var(--p31-cloud);"><span style="color:var(--p31-teal)">[●]</span> FORGE (k4-personal)</div>
+        <div style="margin-bottom: 0.5rem; color: var(--p31-cloud);"><span style="color:var(--p31-teal)">[●]</span> COUNSEL (k4-cage)</div>
+        <div style="margin-bottom: 0.5rem; color: var(--p31-cloud);"><span style="color:var(--p31-teal)">[●]</span> SCHOLAR (tetra-hub)</div>
+        <div style="color: var(--p31-cloud);"><span style="color:var(--p31-coral)">[○]</span> SCRIBE (sync pending)</div>
+      </div>
+      <div class="glass-card" style="padding: 1.5rem;">
+        <h3>Operator Actions</h3>
+        <button class="btn-act" onclick="log('Executing CWP-P31-UI-2026-01...')">Verify Ecosystem</button>
+        <button class="btn-act" onclick="log('Flushing D1 metrics table...')">Purge Telemetry</button>
+        <button class="btn-act" onclick="log('Abdicate sequence initiated. Keys locked.')" style="border-color: rgba(204,98,71,0.3); color: var(--p31-coral);">Abdicate (Lock Config)</button>
+      </div>
+    </div>
+    <div class="log-window" id="terminal">
+      <div>root@p31-edge:~# Initializing dashboard...</div>
+    </div>
+  </main>
+  <script src="/lib/p31-atmosphere-core.js"></script>
+  <script>
+    const safeBtn = document.getElementById('safeModeBtn');
+    if(safeBtn) safeBtn.addEventListener('click', () => document.body.classList.toggle('safe-mode'));
+  </script>
+  <script>
+    function log(msg) {
+      const term = document.getElementById('terminal');
+      const div = document.createElement('div');
+      div.textContent = `> ${msg}`;
+      term.appendChild(div);
+      term.scrollTop = term.scrollHeight;
+    }
+  </script>
+</body>
+</html>

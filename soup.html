@@ -67,6 +67,72 @@
                 <span class="soup-larmor__detail" id="larmor-coherence">—</span>
             </div>
         </div>
+        <!-- PHOS Mascot -->
+        <div id="phos-mascot-container" style="position:fixed;top:1rem;left:1rem;z-index:9998;width:60px;height:60px;cursor:pointer;" onclick="phosInteract()" title="Hi! I'm PHOS! Click me!">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;filter:drop-shadow(0 0 10px rgba(77,184,168,0.5));animation:phos-float 3s ease-in-out infinite;">
+                <defs>
+                    <linearGradient id="phosBody" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#4db8a8;stop-opacity:0.9"/>
+                        <stop offset="100%" style="stop-color:#3ba372;stop-opacity:0.7"/>
+                    </linearGradient>
+                    <filter id="phosGlow">
+                        <feGaussianBlur stdDeviation="2" result="blur"/>
+                        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                </defs>
+                <g transform="translate(100,110)">
+                    <path d="M0,-60 L-50,35 L0,15 Z" fill="rgba(77,184,168,0.3)" stroke="#4db8a8" stroke-width="2"/>
+                    <path d="M0,-60 L50,35 L0,15 Z" fill="rgba(77,184,168,0.3)" stroke="#4db8a8" stroke-width="2"/>
+                    <path d="M-50,35 L0,15 L50,35 L0,60 Z" fill="url(#phosBody)" stroke="#4db8a8" stroke-width="2" filter="url(#phosGlow)"/>
+                    <ellipse cx="0" cy="40" rx="30" ry="18" fill="#d8d6d0" opacity="0.9"/>
+                    <ellipse cx="-10" cy="38" rx="5" ry="6" fill="#0f1115"/>
+                    <circle cx="-8" cy="36" r="1.5" fill="#fff" opacity="0.8"/>
+                    <ellipse cx="10" cy="38" rx="5" ry="6" fill="#0f1115"/>
+                    <circle cx="12" cy="36" r="1.5" fill="#fff" opacity="0.8"/>
+                    <path d="M-7,50 Q0,53 7,50" stroke="#0f1115" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                </g>
+            </svg>
+        </div>
+        <style>
+            @keyframes phos-float {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-5px); }
+            }
+            @keyframes phos-wiggle {
+                0%, 100% { transform: rotate(0deg); }
+                25% { transform: rotate(-10deg); }
+                75% { transform: rotate(10deg); }
+            }
+            .phos-wiggle { animation: phos-wiggle 0.5s ease-in-out; }
+        </style>
+        <script>
+            const phosPhrases = [
+                "Hi! I'm PHOS! Welcome to C.A.R.S.!",
+                "The soup sim is running smoothly!",
+                "Your family mesh is connected!",
+                "Click safe mode if you need calm!",
+                "4-4-6 breathing helps focus!",
+                "W-FLARE is watching quality!"
+            ];
+            function phosInteract() {
+                const mascot = document.getElementById('phos-mascot-container');
+                mascot.classList.remove('phos-wiggle');
+                void mascot.offsetWidth;
+                mascot.classList.add('phos-wiggle');
+                const phrase = phosPhrases[Math.floor(Math.random() * phosPhrases.length)];
+                let bubble = document.getElementById('phos-bubble');
+                if (!bubble) {
+                    bubble = document.createElement('div');
+                    bubble.id = 'phos-bubble';
+                    bubble.style.cssText = 'position:fixed;top:80px;left:80px;background:rgba(22,25,32,0.95);border:1px solid #4db8a8;border-radius:12px;padding:0.75rem 1rem;font-size:0.8rem;max-width:250px;z-index:9999;color:#d8d6d0;font-family:"JetBrains Mono",monospace;pointer-events:none;transition:opacity 0.3s;';
+                    document.body.appendChild(bubble);
+                }
+                bubble.textContent = phrase;
+                bubble.style.opacity = '1';
+                setTimeout(() => bubble.style.opacity = '0', 3000);
+            }
+        </script>
+
         <!-- Calm landing strip: names the 4-4-6 breath without dev clutter.
              Visible to everyone; the dev runbook is now in <details> below. -->
         <p class="soup-calm-strip" aria-label="Breath rhythm">
@@ -1528,6 +1594,19 @@
             }
         })();
     </script>
+    <!-- PHOS Footer -->
+    <footer style="padding:2rem;text-align:center;font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:#6b7280;border-top:1px solid rgba(255,255,255,0.08);margin-top:2rem;">
+        <p style="margin:0.25rem 0;">
+            <a href="/index.html" style="color:#4db8a8;text-decoration:none;margin:0 0.5rem;">PHOS Home</a>
+            <a href="/psych-e2e-docs.html" style="color:#4db8a8;text-decoration:none;margin:0 0.5rem;">Psych E2E Docs</a>
+            <a href="/phos-core-docs.html" style="color:#4db8a8;text-decoration:none;margin:0 0.5rem;">PHOS Core</a>
+            <a href="/phos-mascot.html" style="color:#4db8a8;text-decoration:none;margin:0 0.5rem;">Meet PHOS</a>
+        </p>
+        <p style="margin:0.5rem 0;font-size:0.7rem;color:#8b7cc9;">
+            P31 Labs — EIN 42-1888158 — C.A.R.S. v2.1 — PHOS Protected
+        </p>
+    </footer>
+
     <script src="cognitive-passport/lib/p31-return-ribbon.js" data-local-soup="soup.html" defer></script>
     
     <!-- PHOS Atmosphere Core — Voice-first navigation wrapper -->

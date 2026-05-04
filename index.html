@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/p31-style.css">
   <style>
     :root {
       --p31-void: #0f1115;
@@ -25,13 +26,11 @@
       --p31-font-mono: "JetBrains Mono", monospace;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
+    html, body {
       background: var(--p31-void);
       color: var(--p31-cloud);
       font-family: var(--p31-font-sans);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
     }
@@ -39,10 +38,23 @@
       --p31-void: #000;
       --p31-surface: #0a0a0a;
       --p31-cloud: #fff;
-      animation: none !important;
     }
     body.safe-mode * { animation: none !important; transition: none !important; }
     
+    /* Smart Starfield Background */
+    #starfield-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+    body.safe-mode #starfield-canvas { display: none !important; }
+    
+    /* Safe Mode Toggle */
     .safe-toggle {
       position: fixed;
       top: 1rem;
@@ -57,10 +69,15 @@
       font-size: 0.75rem;
       text-transform: uppercase;
       cursor: pointer;
+      transition: all 150ms;
     }
     .safe-toggle:hover { background: rgba(204,98,71,0.15); }
+    .safe-toggle.active { background: rgba(204,98,71,0.25); border-color: var(--p31-coral); }
     
+    /* Main Layout */
     main {
+      position: relative;
+      z-index: 1;
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -68,6 +85,7 @@
       justify-content: center;
       padding: 2rem;
       text-align: center;
+      min-height: calc(100vh - 200px);
     }
     
     .logo {
@@ -90,26 +108,28 @@
       font-weight: 500;
       letter-spacing: 0.1em;
       margin-bottom: 0.5rem;
+      color: var(--p31-cloud);
     }
     
     .subtitle {
       font-size: 1rem;
       color: var(--p31-muted);
       margin-bottom: 3rem;
-      max-width: 400px;
+      max-width: 450px;
     }
     
+    /* Intent Grid */
     .intent-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 1rem;
-      max-width: 800px;
+      max-width: 700px;
       width: 100%;
-      margin-bottom: 3rem;
+      margin-bottom: 2rem;
     }
     
     .intent-btn {
-      background: var(--p31-surface);
+      background: rgba(22,25,32,0.8);
       border: 1px solid var(--p31-glass-border);
       border-radius: 12px;
       padding: 1.5rem 1rem;
@@ -122,27 +142,30 @@
       flex-direction: column;
       align-items: center;
       gap: 0.5rem;
+      backdrop-filter: blur(4px);
     }
     .intent-btn:hover {
       background: var(--p31-surface2);
       border-color: var(--p31-cyan);
       transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(77,184,168,0.15);
     }
     .intent-btn svg {
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
       stroke: var(--p31-cyan);
       stroke-width: 1.5;
       fill: none;
     }
     
+    /* PHOS Direct Access Orb */
     .phos-direct {
       position: fixed;
       bottom: 2rem;
       right: 2rem;
       width: 64px;
       height: 64px;
-      background: var(--p31-surface);
+      background: rgba(22,25,32,0.9);
       border: 1px solid var(--p31-cyan);
       border-radius: 50%;
       display: flex;
@@ -152,6 +175,7 @@
       box-shadow: 0 0 30px rgba(77,184,168,0.2);
       transition: all 0.3s ease;
       z-index: 10001;
+      backdrop-filter: blur(4px);
     }
     .phos-direct:hover {
       transform: scale(1.1);
@@ -165,37 +189,73 @@
       fill: none;
     }
     
+    /* Footer - Centered & Styled */
     footer {
+      position: relative;
+      z-index: 1;
       padding: 2rem;
       text-align: center;
       font-family: var(--p31-font-mono);
       font-size: 0.75rem;
       color: var(--p31-muted);
       border-top: 1px solid var(--p31-glass-border);
+      background: rgba(15,17,21,0.5);
+      backdrop-filter: blur(4px);
     }
-    footer a { color: var(--p31-cyan); }
+    footer p {
+      margin: 0.25rem 0;
+      line-height: 1.8;
+    }
+    footer a {
+      color: var(--p31-cyan);
+      text-decoration: none;
+      margin: 0 0.5rem;
+      transition: color 150ms;
+    }
+    footer a:hover {
+      color: var(--p31-butter);
+      text-decoration: underline;
+    }
+    footer .commit {
+      color: var(--p31-lavender);
+      font-size: 0.7rem;
+    }
+    
+    /* Mobile */
+    @media (max-width: 600px) {
+      .intent-grid { grid-template-columns: 1fr 1fr; }
+      .phos-direct { bottom: 1rem; right: 1rem; width: 56px; height: 56px; }
+      footer { padding: 1.5rem 1rem; }
+    }
     
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
+      #starfield-canvas { display: none !important; }
     }
   </style>
 </head>
 <body>
-  <button class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">
+  <!-- Smart Starfield Canvas -->
+  <canvas id="starfield-canvas"></canvas>
+  
+  <!-- Safe Mode Toggle -->
+  <button class="safe-toggle" id="safeToggle" onclick="toggleSafeMode()">
     Safe Mode
   </button>
   
   <main>
-    <div class="logo">
+    <!-- K4 Logo -->
+    <div class="logo" aria-hidden="true">
       <svg viewBox="0 0 100 100">
         <path d="M50 10 L20 85 L80 85 Z M50 10 L50 50 M20 85 L50 50 M80 85 L50 50"/>
       </svg>
     </div>
     
     <h1>PHOS</h1>
-    <p class="subtitle">Phosphorus31 Operating System — Voice-first, inference-driven navigation.</p>
+    <p class="subtitle">Phosphorus31 Operating System — Voice-first, inference-driven navigation for the mesh.</p>
     
-    <div class="intent-grid">
+    <!-- Direct Intent Navigation -->
+    <div class="intent-grid" role="navigation" aria-label="Primary navigation">
       <button class="intent-btn" onclick="location.href='/cognitive-passport/index.html'">
         <svg viewBox="0 0 24 24"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z"/><path d="M12 12v10"/><path d="M12 12L2 7"/><path d="M12 12l10-5"/></svg>
         Cognitive Passport
@@ -222,25 +282,178 @@
       </button>
     </div>
     
-    <p style="font-size: 0.8rem; color: var(--p31-muted);">
-      WCD-PSYCH-MERGE-20260503 • 69 tests green • W-FLARE active
+    <p style="font-size: 0.8rem; color: var(--p31-muted); max-width: 500px;">
+      WCD-PSYCH-MERGE-20260503 • 69 tests green • W-FLARE active • Bayesian routing
     </p>
   </main>
   
-  <div class="phos-direct" onclick="alert('PHOS voice nav: Coming in v2.2')">
+  <!-- PHOS Direct Access Orb -->
+  <div class="phos-direct" onclick="activatePhos()" role="button" aria-label="Activate PHOS voice navigation">
     <svg viewBox="0 0 100 100">
       <path d="M50 15 L15 80 L85 80 Z M50 15 L50 55 M15 80 L50 55 M85 80 L50 55"/>
     </svg>
   </div>
   
+  <!-- Centered Footer -->
   <footer>
-    <p>P31 Labs — <a href="/psych-e2e-live.html">Live Testing</a> — <a href="/public/lib/p31-atmosphere-core.js">PHOS Core</a></p>
+    <p>
+      <a href="/soup.html">C.A.R.S.</a>
+      <a href="/psych-e2e-live.html">Live Testing</a>
+      <a href="/docs/P31-PSYCHOLOGICAL-E2E-TESTING.md">Psych E2E Docs</a>
+      <a href="/public/lib/p31-atmosphere-core.js">PHOS Core</a>
+    </p>
+    <p class="commit">
+      P31 Labs — EIN 42-1888158 — commit 5f47d9c — Mesh Status: Online
+    </p>
   </footer>
   
+  <!-- PHOS Atmosphere Core -->
   <script src="/public/lib/p31-atmosphere-core.js"></script>
   <script>
+    // Safe Mode Toggle
+    function toggleSafeMode() {
+      document.body.classList.toggle('safe-mode');
+      const btn = document.getElementById('safeToggle');
+      btn.classList.toggle('active');
+      localStorage.setItem('p31_safe_mode', document.body.classList.contains('safe-mode'));
+      
+      // Hide/show starfield
+      const starfield = document.getElementById('starfield-canvas');
+      if (starfield) {
+        starfield.style.display = document.body.classList.contains('safe-mode') ? 'none' : 'block';
+      }
+    }
+    
+    // Restore safe mode preference
+    if (localStorage.getItem('p31_safe_mode') === 'true') {
+      document.body.classList.add('safe-mode');
+      document.getElementById('safeToggle').classList.add('active');
+    }
+    
+    // PHOS Activation
+    function activatePhos() {
+      if (window.phosOS) {
+        window.phosOS.toggle();
+      } else {
+        alert('PHOS v2.1 — Voice navigation initializing...');
+      }
+    }
+    
+    // Respect prefers-reduced-motion
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       document.body.classList.add('safe-mode');
+    }
+  </script>
+  
+  <!-- Smart Starfield Implementation -->
+  <script type="module">
+    const canvas = document.getElementById('starfield-canvas');
+    if (!canvas || document.body.classList.contains('safe-mode')) {
+      if (canvas) canvas.style.display = 'none';
+    } else {
+      try {
+        // Dynamic import of starfield
+        const { initStarfield } = await import('/design-assets/starfield/p31-starfield.js');
+        
+        const ctx = canvas.getContext('2d');
+        let width, height, stars = [];
+        const STAR_COUNT = 150;
+        const CONNECTION_DISTANCE = 100;
+        const MAX_CONNECTIONS = 3;
+        
+        function resize() {
+          width = canvas.width = window.innerWidth;
+          height = canvas.height = window.innerHeight;
+        }
+        
+        function initStars() {
+          stars = [];
+          for (let i = 0; i < STAR_COUNT; i++) {
+            stars.push({
+              x: Math.random() * width,
+              y: Math.random() * height,
+              vx: (Math.random() - 0.5) * 0.3,
+              vy: (Math.random() - 0.5) * 0.3,
+              size: Math.random() * 1.5 + 0.5,
+              alpha: Math.random() * 0.5 + 0.3,
+              pulse: Math.random() * Math.PI * 2
+            });
+          }
+        }
+        
+        function draw() {
+          ctx.fillStyle = 'rgba(15, 17, 21, 0.3)';
+          ctx.fillRect(0, 0, width, height);
+          
+          const time = Date.now() * 0.001;
+          
+          // Update and draw stars
+          stars.forEach((star, i) => {
+            // Update position
+            star.x += star.vx;
+            star.y += star.vy;
+            star.pulse += 0.02;
+            
+            // Wrap around edges
+            if (star.x < 0) star.x = width;
+            if (star.x > width) star.x = 0;
+            if (star.y < 0) star.y = height;
+            if (star.y > height) star.y = 0;
+            
+            // Draw star with pulsing alpha
+            const pulseAlpha = star.alpha + Math.sin(star.pulse) * 0.1;
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(77, 184, 168, ${Math.max(0.1, pulseAlpha)})`;
+            ctx.fill();
+            
+            // Draw connections (K4 mesh visualization)
+            let connections = 0;
+            for (let j = i + 1; j < stars.length && connections < MAX_CONNECTIONS; j++) {
+              const other = stars[j];
+              const dx = star.x - other.x;
+              const dy = star.y - other.y;
+              const dist = Math.sqrt(dx * dx + dy * dy);
+              
+              if (dist < CONNECTION_DISTANCE) {
+                const alpha = (1 - dist / CONNECTION_DISTANCE) * 0.15;
+                ctx.beginPath();
+                ctx.moveTo(star.x, star.y);
+                ctx.lineTo(other.x, other.y);
+                ctx.strokeStyle = `rgba(77, 184, 168, ${alpha})`;
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+                connections++;
+              }
+            }
+          });
+          
+          requestAnimationFrame(draw);
+        }
+        
+        // Handle resize
+        window.addEventListener('resize', () => {
+          resize();
+          initStars();
+        });
+        
+        // Pause when tab hidden
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            // Starfield pauses automatically with requestAnimationFrame
+          }
+        });
+        
+        // Initialize
+        resize();
+        initStars();
+        draw();
+        
+        console.log('PHOS Starfield: K4 mesh visualization active');
+      } catch (e) {
+        console.log('Starfield disabled — Gray Rock fallback');
+        canvas.style.display = 'none';
+      }
     }
   </script>
 </body>

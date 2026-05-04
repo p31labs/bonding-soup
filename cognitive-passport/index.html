@@ -373,9 +373,19 @@
       box-shadow: 0 0 0 2px color-mix(in srgb, var(--p31-cyan) 22%, transparent);
     }
     textarea {
-      min-height: 12rem;
+      min-height: 8rem;
+      max-height: 16rem;
       font-family: var(--p31-font-mono), ui-monospace, monospace;
       font-size: var(--p31-text-sm);
+      resize: vertical;
+    }
+    /* Export pane - reduce dead space */
+    .cp-export .out-panel textarea {
+      min-height: 6rem;
+      max-height: 12rem;
+    }
+    .cp-export {
+      padding: var(--p31-space-4);
     }
     textarea[readonly] {
       background: var(--p31-elev-1-tone, var(--p31-surface2));

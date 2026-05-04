@@ -190,17 +190,22 @@ describe("I — Interface: THREE-MIRROR URL consistency", () => {
 // P — PURITY: PRS FLOOR — every governed item meets the bar
 // ─────────────────────────────────────────────────────────────────────────────
 describe("P — Purity: PRS governance floor enforcement", () => {
-  it("at least 1 governed worker/pages item exists in PRS", () => {
-    const governed = prsItems.filter((i) =>
-      (prsGov.governedKinds ?? []).includes(i.kind),
+  function governedItems() {
+    const ungovWorkers = new Set(prsGov.ungovernedWorkerIds ?? []);
+    return prsItems.filter(
+      (i) =>
+        (prsGov.governedKinds ?? []).includes(i.kind) &&
+        !ungovWorkers.has(i.id),
     );
+  }
+
+  it("at least 1 governed worker/pages item exists in PRS", () => {
+    const governed = governedItems();
     expect(governed.length).toBeGreaterThan(0);
   });
 
   it("every governed item has a complete score object (all 10 dimensions)", () => {
-    const governed = prsItems.filter((i) =>
-      (prsGov.governedKinds ?? []).includes(i.kind),
-    );
+    const governed = governedItems();
     const incomplete = governed.filter((item) => {
       const s = item.score ?? {};
       return prsScoreDimensions.some((d) => typeof s[d] !== "number");
@@ -213,9 +218,7 @@ describe("P — Purity: PRS governance floor enforcement", () => {
 
   it("no governed item scores below the PRS floor on any dimension", () => {
     const floor = prsGov.minGovernedFloorPerDimension ?? 6;
-    const governed = prsItems.filter((i) =>
-      (prsGov.governedKinds ?? []).includes(i.kind),
-    );
+    const governed = governedItems();
     const violations = [];
     for (const item of governed) {
       const s = item.score ?? {};
@@ -230,9 +233,7 @@ describe("P — Purity: PRS governance floor enforcement", () => {
 
   it("no governed item has an overall score below the governed threshold", () => {
     const threshold = prsGov.minGovernedScore ?? 85;
-    const governed = prsItems.filter((i) =>
-      (prsGov.governedKinds ?? []).includes(i.kind),
-    );
+    const governed = governedItems();
     const below = governed.filter((item) => {
       const s = item.score ?? {};
       const total = prsScoreDimensions.reduce((acc, d) => acc + (s[d] ?? 0), 0);

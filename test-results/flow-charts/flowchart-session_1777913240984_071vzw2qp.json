@@ -1,0 +1,79 @@
+{
+  "personality": "Power User (cautious)",
+  "sessionId": "session_1777913240984_071vzw2qp",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: click",
+      "page": "/glass-box.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: click",
+      "page": "/delta.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: click",
+      "page": "/docs/doc-library/index.html?a=child",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: click",
+      "page": "/soup.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_4",
+      "label": "Step 5: click",
+      "page": "/fleet-portal.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_5",
+      "label": "Step 6: click",
+      "page": "/p31-personal-howto.html",
+      "grade": "Excellent",
+      "action": "click"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 1432ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 1162ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 936ms"
+    },
+    {
+      "from": "step_3",
+      "to": "step_4",
+      "label": "→ 1170ms"
+    },
+    {
+      "from": "step_4",
+      "to": "step_5",
+      "label": "→ 1300ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 6,
+    "averageScore": 100
+  }
+}

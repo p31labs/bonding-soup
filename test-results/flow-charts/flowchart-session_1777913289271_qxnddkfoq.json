@@ -1,0 +1,91 @@
+{
+  "personality": "Power User (exploratory)",
+  "sessionId": "session_1777913289271_qxnddkfoq",
+  "nodes": [
+    {
+      "id": "step_0",
+      "label": "Step 1: click",
+      "page": "/glass-box.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_1",
+      "label": "Step 2: click",
+      "page": "/fleet-portal.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_2",
+      "label": "Step 3: click",
+      "page": "/glass-box.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_3",
+      "label": "Step 4: click",
+      "page": "/demos/index.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_4",
+      "label": "Step 5: click",
+      "page": "/docs/physics-learn/index.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_5",
+      "label": "Step 6: click",
+      "page": "/p31-device-setup.html",
+      "grade": "Excellent",
+      "action": "click"
+    },
+    {
+      "id": "step_6",
+      "label": "Step 7: click",
+      "page": "/fleet-portal.html",
+      "grade": "Excellent",
+      "action": "click"
+    }
+  ],
+  "edges": [
+    {
+      "from": "step_0",
+      "to": "step_1",
+      "label": "→ 1073ms"
+    },
+    {
+      "from": "step_1",
+      "to": "step_2",
+      "label": "→ 1161ms"
+    },
+    {
+      "from": "step_2",
+      "to": "step_3",
+      "label": "→ 1180ms"
+    },
+    {
+      "from": "step_3",
+      "to": "step_4",
+      "label": "→ 1265ms"
+    },
+    {
+      "from": "step_4",
+      "to": "step_5",
+      "label": "→ 837ms"
+    },
+    {
+      "from": "step_5",
+      "to": "step_6",
+      "label": "→ 1325ms"
+    }
+  ],
+  "summary": {
+    "totalSteps": 7,
+    "averageScore": 100
+  }
+}

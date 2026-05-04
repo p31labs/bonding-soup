@@ -285,7 +285,7 @@
     "budgetAnnual": 10000,
     "currency": "USD",
     "email": "security@p31ca.org",
-    "pgpFingerprint": "PENDING_OPERATOR_ACTION",
+    "pgpFingerprint": "B8C0CE8E5E0F8574C4DDBCC1E6217166480AEB52",
     "portalUrl": "https://phosphorus31.org/security/",
     "policyUrl": "https://phosphorus31.org/security/policy.txt",
     "pgpKeyUrl": "https://phosphorus31.org/security/pgp-key.txt",

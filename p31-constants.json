@@ -280,6 +280,56 @@
     "mvpInventory": "docs/MVP-DELIVERABLES-INVENTORY.md",
     "marketLaunchPackage": "docs/P31-MARKET-LAUNCH-PACKAGE.md"
   },
+  "security": {
+    "programLaunched": "2026-05-04",
+    "budgetAnnual": 10000,
+    "currency": "USD",
+    "email": "security@p31ca.org",
+    "pgpFingerprint": "PENDING_OPERATOR_ACTION",
+    "portalUrl": "https://phosphorus31.org/security/",
+    "policyUrl": "https://phosphorus31.org/security/policy.txt",
+    "pgpKeyUrl": "https://phosphorus31.org/security/pgp-key.txt",
+    "hallOfFameUrl": "https://phosphorus31.org/security/hall-of-fame.html",
+    "eggHuntUrl": "https://phosphorus31.org/security/egg-hunt.html",
+    "schema": "p31.bugBounty/1.0.0",
+    "responseTime": {
+      "critical": "24h",
+      "high": "48h",
+      "medium": "7d",
+      "low": "14d"
+    },
+    "bountyTiers": {
+      "critical": { "cvssMin": 9.0, "cvssMax": 10.0, "usd": 2500 },
+      "high":     { "cvssMin": 7.0, "cvssMax": 8.9,  "usd": 1000 },
+      "medium":   { "cvssMin": 4.0, "cvssMax": 6.9,  "usd": 500  },
+      "low":      { "cvssMin": 1.0, "cvssMax": 3.9,  "usd": 100  },
+      "egg":      { "cvssMin": null, "cvssMax": null, "usdMin": 50, "usdMax": 500 }
+    },
+    "scope": {
+      "inScope": [
+        "https://phosphorus31.org/*",
+        "https://p31ca.org/*",
+        "https://bonding.p31ca.org/*",
+        "https://donate-api.phosphorus31.org/*",
+        "*.trimtab-signal.workers.dev",
+        "https://github.com/p31labs/*"
+      ],
+      "outOfScope": [
+        "stripe-infrastructure",
+        "cloudflare-infrastructure",
+        "google-infrastructure",
+        "third-party-dependencies",
+        "node-zero-hardware",
+        "rate-limiting-dos-testing",
+        "social-engineering"
+      ],
+      "absolutelyOutOfScope": [
+        "operator-medical-data",
+        "children-mesh-identities",
+        "physical-safety-of-individuals"
+      ]
+    }
+  },
   "integrations": {
     "schema": "p31.integrationsBridge/1.0.0",
     "bridgeDoc": "docs/P31-INTEGRATIONS-BRIDGE.md",

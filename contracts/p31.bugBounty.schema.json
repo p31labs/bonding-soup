@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "p31.bugBounty/1.0.0",
+  "title": "P31 Labs Bug Bounty Report",
+  "description": "Schema for a verified security vulnerability report in the P31 Labs responsible disclosure program.",
+  "type": "object",
+  "required": ["id", "submittedAt", "severity", "scope", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^BUG-[0-9]{4}-[0-9]{3,}$",
+      "description": "Canonical report identifier, e.g. BUG-2026-001"
+    },
+    "submittedAt": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date the report was received"
+    },
+    "reporter": {
+      "type": ["string", "null"],
+      "description": "Researcher handle or null for anonymous reports"
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low", "egg"],
+      "description": "K₄ severity tier"
+    },
+    "cvss": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 10,
+      "description": "CVSS 3.1 base score, null for egg-class findings"
+    },
+    "k4Vertex": {
+      "type": "string",
+      "enum": ["physical", "network", "compliance", "ux-trust"],
+      "description": "K₄ vertex classification: ψ₁ physical, ψ₂ network, ψ₃ compliance, ψ₄ UX/trust"
+    },
+    "scope": {
+      "type": "string",
+      "description": "Affected URL or endpoint, e.g. https://phosphorus31.org/donate/"
+    },
+    "title": {
+      "type": "string",
+      "description": "Short description of the vulnerability for public display"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["received", "triaging", "confirmed", "fixed", "wont-fix", "duplicate", "out-of-scope"],
+      "description": "Current lifecycle status"
+    },
+    "fixedAt": {
+      "type": ["string", "null"],
+      "format": "date",
+      "description": "ISO 8601 date the fix was deployed, null if not yet fixed"
+    },
+    "reward": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "USD reward paid, null if not yet determined"
+    },
+    "glassBoxRef": {
+      "type": ["string", "null"],
+      "description": "Glass Box transparency URL for the fix, null if not yet published"
+    },
+    "cve": {
+      "type": ["string", "null"],
+      "pattern": "^CVE-[0-9]{4}-[0-9]{4,}$",
+      "description": "CVE identifier if assigned, otherwise null"
+    },
+    "disclosureDate": {
+      "type": ["string", "null"],
+      "format": "date",
+      "description": "Coordinated disclosure date, null if not scheduled"
+    },
+    "hofEntry": {
+      "type": "boolean",
+      "description": "Whether the researcher is listed in the Hall of Fame",
+      "default": false
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "description": "Internal notes; not published"
+    }
+  }
+}

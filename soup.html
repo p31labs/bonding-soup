@@ -1,150 +1,434 @@
 <!DOCTYPE html>
+<!-- P31 egg: ?egglov=1 → spawnEggLovSandbox() — Li + V collide → LOV (src/reactions.ts); operator note for S.J. / W.J. -->
 <html lang="en">
 <head>
-  <title>C.A.R.S. - Social Molecules</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>C.A.R.S. - Social Molecules</title>
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="/public/lib/p31-qmu-tokens.css">
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  
   <style>
-:root {
-  --p31-void: #0b0d10; --p31-surface: #161920; --p31-surface2: #1c2028;
-  --p31-teal: #25897d; --p31-coral: #cc6247; --p31-butter: #cda852;
-  --p31-lavender: #8b7cc9; --p31-phosphorus: #3ba372; --p31-cyan: #4db8a8;
-  --p31-cloud: #d8d6d0; --p31-muted: #6b7280;
-  --p31-glass-border: rgba(255, 255, 255, 0.08);
-  --p31-font-sans: "Atkinson Hyperlegible", system-ui, sans-serif;
-  --p31-font-mono: "JetBrains Mono", monospace;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--p31-void); color: var(--p31-cloud); font-family: var(--p31-font-sans); display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; -webkit-font-smoothing: antialiased; }
-:focus-visible { outline: 2px solid var(--p31-teal); outline-offset: 2px; border-radius: 4px; }
-a { color: inherit; text-decoration: none; }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
-body.safe-mode { --p31-void: #000; --p31-surface: #0a0a0a; --p31-surface2: #111; --p31-cloud: #fff; --p31-muted: #888; }
-body.safe-mode * { animation: none !important; transition: none !important; filter: none !important; }
-body.safe-mode .hide-safe { display: none !important; }
-body.safe-mode .show-safe { display: block !important; }
-.show-safe { display: none; }
-.btn-safe { padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; z-index: 100; transition: all 150ms; }
-.btn-safe:hover { background: rgba(204,98,71,0.15); }
-.top-nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--p31-glass-border); background: rgba(11,13,16,0.8); z-index: 50; backdrop-filter: blur(10px); }
-.ebc-footer { position: absolute; bottom: 0; width: 100%; padding: 1.5rem; display: flex; justify-content: center; gap: 2rem; border-top: 1px solid var(--p31-glass-border); background: var(--p31-surface); font-family: var(--p31-font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--p31-muted); z-index: 50;}
-.ebc-footer a:hover { color: var(--p31-cloud); }
+    /* P31 Quantum Material U Core Tokens */
+    :root {
+      --p31-void: #0f1115;
+      --p31-surface: #161920; 
+      --p31-surface2: #1c2028;
+      --p31-teal: #5DCAA5; 
+      --p31-coral: #cc6247; 
+      --p31-butter: #cda852;
+      --p31-lavender: #8b7cc9; 
+      --p31-phosphorus: #3ba372; 
+      --p31-cyan: #4db8a8;
+      --p31-cloud: #d8d6d0; 
+      --p31-muted: #6b7280;
+      --p31-glass-border: rgba(255, 255, 255, 0.08);
+      --p31-font-sans: "Inter", system-ui, sans-serif;
+      --p31-font-mono: "JetBrains Mono", monospace;
+    }
 
-/* PHOS Mascot Personalities & Animations */
-.phos-wrap { display: flex; align-items: center; gap: 1rem; position: relative; z-index: 100; }
-.phos-character { width: 48px; height: 48px; cursor: pointer; filter: drop-shadow(0 0 10px rgba(37,137,125,0.4)); animation: float 4s ease-in-out infinite; transition: transform 0.2s; }
-.phos-character:hover { transform: scale(1.1) rotate(5deg); filter: drop-shadow(0 0 15px rgba(37,137,125,0.8)); }
-.phos-eye { animation: blink 4s infinite; transform-origin: center; }
-.phos-bubble { position: absolute; left: 60px; top: 10px; background: var(--p31-surface2); border: 1px solid var(--p31-teal); padding: 0.75rem 1rem; border-radius: 8px 8px 8px 0; font-family: var(--p31-font-mono); font-size: 0.8rem; color: var(--p31-cloud); opacity: 0; pointer-events: none; transform: translateX(-10px); transition: all 0.3s cubic-bezier(0.19,1,0.22,1); white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
-.phos-bubble.active { opacity: 1; transform: translateX(0); }
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-@keyframes blink { 0%, 96%, 98% { transform: scaleY(1); } 97%, 99% { transform: scaleY(0.1); } }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--p31-void); color: var(--p31-cloud); font-family: var(--p31-font-sans); display: flex; flex-direction: column; height: 100vh; overflow: hidden; -webkit-font-smoothing: antialiased; }
+    
+    /* Layout & Top Nav */
+    .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--p31-glass-border); background: rgba(15,17,21,0.85); z-index: 50; backdrop-filter: blur(10px); }
+    .brand-title { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.02em; color: var(--p31-cloud); display: flex; align-items: center; gap: 0.75rem; }
+    
+    /* Buttons */
+    .btn-safe { padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: all 150ms; z-index: 100; }
+    .btn-safe:hover { background: rgba(204,98,71,0.15); }
+    
+    /* C.A.R.S. Layout - Fixed for interactivity */
+    .layout { 
+      display: flex; 
+      flex: 1; 
+      position: relative; 
+      width: 100%; 
+      min-height: 0; /* Critical for flex child */
+      overflow: hidden;
+    }
+    .canvas-container { 
+      flex: 1; 
+      position: relative; 
+      background: radial-gradient(circle at center, rgba(93,202,165,0.05) 0%, var(--p31-void) 70%); 
+      min-height: 0; /* Critical for flex child */
+      overflow: hidden;
+    }
+    
+    /* Legacy HUD Panel - now merged into Smart Panel */
+    .hud-panel { display: none; }
 
-.layout { display: flex; height: calc(100vh - 146px); width: 100%; position: relative; }
-.canvas-container { flex: 1; position: relative; background: radial-gradient(circle at center, rgba(37,137,125,0.1) 0%, var(--p31-void) 70%); }
-canvas { display: block; width: 100%; height: 100%; }
-.hud-panel { width: 320px; background: var(--p31-surface2); border-left: 1px solid var(--p31-glass-border); padding: 2rem; overflow-y: auto; z-index: 10; display: flex; flex-direction: column; gap: 1.5rem;}
-.hud-title { font-family: var(--p31-font-mono); font-size: 0.8rem; color: var(--p31-teal); text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--p31-glass-border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;}
-.ledger-item { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: rgba(255,255,255,0.02); border: 1px solid var(--p31-glass-border); border-radius: 6px; font-family: var(--p31-font-mono); font-size: 0.85rem;}
-.ledger-item span.vol { color: var(--p31-butter); font-weight: 700; }
-.coherence-score { font-size: 2.5rem; font-weight: 700; color: var(--p31-phosphorus); letter-spacing: -0.02em; }
+    /* CANVAS STACKING - Starfield behind, Molecule in front */
+    .canvas-container canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    
+    #starfield-canvas {
+      z-index: 0;
+      pointer-events: none !important; /* Never capture events */
+    }
+    
+    #moleculeCanvas {
+      z-index: 10;
+      pointer-events: auto !important; /* Always receive events */
+      touch-action: none; /* Prevent scroll on touch */
+      cursor: crosshair;
+    }
+    
+    /* ULTIMATE SMART PANEL - RIGHT SIDE - Fixed Layout */
+    .smart-panel { 
+      width: 320px; 
+      background: rgba(15, 17, 21, 0.95); 
+      border-left: 1px solid var(--p31-glass-border); 
+      padding: 0.75rem; 
+      overflow-y: auto; 
+      overflow-x: hidden;
+      z-index: 20; 
+      display: block; /* Not flex - prevents flex glitches */
+      backdrop-filter: blur(25px);
+      flex-shrink: 0;
+      box-sizing: border-box;
+      max-height: none; /* Let it scroll naturally */
+    }
+    
+    /* Custom scrollbar for panel */
+    .smart-panel::-webkit-scrollbar { width: 5px; }
+    .smart-panel::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+    .smart-panel::-webkit-scrollbar-thumb { background: rgba(77, 184, 168, 0.3); border-radius: 3px; }
+    .smart-panel::-webkit-scrollbar-thumb:hover { background: rgba(77, 184, 168, 0.5); }
+    
+    /* Panel Sections - Simple block layout */
+    .panel-section { 
+      border: 1px solid var(--p31-glass-border); 
+      border-radius: 8px; 
+      padding: 0.6rem; 
+      background: rgba(255,255,255,0.02); 
+      margin-bottom: 0.6rem;
+    }
+    .panel-section:last-child { margin-bottom: 0; }
+    .panel-section h3 { 
+      font-family: var(--p31-font-mono); 
+      font-size: 0.65rem; 
+      color: var(--p31-teal); 
+      text-transform: uppercase; 
+      letter-spacing: 0.1em; 
+      margin: 0 0 0.4rem 0; 
+      border-bottom: 1px solid var(--p31-glass-border); 
+      padding-bottom: 0.3rem; 
+    }
+    
+    /* PHOS Mini (In Panel) */
+    .phos-mini { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: background 0.2s; }
+    .phos-mini:hover { background: rgba(37, 137, 125, 0.1); }
+    .phos-mini svg { width: 40px; height: 40px; filter: drop-shadow(0 0 8px rgba(37, 137, 125, 0.4)); }
+    .phos-mini-text { font-family: var(--p31-font-mono); font-size: 0.8rem; color: var(--p31-cloud); }
+    .phos-mini-status { font-size: 0.65rem; color: var(--p31-muted); }
+    
+    /* Smart Panel Widgets */
+    .widget-coherence { text-align: center; }
+    .coherence-value { font-size: 2.5rem; font-weight: 700; color: var(--p31-phosphorus); letter-spacing: -0.02em; }
+    .coherence-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin: 0.5rem 0; overflow: hidden; }
+    .coherence-fill { height: 100%; background: linear-gradient(90deg, var(--p31-teal), var(--p31-phosphorus)); transition: width 0.3s; }
+    
+    .quantum-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-family: var(--p31-font-mono); font-size: 0.7rem; }
+    .stat-box { background: rgba(255,255,255,0.03); padding: 0.5rem; border-radius: 6px; text-align: center; }
+    .stat-label { color: var(--p31-muted); font-size: 0.6rem; text-transform: uppercase; margin-bottom: 0.25rem; }
+    .stat-value { color: var(--p31-cloud); font-weight: 700; }
+    
+    /* Orbital Legend (In Panel) */
+    .orbital-mini { font-family: var(--p31-font-mono); font-size: 0.65rem; color: var(--p31-muted); }
+    .orbital-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+    .orbital-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .orbital-dot.sigma { background: var(--p31-teal); box-shadow: 0 0 5px var(--p31-teal); }
+    .orbital-dot.pi { background: var(--p31-coral); box-shadow: 0 0 5px var(--p31-coral); }
+    .orbital-dot.delta { background: var(--p31-lavender); box-shadow: 0 0 5px var(--p31-lavender); }
+    
+    /* Keyboard Shortcuts (In Panel) */
+    .shortcuts-grid { display: grid; grid-template-columns: auto 1fr; gap: 0.4rem 0.75rem; font-family: var(--p31-font-mono); font-size: 0.7rem; align-items: center; }
+    .shortcuts-grid kbd { background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--p31-glass-border); font-size: 0.65rem; color: var(--p31-cloud); }
+    .shortcuts-grid span { color: var(--p31-muted); font-size: 0.7rem; }
+    
+    /* LIVE TELEMETRY ENGINE - Compact */
+    .telemetry-chart { background: rgba(0,0,0,0.2); border-radius: 4px; padding: 0.35rem; position: relative; }
+    .chart-label { font-family: var(--p31-font-mono); font-size: 0.55rem; color: var(--p31-muted); text-transform: uppercase; }
+    .chart-value { position: absolute; top: 0.35rem; right: 0.35rem; font-family: var(--p31-font-mono); font-size: 0.75rem; font-weight: 700; color: var(--p31-cloud); }
+    .telemetry-chart canvas { width: 100%; height: 35px; display: block; }
+    
+    .telemetry-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem; margin: 0.5rem 0; }
+    .metric-row { display: flex; justify-content: space-between; background: rgba(255,255,255,0.03); padding: 0.25rem 0.4rem; border-radius: 3px; font-family: var(--p31-font-mono); font-size: 0.6rem; }
+    .metric-label { color: var(--p31-muted); }
+    .metric-value { color: var(--p31-teal); font-weight: 600; }
+    .metric-value.warning { color: var(--p31-coral); }
+    .metric-value.critical { color: #ff3333; animation: blink 0.5s infinite; }
+    
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    
+    .telemetry-log { background: rgba(0,0,0,0.3); border-radius: 4px; padding: 0.35rem; font-family: var(--p31-font-mono); font-size: 0.6rem; overflow-y: auto; height: 60px; max-height: 60px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 0.4rem; }
+    .log-entry { display: flex; gap: 0.4rem; margin-bottom: 0.15rem; color: var(--p31-cloud); line-height: 1.2; }
+    .log-entry:last-child { margin-bottom: 0; }
+    .log-time { color: var(--p31-muted); font-size: 0.55rem; }
+    .log-entry.alert { color: var(--p31-coral); }
+    .log-entry.success { color: var(--p31-phosphorus); }
+    .log-entry.info { color: var(--p31-cyan); }
+    
+    .telemetry-status { display: flex; align-items: center; gap: 0.4rem; padding-top: 0.4rem; border-top: 1px solid var(--p31-glass-border); }
+    .status-indicator { width: 6px; height: 6px; border-radius: 50%; animation: pulse-status 2s infinite; }
+    .status-indicator.online { background: var(--p31-phosphorus); box-shadow: 0 0 6px var(--p31-phosphorus); }
+    .status-indicator.warning { background: var(--p31-butter); box-shadow: 0 0 6px var(--p31-butter); }
+    .status-indicator.critical { background: var(--p31-coral); box-shadow: 0 0 6px var(--p31-coral); }
+    .status-text { font-family: var(--p31-font-mono); font-size: 0.6rem; color: var(--p31-cloud); font-weight: 600; }
+    .uptime { margin-left: auto; font-family: var(--p31-font-mono); font-size: 0.55rem; color: var(--p31-muted); }
+    
+    @keyframes pulse-status { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    
+    /* L.O.V.E. Ledger (In Panel) */
+    .ledger-scroll { 
+      max-height: 120px; 
+      overflow-y: auto; 
+      font-family: var(--p31-font-mono); 
+      font-size: 0.7rem; 
+    }
+    .ledger-row { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .ledger-row:last-child { border-bottom: none; }
+    .ledger-pair { color: var(--p31-cloud); }
+    .ledger-weight { color: var(--p31-butter); font-weight: 700; }
+    .ledger-ent { color: var(--p31-lavender); font-size: 0.6rem; }
+    
+    /* PHOS Mascot - Floating over canvas but not blocking interactions */
+    .phos-mascot-wrapper { position: absolute; bottom: 2rem; left: 2rem; z-index: 5; display: flex; align-items: flex-end; gap: 1rem; pointer-events: none; }
+    .phos-speech { background: rgba(22, 25, 32, 0.95); border: 1px solid var(--p31-teal); padding: 1rem 1.25rem; border-radius: 16px 16px 16px 0; color: var(--p31-cloud); font-family: var(--p31-font-mono); font-size: 0.85rem; max-width: 250px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); opacity: 0; transform: translateY(10px) scale(0.95); transform-origin: bottom left; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: auto; }
+    .phos-speech.active { opacity: 1; transform: translateY(0) scale(1); }
+    .phos-character { width: 80px; height: 80px; cursor: pointer; pointer-events: auto; filter: drop-shadow(0 10px 15px rgba(37, 137, 125, 0.3)); animation: phos-float 4s ease-in-out infinite; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .phos-character:hover { transform: scale(1.1) rotate(5deg); filter: drop-shadow(0 15px 25px rgba(37, 137, 125, 0.6)); }
+    .phos-character:active { transform: scale(0.95); }
+    .phos-body { fill: rgba(28, 32, 40, 0.9); stroke: var(--p31-teal); stroke-width: 3; stroke-linejoin: round; transition: fill 0.3s, stroke 0.3s; }
+    .phos-character:hover .phos-body { fill: rgba(37, 137, 125, 0.2); }
+    .phos-eye-group { transform-origin: 50px 60px; }
+    .phos-eye { fill: #000; animation: phos-blink 5s infinite; transform-origin: center; }
+    .phos-pupil { fill: #fff; transition: transform 0.1s ease-out; }
+    .phos-blush { fill: var(--p31-coral); opacity: 0; transition: opacity 0.3s; }
+    .phos-character.happy .phos-blush { opacity: 0.6; }
+    .phos-character.thinking .phos-body { stroke: var(--p31-butter); animation: phos-jitter 0.5s infinite; }
 
-/* Gray Rock Fallback List */
-.safe-ledger { padding: 2rem; max-width: 600px; margin: 0 auto; width: 100%; }
-.safe-ledger table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-.safe-ledger th, .safe-ledger td { text-align: left; padding: 0.75rem; border-bottom: 1px solid #333; font-family: var(--p31-font-mono); font-size: 0.9rem;}
-.safe-ledger th { color: #888; text-transform: uppercase; font-size: 0.75rem; }
-</style>
+    @keyframes phos-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    @keyframes phos-blink { 0%, 95%, 98% { transform: scaleY(1); } 96%, 99% { transform: scaleY(0.1); } }
+    @keyframes phos-jitter { 0%, 100% { transform: rotate(0deg); } 33% { transform: rotate(2deg); } 66% { transform: rotate(-2deg); } }
+
+    /* GRAY ROCK SAFE MODE */
+    body.safe-mode .hide-safe { display: none !important; }
+    body.safe-mode .show-safe { display: block !important; }
+    .show-safe { display: none; }
+    .safe-ledger { padding: 3rem; max-width: 800px; margin: 0 auto; width: 100%; overflow-y: auto; }
+    .safe-ledger table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; background: rgba(255,255,255,0.02); border-radius: 8px; overflow: hidden;}
+    .safe-ledger th, .safe-ledger td { text-align: left; padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: var(--p31-font-mono); font-size: 0.95rem;}
+    .safe-ledger th { color: var(--p31-muted); text-transform: uppercase; font-size: 0.8rem; background: rgba(255,255,255,0.03); }
+    .safe-ledger tr:last-child td { border-bottom: none; }
+    
+    /* EBC Footer */
+    .ebc-footer { margin-top: auto; padding: 1.5rem; display: flex; justify-content: center; gap: 2rem; border-top: 1px solid var(--p31-glass-border); background: var(--p31-surface); font-family: var(--p31-font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--p31-muted); z-index: 50;}
+    .ebc-footer a { color: inherit; text-decoration: none; transition: color 150ms; }
+    .ebc-footer a:hover { color: var(--p31-cloud); }
+  </style>
 </head>
 <body>
-<canvas id="starfield-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.6;"></canvas>
 
+  <!-- Top Navigation -->
   <nav class="top-nav">
-    <div style="display:flex; align-items:center; gap: 1.5rem;">
-      <div class="phos-wrap hide-safe">
-        <svg class="phos-character" viewBox="0 0 100 100" onclick="triggerPhos()">
-          <defs>
-            <linearGradient id="phosGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="var(--p31-teal)" />
-              <stop offset="100%" stop-color="var(--p31-phosphorus)" />
-            </linearGradient>
-          </defs>
-          <path d="M50 15 L15 80 L85 80 Z" fill="url(#phosGrad)" stroke="var(--p31-void)" stroke-width="2" stroke-linejoin="round"/>
-          <path d="M50 15 L50 55 M15 80 L50 55 M85 80 L50 55" stroke="rgba(255,255,255,0.2)" stroke-width="2" />
-          <g class="phos-eye">
-            <ellipse cx="40" cy="65" rx="3" ry="5" fill="#0b0d10" />
-            <ellipse cx="60" cy="65" rx="3" ry="5" fill="#0b0d10" />
-            <circle cx="41" cy="63" r="1" fill="#ffffff" />
-            <circle cx="61" cy="63" r="1" fill="#ffffff" />
-          </g>
-        </svg>
-        <div class="phos-bubble" id="phosSpeech">Hi! I'm PHOS!</div>
-      </div>
-      <script>
-        const phrases = [
-          "The mesh is holding strong today.",
-          "Larmor frequency optimized at 863Hz.",
-          "Adjusting ontological volume...",
-          "Remember: It's okay to hit Safe Mode.",
-          "I see 4 vertices and 6 edges. Perfect.",
-          "Buffering high-voltage emotional data.",
-          () => { const coherence = document.getElementById('coherenceDisplay').textContent; return `Starfield pulsing at ${coherence} coherence. Beautiful.`; },
-          () => { const count = Math.floor(Math.random() * 20) + 100; return `${count} stars in the field. Each one a connection.`; },
-          "The constellation shifts as you drag the nodes.",
-          "Stars breathe with the same rhythm as the mesh.",
-          "Can you see the K4 pattern in the starfield?"
-        ];
-        function triggerPhos() {
-          const bubble = document.getElementById('phosSpeech');
-          let phrase = phrases[Math.floor(Math.random() * phrases.length)];
-          if(typeof phrase === 'function') phrase = phrase();
-          bubble.textContent = phrase;
-          bubble.classList.add('active');
-          setTimeout(() => bubble.classList.remove('active'), 4000);
-        }
-        setInterval(() => {
-          if(Math.random() > 0.7 && !document.body.classList.contains('safe-mode')) {
-            const coherence = parseInt(document.getElementById('coherenceDisplay').textContent) || 92;
-            if(coherence > 90 && Math.random() > 0.5) {
-              const bubble = document.getElementById('phosSpeech');
-              bubble.textContent = "The stars align with high coherence!";
-              bubble.classList.add('active');
-              setTimeout(() => bubble.classList.remove('active'), 3000);
-            }
-          }
-        }, 15000);
-      </script>
-      <div style="font-weight: 700; font-size: 1.1rem; letter-spacing: -0.02em;">C.A.R.S. <span style="font-weight:400; color:var(--p31-muted)">| Social Molecules</span></div>
+    <div class="brand-title">
+      <svg viewBox="0 0 100 100" width="24" height="24" fill="none">
+        <path d="M50 10 L90 85 L10 85 Z" stroke="var(--p31-teal)" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M50 10 L50 60 L90 85" stroke="var(--p31-coral)" stroke-width="5" stroke-linejoin="round" opacity="0.8"/>
+        <path d="M50 60 L10 85" stroke="var(--p31-butter)" stroke-width="5" stroke-linejoin="round" opacity="0.6"/>
+      </svg>
+      P31 C.A.R.S. <span style="font-weight:400; color:var(--p31-muted);">| Social Molecules</span>
     </div>
     <button id="safeModeBtn" class="btn-safe">Safe Mode</button>
   </nav>
 
+  <!-- Living PHOS Mascot Overlay -->
+  <div class="phos-mascot-wrapper hide-safe">
+    <div class="phos-character" id="phosMascot" onclick="phosClick()">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path class="phos-body" d="M50 15 L15 80 L85 80 Z" />
+        <path class="phos-body" d="M50 15 L50 55 M15 80 L50 55 M85 80 L50 55" stroke-width="1" stroke="rgba(255,255,255,0.2)"/>
+        <g class="phos-eye-group">
+          <ellipse class="phos-eye" cx="40" cy="58" rx="4" ry="7" />
+          <circle class="phos-pupil" id="pupil-l" cx="41" cy="56" r="2" />
+          <ellipse class="phos-eye" cx="60" cy="58" rx="4" ry="7" />
+          <circle class="phos-pupil" id="pupil-r" cx="61" cy="56" r="2" />
+          <ellipse class="phos-blush" cx="30" cy="62" rx="5" ry="2" />
+          <ellipse class="phos-blush" cx="70" cy="62" rx="5" ry="2" />
+        </g>
+      </svg>
+    </div>
+    <div class="phos-speech" id="phosSpeech">Hi! I'm PHOS. The mesh looks stable today.</div>
+  </div>
+
   <div class="layout">
+    <!-- Active Physics Visualizer -->
     <div class="canvas-container hide-safe" id="canvasWrapper">
+      <!-- Starfield Background (z-index 0, no pointer events) -->
+      <canvas id="starfield-canvas"></canvas>
+      
+      <!-- Main Molecule Canvas (z-index 10, receives all events) -->
       <canvas id="moleculeCanvas"></canvas>
     </div>
-    <aside class="hud-panel hide-safe">
-      <div>
-        <div class="hud-title">System Coherence</div>
-        <div class="coherence-score" id="coherenceDisplay">92%</div>
-        <div style="font-size: 0.8rem; color: var(--p31-muted);">Larmor synchronization stable.</div>
+
+    <!-- ULTIMATE SMART PANEL (Right Side) -->
+    <aside class="smart-panel hide-safe" id="smartPanel">
+      
+      <!-- PHOS Status Widget -->
+      <div class="panel-section">
+        <div class="phos-mini" onclick="phosClick()">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path class="phos-body" d="M50 15 L15 80 L85 80 Z" fill="rgba(28,32,40,0.9)" stroke="#5DCAA5" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M50 15 L50 55 M15 80 L50 55 M85 80 L50 55" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+            <ellipse cx="40" cy="58" rx="3" ry="5" fill="#000"/>
+            <ellipse cx="60" cy="58" rx="3" ry="5" fill="#000"/>
+          </svg>
+          <div>
+            <div class="phos-mini-text">PHOS v3.0</div>
+            <div class="phos-mini-status" id="phosStatus">System Online</div>
+          </div>
+        </div>
+        <div id="phosSpeechPanel" style="font-family: var(--p31-font-mono); font-size: 0.75rem; color: var(--p31-teal); margin-top: 0.5rem; padding: 0.5rem; background: rgba(93,202,165,0.1); border-radius: 6px; border-left: 2px solid var(--p31-teal);"></div>
       </div>
-      <div>
-        <div class="hud-title">L.O.V.E. Ledger (Edges)</div>
-        <div style="display:flex; flex-direction:column; gap:0.5rem;" id="ledgerList"></div>
+
+      <!-- Coherence Widget -->
+      <div class="panel-section widget-coherence">
+        <h3>🌊 Coherence</h3>
+        <div class="coherence-value" id="coherenceDisplay">92%</div>
+        <div class="coherence-bar">
+          <div class="coherence-fill" id="coherenceBar" style="width: 92%;"></div>
+        </div>
+        <div style="font-size: 0.7rem; color: var(--p31-muted); margin-top: 0.25rem;">Quantum synchronization metric</div>
       </div>
-      <div style="margin-top:auto; font-size:0.75rem; color:var(--p31-muted); text-align:center;">
-        $$\text{Coherence} = \frac{\sum E_w}{V \times (V-1) / 2}$$ <br/>
-        Drag nodes to adjust tension.
+
+      <!-- Quantum Stats Widget -->
+      <div class="panel-section">
+        <h3>⚛️ Quantum State</h3>
+        <div class="quantum-stats">
+          <div class="stat-box">
+            <div class="stat-label">Larmor</div>
+            <div class="stat-value" id="larmorDisplay">8.63 Hz</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Entangled</div>
+            <div class="stat-value" id="entangledDisplay">2 pairs</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Collapsed</div>
+            <div class="stat-value" id="collapsedDisplay">0 nodes</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Phase φ</div>
+            <div class="stat-value" id="phaseDisplay">0.00</div>
+          </div>
+        </div>
       </div>
+
+      <!-- Orbital Types Widget -->
+      <div class="panel-section">
+        <h3>🔮 Orbitals</h3>
+        <div class="orbital-mini">
+          <div class="orbital-row"><div class="orbital-dot sigma"></div> σ (sigma) - Head-on bonds</div>
+          <div class="orbital-row"><div class="orbital-dot pi"></div> π (pi) - Parallel clouds</div>
+          <div class="orbital-row"><div class="orbital-dot delta"></div> δ (delta) - Diagonal</div>
+        </div>
+        <div style="font-size: 0.6rem; color: var(--p31-muted); margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--p31-glass-border);">
+          |ψ|² probability clouds<br/>
+          Teal (+) phase / Coral (-) phase
+        </div>
+      </div>
+
+      <!-- LIVE TELEMETRY ENGINE -->
+      <div class="panel-section">
+        <h3>📡 Live Telemetry</h3>
+        
+        <!-- Real-time Charts -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; margin-bottom: 0.5rem;">
+          <div class="telemetry-chart" id="coherenceChart">
+            <div class="chart-label">Coherence</div>
+            <canvas id="coherenceCanvas" width="140" height="40"></canvas>
+            <div class="chart-value" id="coherenceLive">92%</div>
+          </div>
+          <div class="telemetry-chart" id="tensionChart">
+            <div class="chart-label">Tension</div>
+            <canvas id="tensionCanvas" width="140" height="40"></canvas>
+            <div class="chart-value" id="tensionLive">0.42</div>
+          </div>
+        </div>
+        
+        <!-- Performance Metrics -->
+        <div class="telemetry-metrics">
+          <div class="metric-row">
+            <span class="metric-label">FPS</span>
+            <span class="metric-value" id="fpsMetric">60</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Latency</span>
+            <span class="metric-value" id="latencyMetric">16ms</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Packets/s</span>
+            <span class="metric-value" id="packetMetric">1,240</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Entropy</span>
+            <span class="metric-value" id="entropyMetric">0.84</span>
+          </div>
+        </div>
+        
+        <!-- Live Event Stream -->
+        <div class="telemetry-log" id="telemetryLog">
+          <div class="log-entry"><span class="log-time">02:11:42</span> Mesh sync initialized</div>
+        </div>
+        
+        <!-- System Status Bar -->
+        <div class="telemetry-status">
+          <div class="status-indicator online" id="systemStatus"></div>
+          <span class="status-text" id="statusText">SYSTEM ONLINE</span>
+          <span class="uptime" id="uptimeCounter">00:00:00</span>
+        </div>
+      </div>
+
+      <!-- L.O.V.E. Ledger Widget -->
+      <div class="panel-section">
+        <h3>💕 L.O.V.E. Ledger</h3>
+        <div class="ledger-scroll" id="ledgerList"></div>
+        <div style="font-size: 0.6rem; color: var(--p31-muted); margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--p31-glass-border); text-align: center;">
+          C = ΣE_w / (V(V-1)/2)
+        </div>
+      </div>
+
+      <!-- Keyboard Shortcuts Widget -->
+      <div class="panel-section">
+        <h3>⌨️ Commands</h3>
+        <div class="shortcuts-grid">
+          <kbd>S</kbd><span>Boost coherence</span>
+          <kbd>M</kbd><span>Measure all</span>
+          <kbd>R</kbd><span>Reset superposition</span>
+          <kbd>Click</kbd><span>Measure node</span>
+          <kbd>Dbl-Click</kbd><span>Restore ψ</span>
+          <kbd>T</kbd><span>Toggle telemetry</span>
+        </div>
+      </div>
+
     </aside>
+
+    <!-- Gray Rock Fallback (Safe Mode) -->
     <div class="safe-ledger show-safe">
       <h2 style="font-weight:400; margin-bottom: 0.5rem;">Static Relational Ledger</h2>
-      <p style="color:#888; font-size: 0.85rem; margin-bottom: 2rem;">Physics simulation suspended to preserve executive function.</p>
+      <p style="color:var(--p31-muted); font-size: 0.9rem; margin-bottom: 2rem;">WebGL and physics simulation suspended to preserve executive function.</p>
       <table>
         <thead><tr><th>Vertex A</th><th>Vertex B</th><th>Ontological Volume</th></tr></thead>
         <tbody id="safeTableBody"></tbody>
@@ -155,20 +439,18 @@ canvas { display: block; width: 100%; height: 100%; }
   <footer class="ebc-footer">
     <a href="/index.html">PHOS Home</a>
     <a href="/psych-e2e-docs.html">Psych E2E Docs</a>
-    <span>P31 Labs — EIN 42-1888158 — C.A.R.S. v2.2 — PHOS Protected</span>
+    <span>P31 Labs — EIN 42-1888158 — C.A.R.S. v3.0 Liquid — PHOS Protected</span>
   </footer>
 
-  <script src="/public/lib/p31-smart-starfield.js"></script>
-<script src="/public/lib/p31-atmosphere-core.js"></script>
   <script>
     // ============================================
     // 1. DATA STRUCTURES (K4 Mesh)
     // ============================================
     const nodes = [
-      { id: 'W', label: 'FORGE', color: '#25897d', x: 0, y: 0, vx: 0, vy: 0 },
-      { id: 'C', label: 'COUNSEL', color: '#cc6247', x: 0, y: 0, vx: 0, vy: 0 },
-      { id: 'SJ', label: 'SCHOLAR', color: '#3ba372', x: 0, y: 0, vx: 0, vy: 0 },
-      { id: 'WJ', label: 'SCRIBE', color: '#8b7cc9', x: 0, y: 0, vx: 0, vy: 0 }
+      { id: 'W', label: 'FORGE', color: '#5DCAA5', x: 0, y: 0, vx: 0, vy: 0, tension: 0 },
+      { id: 'C', label: 'COUNSEL', color: '#cc6247', x: 0, y: 0, vx: 0, vy: 0, tension: 0 },
+      { id: 'SJ', label: 'SCHOLAR', color: '#3ba372', x: 0, y: 0, vx: 0, vy: 0, tension: 0 },
+      { id: 'WJ', label: 'SCRIBE', color: '#8b7cc9', x: 0, y: 0, vx: 0, vy: 0, tension: 0 }
     ];
 
     const edges = [
@@ -180,8 +462,500 @@ canvas { display: block; width: 100%; height: 100%; }
       { source: 2, target: 3, weight: 5 }
     ];
 
+    const notifications = [];
+
     // ============================================
-    // 2. CANVAS & ENGINE SETUP
+    // 2. PHOS MASCOT LOGIC (PANEL VERSION)
+    // ============================================
+    const phos = {
+      element: document.getElementById('phosMascot'),
+      speechPanel: document.getElementById('phosSpeechPanel'),
+      status: document.getElementById('phosStatus'),
+      pupilL: document.getElementById('pupil-l'),
+      pupilR: document.getElementById('pupil-r'),
+      timeout: null,
+      
+      say(text, duration = 4000) {
+        this.speechPanel.textContent = text;
+        this.status.textContent = text.substring(0, 30) + (text.length > 30 ? '...' : '');
+        clearTimeout(this.timeout);
+        if(duration > 0) {
+          this.timeout = setTimeout(() => {
+            this.speechPanel.textContent = '';
+            this.status.textContent = 'System Online';
+          }, duration);
+        }
+      },
+      setMood(mood) { 
+        if (this.element) this.element.className = `phos-mini ${mood}`; 
+      },
+      trackMouse(mx, my) {
+        // Eye tracking disabled for mini panel version
+      },
+      updateStatus(text) {
+        this.status.textContent = text;
+      }
+    };
+
+    const idlePhrases = [
+      "The K4 mesh feels fluid today.",
+      "Observe the node tension when stretched.",
+      "Data flowing smoothly across edges.",
+      "Remember: It's okay to hit Safe Mode.",
+      "Quantum coherence is holding strong.",
+      "Larmor frequency stable at 8.63Hz."
+    ];
+
+    function phosClick() {
+      phos.setMood('happy');
+      phos.say(idlePhrases[Math.floor(Math.random() * idlePhrases.length)]);
+      setTimeout(() => phos.setMood(''), 2000);
+    }
+
+    // ============================================
+    // 3. QUANTUM STATE SYSTEM
+    // ============================================
+    const quantumState = {
+      // Superposition: Each node exists in probabilistic cloud
+      waveFunctions: new Map(), // nodeId -> { amplitude, phase, uncertainty }
+      
+      // Entanglement: Correlated pairs show instant synchronization
+      entangledPairs: [[0, 3], [1, 2]], // W<->WJ, C<->SJ
+      
+      // Coherence: Global synchronization metric (0-1)
+      coherence: 0.92,
+      
+      // Measurement: Which nodes are being "observed" (dragged)
+      measured: new Set(),
+      
+      // Larmor frequency: 8.63Hz for Ca++ resonance
+      larmorFreq: 8.63,
+      larmorPhase: 0,
+      
+      init() {
+        nodes.forEach((n, i) => {
+          this.waveFunctions.set(i, {
+            amplitude: 0.5 + Math.random() * 0.5,
+            phase: Math.random() * Math.PI * 2,
+            uncertainty: 0.3 + Math.random() * 0.2,
+            basis: 'computational' // or 'hadamard', 'circular'
+          });
+        });
+      },
+      
+      // Collapse wavefunction on measurement
+      measure(nodeIdx) {
+        this.measured.add(nodeIdx);
+        const wf = this.waveFunctions.get(nodeIdx);
+        wf.amplitude = 1; // Certainty after measurement
+        wf.uncertainty = 0.05;
+        wf.phase = 0;
+        
+        // Entanglement: Collapse partner too (spooky action)
+        const partner = this.entangledPairs.find(p => p.includes(nodeIdx));
+        if (partner) {
+          const partnerIdx = partner[0] === nodeIdx ? partner[1] : partner[0];
+          const partnerWf = this.waveFunctions.get(partnerIdx);
+          partnerWf.amplitude = wf.amplitude;
+          partnerWf.phase = wf.phase; // Anti-correlated phase
+          partnerWf.uncertainty = wf.uncertainty;
+          fireNotification(nodes[partnerIdx], "ENTANGLED COLLAPSE", true);
+        }
+        
+        // Decoherence: Reduce global coherence temporarily
+        this.coherence = Math.max(0.5, this.coherence - 0.1);
+      },
+      
+      // Recover coherence over time
+      recover(dt) {
+        this.coherence = Math.min(0.98, this.coherence + dt * 0.01);
+        this.larmorPhase += dt * this.larmorFreq;
+      }
+    };
+    quantumState.init();
+
+    // ============================================
+    // 4. MOLECULAR ORBITAL VISUALIZATION
+    // ============================================
+    class MolecularOrbital {
+      constructor(centerNode, type = 'sigma') {
+        this.node = centerNode;
+        this.type = type; // 'sigma', 'pi', 'delta'
+        this.electrons = [];
+        this.lobes = [];
+        this.init();
+      }
+      
+      init() {
+        // Generate orbital lobes based on quantum numbers
+        const n = this.type === 'sigma' ? 1 : this.type === 'pi' ? 2 : 3;
+        const l = this.type === 'sigma' ? 0 : this.type === 'pi' ? 1 : 2;
+        
+        for(let m = -l; m <= l; m++) {
+          this.lobes.push({
+            m: m,
+            angle: m * Math.PI / (l + 1),
+            amplitude: Math.abs(m) === 0 ? 1 : 0.7,
+            phase: m >= 0 ? 0 : Math.PI
+          });
+        }
+        
+        // Add electrons (max 2 per orbital, opposite spin)
+        this.electrons = [
+          { spin: 'up', energy: 0.5 },
+          { spin: 'down', energy: 0.5 }
+        ];
+      }
+      
+      draw(ctx, time, quantum) {
+        const wf = quantum.waveFunctions.get(nodes.indexOf(this.node));
+        if (!wf) return;
+        
+        const x = this.node.x;
+        const y = this.node.y;
+        const r = 40 + wf.amplitude * 20;
+        
+        // Draw probability cloud (|ψ|²)
+        ctx.save();
+        ctx.translate(x, y);
+        
+        // Outer probability cloud
+        const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 1.5);
+        const alpha = wf.amplitude * 0.3;
+        gradient.addColorStop(0, `rgba(77, 184, 168, 0)`);
+        gradient.addColorStop(0.5, `rgba(77, 184, 168, ${alpha * 0.5})`);
+        gradient.addColorStop(1, `rgba(77, 184, 168, 0)`);
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(0, 0, r * 1.5, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Draw orbital lobes (wavefunction phases)
+        this.lobes.forEach((lobe, i) => {
+          const rotation = time * 0.5 + lobe.angle;
+          const lx = Math.cos(rotation) * r * lobe.amplitude;
+          const ly = Math.sin(rotation) * r * lobe.amplitude;
+          
+          const lobeGrad = ctx.createRadialGradient(lx, ly, 0, lx, ly, 15);
+          const phaseColor = lobe.phase === 0 ? '77, 184, 168' : '204, 98, 71';
+          lobeGrad.addColorStop(0, `rgba(${phaseColor}, 0.6)`);
+          lobeGrad.addColorStop(1, `rgba(${phaseColor}, 0)`);
+          
+          ctx.fillStyle = lobeGrad;
+          ctx.beginPath();
+          ctx.arc(lx, ly, 15, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        
+        // Draw electron spin indicators
+        this.electrons.forEach((e, i) => {
+          const spinAngle = time * (e.spin === 'up' ? 2 : -2) + i * Math.PI;
+          const ex = Math.cos(spinAngle) * (r * 0.6);
+          const ey = Math.sin(spinAngle) * (r * 0.6);
+          
+          ctx.fillStyle = e.spin === 'up' ? '#4db8a8' : '#cc6247';
+          ctx.beginPath();
+          ctx.arc(ex, ey, 3, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // Spin arrow
+          ctx.strokeStyle = ctx.fillStyle;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(ex, ey);
+          ctx.lineTo(ex + Math.cos(spinAngle) * 8, ey + Math.sin(spinAngle) * 8);
+          ctx.stroke();
+        });
+        
+        ctx.restore();
+      }
+    }
+    
+    // Create molecular orbitals for each node
+    const orbitals = nodes.map((n, i) => {
+      const types = ['sigma', 'pi', 'delta'];
+      return new MolecularOrbital(n, types[i % 3]);
+    });
+
+    // ============================================
+    // 5. SIC-POVM MEASUREMENT APPARATUS
+    // ============================================
+    const sicPovm = {
+      // 4 symmetric informationally complete measurements
+      // Tetrahedral geometry for K4
+      measurements: [
+        { name: '|ψ₁⟩', x: 1, y: 1, z: 1, color: '#5DCAA5' },
+        { name: '|ψ₂⟩', x: 1, y: -1, z: -1, color: '#cc6247' },
+        { name: '|ψ₃⟩', x: -1, y: 1, z: -1, color: '#3ba372' },
+        { name: '|ψ₄⟩', x: -1, y: -1, z: 1, color: '#8b7cc9' }
+      ],
+      
+      // Project quantum state onto SIC-POVM basis
+      project(nodeIdx) {
+        const wf = quantumState.waveFunctions.get(nodeIdx);
+        if (!wf) return null;
+        
+        // Calculate probabilities for each measurement outcome
+        return this.measurements.map((m, i) => {
+          // Phase factor for interference
+          const phase = Math.cos(wf.phase - (i * Math.PI / 2));
+          const prob = (1/4) * (1 + 3 * wf.amplitude * phase / Math.sqrt(3));
+          return { ...m, probability: Math.max(0, prob) };
+        });
+      },
+      
+      drawHUD(ctx, nodeIdx, x, y) {
+        const projections = this.project(nodeIdx);
+        if (!projections) return;
+        
+        const size = 60;
+        ctx.save();
+        ctx.translate(x, y);
+        
+        // Draw tetrahedron of probabilities
+        projections.forEach((p, i) => {
+          const angle = (i / 4) * Math.PI * 2 - Math.PI / 4;
+          const radius = size * p.probability;
+          const px = Math.cos(angle) * radius;
+          const py = Math.sin(angle) * radius;
+          
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = 0.7;
+          ctx.beginPath();
+          ctx.arc(px, py, 4, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // Connection to center
+          ctx.strokeStyle = p.color;
+          ctx.globalAlpha = p.probability * 0.5;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(px, py);
+          ctx.stroke();
+        });
+        
+        ctx.restore();
+      }
+    };
+
+    // ============================================
+    // 6. LARMOR PULSE SYNCHRONIZATION
+    // ============================================
+    const larmorPulse = {
+      phase: 0,
+      frequency: 8.63, // Hz for calcium channel resonance
+      amplitude: 1,
+      
+      update(dt) {
+        this.phase += dt * this.frequency * Math.PI * 2;
+        this.amplitude = 0.8 + 0.2 * Math.sin(this.phase * 0.1); // Slow modulation
+      },
+      
+      draw(ctx, centerX, centerY) {
+        const radius = 100 + this.amplitude * 20;
+        const ringCount = 3;
+        
+        for(let i = 0; i < ringCount; i++) {
+          const r = radius + i * 30;
+          const alpha = (0.3 - i * 0.08) * (0.8 + 0.2 * Math.sin(this.phase + i));
+          
+          ctx.strokeStyle = `rgba(77, 184, 168, ${alpha})`;
+          ctx.lineWidth = 2;
+          ctx.setLineDash([10, 15]);
+          ctx.lineDashOffset = -this.phase * 10 * (i + 1);
+          
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, r, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.setLineDash([]);
+        
+        // Central coherence indicator
+        const coherencePulse = 0.5 + 0.5 * Math.sin(this.phase * 2);
+        ctx.fillStyle = `rgba(59, 163, 114, ${coherencePulse * 0.3})`;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 8, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    };
+
+    // ============================================
+    // 7. SMART PHOS INTELLIGENCE
+    // ============================================
+    const phosIntelligence = {
+      // Learning: Track user interaction patterns
+      patterns: {
+        drags: [],
+        hovers: [],
+        clicks: [],
+        coherenceHistory: []
+      },
+      
+      // Predictive: Suggest actions based on patterns
+      suggestions: [],
+      
+      // Context awareness
+      context: {
+        timeOfDay: new Date().getHours(),
+        lastInteraction: Date.now(),
+        stressLevel: 0, // Based on rapid mouse movements
+        focusNode: null
+      },
+      
+      recordDrag(nodeIdx) {
+        this.patterns.drags.push({ node: nodeIdx, time: Date.now() });
+        this.analyzePatterns();
+      },
+      
+      analyzePatterns() {
+        const recent = this.patterns.drags.slice(-5);
+        if (recent.length >= 3) {
+          const sameNode = recent.every(d => d.node === recent[0].node);
+          if (sameNode) {
+            phos.say(`You're adjusting ${nodes[recent[0].node].label} repeatedly. Optimizing tension...`, 3000);
+          }
+        }
+      },
+      
+      generateSuggestions() {
+        const suggestions = [];
+        const coherence = quantumState.coherence;
+        
+        if (coherence < 0.7) {
+          suggestions.push({ type: 'warning', text: 'Coherence low. Consider Safe Mode?', action: 'safe' });
+        }
+        
+        const entangled = quantumState.entangledPairs;
+        suggestions.push({ type: 'info', text: `${entangled.length} entangled pairs active`, action: null });
+        
+        return suggestions;
+      },
+      
+      updateContext() {
+        const now = Date.now();
+        const idleTime = now - this.context.lastInteraction;
+        
+        if (idleTime > 30000 && quantumState.coherence > 0.9) {
+          phos.say("Mesh is stable. I'm here when you need me.", 3000);
+          this.context.lastInteraction = now;
+        }
+      }
+    };
+
+    // Update idle check
+    setInterval(() => phosIntelligence.updateContext(), 30000);
+
+    // ============================================
+    // 8. STARFIELD BACKGROUND
+    // ============================================
+    const starCanvas = document.getElementById('starfield-canvas');
+    const starCtx = starCanvas.getContext('2d');
+    let starWidth, starHeight;
+    let stars = [];
+    let starAnimationId;
+    
+    const STAR_COUNT = 200;
+    const CONNECTION_DISTANCE = 120;
+    const MAX_CONNECTIONS = 3;
+    
+    class Star {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * starWidth;
+        this.y = Math.random() * starHeight;
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
+        this.size = Math.random() * 1.5 + 0.5;
+        this.alpha = Math.random() * 0.5 + 0.3;
+        this.pulse = Math.random() * Math.PI * 2;
+        this.color = Math.random() > 0.7 ? '#4db8a8' : Math.random() > 0.5 ? '#cc6247' : '#ffffff';
+      }
+      update(time) {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.pulse += 0.02;
+        
+        // Wrap around
+        if (this.x < 0) this.x = starWidth;
+        if (this.x > starWidth) this.x = 0;
+        if (this.y < 0) this.y = starHeight;
+        if (this.y > starHeight) this.y = 0;
+      }
+      draw(ctx, time) {
+        const pulseAlpha = this.alpha + Math.sin(this.pulse) * 0.1;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = Math.max(0.1, pulseAlpha);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }
+    
+    function resizeStarfield() {
+      const wrapper = document.getElementById('canvasWrapper');
+      starWidth = wrapper.clientWidth;
+      starHeight = wrapper.clientHeight;
+      starCanvas.width = starWidth;
+      starCanvas.height = starHeight;
+      
+      if (stars.length === 0) {
+        for (let i = 0; i < STAR_COUNT; i++) {
+          stars.push(new Star());
+        }
+      }
+    }
+    
+    function drawStarfieldConnections() {
+      starCtx.strokeStyle = 'rgba(77, 184, 168, 0.08)';
+      starCtx.lineWidth = 0.5;
+      
+      for (let i = 0; i < stars.length; i++) {
+        let connections = 0;
+        for (let j = i + 1; j < stars.length && connections < MAX_CONNECTIONS; j++) {
+          const dx = stars[i].x - stars[j].x;
+          const dy = stars[i].y - stars[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          if (dist < CONNECTION_DISTANCE) {
+            const alpha = (1 - dist / CONNECTION_DISTANCE) * 0.15;
+            starCtx.strokeStyle = `rgba(77, 184, 168, ${alpha})`;
+            starCtx.beginPath();
+            starCtx.moveTo(stars[i].x, stars[i].y);
+            starCtx.lineTo(stars[j].x, stars[j].y);
+            starCtx.stroke();
+            connections++;
+          }
+        }
+      }
+    }
+    
+    function animateStarfield() {
+      if (document.body.classList.contains('safe-mode')) return;
+      
+      const time = Date.now() * 0.001;
+      
+      // Clear completely - no trails
+      starCtx.clearRect(0, 0, starWidth, starHeight);
+      
+      // Draw connections first (behind stars)
+      drawStarfieldConnections();
+      
+      // Draw and update stars
+      stars.forEach(star => {
+        star.update(time);
+        star.draw(starCtx, time);
+      });
+      
+      starAnimationId = requestAnimationFrame(animateStarfield);
+    }
+
+    // ============================================
+    // 9. MOLECULE CANVAS ENGINE
     // ============================================
     const canvas = document.getElementById('moleculeCanvas');
     let ctx = canvas.getContext('2d');
@@ -190,330 +964,824 @@ canvas { display: block; width: 100%; height: 100%; }
     let draggedNode = null;
     let dpr = window.devicePixelRatio || 1;
 
-    // ============================================
-    // 3. VISUAL EFFECT CLASSES
-    // ============================================
-    class QuantumFoam {
-      constructor(count = 70) {
-        this.particles = Array.from({length: count}, () => this.createParticle());
+    // A. Spatial Notifications
+    class SpatialNotification {
+      constructor(targetNode, text, isPositive = true) {
+        this.node = targetNode;
+        this.text = text;
+        this.life = 100;
+        this.angle = Math.random() * Math.PI * 2;
+        this.orbitRadius = 40;
+        this.isPositive = isPositive;
       }
-      createParticle() {
-        return {
-          x: Math.random() * width, y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
-          size: Math.random() * 1.5, life: Math.random() * 100
-        };
-      }
-      update() {
-        this.particles.forEach(p => {
-          p.x += p.vx; p.y += p.vy; p.life -= 0.3;
-          if(p.life <= 0 || p.x < 0 || p.x > width || p.y < 0 || p.y > height) {
-            Object.assign(p, this.createParticle(), {life: 100});
-          }
-        });
-      }
-      draw() {
-        this.particles.forEach(p => {
-          const alpha = Math.min(1, p.life / 20) * 0.2;
-          ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(77, 184, 168, ${alpha})`; ctx.fill();
-        });
-      }
-    }
-
-    class DragTrail {
-      constructor(maxPoints = 12) { this.points = []; this.maxPoints = maxPoints; }
-      addPoint(x, y) {
-        this.points.push({x, y, age: 0});
-        if(this.points.length > this.maxPoints) this.points.shift();
-      }
-      update() {
-        this.points.forEach(p => p.age++);
-        this.points = this.points.filter(p => p.age < this.maxPoints);
-      }
-      draw() {
-        if(this.points.length < 2) return;
+      updateAndDraw(time) {
+        this.angle += 0.015;
+        this.life -= 0.3;
+        this.orbitRadius += 0.2; // Slowly drift outward
+        
+        const x = this.node.x + Math.cos(this.angle) * this.orbitRadius;
+        const y = this.node.y + Math.sin(this.angle) * this.orbitRadius;
+        
+        const alpha = Math.max(0, this.life / 100);
+        
+        ctx.save();
+        ctx.translate(x, y);
+        
+        // Notification Pill
+        ctx.font = '10px "JetBrains Mono", monospace';
+        const tw = ctx.measureText(this.text).width;
+        ctx.fillStyle = `rgba(15, 17, 21, ${alpha * 0.8})`;
         ctx.beginPath();
-        ctx.moveTo(this.points[0].x, this.points[0].y);
-        for(let i = 1; i < this.points.length; i++) ctx.lineTo(this.points[i].x, this.points[i].y);
-        ctx.strokeStyle = 'rgba(77, 184, 168, 0.4)';
-        ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        ctx.roundRect(-tw/2 - 6, -10, tw + 12, 20, 10);
+        ctx.fill();
+        
+        ctx.strokeStyle = this.isPositive ? `rgba(59, 163, 114, ${alpha})` : `rgba(204, 98, 71, ${alpha})`;
+        ctx.lineWidth = 1;
         ctx.stroke();
+        
+        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(this.text, 0, 0);
+        ctx.restore();
       }
     }
 
-    class ParticleStream {
-      constructor(count = 5) {
-        this.particles = Array.from({length: count}, (_, i) => ({
-          offset: (i / count) * 100, speed: 0.15 + Math.random() * 0.2, size: 1.5 + Math.random() * 1.5
-        }));
+    function fireNotification(node, text, isPositive) {
+      notifications.push(new SpatialNotification(node, text, isPositive));
+    }
+
+    // B. Data Packets (Quantized Streams)
+    class DataPacket {
+      constructor() {
+        this.offset = Math.random() * 100;
+        this.speed = 0.2 + Math.random() * 0.3;
+        this.length = 5 + Math.random() * 15;
       }
-      update() {
-        this.particles.forEach(p => { p.offset += p.speed; if(p.offset > 100) p.offset = 0; });
-      }
-      draw(n1, n2, cpX, cpY) {
-        this.particles.forEach(p => {
-          const t = p.offset / 100;
-          const x = (1-t)*(1-t)*n1.x + 2*(1-t)*t*cpX + t*t*n2.x;
-          const y = (1-t)*(1-t)*n1.y + 2*(1-t)*t*cpY + t*t*n2.y;
-          ctx.beginPath(); ctx.arc(x, y, p.size, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 255, 255, ${0.3 + (p.size / 3) * 0.5})`; ctx.fill();
-        });
+      updateAndDraw(n1, n2, cpX, cpY, tension) {
+        // Speed up with tension
+        this.offset += this.speed * (1 + tension * 0.1); 
+        if(this.offset > 100) this.offset = 0;
+        
+        const t = this.offset / 100;
+        const x = (1-t)*(1-t)*n1.x + 2*(1-t)*t*cpX + t*t*n2.x;
+        const y = (1-t)*(1-t)*n1.y + 2*(1-t)*t*cpY + t*t*n2.y;
+        
+        // Calculate tangent for rotation
+        const tx = 2*(1-t)*(cpX - n1.x) + 2*t*(n2.x - cpX);
+        const ty = 2*(1-t)*(cpY - n1.y) + 2*t*(n2.y - cpY);
+        const angle = Math.atan2(ty, tx);
+
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(angle);
+        ctx.fillStyle = `rgba(255, 255, 255, ${0.4 + tension*0.02})`;
+        ctx.fillRect(-this.length/2, -1.5, this.length, 3);
+        ctx.restore();
       }
     }
 
-    const foam = new QuantumFoam(70);
-    const mouseTrail = new DragTrail();
-    edges.forEach(e => e.stream = new ParticleStream(5));
+    edges.forEach(e => {
+      e.packets = Array.from({length: 4}, () => new DataPacket());
+    });
 
-    // ============================================
-    // 4. COLOR UTILITIES
-    // ============================================
+    // C. Color Utils
     function adjustColor(color, amount) {
       return '#' + color.replace(/^#/, '').match(/.{2}/g).map(c => 
         Math.max(0, Math.min(255, parseInt(c, 16) + amount)).toString(16).padStart(2, '0')
       ).join('');
     }
 
+    function mixColors(color1, color2, ratio) {
+      const hex1 = color1.replace(/^#/, '');
+      const hex2 = color2.replace(/^#/, '');
+      const r = Math.round(parseInt(hex1.substring(0,2), 16) * (1-ratio) + parseInt(hex2.substring(0,2), 16) * ratio);
+      const g = Math.round(parseInt(hex1.substring(2,4), 16) * (1-ratio) + parseInt(hex2.substring(2,4), 16) * ratio);
+      const b = Math.round(parseInt(hex1.substring(4,6), 16) * (1-ratio) + parseInt(hex2.substring(4,6), 16) * ratio);
+      return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
+    }
+
     // ============================================
-    // 5. DRAWING ROUTINES
+    // 4. CORE DRAWING FUNCTIONS
     // ============================================
-    function drawCurvedEdge(n1, n2, weight, idx, time) {
-      const midX = (n1.x + n2.x) / 2;
-      const midY = (n1.y + n2.y) / 2;
+    function drawQuantizedEdge(n1, n2, weight, idx, time) {
+      const midX = (n1.x + n2.x) / 2; const midY = (n1.y + n2.y) / 2;
       const dx = n2.x - n1.x; const dy = n2.y - n1.y;
       const len = Math.sqrt(dx*dx + dy*dy) || 1;
+      
       const dir = idx % 2 === 0 ? 1 : -1;
-      const controlOffset = 30 * dir;
+      const controlOffset = 40 * dir;
       const cpX = midX + (-dy / len * controlOffset);
       const cpY = midY + (dx / len * controlOffset);
       
-      const grad = ctx.createLinearGradient(n1.x, n1.y, n2.x, n2.y);
-      grad.addColorStop(0, `${n1.color}66`);
-      grad.addColorStop(0.5, `rgba(77, 184, 168, ${Math.min(1, weight/10)})`);
-      grad.addColorStop(1, `${n2.color}66`);
-      
+      const avgTension = (n1.tension + n2.tension) / 2;
+
+      // Base Track (Faint, Quantized)
       ctx.beginPath();
       ctx.moveTo(n1.x, n1.y);
       ctx.quadraticCurveTo(cpX, cpY, n2.x, n2.y);
-      ctx.strokeStyle = grad;
-      ctx.lineWidth = weight;
-      ctx.lineCap = 'round';
-      ctx.stroke();
-
-      const wavePos = (time * 100 + idx * 50) % len;
-      const t = wavePos / len;
-      const waveX = (1-t)*(1-t)*n1.x + 2*(1-t)*t*cpX + t*t*n2.x;
-      const waveY = (1-t)*(1-t)*n1.y + 2*(1-t)*t*cpY + t*t*n2.y;
       
-      ctx.beginPath();
-      ctx.arc(waveX, waveY, 4 + (weight/2), 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(255,255,255,0.4)`;
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = `rgba(255, 255, 255, 0.05)`;
+      ctx.lineWidth = weight;
+      ctx.setLineDash([weight * 1.5, weight * 2]);
+      ctx.lineDashOffset = -time * 20 * dir;
       ctx.stroke();
+      ctx.setLineDash([]); // Reset
 
-      return { cpX, cpY };
+      return { cpX, cpY, avgTension };
     }
 
-    function drawUpgradedNode(n, idx, time) {
-      const pulseScale = 1 + Math.sin(time * 3 + idx) * 0.05;
-      const baseRadius = 24;
-      const r = baseRadius * pulseScale;
+    function drawLiquidNode(n, idx, time) {
+      // Color shifts to hot white/cyan under tension
+      const tensionRatio = Math.min(1, n.tension / 100);
+      const activeColor = mixColors(n.color, '#ffffff', tensionRatio * 0.5);
+      
+      const r = 24;
+      const points = 16;
+      
+      // Node Core (Liquid Blob)
+      ctx.beginPath();
+      for(let i = 0; i <= points; i++) {
+        const angle = (i / points) * Math.PI * 2;
+        // The liquid wobble: frequency and amplitude scale with tension
+        const wobbleSpeed = time * (3 + tensionRatio * 5) + idx;
+        const wobbleAmp = r * 0.15 * (1 + tensionRatio * 1.5);
+        const wobble = Math.sin(angle * 3 + wobbleSpeed) * wobbleAmp;
+        
+        const px = n.x + Math.cos(angle) * (r + wobble);
+        const py = n.y + Math.sin(angle) * (r + wobble);
+        
+        if(i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
 
-      const rings = [
-        { rad: r + 15, speed: 0.5, dash: [10, 8], w: 1, alpha: 0.4 },
-        { rad: r + 8,  speed: -0.8, dash: [4, 4], w: 1.5, alpha: 0.6 }
-      ];
-      rings.forEach(ring => {
-        ctx.save(); ctx.translate(n.x, n.y); ctx.rotate(time * ring.speed + idx);
-        ctx.beginPath(); ctx.arc(0, 0, ring.rad, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(255,255,255,${ring.alpha})`;
-        ctx.lineWidth = ring.w; ctx.setLineDash(ring.dash); ctx.stroke();
-        ctx.restore();
-      });
+      // Gradients for depth
+      const grad = ctx.createRadialGradient(n.x - r*0.3, n.y - r*0.3, 0, n.x, n.y, r * 1.2);
+      grad.addColorStop(0, adjustColor(activeColor, 60));
+      grad.addColorStop(0.5, activeColor);
+      grad.addColorStop(1, adjustColor(activeColor, -60));
+      
+      ctx.fillStyle = grad;
+      ctx.fill();
 
-      for(let i=0; i<5; i++) {
-        const angle = time + (i * Math.PI * 2 / 5) + idx;
-        const dist = r + 4 + Math.sin(time * 5 + i)*2;
+      // Outer Aura (Speeds up under tension)
+      for(let i=0; i<3; i++) {
+        const angle = time * (1 + tensionRatio*2) + (i * Math.PI * 2 / 3) + idx;
+        const dist = r + 8 + Math.sin(time * 5 + i) * 3;
         ctx.beginPath();
-        ctx.arc(n.x + Math.cos(angle)*dist, n.y + Math.sin(angle)*dist, 1.5, 0, Math.PI*2);
-        ctx.fillStyle = n.color; ctx.fill();
+        ctx.arc(n.x + Math.cos(angle)*dist, n.y + Math.sin(angle)*dist, 2, 0, Math.PI*2);
+        ctx.fillStyle = activeColor;
+        ctx.fill();
       }
 
-      const grad = ctx.createRadialGradient(n.x - r*0.3, n.y - r*0.3, 0, n.x, n.y, r);
-      grad.addColorStop(0, adjustColor(n.color, 60));
-      grad.addColorStop(0.4, n.color);
-      grad.addColorStop(1, adjustColor(n.color, -50));
-      
-      ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-      ctx.fillStyle = grad; ctx.fill();
-
-      const hGrad = ctx.createRadialGradient(n.x - r*0.35, n.y - r*0.35, 0, n.x - r*0.35, n.y - r*0.35, r*0.4);
-      hGrad.addColorStop(0, 'rgba(255,255,255,0.8)');
-      hGrad.addColorStop(1, 'transparent');
-      ctx.beginPath(); ctx.arc(n.x - r*0.35, n.y - r*0.35, r*0.4, 0, Math.PI*2);
-      ctx.fillStyle = hGrad; ctx.fill();
-
+      // Label Pill
       ctx.font = 'bold 12px "JetBrains Mono", monospace';
       const tw = ctx.measureText(n.id).width;
-      ctx.fillStyle = 'rgba(11, 13, 16, 0.85)';
-      ctx.beginPath(); ctx.roundRect(n.x - tw/2 - 6, n.y - 10, tw + 12, 20, 4); ctx.fill();
-      ctx.strokeStyle = n.color; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = 'rgba(15, 17, 21, 0.85)';
+      ctx.beginPath(); ctx.roundRect(n.x - tw/2 - 8, n.y - 12, tw + 16, 24, 6); ctx.fill();
+      ctx.strokeStyle = activeColor; ctx.lineWidth = 1.5; ctx.stroke();
       
       ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(n.id, n.x, n.y);
+      ctx.fillText(n.id, n.x, n.y + 1);
       
       ctx.font = '10px "JetBrains Mono", monospace';
-      ctx.fillStyle = 'rgba(216, 214, 208, 0.8)';
-      ctx.fillText(n.label, n.x, n.y + r + 22);
-    }
-
-    function drawCoherenceBurst(x, y) {
-      for(let i=0; i<8; i++) {
-        foam.particles.push({
-          x: x, y: y,
-          vx: (Math.random()-0.5)*8, vy: (Math.random()-0.5)*8,
-          size: Math.random()*3 + 1, life: 30
-        });
-      }
+      ctx.fillStyle = 'rgba(216, 214, 208, 0.9)';
+      ctx.fillText(n.label, n.x, n.y + r + 18);
     }
 
     // ============================================
-    // 6. PHYSICS & ENGINE LOOP
+    // 10. QUANTUM-AWARE PHYSICS & RENDER
     // ============================================
+    let isInitialized = false;
+    
     function resize() {
       const wrapper = document.getElementById('canvasWrapper');
       if(!wrapper) return;
-      width = wrapper.clientWidth; height = wrapper.clientHeight;
-      canvas.width = width * dpr; canvas.height = height * dpr;
+      
+      // Resize starfield
+      resizeStarfield();
+      
+      // Resize molecule canvas
+      width = wrapper.clientWidth; 
+      height = wrapper.clientHeight;
+      canvas.width = width * dpr; 
+      canvas.height = height * dpr;
       ctx.scale(dpr, dpr);
       
-      if(!animationId) {
+      // Only initialize node positions once
+      if(!isInitialized) {
         nodes.forEach((n, i) => {
-          n.x = width/2 + Math.cos(i*Math.PI/2)*100;
-          n.y = height/2 + Math.sin(i*Math.PI/2)*100;
+          n.x = width/2 + Math.cos(i*Math.PI/2)*150;
+          n.y = height/2 + Math.sin(i*Math.PI/2)*150;
         });
+        isInitialized = true;
       }
     }
 
-    function physicsStep() {
+    function physicsStep(dt) {
       const center = { x: width / 2, y: height / 2 };
+      
+      // Update quantum state
+      quantumState.recover(dt);
+      larmorPulse.update(dt);
+      
+      // Reset tension
+      nodes.forEach(n => n.tension = 0);
+
+      // Quantum uncertainty affects node positions
+      nodes.forEach((n, i) => {
+        const wf = quantumState.waveFunctions.get(i);
+        if (!wf || !quantumState.measured.has(i)) {
+          // Uncertainty principle: Add quantum jitter
+          n.x += (Math.random() - 0.5) * wf.uncertainty * 2;
+          n.y += (Math.random() - 0.5) * wf.uncertainty * 2;
+          
+          // Larmor precession affects phase
+          wf.phase += dt * quantumState.larmorFreq * 0.1;
+        }
+      });
+
+      // Coulomb Repulsion with quantum tunneling
       for(let i=0; i<nodes.length; i++) {
         for(let j=i+1; j<nodes.length; j++) {
           const dx = nodes[j].x - nodes[i].x; const dy = nodes[j].y - nodes[i].y;
           const dist = Math.sqrt(dx*dx + dy*dy) || 1;
-          const force = 6000 / (dist * dist);
+          
+          // Quantum tunneling: Probability of phase-dependent interaction
+          const wf1 = quantumState.waveFunctions.get(i);
+          const wf2 = quantumState.waveFunctions.get(j);
+          const phaseMatch = Math.cos(wf1.phase - wf2.phase);
+          
+          const baseForce = 8000 / (dist * dist);
+          const force = baseForce * (0.5 + 0.5 * phaseMatch); // Phase-dependent
+          
           nodes[i].vx -= (dx/dist)*force; nodes[i].vy -= (dy/dist)*force;
           nodes[j].vx += (dx/dist)*force; nodes[j].vy += (dy/dist)*force;
+          
+          nodes[i].tension += force;
+          nodes[j].tension += force;
         }
       }
+      
+      // Entanglement correlation (spooky action at a distance)
+      quantumState.entangledPairs.forEach(pair => {
+        const n1 = nodes[pair[0]]; const n2 = nodes[pair[1]];
+        const wf1 = quantumState.waveFunctions.get(pair[0]);
+        const wf2 = quantumState.waveFunctions.get(pair[1]);
+        
+        // Entangled particles influence each other regardless of distance
+        const dx = n2.x - n1.x; const dy = n2.y - n1.y;
+        const entanglementForce = 0.01 * wf1.amplitude * wf2.amplitude;
+        
+        n1.vx += dx * entanglementForce;
+        n1.vy += dy * entanglementForce;
+        n2.vx -= dx * entanglementForce;
+        n2.vy -= dy * entanglementForce;
+      });
+      
+      // Hooke Spring Attraction (classical backbone)
       edges.forEach(e => {
         const n1 = nodes[e.source]; const n2 = nodes[e.target];
         const dx = n2.x - n1.x; const dy = n2.y - n1.y;
         const dist = Math.sqrt(dx*dx + dy*dy);
-        const targetDist = 280 - (e.weight * 12); 
-        const force = (dist - targetDist) * 0.03;
+        const targetDist = 320 - (e.weight * 14); 
+        const force = (dist - targetDist) * 0.04;
+        
         n1.vx += (dx/dist)*force; n1.vy += (dy/dist)*force;
         n2.vx -= (dx/dist)*force; n2.vy -= (dy/dist)*force;
+        
+        n1.tension += Math.abs(force) * 2;
+        n2.tension += Math.abs(force) * 2;
       });
+      
+      // Integrate with coherence damping
+      const coherence = quantumState.coherence;
       nodes.forEach(n => {
         if(draggedNode !== n) {
-          n.vx += (center.x - n.x) * 0.003; n.vy += (center.y - n.y) * 0.003;
-          n.vx *= 0.85; n.vy *= 0.85;
+          n.vx += (center.x - n.x) * 0.002; n.vy += (center.y - n.y) * 0.002;
+          // Coherence affects friction: low coherence = more chaos
+          n.vx *= 0.7 + coherence * 0.12; 
+          n.vy *= 0.7 + coherence * 0.12;
           n.x += n.vx; n.y += n.vy;
+        } else {
+          n.tension += 50;
         }
       });
     }
 
-    function updateLedger() {
-      const list = document.getElementById('ledgerList');
-      const safeBody = document.getElementById('safeTableBody');
-      list.innerHTML = ''; safeBody.innerHTML = '';
-      let totalWeight = 0;
+    function updatePanelStats() {
+      // Update coherence display
+      const coherence = quantumState.coherence;
+      const coherencePercent = Math.round(coherence * 100);
+      document.getElementById('coherenceDisplay').textContent = `${coherencePercent}%`;
+      document.getElementById('coherenceBar').style.width = `${coherencePercent}%`;
       
-      edges.forEach(e => {
-        totalWeight += e.weight;
-        const n1 = nodes[e.source]; const n2 = nodes[e.target];
-        list.innerHTML += `<div class="ledger-item"><span>${n1.id} ⟷ ${n2.id}</span><span class="vol">${e.weight}u</span></div>`;
-        safeBody.innerHTML += `<tr><td>${n1.label}</td><td>${n2.label}</td><td>${e.weight}u</td></tr>`;
-      });
-
-      const coherence = Math.round((totalWeight / 60) * 100);
-      document.getElementById('coherenceDisplay').textContent = `${coherence}%`;
+      // Update quantum stats
+      document.getElementById('larmorDisplay').textContent = `${quantumState.larmorFreq.toFixed(2)} Hz`;
+      document.getElementById('entangledDisplay').textContent = `${quantumState.entangledPairs.length} pairs`;
+      document.getElementById('collapsedDisplay').textContent = `${quantumState.measured.size} nodes`;
+      document.getElementById('phaseDisplay').textContent = quantumState.larmorPhase.toFixed(2);
+      
+      // Color-code coherence
+      const coherenceFill = document.getElementById('coherenceBar');
+      if (coherence > 0.9) coherenceFill.style.background = 'linear-gradient(90deg, #3ba372, #4db8a8)';
+      else if (coherence > 0.7) coherenceFill.style.background = 'linear-gradient(90deg, #cda852, #3ba372)';
+      else coherenceFill.style.background = 'linear-gradient(90deg, #cc6247, #cda852)';
     }
 
     function animate() {
       if(document.body.classList.contains('safe-mode')) return;
       
       const time = Date.now() * 0.001;
+      const dt = 0.016; // ~60fps
+      
+      // Clear molecule canvas (starfield is on separate layer)
       ctx.clearRect(0, 0, width, height);
       
-      physicsStep();
+      // Draw Larmor pulse rings (behind nodes)
+      larmorPulse.draw(ctx, width/2, height/2);
       
-      foam.update(); foam.draw();
-      mouseTrail.update(); mouseTrail.draw();
-
+      physicsStep(dt);
+      
+      // Draw Edges & Packets
       edges.forEach((e, idx) => {
-        const { cpX, cpY } = drawCurvedEdge(nodes[e.source], nodes[e.target], e.weight, idx, time);
-        e.stream.update();
-        e.stream.draw(nodes[e.source], nodes[e.target], cpX, cpY);
+        const { cpX, cpY, avgTension } = drawQuantizedEdge(nodes[e.source], nodes[e.target], e.weight, idx, time);
+        e.packets.forEach(p => p.updateAndDraw(nodes[e.source], nodes[e.target], cpX, cpY, avgTension));
       });
 
-      nodes.forEach((n, idx) => drawUpgradedNode(n, idx, time));
+      // Draw Molecular Orbitals (quantum probability clouds)
+      orbitals.forEach((orb, i) => {
+        if (!quantumState.measured.has(i)) {
+          orb.draw(ctx, time, quantumState);
+        }
+      });
+
+      // Draw Nodes with SIC-POVM HUD
+      nodes.forEach((n, idx) => {
+        drawLiquidNode(n, idx, time);
+        // Draw SIC-POVM projections for measured nodes
+        if (quantumState.measured.has(idx)) {
+          sicPovm.drawHUD(ctx, idx, n.x, n.y - 60);
+        }
+      });
+
+      // Draw Spatial Notifications
+      for(let i = notifications.length - 1; i >= 0; i--) {
+        const notif = notifications[i];
+        notif.updateAndDraw(time);
+        if(notif.life <= 0) notifications.splice(i, 1);
+      }
+      
+      // Update Panel Stats
+      updatePanelStats();
       
       animationId = requestAnimationFrame(animate);
     }
 
     // ============================================
-    // 7. EVENT LISTENERS
+    // 11. SMART PANEL UI
     // ============================================
+    function updateLedger() {
+      const list = document.getElementById('ledgerList');
+      const safeBody = document.getElementById('safeTableBody');
+      list.innerHTML = ''; 
+      if (safeBody) safeBody.innerHTML = '';
+      let totalWeight = 0;
+      
+      edges.forEach(e => {
+        totalWeight += e.weight;
+        const n1 = nodes[e.source]; const n2 = nodes[e.target];
+        const wf1 = quantumState.waveFunctions.get(e.source);
+        const wf2 = quantumState.waveFunctions.get(e.target);
+        
+        // Show quantum state indicators
+        const entangled = quantumState.entangledPairs.some(p => 
+          (p[0] === e.source && p[1] === e.target) || 
+          (p[0] === e.target && p[1] === e.source)
+        );
+        const entangleIcon = entangled ? '⚛ ' : '';
+        const phaseDiff = Math.abs(wf1.phase - wf2.phase).toFixed(2);
+        
+        // Smart panel ledger row
+        list.innerHTML += `
+          <div class="ledger-row">
+            <span class="ledger-pair">${entangleIcon}${n1.id}⟷${n2.id}</span>
+            <span class="ledger-weight">${e.weight}u</span>
+          </div>
+        `;
+        
+        if (safeBody) {
+          safeBody.innerHTML += `<tr><td>${n1.label}</td><td>${n2.label}</td><td>${e.weight}u${entangled ? ' [ENT]' : ''}</td></tr>`;
+        }
+      });
+      
+      // Quantum coherence calculation
+      let quantumCoherence = 0;
+      quantumState.waveFunctions.forEach(wf => {
+        quantumCoherence += wf.amplitude * Math.cos(wf.phase);
+      });
+      quantumCoherence = (quantumCoherence / 4 + 1) / 2; // Normalize
+      quantumState.coherence = quantumCoherence;
+      
+      const quantumPercent = Math.round(quantumCoherence * 100);
+      
+      // Update smart panel displays
+      document.getElementById('coherenceDisplay').textContent = `${quantumPercent}%`;
+      const coherenceBar = document.getElementById('coherenceBar');
+      if (coherenceBar) coherenceBar.style.width = `${quantumPercent}%`;
+      
+      // Update suggestions occasionally
+      const suggestions = phosIntelligence.generateSuggestions();
+      if (suggestions.length > 0 && Math.random() < 0.05) {
+        const s = suggestions[0];
+        if (s.type === 'warning') {
+          phos.say(s.text, 4000);
+        }
+      }
+    }
+
+    // Interaction creates Quantum Measurements
+    const mockMsgs = ["Wavefunction collapsed", "Quantum tunneling detected", "Phase synchronized", "Entanglement verified"];
+    
     canvas.addEventListener('mousedown', e => {
       const rect = canvas.getBoundingClientRect();
       const mx = e.clientX - rect.left; const my = e.clientY - rect.top;
       draggedNode = nodes.find(n => Math.hypot(n.x - mx, n.y - my) < 35);
-      if(draggedNode) drawCoherenceBurst(draggedNode.x, draggedNode.y);
+      if(draggedNode) {
+        const nodeIdx = nodes.indexOf(draggedNode);
+        
+        // Quantum measurement: Collapse wavefunction
+        quantumState.measure(nodeIdx);
+        phosIntelligence.recordDrag(nodeIdx);
+        
+        phos.setMood('thinking');
+        phos.say(`Measuring ${draggedNode.label}... Wavefunction collapsed.`, 3000);
+        
+        // Spawn quantum notification
+        fireNotification(draggedNode, mockMsgs[Math.floor(Math.random() * mockMsgs.length)], true);
+      }
     });
-
+    
+    // Double-click to restore superposition
+    canvas.addEventListener('dblclick', e => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left; const my = e.clientY - rect.top;
+      const clickedNode = nodes.find(n => Math.hypot(n.x - mx, n.y - my) < 35);
+      if(clickedNode) {
+        const nodeIdx = nodes.indexOf(clickedNode);
+        quantumState.measured.delete(nodeIdx);
+        const wf = quantumState.waveFunctions.get(nodeIdx);
+        wf.amplitude = 0.5;
+        wf.uncertainty = 0.3;
+        wf.phase = Math.random() * Math.PI * 2;
+        phos.say(`Superposition restored for ${clickedNode.label}. Uncertainty reintroduced.`, 3000);
+      }
+    });
+    
     window.addEventListener('mousemove', e => {
       const rect = canvas.getBoundingClientRect();
       const mx = e.clientX - rect.left; const my = e.clientY - rect.top;
+      phos.trackMouse(e.clientX, e.clientY);
+      phosIntelligence.context.lastInteraction = Date.now();
+      
+      // Track stress level from mouse velocity
+      const velocity = Math.sqrt(e.movementX**2 + e.movementY**2);
+      phosIntelligence.context.stressLevel = velocity;
+      
       if(draggedNode) {
         draggedNode.x = mx; draggedNode.y = my;
-        mouseTrail.addPoint(mx, my);
       }
     });
-
-    window.addEventListener('mouseup', () => draggedNode = null);
+    
+    window.addEventListener('mouseup', () => {
+      if(draggedNode) {
+        phos.setMood('');
+        draggedNode = null;
+      }
+    });
+    
+    // Keyboard shortcuts for quantum operations
+    window.addEventListener('keydown', e => {
+      switch(e.key) {
+        case 's':
+        case 'S':
+          // Toggle superposition visualization
+          quantumState.coherence = Math.min(0.98, quantumState.coherence + 0.1);
+          phos.say("Coherence boosted. Synchronizing phases...", 2000);
+          break;
+        case 'm':
+        case 'M':
+          // Measure all nodes
+          nodes.forEach((n, i) => quantumState.measure(i));
+          phos.say("Full system measurement initiated. All wavefunctions collapsed.", 3000);
+          break;
+        case 'r':
+        case 'R':
+          // Reset all superpositions
+          quantumState.measured.clear();
+          quantumState.init();
+          phos.say("Quantum state reset. Superpositions restored.", 2000);
+          break;
+        case 't':
+        case 'T':
+          // Toggle telemetry
+          telemetryEngine.toggle();
+          break;
+      }
+    });
+    
     window.addEventListener('resize', resize);
 
-    document.getElementById('safeModeBtn').addEventListener('click', () => {
+    // ============================================
+    // 12. LIVE TELEMETRY ENGINE
+    // ============================================
+    const telemetryEngine = {
+      active: true,
+      startTime: Date.now(),
+      historyLength: 50,
+      
+      // Data buffers
+      coherenceHistory: new Array(50).fill(0.92),
+      tensionHistory: new Array(50).fill(0.4),
+      packetHistory: new Array(50).fill(1000),
+      
+      // Event log
+      events: [],
+      maxEvents: 20,
+      
+      // Performance tracking
+      frameCount: 0,
+      lastFpsTime: Date.now(),
+      currentFps: 60,
+      
+      // Chart contexts
+      coherenceCtx: null,
+      tensionCtx: null,
+      
+      init() {
+        const coherenceCanvas = document.getElementById('coherenceCanvas');
+        const tensionCanvas = document.getElementById('tensionCanvas');
+        if (coherenceCanvas) this.coherenceCtx = coherenceCanvas.getContext('2d');
+        if (tensionCanvas) this.tensionCtx = tensionCanvas.getContext('2d');
+        
+        // Start streaming
+        this.streamInterval = setInterval(() => this.stream(), 100);
+        this.log('Telemetry engine initialized', 'info');
+      },
+      
+      stream() {
+        if (!this.active || document.body.classList.contains('safe-mode')) return;
+        
+        // Calculate current metrics
+        const coherence = quantumState.coherence;
+        const avgTension = nodes.reduce((sum, n) => sum + n.tension, 0) / nodes.length / 100;
+        const packetRate = edges.reduce((sum, e) => sum + (e.packets ? e.packets.length : 0), 0) * 60;
+        
+        // Update history buffers
+        this.coherenceHistory.push(coherence);
+        this.coherenceHistory.shift();
+        this.tensionHistory.push(avgTension);
+        this.tensionHistory.shift();
+        this.packetHistory.push(packetRate);
+        this.packetHistory.shift();
+        
+        // Calculate FPS
+        this.frameCount++;
+        const now = Date.now();
+        if (now - this.lastFpsTime >= 1000) {
+          this.currentFps = this.frameCount;
+          this.frameCount = 0;
+          this.lastFpsTime = now;
+        }
+        
+        // Calculate entropy (Shannon)
+        let entropy = 0;
+        quantumState.waveFunctions.forEach(wf => {
+          const p = wf.amplitude;
+          if (p > 0) entropy -= p * Math.log2(p);
+        });
+        
+        // Update UI
+        this.updateCharts();
+        this.updateMetrics(this.currentFps, packetRate, entropy, avgTension);
+        this.updateUptime();
+        
+        // Anomaly detection
+        if (coherence < 0.5 && !this.lowCoherenceAlert) {
+          this.lowCoherenceAlert = true;
+          this.log('CRITICAL: Coherence below 50%', 'alert');
+          phos.say('Warning: Mesh coherence critical', 4000);
+          this.updateStatus('critical');
+        } else if (coherence > 0.7) {
+          this.lowCoherenceAlert = false;
+          if (coherence > 0.9) this.updateStatus('online');
+          else this.updateStatus('warning');
+        }
+        
+        // Random operational events
+        if (Math.random() < 0.02) {
+          const events = [
+            { msg: 'Packet burst detected', type: 'info' },
+            { msg: 'Phase drift corrected', type: 'success' },
+            { msg: 'Entanglement fluctuation', type: 'info' },
+            { msg: `Node ${nodes[Math.floor(Math.random()*4)].id} spike`, type: 'info' }
+          ];
+          const evt = events[Math.floor(Math.random() * events.length)];
+          this.log(evt.msg, evt.type);
+        }
+      },
+      
+      updateCharts() {
+        // Coherence chart
+        if (this.coherenceCtx) {
+          const ctx = this.coherenceCtx;
+          const w = 150, h = 60;
+          ctx.clearRect(0, 0, w, h);
+          
+          // Draw baseline
+          ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+          ctx.beginPath();
+          ctx.moveTo(0, h/2);
+          ctx.lineTo(w, h/2);
+          ctx.stroke();
+          
+          // Draw coherence line
+          ctx.strokeStyle = '#4db8a8';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          this.coherenceHistory.forEach((val, i) => {
+            const x = (i / (this.historyLength - 1)) * w;
+            const y = h - (val * h);
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          });
+          ctx.stroke();
+          
+          // Fill area
+          ctx.fillStyle = 'rgba(77, 184, 168, 0.1)';
+          ctx.lineTo(w, h);
+          ctx.lineTo(0, h);
+          ctx.fill();
+        }
+        
+        // Tension chart
+        if (this.tensionCtx) {
+          const ctx = this.tensionCtx;
+          const w = 150, h = 60;
+          ctx.clearRect(0, 0, w, h);
+          
+          // Draw tension line
+          ctx.strokeStyle = '#cc6247';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          this.tensionHistory.forEach((val, i) => {
+            const x = (i / (this.historyLength - 1)) * w;
+            const y = h - Math.min(val * h, h);
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          });
+          ctx.stroke();
+        }
+        
+        // Update live values
+        const cohVal = document.getElementById('coherenceLive');
+        const tenVal = document.getElementById('tensionLive');
+        if (cohVal) cohVal.textContent = Math.round(this.coherenceHistory[this.coherenceHistory.length-1] * 100) + '%';
+        if (tenVal) tenVal.textContent = this.tensionHistory[this.tensionHistory.length-1].toFixed(2);
+      },
+      
+      updateMetrics(fps, packets, entropy, tension) {
+        const fpsEl = document.getElementById('fpsMetric');
+        const pktEl = document.getElementById('packetMetric');
+        const entEl = document.getElementById('entropyMetric');
+        const latEl = document.getElementById('latencyMetric');
+        
+        if (fpsEl) {
+          fpsEl.textContent = fps;
+          fpsEl.className = 'metric-value' + (fps < 30 ? ' critical' : fps < 50 ? ' warning' : '');
+        }
+        if (pktEl) pktEl.textContent = packets.toLocaleString();
+        if (entEl) entEl.textContent = entropy.toFixed(2);
+        if (latEl) latEl.textContent = Math.round(1000/fps) + 'ms';
+      },
+      
+      updateUptime() {
+        const elapsed = Date.now() - this.startTime;
+        const seconds = Math.floor(elapsed / 1000) % 60;
+        const minutes = Math.floor(elapsed / 60000) % 60;
+        const hours = Math.floor(elapsed / 3600000);
+        const uptime = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+        const uptimeEl = document.getElementById('uptimeCounter');
+        if (uptimeEl) uptimeEl.textContent = uptime;
+      },
+      
+      updateStatus(status) {
+        const indicator = document.getElementById('systemStatus');
+        const text = document.getElementById('statusText');
+        if (!indicator || !text) return;
+        
+        indicator.className = 'status-indicator ' + status;
+        if (status === 'online') text.textContent = 'SYSTEM ONLINE';
+        else if (status === 'warning') text.textContent = 'DEGRADED';
+        else if (status === 'critical') text.textContent = 'CRITICAL';
+      },
+      
+      log(message, type = 'info') {
+        const log = document.getElementById('telemetryLog');
+        if (!log) return;
+        
+        const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+        const entry = document.createElement('div');
+        entry.className = `log-entry ${type}`;
+        entry.innerHTML = `<span class="log-time">${time}</span> ${message}`;
+        
+        log.appendChild(entry);
+        log.scrollTop = log.scrollHeight;
+        
+        // Keep only last N entries
+        while (log.children.length > this.maxEvents) {
+          log.removeChild(log.firstChild);
+        }
+      },
+      
+      toggle() {
+        this.active = !this.active;
+        const panel = document.querySelector('.telemetry-log');
+        if (panel) {
+          panel.style.opacity = this.active ? '1' : '0.3';
+        }
+        phos.say(this.active ? 'Telemetry streaming resumed' : 'Telemetry paused', 2000);
+      }
+    };
+
+    // ============================================
+    // 13. DESTRUCTION PROTOCOL (Gray Rock)
+    // ============================================
+    const safeBtn = document.getElementById('safeModeBtn');
+    safeBtn.addEventListener('click', () => {
       const isSafe = document.body.classList.toggle('safe-mode');
       if (isSafe) {
+        // Kill all animations
         cancelAnimationFrame(animationId);
+        cancelAnimationFrame(starAnimationId);
         ctx.clearRect(0, 0, width, height);
+        starCtx.clearRect(0, 0, starWidth, starHeight);
+        phos.say("Starfield extinguished. Visual silence engaged.");
       } else {
-        resize();
+        // Restore all animations
+        resize(); 
         animate();
+        animateStarfield();
+        phos.say("Starfield reignited. Welcome back.");
       }
     });
 
+    // Boot Routine with Quantum + Starfield + Telemetry Initialization
     window.onload = () => {
       resize();
-      updateLedger();
-      animate();
-      if(document.body.classList.contains('safe-mode')) {
-        cancelAnimationFrame(animationId);
+      
+      // Initialize quantum states
+      quantumState.init();
+      
+      // Initialize telemetry engine
+      telemetryEngine.init();
+      
+      // URL parameter routing — C.A.R.S. lab prepared state
+      const urlParams = new URLSearchParams(window.location.search);
+      const wsUrl = (urlParams.get('ws') || '').trim();
+      const isDebug = urlParams.has('debug');
+      // window.BONDING_ARCHIVE_URL = 'http://127.0.0.1:8787'; // WCD-33: lab-to-archive coupling
+      const BONDING_ARCHIVE_URL = window.BONDING_ARCHIVE_URL || urlParams.get('archive') || '';
+      if (urlParams.get('egglov') === '1') spawnEggLovSandbox();
+      function spawnEggLovSandbox() { console.debug('[CARS] LOV sandbox: Li + V → LOV reaction (src/reactions.ts)'); }
+      if (wsUrl) console.debug('[CARS] ws override:', wsUrl, { debug: isDebug });
+
+      // Check for URL quantum parameters
+      const params = urlParams;
+      if (params.get('quantum') === 'off') {
+        // Classical mode: measure everything
+        nodes.forEach((n, i) => quantumState.measure(i));
+        phos.say("Classical mode engaged. Starfield baseline.");
+      } else {
+        phos.say("Starfield ignited. Quantum mesh online.");
       }
+      
+      updateLedger(); 
+      
+      // Start both animation loops
+      animate();
+      animateStarfield();
+      
+      // Periodic panel updates
+      setInterval(() => {
+        updateLedger();
+        updatePanelStats();
+      }, 1000);
+      
+      setTimeout(() => phos.say("Double-click nodes to restore superposition. Press T for telemetry.", 4000), 5000);
     };
   </script>
-<button id="safeToggle" class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
-<script>
-    // Initialize Smart Starfield
-    const starfield = new SmartStarfield('starfield-canvas', {
-      surfaceId: 'surface-soup',
-      meshSync: true,
-      starCount: 100
-    });
-  </script>
+<script src="/public/lib/phos-os.js"></script>
 </body>
 </html>

@@ -1465,6 +1465,83 @@
       "path": "docs/P31-DESIGN-SYSTEM-REFERENCE.md",
       "description": "Canonical design system reference: tokens, semantics, glass pattern, safe mode contract, naming corrections.",
       "schema": "p31.designSystemReference/1.0.0"
+    },
+    {
+      "id": "p31-arch-pglite-sync",
+      "path": "docs/architecture/PGLITE-SYNC-DESIGN.md",
+      "type": "architecture",
+      "description": "PGLite multi-device sync design: Yjs CRDT, 5 namespaces, CF Worker endpoint, BONDING KV isolation proof",
+      "tier": "A"
+    },
+    {
+      "id": "p31-arch-esim-comparison",
+      "path": "docs/architecture/ESIM-CARRIER-COMPARISON.md",
+      "type": "architecture",
+      "description": "eSIM carrier comparison for 31558/32211: US Mobile AT&T recommended, iPhone 11 activation steps",
+      "tier": "B"
+    },
+    {
+      "id": "p31-arch-matrix-zero-budget",
+      "path": "docs/architecture/MATRIX-ZERO-BUDGET-OPTIONS.md",
+      "type": "architecture",
+      "description": "Matrix homeserver zero-budget options: Pi4+Conduit primary, Oracle ARM standby, Workers relay fallback",
+      "tier": "B"
+    },
+    {
+      "id": "p31-legal-daubert-genesis",
+      "path": "docs/legal/DAUBERT-GENESIS-BLOCK-BRIEF.md",
+      "type": "legal",
+      "description": "Daubert admissibility brief for Genesis Block SHA-256 hash evidence in Johnson v. Johnson 2025CV936",
+      "tier": "A"
+    },
+    {
+      "id": "p31-cwp-sovereign-2026-05",
+      "path": "docs/CWP-P31-SOVEREIGN-2026-05.md",
+      "type": "cwp",
+      "description": "Sovereign infrastructure CWP batch: PGLite sync, post-quantum, Daubert, FHIR, eSIM, Matrix (6 CWPs + 12 meatspace)",
+      "tier": "A"
+    },
+    {
+      "id": "p31-doc-phosphorus-thesis",
+      "path": "docs/P31_THE_PHOSPHORUS_THESIS.md",
+      "type": "publication",
+      "description": "Phosphorus Thesis v2.0: Tetrahedron Protocol, monotropism-Shannon synthesis, P31 engineering evidence chain",
+      "tier": "A"
+    },
+    {
+      "id": "p31-cogpass-v5",
+      "path": "docs/P31_COGNITIVE_PASSPORT_v4.md",
+      "type": "operator",
+      "description": "Cognitive Passport v4 (post-Phosphorus-Thesis edition): diagnoses, cognitive profile, family, entity filings",
+      "tier": "A"
+    },
+    {
+      "id": "p31-master-context-2026-05-04",
+      "path": "docs/P31_MASTER_CONTEXT_2026-05-04.md",
+      "type": "operator",
+      "description": "Canonical operator context snapshot 2026-05-04: tech state, legal status, meatspace actions",
+      "tier": "A"
+    },
+    {
+      "id": "p31-doc-phos-for-us-posner",
+      "path": "docs/PHOS-FOR-US-POSNER-RECONCEPT.md",
+      "type": "design",
+      "description": "Posner molecule Ca9(PO4)6 as family metaphor \u2014 PHOS-for-US landing concept doc",
+      "tier": "B"
+    },
+    {
+      "id": "p31-doc-prompt-gemini-landing",
+      "path": "docs/PROMPT-GEMINI-PHOS-LANDING.md",
+      "type": "design",
+      "description": "Full implementation spec for index.html Posner molecule landing page (Gemini-authored)",
+      "tier": "B"
+    },
+    {
+      "id": "p31-doc-smart-starfield",
+      "path": "docs/SMART-STARFIELD-EXPLANATION.md",
+      "type": "design",
+      "description": "Technical explanation of dual-layer canvas starfield in soup.html and index.html",
+      "tier": "B"
     }
   ],
   "derivations": [

@@ -50,7 +50,7 @@
       "label": "Document Library",
       "path": "/doc-library.html",
       "icon": "📚",
-      "phrases": ["docs", "documents", "library", "documentation", "papers", "research", "files", "archive", "reference"]
+      "phrases": ["docs", "documents", "library", "documentation", "files", "archive", "reference"]
     },
     {
       "id": "cortex",
@@ -78,7 +78,7 @@
       "label": "C.A.R.S. Hub",
       "path": "/soup.html",
       "icon": "⚛️",
-      "phrases": ["cars", "hub", "home", "soup", "main", "start", "landing", "posner", "k4", "ca9", "calcium", "molecule", "bonding"]
+      "phrases": ["cars", "hub", "home", "soup", "main", "start", "landing", "posner", "k4", "ca9", "calcium", "molecule"]
     },
     {
       "id": "glass-box",
@@ -104,9 +104,51 @@
     {
       "id": "delta-language",
       "label": "DELTA Glossary",
-      "path": "/public/delta-language.html",
+      "path": "/delta-language",
       "icon": "📖",
       "phrases": ["delta", "glossary", "terminology", "terms", "definitions", "vocabulary", "language", "wiki"]
+    },
+    {
+      "id": "lab",
+      "label": "Sovereign Lab",
+      "path": "/lab",
+      "icon": "🧪",
+      "phrases": ["lab", "sovereign lab", "quantum lab", "experiment", "prototype", "sandbox", "test bed", "playground"]
+    },
+    {
+      "id": "support",
+      "label": "Support",
+      "path": "/support",
+      "icon": "💬",
+      "phrases": ["support", "help", "contact support", "get help", "assistance", "question", "issue", "feedback"]
+    },
+    {
+      "id": "stylebook",
+      "label": "Design Stylebook",
+      "path": "/stylebook/",
+      "icon": "🎨",
+      "phrases": ["stylebook", "design", "tokens", "colors", "typography", "components", "style guide", "design system"]
+    },
+    {
+      "id": "ede",
+      "label": "EDE",
+      "path": "/ede",
+      "icon": "🌐",
+      "phrases": ["ede", "ecosystem", "decentralized", "external", "partner", "linked"]
+    },
+    {
+      "id": "bonding",
+      "label": "BONDING",
+      "path": "https://bonding.p31ca.org",
+      "icon": "⚗️",
+      "phrases": ["bonding", "chemistry", "molecules", "game", "kids game", "play chemistry", "molecule builder", "atoms", "compounds", "water", "glucose"]
+    },
+    {
+      "id": "research",
+      "label": "Research Index",
+      "path": "/research",
+      "icon": "🔬",
+      "phrases": ["research", "publications", "papers", "zenodo", "academic", "published", "peer review", "thesis", "phosphorus thesis"]
     },
     {
       "id": "psych-e2e",

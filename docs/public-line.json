@@ -104,13 +104,76 @@
       "notes": "PHOS bus bar slot 5. Research index page. Links to architecture docs, cognitive science, and Glass Box."
     },
     {
-      "path": "/ops/",
-      "resolves": "Astro route",
+      "path": "/ops",
+      "resolves": "ops.html",
       "gate": "alpha",
-      "phosSlot": "ops",
+      "phosSlot": null,
       "phosReady": false,
-      "lastVerified": "2026-05-03",
-      "notes": "PHOS bus bar slot 8. Operator-only. Not publicly linked. CWP-P31-UI-2026-01 surface."
+      "lastVerified": "2026-05-04",
+      "notes": "Ops Desk — operator-only surface. Gemini-styled 2026-05-04. phosSlot=null until promoted to live."
+    },
+    {
+      "path": "/build",
+      "resolves": "build.html",
+      "gate": "alpha",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-04",
+      "notes": "WCD Intake — operator tool. Alpha. phosSlot=null until promoted."
+    },
+    {
+      "path": "/cortex",
+      "resolves": "cortex.html",
+      "gate": "alpha",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-04",
+      "notes": "Centaur Pack — agent fleet control. Alpha. phosSlot=null until promoted."
+    },
+    {
+      "path": "/garden",
+      "resolves": "garden.html",
+      "gate": "gate2",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-04",
+      "notes": "The Garden — children's safe space. Gate 2. phosSlot=null until gate=live."
+    },
+    {
+      "path": "/geodesic",
+      "resolves": "geodesic.html",
+      "gate": "gate2",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-04",
+      "notes": "Geodesic — structural geometry builder. Gate 2. phosSlot=null until gate=live."
+    },
+    {
+      "path": "/observatory",
+      "resolves": "observatory.html",
+      "gate": "gate2",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-04",
+      "notes": "Data Observatory — biometrics and mesh telemetry. Gate 2. phosSlot=null until gate=live."
+    },
+    {
+      "path": "/vibe",
+      "resolves": "vibe.html",
+      "gate": "alpha",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-04",
+      "notes": "Vibe IDE — development environment. Alpha. phosSlot=null until promoted."
+    },
+    {
+      "path": "/doc-library",
+      "resolves": "doc-library.html",
+      "gate": "gate1",
+      "phosSlot": null,
+      "phosReady": false,
+      "lastVerified": "2026-05-04",
+      "notes": "Document Library — P31 paper and architecture doc index. Gate 1. phosSlot=null until gate=live."
     },
     {
       "path": "/social-molecules",
@@ -186,12 +249,12 @@
     },
     {
       "path": "/delta-language",
-      "resolves": "delta-language.html",
+      "resolves": "public/delta-language.html",
       "gate": "live",
       "phosSlot": "delta-language",
       "phosReady": true,
       "lastVerified": "2026-05-04",
-      "notes": "P31 canonical glossary. Gate 2 polish complete (CWP-DESIGN-05). Anchor links, a11y, PHOS router active."
+      "notes": "P31 canonical glossary. Gate 2 polish complete (CWP-DESIGN-05). File at public/delta-language.html — served at /public/delta-language.html; add _redirects /delta-language entry before promoting to top-level URL."
     },
     {
       "path": "/fluid",

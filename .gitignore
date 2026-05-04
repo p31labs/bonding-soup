@@ -156,3 +156,6 @@ npm-debug.log*
 Discovery/*
 !Discovery/assemble_supplemental_exhibits.py
 out/fleet-comparison/
+
+# Legacy /lib/ path remnants (pre path-migration, not deployed)
+lib/

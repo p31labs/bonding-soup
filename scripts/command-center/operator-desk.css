@@ -9,7 +9,7 @@
   margin: 0;
   background: var(--od-bg);
   color: var(--od-text);
-  font-family: "Atkinson Hyperlegible", system-ui, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
   line-height: 1.45;
 }
 

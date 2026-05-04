@@ -41,15 +41,15 @@ class PhosOS {
     s.id = 'phos-styles';
     s.textContent = `
       .phos-container { position: fixed; bottom: 2rem; right: 2rem; z-index: 10000; display: flex; flex-direction: column; align-items: flex-end; }
-      .phos-orb { width: 60px; height: 60px; background: rgba(10,12,15,0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 20px rgba(37,137,125,0.3); transition: all 0.4s ease; }
-      .phos-orb:hover { transform: scale(1.1); box-shadow: 0 0 30px rgba(37,137,125,0.6); }
-      .k4-icon { width: 50%; height: 50%; stroke: #25897d; stroke-width: 2; fill: none; transition: all 0.5s ease; }
+      .phos-orb { width: 60px; height: 60px; background: rgba(10,12,15,0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 20px rgba(93,202,165,0.3); transition: all 0.4s ease; }
+      .phos-orb:hover { transform: scale(1.1); box-shadow: 0 0 30px rgba(93,202,165,0.6); }
+      .k4-icon { width: 50%; height: 50%; stroke: #5DCAA5; stroke-width: 2; fill: none; transition: all 0.5s ease; }
       .status-THINKING .k4-icon { animation: jitterbug 0.8s infinite; stroke: #cda852; }
       @keyframes jitterbug { 0%, 100% { transform: rotate(0deg) scale(1); } 33% { transform: rotate(5deg) scale(1.1); } 66% { transform: rotate(-5deg) scale(0.9); } }
       .phos-bubble { position: absolute; bottom: 80px; right: 0; width: 320px; background: rgba(15,17,21,0.98); border: 1px solid rgba(255,255,255,0.1); border-radius: 1.5rem; padding: 1.5rem; opacity: 0; pointer-events: none; transform: translateY(10px); transition: all 0.4s cubic-bezier(0.19,1,0.22,1); font-family: "JetBrains Mono", monospace; color: #fff; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
       .phos-bubble.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
       .phos-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #d8d6d0; padding: 0.8rem; border-radius: 0.75rem; font-size: 0.8rem; cursor: pointer; text-align: left; transition: all 0.2s; width: 100%; margin-bottom: 0.5rem; }
-      .phos-btn:hover { background: rgba(37,137,125,0.1); border-color: #25897d; color: #fff; }
+      .phos-btn:hover { background: rgba(93,202,165,0.1); border-color: #5DCAA5; color: #fff; }
       body.safe-mode .phos-container { filter: grayscale(1); }
     `;
     document.head.appendChild(s);
@@ -95,7 +95,7 @@ class PhosOS {
   ask(q) {
     this.state.status = 'LISTENING';
     document.getElementById('phos-jarvis').className = `phos-container status-${this.state.status}`;
-    document.getElementById('phos-display').innerHTML = `<span style="color:#25897d">[PROBE]</span> ${q.text}`;
+    document.getElementById('phos-display').innerHTML = `<span style="color:#5DCAA5">[PROBE]</span> ${q.text}`;
     document.getElementById('phos-options').innerHTML = `
       <button class="phos-btn" onclick="window.phosOS.handle(true, '${q.id}')">Affirmative</button>
       <button class="phos-btn" onclick="window.phosOS.handle(false, '${q.id}')">Negative</button>
@@ -113,14 +113,14 @@ class PhosOS {
   presentResult(intent) {
     this.state.status = 'IDLE';
     document.getElementById('phos-jarvis').className = `phos-container status-${this.state.status}`;
-    document.getElementById('phos-display').innerHTML = `<span style="color:#25897d">[RESOLVED]</span> Routing to <strong>${intent.label}</strong>.`;
+    document.getElementById('phos-display').innerHTML = `<span style="color:#5DCAA5">[RESOLVED]</span> Routing to <strong>${intent.label}</strong>.`;
     document.getElementById('phos-options').innerHTML = `
-      <button class="phos-btn" style="border-color:#25897d" onclick="window.location.href='${intent.path}'">Initialize Shift →</button>
+      <button class="phos-btn" style="border-color:#5DCAA5" onclick="window.location.href='${intent.path}'">Initialize Shift →</button>
     `;
   }
 
   presentAmbiguous() {
-    document.getElementById('phos-display').innerHTML = `<span style="color:#25897d">[AMBIGUOUS]</span> Coordinate unclear. Select destination:`;
+    document.getElementById('phos-display').innerHTML = `<span style="color:#5DCAA5">[AMBIGUOUS]</span> Coordinate unclear. Select destination:`;
     document.getElementById('phos-options').innerHTML = this.state.activePool.map(i =>
       `<button class="phos-btn" onclick="window.location.href='${i.path}'">${i.label}</button>`
     ).join('') + `<button class="phos-btn" onclick="window.phosOS.resetBrain(); window.phosOS.think();">Reset</button>`;

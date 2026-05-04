@@ -34,7 +34,7 @@ class K4MeshVisualizer {
     this.config = {
       // Vertices: 4 nodes of the tetrahedron
       vertices: config.vertices || [
-        { id: 'will', label: 'FORGE', color: '#25897d', role: 'parent' },
+        { id: 'will', label: 'FORGE', color: '#5DCAA5', role: 'parent' },
         { id: 'sj', label: 'COUNSEL', color: '#cc6247', role: 'child' },
         { id: 'wj', label: 'SCHOLAR', color: '#3ba372', role: 'child' },
         { id: 'christyn', label: 'SCRIBE', color: '#8b7cc9', role: 'parent' }
@@ -561,7 +561,7 @@ class K4MeshVisualizer {
   static familyCage(canvasId, options = {}) {
     return new K4MeshVisualizer(canvasId, {
       vertices: [
-        { id: 'will', label: 'FORGE', color: '#25897d', role: 'parent' },
+        { id: 'will', label: 'FORGE', color: '#5DCAA5', role: 'parent' },
         { id: 'sj', label: 'SCHOLAR', color: '#cc6247', role: 'child' },
         { id: 'wj', label: 'SCRIBE', color: '#3ba372', role: 'child' },
         { id: 'christyn', label: 'COUNSEL', color: '#8b7cc9', role: 'parent' }
@@ -581,7 +581,7 @@ class K4MeshVisualizer {
   static personalHub(canvasId, hubType, options = {}) {
     // Hub-specific configurations
     const hubConfigs = {
-      'forge': { color: '#25897d', label: 'FORGE Hub' },
+      'forge': { color: '#5DCAA5', label: 'FORGE Hub' },
       'counsel': { color: '#cc6247', label: 'COUNSEL Hub' },
       'scholar': { color: '#3ba372', label: 'SCHOLAR Hub' },
       'scribe': { color: '#8b7cc9', label: 'SCRIBE Hub' }

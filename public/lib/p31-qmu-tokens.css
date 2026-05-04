@@ -19,7 +19,7 @@
   
   /* Brand Colors */
   --p31-cyan: #4db8a8;
-  --p31-teal: #25897d;
+  --p31-teal: #5DCAA5;
   --p31-coral: #cc6247;
   --p31-butter: #cda852;
   --p31-lavender: #8b7cc9;
@@ -43,7 +43,7 @@
   /* ========================================
      TYPOGRAPHY
      ======================================== */
-  --p31-font-sans: "Atkinson Hyperlegible", system-ui, -apple-system, sans-serif;
+  --p31-font-sans: "Inter", system-ui, -apple-system, sans-serif;
   --p31-font-mono: "JetBrains Mono", "Fira Code", "SF Mono", monospace;
   --p31-font-serif: "Playfair Display", Georgia, serif;
   

@@ -1,146 +1,1003 @@
 <!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-p31-appearance="hub">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Demo Tour · P31</title>
-  <meta name="description" content="Phosphorus31 — Family mesh infrastructure for the neurodivergent operator">
-  <meta name="theme-color" content="#0f1115">
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  
+  <meta charset="utf-8" />
+  <script>
+    (function () {
+      var r = document.documentElement;
+      if (/[?&]alive=1(?:&|$)/.test(location.search)) return;
+      r.classList.add("p31-gray-rock");
+      function wake() { r.classList.remove("p31-gray-rock"); }
+      document.addEventListener("pointerdown", wake, { once: true, capture: true });
+      document.addEventListener("keydown", wake, { once: true, capture: true });
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>P31 Labs — come in</title>
   <link rel="stylesheet" href="/public/lib/p31-qmu-tokens.css">
-  <link rel="stylesheet" href="/p31-style.css">
-  
+  <meta
+    name="description"
+    content="A guided walk through the P31 Labs ecosystem running locally — a small lab building free, open-source tools for families whose brains work differently."
+  />
+  <meta name="theme-color" content="#0f1115" />
+  <meta name="color-scheme" content="dark" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700&family=JetBrains+Mono:ital,wght@0,400;0,600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="cognitive-passport/p31-style.css" />
+  <link rel="stylesheet" href="cognitive-passport/p31-responsive-surface.css" />
+  <script src="cognitive-passport/lib/p31-subject-prefs.js"></script>
+  <link rel="stylesheet" href="p31-shared-surface.css" />
+  <link rel="manifest" href="p31-bonding.webmanifest" crossorigin="anonymous" />
+
+  <link
+    rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%234db8a8' d='M16 4l12 22H4z'/%3E%3C/svg%3E"
+  />
+
   <style>
-    /* Starfield Canvas */
-    #starfield-canvas {
+    /* ------------------------------------------------------------------
+       P31 LOBBY — guided walk
+       Canon: cognitive-passport/p31-style.css (do not invent colors)
+       Atmosphere: real p31-starfield.js at lobby density
+       Voice: plain English, no jargon, no monospace paths in visible UI
+       ------------------------------------------------------------------ */
+
+    :root {
+      --lobby-step-cyan: var(--p31-cyan);
+      --lobby-step-coral: var(--p31-coral);
+      --lobby-step-phos: var(--p31-phosphorus);
+      --lobby-text: var(--p31-cloud);
+      --lobby-mute: color-mix(in srgb, var(--p31-cloud) 64%, transparent);
+      --lobby-edge: rgba(255, 255, 255, 0.07);
+      --lobby-glass: rgba(255, 255, 255, 0.04);
+      --lobby-pad: clamp(20px, 4vw, 48px);
+    }
+
+    html, body {
+      background: var(--p31-void);
+      color: var(--lobby-text);
+    }
+    body {
+      margin: 0;
+      font-family: var(--p31-font-sans);
+      line-height: var(--p31-leading-normal);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    a { color: var(--p31-cyan); text-decoration: none; }
+    a:hover, a:focus-visible { color: var(--p31-coral); }
+
+    /* ---------------- Atmosphere layers ---------------- */
+
+    .lobby-starfield,
+    .lobby-hearth,
+    .lobby-grain {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
+      inset: 0;
       pointer-events: none;
-      opacity: 0.5;
+      z-index: 0;
     }
-    body.safe-mode #starfield-canvas { display: none !important; }
-    
-    /* Safe Mode Toggle */
-    .safe-toggle {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      z-index: 10000;
-      padding: 0.5rem 0.75rem;
-      border: 1px solid rgba(204,98,71,0.3);
-      border-radius: 6px;
-      background: rgba(204,98,71,0.08);
-      color: var(--p31-coral);
+    .lobby-starfield { z-index: 0; }
+    .lobby-hearth {
+      z-index: 1;
+      background:
+        radial-gradient(60vmax 35vmax at 50% 105%,
+          rgba(204, 98, 71, 0.16),
+          rgba(204, 98, 71, 0.04) 38%,
+          transparent 62%),
+        radial-gradient(80vmax 45vmax at 50% -10%,
+          rgba(77, 184, 168, 0.08),
+          transparent 60%);
+      mix-blend-mode: screen;
+      transition: opacity 600ms var(--p31-ease-standard);
+    }
+    .lobby-grain {
+      z-index: 2;
+      opacity: 0.18;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E");
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .lobby-hearth { opacity: 0.85 !important; }
+    }
+
+    /* ---------------- Hero scene ---------------- */
+
+    .lobby-shell {
+      position: relative;
+      z-index: 4;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: var(--lobby-pad) 18px clamp(120px, 14vw, 180px);
+    }
+
+    .lobby-hero {
+      display: grid;
+      place-items: center;
+      gap: var(--p31-space-4);
+      text-align: center;
+      padding: clamp(28px, 7vw, 64px) 0 clamp(20px, 5vw, 40px);
+    }
+
+    /* K4 wireframe — breathes at "Larmor" cadence (slow, calm) */
+    .lobby-k4 {
+      width: clamp(120px, 18vw, 168px);
+      height: clamp(120px, 18vw, 168px);
+      display: block;
+      filter: drop-shadow(0 0 28px rgba(77, 184, 168, 0.28));
+    }
+    .lobby-k4__edges line { stroke-dasharray: 1 0; }
+    .lobby-k4__edges line,
+    .lobby-k4__node {
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .lobby-k4__node {
+      animation: lobby-node-pulse 6s ease-in-out infinite;
+    }
+    .lobby-k4__node:nth-child(2) { animation-delay: 0.6s; }
+    .lobby-k4__node:nth-child(3) { animation-delay: 1.2s; }
+    .lobby-k4__node:nth-child(4) { animation-delay: 1.8s; }
+
+    .lobby-k4__group {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: lobby-k4-breathe 12s ease-in-out infinite;
+    }
+
+    @keyframes lobby-k4-breathe {
+      0%, 100% { transform: rotate(-3deg) scale(1); }
+      50%      { transform: rotate(3deg)  scale(1.04); }
+    }
+    @keyframes lobby-node-pulse {
+      0%, 100% { transform: scale(1);   filter: drop-shadow(0 0 0 rgba(77,184,168,0)); }
+      50%      { transform: scale(1.18); filter: drop-shadow(0 0 6px rgba(77,184,168,0.65)); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .lobby-k4__group, .lobby-k4__node { animation: none; }
+    }
+
+    .lobby-eyebrow {
       font-family: var(--p31-font-mono);
-      font-size: 0.75rem;
+      font-size: var(--p31-text-xs);
+      letter-spacing: var(--p31-tracking-caps);
       text-transform: uppercase;
-      cursor: pointer;
-      transition: all 150ms;
+      color: color-mix(in srgb, var(--p31-cloud) 55%, transparent);
     }
-    .safe-toggle:hover { background: rgba(204,98,71,0.15); }
-    
-    /* PHOS Orb */
-    .phos-orb {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      width: 60px;
-      height: 60px;
-      z-index: 9999;
-      cursor: pointer;
-      filter: drop-shadow(0 0 10px rgba(77,184,168,0.4));
-      transition: transform 0.3s ease;
+    .lobby-title {
+      margin: 0;
+      font-size: clamp(34px, 6.6vw, 56px);
+      letter-spacing: var(--p31-tracking-tight);
+      line-height: 1.05;
+      font-weight: 700;
+      color: var(--p31-cloud);
     }
-    .phos-orb:hover { transform: scale(1.1); }
-    body.safe-mode .phos-orb { filter: grayscale(1); animation: none; }
-    
-    /* Power Level Indicator */
-    .power-level {
-      position: fixed;
-      bottom: 2rem;
-      right: 5rem;
-      z-index: 9998;
+    .lobby-title em {
+      font-style: italic;
+      color: var(--p31-cyan);
+      font-weight: 400;
+    }
+    .lobby-lede {
+      max-width: 56ch;
+      color: color-mix(in srgb, var(--p31-cloud) 80%, transparent);
+      font-size: var(--p31-text-md);
+      line-height: var(--p31-leading-relaxed);
+      margin: 0 auto;
+    }
+
+    .lobby-receipts {
       display: flex;
-      gap: 0.25rem;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: var(--p31-space-3);
     }
-    .power-dot {
-      width: 8px;
-      height: 8px;
+    .lobby-receipt {
+      font-family: var(--p31-font-mono);
+      font-size: var(--p31-text-xs);
+      letter-spacing: var(--p31-tracking-wide);
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--p31-cloud) 70%, transparent);
+      padding: 5px 10px;
+      border-radius: var(--p31-radius-full);
+      border: 1px solid var(--lobby-edge);
+      background: var(--lobby-glass);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    /* Scroll prompt: breathing dot + label */
+    .lobby-scroll-cue {
+      margin-top: clamp(20px, 4vw, 36px);
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--p31-font-mono);
+      font-size: var(--p31-text-xs);
+      letter-spacing: var(--p31-tracking-caps);
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--p31-cloud) 55%, transparent);
+    }
+    .lobby-scroll-cue::after {
+      content: "˅";
+      font-size: 1rem;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      opacity: 0.55;
+      animation: lobby-scroll-pulse 3.2s ease-in-out infinite;
+    }
+    @keyframes lobby-scroll-pulse {
+      0%, 100% { transform: translateY(0);   opacity: 0.45; }
+      50%      { transform: translateY(4px); opacity: 0.85; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .lobby-scroll-cue::after { animation: none; opacity: 0.55; }
+    }
+
+    /* ---------------- Steps ---------------- */
+
+    .lobby-steps {
+      list-style: none;
+      counter-reset: step;
+      padding: 0;
+      margin: clamp(28px, 5vw, 48px) 0 0;
+      display: grid;
+      gap: clamp(12px, 1.6vw, 16px);
+    }
+
+    .lobby-step {
+      counter-increment: step;
+      position: relative;
+      padding: clamp(20px, 3.5vw, 32px);
+      border: 1px solid var(--lobby-edge);
+      border-left-width: 3px;
+      border-left-color: var(--lobby-step-cyan);
+      border-radius: var(--p31-radius-xl);
+      background: var(--lobby-glass);
+      backdrop-filter: blur(10px) saturate(110%);
+      -webkit-backdrop-filter: blur(10px) saturate(110%);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(14px, 2vw, 22px);
+      transform: translateY(28px);
+      opacity: 0;
+      transition:
+        transform 700ms var(--p31-ease-emphasized),
+        opacity 700ms var(--p31-ease-emphasized),
+        border-color 200ms var(--p31-ease-standard),
+        box-shadow 400ms var(--p31-ease-standard);
+    }
+    .lobby-step.is-visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .lobby-step:hover,
+    .lobby-step:focus-within {
+      border-color: color-mix(in srgb, var(--lobby-step-cyan) 65%, transparent);
+      box-shadow: 0 18px 60px -28px rgba(77, 184, 168, 0.45);
+    }
+
+    @media (min-width: 720px) {
+      .lobby-step {
+        grid-template-columns: 96px minmax(0, 1fr);
+        align-items: start;
+      }
+    }
+
+    .lobby-step--operator {
+      border-left-color: var(--lobby-step-coral);
+    }
+    .lobby-step--operator:hover,
+    .lobby-step--operator:focus-within {
+      border-color: color-mix(in srgb, var(--lobby-step-coral) 65%, transparent);
+      box-shadow: 0 18px 60px -28px rgba(204, 98, 71, 0.45);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .lobby-step {
+        transition: none;
+        transform: none;
+        opacity: 1;
+      }
+    }
+
+    /* Step illustration — small animated SVG, custom per step */
+    .lobby-step__art {
+      width: 96px;
+      height: 96px;
+      border-radius: var(--p31-radius-md);
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(60% 60% at 50% 50%,
+          color-mix(in srgb, var(--lobby-step-cyan) 12%, transparent),
+          transparent 70%);
+      border: 1px solid var(--lobby-edge);
+      flex: 0 0 auto;
+    }
+    .lobby-step--operator .lobby-step__art {
+      background:
+        radial-gradient(60% 60% at 50% 50%,
+          color-mix(in srgb, var(--lobby-step-coral) 14%, transparent),
+          transparent 70%);
+    }
+    .lobby-step__art svg { width: 70%; height: 70%; display: block; }
+
+    .lobby-step__num {
+      font-family: var(--p31-font-mono);
+      font-size: var(--p31-text-xs);
+      letter-spacing: var(--p31-tracking-caps);
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--p31-cloud) 55%, transparent);
+      margin: 0 0 var(--p31-space-2);
+    }
+    .lobby-step__num::before { content: "Step " counter(step) " · "; }
+    .lobby-step--operator .lobby-step__num {
+      color: color-mix(in srgb, var(--p31-coral) 75%, var(--p31-cloud));
+      letter-spacing: var(--p31-tracking-caps);
+    }
+    .lobby-step--operator .lobby-step__num::after {
+      content: " · OPERATOR";
+      color: var(--p31-coral);
+      font-weight: 700;
+    }
+
+    .lobby-step__title {
+      margin: 0 0 var(--p31-space-3);
+      font-size: var(--p31-text-2xl);
+      letter-spacing: var(--p31-tracking-tight);
+      line-height: var(--p31-leading-tight);
+      color: var(--p31-cloud);
+      font-weight: 700;
+    }
+    .lobby-step__what,
+    .lobby-step__why {
+      margin: 0 0 var(--p31-space-3);
+      color: color-mix(in srgb, var(--p31-cloud) 80%, transparent);
+      font-size: var(--p31-text-md);
+      line-height: var(--p31-leading-relaxed);
+    }
+    .lobby-step__why { color: color-mix(in srgb, var(--p31-cloud) 60%, transparent); font-style: italic; }
+    .lobby-step__do {
+      margin: 0;
+      color: color-mix(in srgb, var(--p31-cloud) 60%, transparent);
+      font-size: var(--p31-text-sm);
+    }
+
+    /* CTA — magnetic feel: subtle tilt on hover, hearth glow on press */
+    .lobby-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 18px;
+      margin: var(--p31-space-3) 0;
+      border-radius: var(--p31-radius-md);
+      border: 1px solid color-mix(in srgb, var(--lobby-step-cyan) 50%, transparent);
+      background: color-mix(in srgb, var(--lobby-step-cyan) 12%, transparent);
+      color: var(--p31-cloud);
+      font-weight: 600;
+      font-size: var(--p31-text-sm);
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition:
+        transform 180ms var(--p31-ease-emphasized),
+        background 200ms var(--p31-ease-standard),
+        border-color 200ms var(--p31-ease-standard),
+        box-shadow 220ms var(--p31-ease-standard);
+      will-change: transform;
+    }
+    .lobby-cta::after {
+      content: "→";
+      transition: transform 220ms var(--p31-ease-emphasized);
+    }
+    .lobby-cta:hover, .lobby-cta:focus-visible {
+      background: color-mix(in srgb, var(--lobby-step-cyan) 22%, transparent);
+      border-color: var(--lobby-step-cyan);
+      box-shadow: 0 12px 40px -18px color-mix(in srgb, var(--lobby-step-cyan) 70%, transparent);
+    }
+    .lobby-cta:focus-visible {
+      outline: 2px solid var(--lobby-step-cyan);
+      outline-offset: 3px;
+    }
+    .lobby-step--operator .lobby-cta:focus-visible {
+      outline-color: var(--lobby-step-coral);
+    }
+    .lobby-cta:hover::after, .lobby-cta:focus-visible::after {
+      transform: translateX(4px);
+    }
+    .lobby-cta:active { transform: translateY(1px) scale(0.985); }
+
+    .lobby-step--operator .lobby-cta {
+      border-color: color-mix(in srgb, var(--lobby-step-coral) 55%, transparent);
+      background: color-mix(in srgb, var(--lobby-step-coral) 14%, transparent);
+    }
+    .lobby-step--operator .lobby-cta:hover,
+    .lobby-step--operator .lobby-cta:focus-visible {
+      background: color-mix(in srgb, var(--lobby-step-coral) 24%, transparent);
+      border-color: var(--lobby-step-coral);
+      box-shadow: 0 12px 40px -18px color-mix(in srgb, var(--lobby-step-coral) 70%, transparent);
+    }
+
+    /* ---------------- Sticky step rail ---------------- */
+
+    .lobby-rail {
+      position: fixed;
+      right: clamp(12px, 2vw, 22px);
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 6;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px 8px;
+      border-radius: 999px;
+      background: rgba(15, 17, 21, 0.55);
+      border: 1px solid var(--lobby-edge);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    @media (min-width: 980px) {
+      .lobby-rail { display: flex; }
+    }
+    .lobby-rail__dot {
+      position: relative;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
-      background: var(--p31-muted);
-      transition: all 0.3s;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      transition:
+        background 200ms var(--p31-ease-standard),
+        transform 200ms var(--p31-ease-standard),
+        box-shadow 200ms var(--p31-ease-standard);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
     }
-    .power-dot.active { background: var(--p31-cyan); box-shadow: 0 0 8px var(--p31-cyan); }
-    
-    /* Main Content */
-    main { position: relative; z-index: 1; }
+    /* 44×44 hit-target for fingers / coarse pointers (link element wraps the dot). */
+    .lobby-rail__dot::before {
+      content: "";
+      position: absolute;
+      inset: -16px;
+      border-radius: 999px;
+    }
+    .lobby-rail__dot:focus-visible {
+      outline: 2px solid var(--p31-cyan);
+      outline-offset: 4px;
+    }
+    .lobby-rail__dot[data-active="1"] {
+      background: var(--p31-cyan);
+      transform: scale(1.35);
+      box-shadow: 0 0 12px rgba(77, 184, 168, 0.7);
+    }
+    .lobby-rail__dot[data-track="operator"][data-active="1"] {
+      background: var(--p31-coral);
+      box-shadow: 0 0 12px rgba(204, 98, 71, 0.7);
+    }
+
+    /* ---------------- Tip + footer ---------------- */
+
+    .lobby-tip {
+      margin: clamp(48px, 8vw, 80px) auto 0;
+      max-width: 640px;
+      text-align: center;
+      padding: var(--p31-space-5) var(--p31-space-6);
+      border-radius: var(--p31-radius-lg);
+      background: var(--lobby-glass);
+      border: 1px solid var(--lobby-edge);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: color-mix(in srgb, var(--p31-cloud) 78%, transparent);
+      font-size: var(--p31-text-md);
+      line-height: var(--p31-leading-relaxed);
+    }
+
+    .lobby-foot {
+      margin-top: clamp(32px, 6vw, 56px);
+      text-align: center;
+      font-size: var(--p31-text-sm);
+      color: color-mix(in srgb, var(--p31-cloud) 60%, transparent);
+      line-height: var(--p31-leading-relaxed);
+    }
+    .lobby-foot strong { color: var(--p31-cloud); }
+
+    /* Return ribbon should sit above the atmosphere layers */
+    body.p31-has-return-ribbon .p31-return-ribbon { z-index: 7; }
+
+    /* ---------------- View transition: lobby → destination ---------------- */
+    .lobby-shell.is-leaving { animation: lobby-leave 320ms var(--p31-ease-emphasized) forwards; }
+    .lobby-hearth.is-leaving { animation: lobby-hearth-flare 320ms var(--p31-ease-emphasized) forwards; }
+    @keyframes lobby-leave {
+      to { opacity: 0; transform: translateY(-6px); filter: blur(2px); }
+    }
+    @keyframes lobby-hearth-flare {
+      to { opacity: 1.4; transform: scale(1.02); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .lobby-shell.is-leaving, .lobby-hearth.is-leaving { animation: none; }
+    }
+  </style>
+  <style>
+    .safe-toggle { position: fixed; top: 1rem; right: 1rem; z-index: 9999; padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: all 150ms; }
+    .safe-toggle:hover { background: rgba(204,98,71,0.15); }
+    body.safe-mode { --p31-void: #000; --p31-surface: #0a0a0a; --p31-cloud: #fff; }
+    body.safe-mode * { animation: none !important; transition: none !important; }
+    body.safe-mode #starfield-canvas { display: none !important; }
   </style>
 </head>
-<body>
-  <canvas id="starfield-canvas"></canvas>
-  <button class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
-  
-  
-  <div class="phos-orb" id="phos-orb" title="PHOS Navigation">
-    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="orb-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#4db8a8;stop-opacity:0.9"/>
-          <stop offset="100%" style="stop-color:#3ba372;stop-opacity:0.7"/>
-        </linearGradient>
-      </defs>
-      <polygon points="50,10 10,90 90,90" fill="none" stroke="url(#orb-grad)" stroke-width="2"/>
-      <polygon points="50,30 25,75 75,75" fill="url(#orb-grad)" opacity="0.5"/>
-    </svg>
-  </div>
-  <div class="power-level" id="power-level">
-    <div class="power-dot" data-level="0"></div><div class="power-dot" data-level="1"></div><div class="power-dot" data-level="2"></div><div class="power-dot" data-level="3"></div><div class="power-dot" data-level="4"></div><div class="power-dot" data-level="5"></div><div class="power-dot" data-level="6"></div>
-  </div>
-  
-  
-  <main>
-    
-  <article class="page-content">
-    <header class="page-header">
-      <h1>Demo Tour</h1>
-    </header>
-    <div class="page-body">
-      <p>This is the Demo Tour page.</p>
-      <p>Type: guide</p>
-      <p>PHOS enabled: Yes</p>
-    </div>
-  </article>
-  
+<body class="p31-mesh-m-first">
+  <a class="p31-doc-skip" href="#main" style="position:absolute;left:-9999px;top:0;padding:0.5rem 1rem;background:#0f1115;color:#4db8a8;font-size:0.875rem;z-index:9999;border-radius:0 0 4px 4px;text-decoration:none" onfocus="this.style.left='0'" onblur="this.style.left='-9999px'">Skip to main content</a>
+
+  <canvas class="lobby-starfield" id="lobby-starfield" aria-hidden="true"></canvas>
+  <div class="lobby-hearth" aria-hidden="true"></div>
+  <div class="lobby-grain" aria-hidden="true"></div>
+
+  <nav class="lobby-rail" aria-label="Walkthrough progress">
+    <a class="lobby-rail__dot" href="#step-1" data-track="tools" title="The Room"></a>
+    <a class="lobby-rail__dot" href="#step-2" data-track="tools" title="Cognitive Passport"></a>
+    <a class="lobby-rail__dot" href="#step-3" data-track="tools" title="Document library"></a>
+    <a class="lobby-rail__dot" href="#step-4" data-track="tools" title="Fleet portal"></a>
+    <a class="lobby-rail__dot" href="#step-5" data-track="tools" title="Device setup"></a>
+    <a class="lobby-rail__dot" href="#step-6" data-track="operator" title="Command center"></a>
+    <a class="lobby-rail__dot" href="#step-7" data-track="operator" title="Operator desk"></a>
+  </nav>
+
+  <main id="main" class="lobby-shell" aria-labelledby="lobby-title">
+    <section class="lobby-hero">
+      <svg class="lobby-k4" viewBox="0 0 100 100" role="img" aria-label="P31 K-four mark">
+        <g class="lobby-k4__group">
+          <g
+            class="lobby-k4__edges"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            fill="none"
+            style="color: var(--p31-cyan)"
+          >
+            <line x1="50" y1="14" x2="14" y2="80" />
+            <line x1="50" y1="14" x2="86" y2="80" />
+            <line x1="14" y1="80" x2="86" y2="80" />
+            <line x1="50" y1="14" x2="50" y2="56" />
+            <line x1="14" y1="80" x2="50" y2="56" />
+            <line x1="86" y1="80" x2="50" y2="56" />
+          </g>
+          <circle class="lobby-k4__node" cx="50" cy="14" r="2.6" fill="var(--p31-cyan)" />
+          <circle class="lobby-k4__node" cx="14" cy="80" r="2.6" fill="var(--p31-cyan)" />
+          <circle class="lobby-k4__node" cx="86" cy="80" r="2.6" fill="var(--p31-cyan)" />
+          <circle class="lobby-k4__node" cx="50" cy="56" r="2.6" fill="var(--p31-coral)" />
+        </g>
+      </svg>
+
+      <div class="lobby-eyebrow">A guided walk · about seven minutes</div>
+      <h1 class="lobby-title" id="lobby-title">
+        Come in. Let me <em>show you around</em>.
+      </h1>
+      <p class="lobby-lede">
+        This is P31 Labs — a small lab building free, open-source tools for
+        families whose brains work differently. Take your time. Nothing
+        here is trying to capture your attention. We are just trying to be
+        useful, and to show our work.
+      </p>
+
+      <div class="lobby-receipts" aria-label="Quick receipts">
+        <span class="lobby-receipt">P31 Labs, Inc.</span>
+        <span class="lobby-receipt">Saint Marys, Georgia</span>
+        <span class="lobby-receipt">EIN 42-1888158</span>
+        <span class="lobby-receipt">501(c)(3) pending</span>
+      </div>
+
+      <span class="lobby-scroll-cue" aria-hidden="true">scroll</span>
+    </section>
+
+    <ol class="lobby-steps">
+      <!-- Step 1 — The Room -->
+      <li class="lobby-step" id="step-1">
+        <div class="lobby-step__art" aria-hidden="true">
+          <svg viewBox="0 0 64 64">
+            <g fill="none" stroke="var(--p31-cyan)" stroke-width="1.6" stroke-linecap="round">
+              <circle cx="22" cy="32" r="6">
+                <animate attributeName="cx" values="22;26;22" dur="6s" repeatCount="indefinite" />
+              </circle>
+              <circle cx="42" cy="22" r="6">
+                <animate attributeName="cy" values="22;26;22" dur="5s" repeatCount="indefinite" />
+              </circle>
+              <circle cx="42" cy="44" r="6" stroke="var(--p31-coral)">
+                <animate attributeName="cy" values="44;40;44" dur="7s" repeatCount="indefinite" />
+              </circle>
+              <line x1="22" y1="32" x2="42" y2="22" />
+              <line x1="22" y1="32" x2="42" y2="44" />
+              <line x1="42" y1="22" x2="42" y2="44" stroke="var(--p31-coral)" />
+            </g>
+          </svg>
+        </div>
+        <div>
+          <div class="lobby-step__num">The Room</div>
+          <h2 class="lobby-step__title">A shared space for your people</h2>
+          <p class="lobby-step__what">
+            C.A.R.S. is a small room where families can play together —
+            dragging atoms, building molecules, watching the colors
+            breathe. No strangers can wander in. There is no leaderboard.
+          </p>
+          <p class="lobby-step__why">
+            Most “together” software is actually a stadium. This one is a
+            living room.
+          </p>
+          <a class="lobby-cta" href="/soup.html" data-cta>Enter the room</a>
+          <p class="lobby-step__do">
+            When you arrive: drag an atom from the palette, build water
+            (H + H + O), and watch the room respond.
+          </p>
+        </div>
+      </li>
+
+      <!-- Step 2 — Cognitive Passport -->
+      <li class="lobby-step" id="step-2">
+        <div class="lobby-step__art" aria-hidden="true">
+          <svg viewBox="0 0 64 64">
+            <g fill="none" stroke="var(--p31-cyan)" stroke-width="1.6" stroke-linecap="round">
+              <rect x="14" y="12" width="36" height="40" rx="3" />
+              <line x1="22" y1="22" x2="42" y2="22" />
+              <line x1="22" y1="30" x2="42" y2="30" stroke="var(--p31-coral)" />
+              <line x1="22" y1="38" x2="36" y2="38" />
+              <line x1="22" y1="46" x2="38" y2="46" />
+              <path d="M50 12 L50 52" stroke-dasharray="2 4">
+                <animate attributeName="stroke-dashoffset" from="0" to="12" dur="5s" repeatCount="indefinite" />
+              </path>
+            </g>
+          </svg>
+        </div>
+        <div>
+          <div class="lobby-step__num">Cognitive Passport</div>
+          <h2 class="lobby-step__title">A one-page summary of how your brain works</h2>
+          <p class="lobby-step__what">
+            A short, plain-English document you fill out for yourself.
+            Then you can hand the same one page to a doctor, a teacher,
+            or a family member, instead of explaining everything from
+            scratch.
+          </p>
+          <p class="lobby-step__why">
+            Saying the same things over and over is one of the most
+            expensive things a neurodivergent person does. This makes
+            that cheaper.
+          </p>
+          <a class="lobby-cta" href="/cognitive-passport/index.html" data-cta>Open the passport</a>
+          <p class="lobby-step__do">
+            Pick an audience, fill in one section, then export it.
+          </p>
+        </div>
+      </li>
+
+      <!-- Step 3 — Document library -->
+      <li class="lobby-step" id="step-3">
+        <div class="lobby-step__art" aria-hidden="true">
+          <svg viewBox="0 0 64 64">
+            <g fill="none" stroke="var(--p31-cyan)" stroke-width="1.5" stroke-linecap="round">
+              <rect x="12" y="14" width="40" height="6" rx="2" />
+              <rect x="12" y="24" width="40" height="6" rx="2" />
+              <rect x="12" y="34" width="40" height="6" rx="2" stroke="var(--p31-coral)" />
+              <rect x="12" y="44" width="40" height="6" rx="2" />
+              <circle cx="48" cy="48" r="6" stroke="var(--p31-coral)">
+                <animate attributeName="r" values="6;7.5;6" dur="3.5s" repeatCount="indefinite" />
+              </circle>
+              <line x1="52" y1="52" x2="58" y2="58" stroke="var(--p31-coral)" />
+            </g>
+          </svg>
+        </div>
+        <div>
+          <div class="lobby-step__num">Document library</div>
+          <h2 class="lobby-step__title">The receipts, all searchable</h2>
+          <p class="lobby-step__what">
+            Every plan, standard, and specification we use to build this
+            lab lives here — in plain markdown, fully searchable in your
+            browser. Nothing is hidden behind a portal.
+          </p>
+          <p class="lobby-step__why">
+            “We build in public” has to mean something. This is what it
+            means.
+          </p>
+          <a class="lobby-cta" href="/docs/doc-library/" data-cta>Search the library</a>
+          <p class="lobby-step__do">
+            Type a word like <em>legal</em> or <em>mesh</em> in the
+            search box. Watch what comes back.
+          </p>
+        </div>
+      </li>
+
+      <!-- Step 4 — Fleet portal -->
+      <li class="lobby-step" id="step-4">
+        <div class="lobby-step__art" aria-hidden="true">
+          <svg viewBox="0 0 64 64">
+            <g stroke-linecap="round">
+              <circle cx="32" cy="32" r="22" fill="none" stroke="var(--p31-cyan)" stroke-width="1.2" stroke-dasharray="2 4" />
+              <circle cx="32" cy="32" r="14" fill="none" stroke="var(--p31-cyan)" stroke-width="1.2" stroke-dasharray="2 4" />
+              <circle cx="32" cy="32" r="3" fill="var(--p31-coral)" />
+              <circle cx="48" cy="22" r="2.5" fill="var(--p31-phosphorus)">
+                <animate attributeName="r" values="2;3;2" dur="2.4s" repeatCount="indefinite" />
+              </circle>
+              <circle cx="18" cy="40" r="2.5" fill="var(--p31-phosphorus)">
+                <animate attributeName="r" values="2.5;3.5;2.5" dur="2.8s" repeatCount="indefinite" />
+              </circle>
+              <circle cx="44" cy="46" r="2.5" fill="var(--p31-phosphorus)">
+                <animate attributeName="r" values="2;3;2" dur="3.1s" repeatCount="indefinite" />
+              </circle>
+              <circle cx="22" cy="20" r="2.5" fill="var(--p31-phosphorus)">
+                <animate attributeName="r" values="2.5;3.5;2.5" dur="2.5s" repeatCount="indefinite" />
+              </circle>
+            </g>
+          </svg>
+        </div>
+        <div>
+          <div class="lobby-step__num">Fleet portal</div>
+          <h2 class="lobby-step__title">Every live URL on one page</h2>
+          <p class="lobby-step__what">
+            A single page that lists everything we have running, with a
+            small dot showing whether it is up. The list is generated,
+            not hand-typed, so it tells the truth.
+          </p>
+          <p class="lobby-step__why">
+            If a thing is not on this page, it is not real yet.
+          </p>
+          <a class="lobby-cta" href="/fleet-portal.html" data-cta>Open the fleet portal</a>
+          <p class="lobby-step__do">
+            Count the green dots. That is what is running right now.
+          </p>
+        </div>
+      </li>
+
+      <!-- Step 5 — Device setup -->
+      <li class="lobby-step" id="step-5">
+        <div class="lobby-step__art" aria-hidden="true">
+          <svg viewBox="0 0 64 64">
+            <g fill="none" stroke="var(--p31-cyan)" stroke-width="1.5" stroke-linecap="round">
+              <rect x="6"  y="20" width="26" height="18" rx="2" />
+              <rect x="40" y="14" width="14" height="28" rx="3" />
+              <line x1="32" y1="29" x2="40" y2="29" stroke-dasharray="2 3">
+                <animate attributeName="stroke-dashoffset" from="0" to="10" dur="2.6s" repeatCount="indefinite" />
+              </line>
+              <circle cx="47" cy="38" r="1.4" fill="var(--p31-coral)" stroke="none" />
+              <line x1="9"  y1="42" x2="29" y2="42" />
+            </g>
+          </svg>
+        </div>
+        <div>
+          <div class="lobby-step__num">Device setup</div>
+          <h2 class="lobby-step__title">How to run all of this on a Chromebook and a phone</h2>
+          <p class="lobby-step__what">
+            The same instructions we use ourselves. A Chromebook on the
+            desk, a phone in your pocket, and a small set of commands —
+            nothing fancier than that.
+          </p>
+          <p class="lobby-step__why">
+            The lab should run on the hardware a real family already
+            owns.
+          </p>
+          <a class="lobby-cta" href="/p31-device-setup.html" data-cta>Read the setup</a>
+          <p class="lobby-step__do">
+            Scroll through. This is the operator’s field manual.
+          </p>
+        </div>
+      </li>
+
+      <!-- Step 6 — Command center (operator) -->
+      <li class="lobby-step lobby-step--operator" id="step-6">
+        <div class="lobby-step__art" aria-hidden="true">
+          <svg viewBox="0 0 64 64">
+            <g fill="none" stroke="var(--p31-coral)" stroke-width="1.6" stroke-linecap="round">
+              <rect x="10" y="22" width="44" height="28" rx="4" />
+              <path d="M22 22 V14 a10 10 0 0 1 20 0 V22" />
+              <circle cx="32" cy="36" r="4" fill="var(--p31-coral)" stroke="none">
+                <animate attributeName="r" values="3.4;4.6;3.4" dur="2.4s" repeatCount="indefinite" />
+              </circle>
+              <line x1="32" y1="40" x2="32" y2="46" stroke-width="2" />
+            </g>
+          </svg>
+        </div>
+        <div>
+          <div class="lobby-step__num">Command center</div>
+          <h2 class="lobby-step__title">The control panel — locked by default</h2>
+          <p class="lobby-step__what">
+            A small page on this computer with a list of buttons. Each
+            button runs one specific, pre-approved action. Nothing else
+            can run from here.
+          </p>
+          <p class="lobby-step__why">
+            A control panel that lets anything run is not a control
+            panel. This one is gated, on purpose.
+          </p>
+          <a class="lobby-cta" href="http://127.0.0.1:3131/" data-cta data-external>Open the control panel</a>
+          <p class="lobby-step__do">
+            Click <em>Doctor</em> in Essentials. Watch it run, then come
+            back.
+          </p>
+        </div>
+      </li>
+
+      <!-- Step 7 — Operator desk (operator) -->
+      <li class="lobby-step lobby-step--operator" id="step-7">
+        <div class="lobby-step__art" aria-hidden="true">
+          <svg viewBox="0 0 64 64">
+            <g fill="none" stroke="var(--p31-coral)" stroke-width="1.5" stroke-linecap="round">
+              <path d="M10 44 a22 22 0 0 1 44 0" />
+              <line x1="32" y1="44" x2="46" y2="26">
+                <animateTransform attributeName="transform" type="rotate" from="-30 32 44" to="30 32 44" dur="6s" repeatCount="indefinite" />
+              </line>
+              <circle cx="32" cy="44" r="2" fill="var(--p31-coral)" stroke="none" />
+              <line x1="14" y1="46" x2="50" y2="46" stroke="var(--p31-cyan)" stroke-dasharray="1 3" opacity="0.65" />
+            </g>
+          </svg>
+        </div>
+        <div>
+          <div class="lobby-step__num">Operator desk</div>
+          <h2 class="lobby-step__title">Read-only telemetry — the calm window</h2>
+          <p class="lobby-step__what">
+            The desk does not run anything. It only shows the current
+            state — connection counts, glass probes, what is up, what
+            is quiet. Leave it open in a second tab.
+          </p>
+          <p class="lobby-step__why">
+            Two windows: one for action, one for awareness. They should
+            never be the same window.
+          </p>
+          <a class="lobby-cta" href="http://127.0.0.1:3131/desk" data-cta data-external>Open the desk</a>
+          <p class="lobby-step__do">
+            Keep this open while you finish the tour. Glance over once
+            or twice. That is the whole job.
+          </p>
+        </div>
+      </li>
+    </ol>
+
+    <p class="lobby-tip">
+      The library search is the fastest way to prove this is real
+      without explaining anything. Type a word and read what comes back.
+    </p>
+
+    <p class="lobby-foot">
+      <strong>P31 Labs, Inc.</strong> · Saint Marys, Georgia · EIN
+      42-1888158 · 501(c)(3) pending<br />
+      This demo runs entirely on your machine. Nothing leaves localhost.
+    </p>
   </main>
-  
-  
+
   <script type="module">
-    import { Starfield } from '/public/lib/p31-starfield.mjs';
-    const starfield = new Starfield('starfield-canvas', {
-      surfaceId: 'demo-tour',
-      starCount: 100,
-      meshSync: true
+    import {
+      initStarfield,
+      DEFAULT_STARFIELD_CONFIG,
+    } from "/design-assets/starfield/p31-starfield.js";
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    /* --- Starfield (lobby density — bumped 2026-04-30 polish) --- */
+    const canvas = document.getElementById("lobby-starfield");
+    if (canvas && typeof initStarfield === "function") {
+      try {
+        initStarfield(
+          canvas,
+          {
+            ...DEFAULT_STARFIELD_CONFIG,
+            count: 140,
+            speed: 0.22,
+            hearthA: 0.06,
+          },
+          { surface: "hub" }
+        );
+      } catch (_e) {
+        /* decorative — fail quiet */
+      }
+    }
+
+    /* --- Reveal steps on scroll --- */
+    const steps = Array.from(document.querySelectorAll(".lobby-step"));
+    if ("IntersectionObserver" in window && !reduced) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add("is-visible");
+              io.unobserve(e.target);
+            }
+          }
+        },
+        { threshold: 0.18, rootMargin: "0px 0px -40px 0px" }
+      );
+      steps.forEach((s) => io.observe(s));
+    } else {
+      steps.forEach((s) => s.classList.add("is-visible"));
+    }
+
+    /* --- Sticky rail "you are here" --- */
+    const dots = Array.from(document.querySelectorAll(".lobby-rail__dot"));
+    if ("IntersectionObserver" in window && dots.length === steps.length) {
+      const railIO = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              const idx = steps.indexOf(e.target);
+              dots.forEach((d, i) =>
+                d.toggleAttribute("data-active", i === idx)
+              );
+            }
+          }
+        },
+        { threshold: 0.55 }
+      );
+      steps.forEach((s) => railIO.observe(s));
+    }
+
+    /* --- Hearth scales with scroll velocity (subtle) --- */
+    const hearth = document.querySelector(".lobby-hearth");
+    if (hearth && !reduced) {
+      let lastY = window.scrollY;
+      let raf = 0;
+      const tick = () => {
+        const dy = Math.abs(window.scrollY - lastY);
+        lastY = window.scrollY;
+        const energy = Math.min(1.6, 0.85 + dy / 240);
+        hearth.style.opacity = energy.toString();
+        raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+      window.addEventListener("beforeunload", () => cancelAnimationFrame(raf));
+    }
+
+    /* --- Magnetic CTAs (very small tilt toward cursor) --- */
+    if (!reduced) {
+      document.querySelectorAll(".lobby-cta").forEach((btn) => {
+        let raf = 0;
+        btn.addEventListener("pointermove", (e) => {
+          const r = btn.getBoundingClientRect();
+          const px = (e.clientX - r.left) / r.width - 0.5;
+          const py = (e.clientY - r.top) / r.height - 0.5;
+          cancelAnimationFrame(raf);
+          raf = requestAnimationFrame(() => {
+            btn.style.transform = `translate(${px * 4}px, ${py * 3}px)`;
+          });
+        });
+        btn.addEventListener("pointerleave", () => {
+          cancelAnimationFrame(raf);
+          btn.style.transform = "";
+        });
+      });
+    }
+
+    /* --- View transition: fade lobby on internal CTA --- */
+    document.querySelectorAll('.lobby-cta:not([data-external])').forEach((a) => {
+      a.addEventListener("click", (ev) => {
+        if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button !== 0) return;
+        if (reduced) return;
+        const href = a.getAttribute("href");
+        if (!href || href.startsWith("#") || href.startsWith("http")) return;
+        ev.preventDefault();
+        document.querySelector(".lobby-shell")?.classList.add("is-leaving");
+        document.querySelector(".lobby-hearth")?.classList.add("is-leaving");
+        setTimeout(() => { window.location.href = href; }, 280);
+      });
     });
   </script>
-  
-  
-  
-  <script type="module">
-    import { PHOS } from '/public/lib/p31-phos-core.mjs';
-    window.phos = new PHOS({
-      mount: '#phos-orb',
-      pageId: 'demo-tour',
-      powerLevels: [0,1,2,3,4,5,6]
-    });
-  </script>
-  
+
+  <script
+    src="/cognitive-passport/lib/p31-return-ribbon.js"
+    data-local-soup="/soup.html"
+    defer
+  ></script>
+<script src="/public/lib/p31-atmosphere-core.js"></script>
+<script src="/public/lib/p31-smart-starfield.js"></script>
+<script>
+  const starfield = new SmartStarfield('starfield-canvas', {
+    surfaceId: 'surface-demo-tour',
+    meshSync: true,
+    starCount: 80
+  });
+</script>
 </body>
 </html>

@@ -1,0 +1,16 @@
+{
+  "name": "p31-ecosystem-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "P31 cross-site nervous system — CORS bridge between phosphorus31.org and p31ca.org",
+  "scripts": {
+    "dev": "wrangler dev --config wrangler.toml",
+    "deploy": "wrangler deploy --config wrangler.toml",
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250510.0",
+    "typescript": "^5.0.0",
+    "wrangler": "^3.114.17"
+  }
+}

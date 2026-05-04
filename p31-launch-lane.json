@@ -1,6 +1,6 @@
 {
   "schema": "p31.launchLane/0.1.0",
-  "updated": "2026-04-30T12:00:00.000Z",
+  "updated": "2026-05-04T12:00:00.000Z",
   "governance": {
     "minGovernedScore": 85,
     "minGovernedFloorPerDimension": 6,
@@ -27,7 +27,8 @@
     "orgMarketing": {
       "url": "https://phosphorus31.org/",
       "kind": "separate-repo-deploy",
-      "note": "Not p31ca; parallel site"
+      "statusJson": "https://phosphorus31.org/p31-status.json",
+      "note": "Not p31ca; parallel site. Serves p31-status.json for cross-site reads."
     },
     "bondingVertical": {
       "url": "https://bonding.p31ca.org/",
@@ -384,6 +385,62 @@
         ],
         "customDomain": null,
         "deploy": "04_SOFTWARE/p31-agent-hub"
+      }
+    },
+    {
+      "id": "p31-buffer-api",
+      "kind": "worker",
+      "label": "p31-buffer-api (phosphorus31.org buffer/rewrite Worker)",
+      "prsTotal": 64,
+      "tier": "governed-short",
+      "tierPrsUi": "P2",
+      "score": {
+        "liveReachable": 6,
+        "deployability": 7,
+        "verificationHooks": 6,
+        "testingDepth": 5,
+        "contractsSchemas": 6,
+        "observability": 6,
+        "securityPosture": 8,
+        "operationalClarity": 7,
+        "uxCompleteness": 6,
+        "ephemeralizationAlignment": 7
+      },
+      "fleet": {
+        "workersDev": "https://p31-buffer-api.trimtab-signal.workers.dev",
+        "healthPaths": [
+          "/health"
+        ],
+        "customDomain": null,
+        "deploy": "phosphorus31.org/apps/buffer-api (wrangler deploy)"
+      }
+    },
+    {
+      "id": "p31-ecosystem-bridge",
+      "kind": "worker",
+      "label": "p31-ecosystem-bridge (Cross-site nervous system; CORS bridge phosphorus31.org ↔ p31ca.org)",
+      "prsTotal": 87,
+      "tier": "governed-ok",
+      "tierPrsUi": "P0",
+      "score": {
+        "liveReachable": 8,
+        "deployability": 9,
+        "verificationHooks": 9,
+        "testingDepth": 9,
+        "contractsSchemas": 8,
+        "observability": 9,
+        "securityPosture": 9,
+        "operationalClarity": 9,
+        "uxCompleteness": 7,
+        "ephemeralizationAlignment": 10
+      },
+      "fleet": {
+        "workersDev": "https://ecosystem-bridge.trimtab-signal.workers.dev",
+        "healthPaths": [
+          "/health"
+        ],
+        "customDomain": null,
+        "deploy": "workers/p31-ecosystem-bridge (wrangler deploy)"
       }
     },
     {

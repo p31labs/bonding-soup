@@ -326,5 +326,13 @@ body.safe-mode * { animation: none !important; transition: none !important; }
     if (localStorage.getItem('p31_safe_mode') === 'true') document.body.classList.add('safe-mode');
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.body.classList.add('safe-mode');
   </script>
+<script>
+    // Initialize Smart Starfield
+    const starfield = new SmartStarfield('starfield-canvas', {
+      surfaceId: 'surface-fleet-portal',
+      meshSync: true,
+      starCount: 100
+    });
+  </script>
 </body>
 </html>

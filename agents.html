@@ -723,5 +723,13 @@ body.safe-mode * { animation: none !important; transition: none !important; }
       if (tetra) tetra.style.display = 'none';
     }
   </script>
+<script>
+    // Initialize Smart Starfield
+    const starfield = new SmartStarfield('starfield-canvas', {
+      surfaceId: 'surface-agents',
+      meshSync: true,
+      starCount: 100
+    });
+  </script>
 </body>
 </html>

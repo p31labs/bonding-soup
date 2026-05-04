@@ -1,10 +1,3 @@
-<style>
-.safe-toggle { position: fixed; top: 1rem; right: 1rem; z-index: 9999; padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: #cc6247; font-family: "JetBrains Mono", monospace; font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: all 150ms; }
-.safe-toggle:hover { background: rgba(204,98,71,0.15); }
-body.safe-mode { --p31-void: #000; --p31-surface: #0a0a0a; --p31-cloud: #fff; }
-body.safe-mode * { animation: none !important; transition: none !important; }
-</style>
-<button id="safeToggle" class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
 <!DOCTYPE html>
 <html lang="en" data-p31-appearance="hub">
 <head>
@@ -281,6 +274,7 @@ body.safe-mode * { animation: none !important; transition: none !important; }
   </style>
 </head>
 <body>
+  <button id="safeToggle" class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
   <!-- Smart Starfield Canvas -->
   <canvas id="starfield-canvas"></canvas>
   
@@ -566,10 +560,12 @@ body.safe-mode * { animation: none !important; transition: none !important; }
           }
         });
         
-        // Initialize
-        resize();
-        initStars();
-        draw();
+        // Initialize SmartStarfield module
+        const starfield = new SmartStarfield('starfield-canvas', {
+          surfaceId: 'phos-landing',
+          meshSync: true,
+          coherenceSource: 'coherence-value'
+        });
         
         console.log('PHOS Starfield: K4 mesh visualization active');
       } catch (e) {

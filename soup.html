@@ -61,6 +61,8 @@ canvas { display: block; width: 100%; height: 100%; }
 </style>
 </head>
 <body>
+<canvas id="starfield-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.6;"></canvas>
+
   <nav class="top-nav">
     <div style="display:flex; align-items:center; gap: 1.5rem;">
       <div class="phos-wrap hide-safe">
@@ -156,7 +158,8 @@ canvas { display: block; width: 100%; height: 100%; }
     <span>P31 Labs — EIN 42-1888158 — C.A.R.S. v2.2 — PHOS Protected</span>
   </footer>
 
-  <script src="/lib/p31-atmosphere-core.js"></script>
+  <script src="/lib/p31-smart-starfield.js"></script>
+<script src="/lib/p31-atmosphere-core.js"></script>
   <script>
     // ============================================
     // 1. DATA STRUCTURES (K4 Mesh)
@@ -504,5 +507,13 @@ canvas { display: block; width: 100%; height: 100%; }
     };
   </script>
 <button id="safeToggle" class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
+<script>
+    // Initialize Smart Starfield
+    const starfield = new SmartStarfield('starfield-canvas', {
+      surfaceId: 'surface-soup',
+      meshSync: true,
+      starCount: 100
+    });
+  </script>
 </body>
 </html>

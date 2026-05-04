@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" data-p31-appearance="hub">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K4 Mesh Widget Demo — Personal Tetrahedrons</title>
+  <link rel="stylesheet" href="/lib/p31-qmu-tokens.css">
+  <style>
+    body {
+      background: var(--p31-void);
+      color: var(--p31-cloud);
+      font-family: var(--p31-font-sans);
+      margin: 0;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .mesh-widget {
+      background: var(--p31-surface);
+      border: 1px solid var(--p31-glass-border);
+      border-radius: var(--p31-radius-lg);
+      overflow: hidden;
+    }
+    
+    .widget-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--p31-glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .widget-title {
+      font-family: var(--p31-font-mono);
+      font-size: var(--p31-text-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--p31-cyan);
+    }
+    
+    .coherence-badge {
+      background: rgba(59, 163, 114, 0.2);
+      color: var(--p31-phosphorus);
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--p31-radius-full);
+      font-family: var(--p31-font-mono);
+      font-size: var(--p31-text-xs);
+    }
+    
+    .canvas-container {
+      position: relative;
+      height: 300px;
+      background: radial-gradient(circle at center, rgba(37, 137, 125, 0.05) 0%, transparent 70%);
+    }
+    
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .widget-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--p31-glass-border);
+      font-size: var(--p31-text-xs);
+      color: var(--p31-muted);
+      font-family: var(--p31-font-mono);
+    }
+    
+    .legend {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    
+    h1 {
+      font-family: var(--p31-font-mono);
+      text-align: center;
+      margin-bottom: 2rem;
+      color: var(--p31-cyan);
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: var(--p31-muted);
+      margin-bottom: 3rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔺 K4 Mesh Visualizer</h1>
+  <p class="subtitle">
+    Personal tetrahedrons and hubs embedded in any surface.<br>
+    Drag nodes to adjust tension. Coherence broadcasts across all widgets.
+  </p>
+  
+  <div class="demo-grid">
+    <!-- Family K4 Cage -->
+    <div class="mesh-widget">
+      <div class="widget-header">
+        <span class="widget-title">Family K4 Cage</span>
+        <span class="coherence-badge" id="family-coherence">92%</span>
+      </div>
+      <div class="canvas-container">
+        <canvas id="family-canvas"></canvas>
+      </div>
+      <div class="widget-footer">
+        <div class="legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background: #25897d;"></div>
+            <span>will (FORGE)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: #cc6247;"></div>
+            <span>S.J. (SCHOLAR)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: #3ba372;"></div>
+            <span>W.J. (SCRIBE)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: #8b7cc9;"></div>
+            <span>christyn (COUNSEL)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- FORGE Hub -->
+    <div class="mesh-widget">
+      <div class="widget-header">
+        <span class="widget-title">FORGE Hub — Making</span>
+        <span class="coherence-badge" id="forge-coherence">85%</span>
+      </div>
+      <div class="canvas-container">
+        <canvas id="forge-canvas"></canvas>
+      </div>
+      <div class="widget-footer">
+        Central hub for building, creating, and technical work.
+      </div>
+    </div>
+    
+    <!-- COUNSEL Hub -->
+    <div class="mesh-widget">
+      <div class="widget-header">
+        <span class="widget-title">COUNSEL Hub — Protecting</span>
+        <span class="coherence-badge" id="counsel-coherence">78%</span>
+      </div>
+      <div class="canvas-container">
+        <canvas id="counsel-canvas"></canvas>
+      </div>
+      <div class="widget-footer">
+        Legal, medical, and safety coordination center.
+      </div>
+    </div>
+    
+    <!-- SCHOLAR Hub -->
+    <div class="mesh-widget">
+      <div class="widget-header">
+        <span class="widget-title">SCHOLAR Hub — Understanding</span>
+        <span class="coherence-badge" id="scholar-coherence">88%</span>
+      </div>
+      <div class="canvas-container">
+        <canvas id="scholar-canvas"></canvas>
+      </div>
+      <div class="widget-footer">
+        Research, documentation, and knowledge synthesis.
+      </div>
+    </div>
+    
+    <!-- SCRIBE Hub -->
+    <div class="mesh-widget">
+      <div class="widget-header">
+        <span class="widget-title">SCRIBE Hub — Remembering</span>
+        <span class="coherence-badge" id="scribe-coherence">91%</span>
+      </div>
+      <div class="canvas-container">
+        <canvas id="scribe-canvas"></canvas>
+      </div>
+      <div class="widget-footer">
+        Archives, logs, and institutional memory.
+      </div>
+    </div>
+    
+    <!-- Personal K4 (Isolated) -->
+    <div class="mesh-widget">
+      <div class="widget-header">
+        <span class="widget-title">Personal K4 — Pillars a·b·c·d</span>
+        <span class="coherence-badge" id="personal-coherence">95%</span>
+      </div>
+      <div class="canvas-container">
+        <canvas id="personal-canvas"></canvas>
+      </div>
+      <div class="widget-footer">
+        Isolated personal scope. Not shared with family mesh.
+      </div>
+    </div>
+  </div>
+  
+  <!-- Safe Mode Toggle -->
+  <button id="safeToggle" style="position: fixed; top: 1rem; right: 1rem; padding: 0.5rem 1rem; background: rgba(204,98,71,0.1); border: 1px solid rgba(204,98,71,0.3); color: #cc6247; font-family: 'JetBrains Mono', monospace; cursor: pointer; border-radius: 6px;">
+    Safe Mode
+  </button>
+  
+  <script src="/lib/p31-k4-mesh-visualizer.js"></script>
+  <script>
+    // Initialize family cage
+    const familyMesh = K4MeshVisualizer.familyCage('family-canvas', {
+      meshSync: true,
+      surfaceId: 'family-widget',
+      onCoherenceChange: (c) => {
+        document.getElementById('family-coherence').textContent = `${c}%`;
+      }
+    });
+    familyMesh.start();
+    
+    // Initialize personal hubs
+    const forgeHub = K4MeshVisualizer.personalHub('forge-canvas', 'forge', {
+      meshSync: true,
+      surfaceId: 'forge-widget',
+      onCoherenceChange: (c) => {
+        document.getElementById('forge-coherence').textContent = `${c}%`;
+      }
+    });
+    forgeHub.start();
+    
+    const counselHub = K4MeshVisualizer.personalHub('counsel-canvas', 'counsel', {
+      meshSync: true,
+      surfaceId: 'counsel-widget',
+      onCoherenceChange: (c) => {
+        document.getElementById('counsel-coherence').textContent = `${c}%`;
+      }
+    });
+    counselHub.start();
+    
+    const scholarHub = K4MeshVisualizer.personalHub('scholar-canvas', 'scholar', {
+      meshSync: true,
+      surfaceId: 'scholar-widget',
+      onCoherenceChange: (c) => {
+        document.getElementById('scholar-coherence').textContent = `${c}%`;
+      }
+    });
+    scholarHub.start();
+    
+    const scribeHub = K4MeshVisualizer.personalHub('scribe-canvas', 'scribe', {
+      meshSync: true,
+      surfaceId: 'scribe-widget',
+      onCoherenceChange: (c) => {
+        document.getElementById('scribe-coherence').textContent = `${c}%`;
+      }
+    });
+    scribeHub.start();
+    
+    // Personal K4 (custom configuration)
+    const personalMesh = new K4MeshVisualizer('personal-canvas', {
+      vertices: [
+        { id: 'a', label: 'PILLAR A', color: '#4db8a8', role: 'pillar' },
+        { id: 'b', label: 'PILLAR B', color: '#cda852', role: 'pillar' },
+        { id: 'c', label: 'PILLAR C', color: '#8b7cc9', role: 'pillar' },
+        { id: 'd', label: 'PILLAR D', color: '#cc6247', role: 'pillar' }
+      ],
+      edges: [
+        { source: 0, target: 1, weight: 9 },
+        { source: 0, target: 2, weight: 7 },
+        { source: 0, target: 3, weight: 8 },
+        { source: 1, target: 2, weight: 6 },
+        { source: 1, target: 3, weight: 7 },
+        { source: 2, target: 3, weight: 8 }
+      ],
+      meshSync: true,
+      surfaceId: 'personal-widget',
+      onCoherenceChange: (c) => {
+        document.getElementById('personal-coherence').textContent = `${c}%`;
+      }
+    });
+    personalMesh.start();
+    
+    // Safe mode toggle
+    document.getElementById('safeToggle').onclick = () => {
+      const isSafe = document.body.classList.toggle('safe-mode');
+      if (isSafe) {
+        familyMesh.destroy();
+        forgeHub.destroy();
+        counselHub.destroy();
+        scholarHub.destroy();
+        scribeHub.destroy();
+        personalMesh.destroy();
+      } else {
+        familyMesh.resume();
+        forgeHub.resume();
+        counselHub.resume();
+        scholarHub.resume();
+        scribeHub.resume();
+        personalMesh.resume();
+      }
+    };
+    
+    console.log('🔺 K4 Mesh Widget Demo: 6 tetrahedrons active');
+  </script>
+</body>
+</html>

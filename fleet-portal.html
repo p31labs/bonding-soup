@@ -300,5 +300,23 @@
     })();
   </script>
   <script src="/lib/p31-return-ribbon.js" defer></script>
+  
+  <!-- PHOS Atmosphere Core — Voice-first navigation wrapper -->
+  <script src="public/lib/p31-atmosphere-core.js"></script>
+  <script>
+    // Safe Mode Toggle
+    const safeToggle = document.createElement('button');
+    safeToggle.className = 'safe-toggle';
+    safeToggle.innerText = 'Safe Mode';
+    safeToggle.style.cssText = 'position:fixed;top:1rem;right:1rem;z-index:9999;padding:0.5rem 0.75rem;border:1px solid rgba(204,98,71,0.3);border-radius:6px;background:rgba(204,98,71,0.08);color:#cc6247;font-family:"JetBrains Mono",monospace;font-size:0.75rem;text-transform:uppercase;cursor:pointer;transition:all 150ms;';
+    safeToggle.onclick = () => {
+      document.body.classList.toggle('safe-mode');
+      document.body.style.animation = document.body.classList.contains('safe-mode') ? 'none !important' : '';
+    };
+    document.body.appendChild(safeToggle);
+    
+    if (localStorage.getItem('p31_safe_mode') === 'true') document.body.classList.add('safe-mode');
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.body.classList.add('safe-mode');
+  </script>
 </body>
 </html>

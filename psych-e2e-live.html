@@ -1,416 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-p31-appearance="hub">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Psychological E2E — Live Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Psych E2E Dashboard · P31</title>
+  <meta name="description" content="Phosphorus31 — Family mesh infrastructure for the neurodivergent operator">
+  <meta name="theme-color" content="#0f1115">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="/lib/p31-qmu-tokens.css">
-  <link rel="stylesheet" href="cognitive-passport/p31-style.css">
+  <link rel="stylesheet" href="/p31-style.css">
+  
   <style>
-    :root {
-      --p31-void: #0f1115;
-      --p31-surface: #161920;
-      --p31-coral: #cc6247;
-      --p31-teal: #25897d;
-      --p31-cyan: #4db8a8;
-      --p31-phosphorus: #3ba372;
-      --p31-cloud: #d8d6d0;
-      --p31-muted: #6b7280;
+    /* Starfield Canvas */
+    #starfield-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.5;
     }
+    body.safe-mode #starfield-canvas { display: none !important; }
     
-    body {
-      margin: 0;
-      padding: 2rem;
-      background: var(--p31-void);
-      color: var(--p31-cloud);
-      font-family: "Atkinson Hyperlegible", sans-serif;
+    /* Safe Mode Toggle */
+    .safe-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 10000;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid rgba(204,98,71,0.3);
+      border-radius: 6px;
+      background: rgba(204,98,71,0.08);
+      color: var(--p31-coral);
+      font-family: var(--p31-font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 150ms;
     }
+    .safe-toggle:hover { background: rgba(204,98,71,0.15); }
     
-    .dashboard-header {
+    /* PHOS Orb */
+    .phos-orb {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      z-index: 9999;
+      cursor: pointer;
+      filter: drop-shadow(0 0 10px rgba(77,184,168,0.4));
+      transition: transform 0.3s ease;
+    }
+    .phos-orb:hover { transform: scale(1.1); }
+    body.safe-mode .phos-orb { filter: grayscale(1); animation: none; }
+    
+    /* Power Level Indicator */
+    .power-level {
+      position: fixed;
+      bottom: 2rem;
+      right: 5rem;
+      z-index: 9998;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      gap: 0.25rem;
     }
-    
-    h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      color: var(--p31-cyan);
-    }
-    
-    .status-badge {
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      font-family: "JetBrains Mono", monospace;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-    }
-    
-    .status-live {
-      background: rgba(59, 163, 114, 0.2);
-      color: var(--p31-phosphorus);
-      border: 1px solid var(--p31-phosphorus);
-      animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
-    
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    
-    .card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 8px;
-      padding: 1.5rem;
-    }
-    
-    .card h3 {
-      margin: 0 0 1rem 0;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--p31-muted);
-    }
-    
-    .metric-value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      font-family: "JetBrains Mono", monospace;
-    }
-    
-    .metric-pass { color: var(--p31-phosphorus); }
-    .metric-fail { color: var(--p31-coral); }
-    .metric-warn { color: #cda852; }
-    
-    .test-stream {
-      background: rgba(0,0,0,0.3);
-      border-radius: 8px;
-      padding: 1rem;
-      max-height: 400px;
-      overflow-y: auto;
-      font-family: "JetBrains Mono", monospace;
-      font-size: 0.85rem;
-    }
-    
-    .test-entry {
-      padding: 0.5rem;
-      margin-bottom: 0.5rem;
-      border-left: 3px solid transparent;
-      background: rgba(255,255,255,0.02);
-      border-radius: 4px;
-    }
-    
-    .test-pass { border-left-color: var(--p31-phosphorus); }
-    .test-fail { border-left-color: var(--p31-coral); background: rgba(204,98,71,0.1); }
-    .test-warn { border-left-color: #cda852; }
-    
-    .persona-indicator {
-      display: inline-block;
+    .power-dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      margin-right: 0.5rem;
+      background: var(--p31-muted);
+      transition: all 0.3s;
     }
+    .power-dot.active { background: var(--p31-cyan); box-shadow: 0 0 8px var(--p31-cyan); }
     
-    .persona-w { background: var(--p31-cyan); }
-    .persona-crisis { background: var(--p31-coral); animation: blink 1s infinite; }
-    .persona-sj { background: #cda852; }
-    .persona-wj { background: #8b7cc9; }
-    .persona-shutdown { background: var(--p31-muted); }
-    
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-    
-    .alert-box {
-      background: rgba(204, 98, 71, 0.1);
-      border: 1px solid var(--p31-coral);
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-      display: none;
-    }
-    
-    .alert-box.visible {
-      display: block;
-      animation: slideIn 0.3s ease;
-    }
-    
-    @keyframes slideIn {
-      from { transform: translateY(-10px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    
-    .controls {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    
-    button {
-      padding: 0.75rem 1.5rem;
-      background: var(--p31-teal);
-      color: #000;
-      border: none;
-      border-radius: 6px;
-      font-family: "JetBrains Mono", monospace;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-    
-    button:hover {
-      opacity: 0.9;
-    }
-    
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    
-    .last-updated {
-      text-align: right;
-      color: var(--p31-muted);
-      font-size: 0.8rem;
-      margin-top: 2rem;
-    }
+    /* Main Content */
+    main { position: relative; z-index: 1; }
   </style>
 </head>
 <body>
-<canvas id="starfield-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.6;"></canvas>
-
-  <div class="dashboard-header">
-    <div>
-      <h1>🔮 Psychological E2E — Live Dashboard</h1>
-      <p style="margin:0; color: var(--p31-muted);">Autoethnographic testing for neurodivergent accessibility</p>
-    </div>
-    <span class="status-badge status-live">● LIVE</span>
+  <canvas id="starfield-canvas"></canvas>
+  <button class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
+  
+  
+  <div class="phos-orb" id="phos-orb" title="PHOS Navigation">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="orb-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#4db8a8;stop-opacity:0.9"/>
+          <stop offset="100%" style="stop-color:#3ba372;stop-opacity:0.7"/>
+        </linearGradient>
+      </defs>
+      <polygon points="50,10 10,90 90,90" fill="none" stroke="url(#orb-grad)" stroke-width="2"/>
+      <polygon points="50,30 25,75 75,75" fill="url(#orb-grad)" opacity="0.5"/>
+    </svg>
   </div>
-
-  <div id="alertBox" class="alert-box">
-    <strong>🚨 OPERATOR ALERT:</strong> <span id="alertMessage"></span>
+  <div class="power-level" id="power-level">
+    <div class="power-dot" data-level="0"></div><div class="power-dot" data-level="1"></div><div class="power-dot" data-level="2"></div><div class="power-dot" data-level="3"></div><div class="power-dot" data-level="4"></div><div class="power-dot" data-level="5"></div><div class="power-dot" data-level="6"></div>
   </div>
-
-  <div class="controls">
-    <button onclick="runTests()" id="runBtn">▶ Run All Tests</button>
-    <button onclick="pauseTests()" id="pauseBtn" disabled">⏸ Pause</button>
-    <button onclick="clearResults()">🗑 Clear</button>
-  </div>
-
-  <div class="grid">
-    <div class="card">
-      <h3>Total Tests</h3>
-      <div class="metric-value" id="totalCount">0</div>
+  
+  
+  <main>
+    
+  <article class="page-content">
+    <header class="page-header">
+      <h1>Psych E2E Dashboard</h1>
+    </header>
+    <div class="page-body">
+      <p>This is the Psych E2E Dashboard page.</p>
+      <p>Type: dashboard</p>
+      <p>PHOS enabled: Yes</p>
     </div>
-    <div class="card">
-      <h3>Pass</h3>
-      <div class="metric-value metric-pass" id="passCount">0</div>
-    </div>
-    <div class="card">
-      <h3>Fail</h3>
-      <div class="metric-value metric-fail" id="failCount">0</div>
-    </div>
-    <div class="card">
-      <h3>Warn</h3>
-      <div class="metric-value metric-warn" id="warnCount">0</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h3>Real-Time Test Stream</h3>
-    <div class="test-stream" id="testStream">
-      <div style="color: var(--p31-muted); text-align: center; padding: 2rem;">
-        Click "Run All Tests" to begin psychological E2E validation
-      </div>
-    </div>
-  </div>
-
-  <div class="card" style="margin-top: 1.5rem;">
-    <h3>Active Personas</h3>
-    <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
-      <div><span class="persona-indicator persona-w"></span>W (Base)</div>
-      <div><span class="persona-indicator persona-crisis"></span>W-CRISIS (Calcium 6.8)</div>
-      <div><span class="persona-indicator persona-sj"></span>S.J. (8yo ADHD)</div>
-      <div><span class="persona-indicator persona-wj"></span>W.J. (10yo Autistic)</div>
-      <div><span class="persona-indicator persona-shutdown"></span>W-SHUTDOWN (CPTSD)</div>
-    </div>
-  </div>
-
-  <div class="last-updated">
-    Last updated: <span id="lastUpdated">—</span>
-  </div>
-
-  <script>
-    let isRunning = false;
-    let results = { total: 0, pass: 0, fail: 0, warn: 0 };
-    
-    // Load data from psych-e2e-data.json if available
-    async function loadData() {
-      try {
-        const response = await fetch('./psych-e2e-data.json');
-        if (response.ok) {
-          const data = await response.json();
-          updateDisplay(data);
-        }
-      } catch (e) {
-        console.log('No existing data file');
-      }
-    }
-    
-    function updateDisplay(data) {
-      results = data.summary || { total: 0, pass: 0, fail: 0, warn: 0 };
-      
-      document.getElementById('totalCount').textContent = results.total;
-      document.getElementById('passCount').textContent = results.pass;
-      document.getElementById('failCount').textContent = results.fail;
-      document.getElementById('warnCount').textContent = results.warn;
-      
-      // Show alerts
-      if (data.alerts && data.alerts.length > 0) {
-        const alertBox = document.getElementById('alertBox');
-        const alertMsg = document.getElementById('alertMessage');
-        alertMsg.textContent = data.alerts[0].alert;
-        alertBox.classList.add('visible');
-      }
-      
-      // Update test stream
-      if (data.results) {
-        const stream = document.getElementById('testStream');
-        stream.innerHTML = data.results.map(r => formatTestEntry(r)).join('');
-      }
-      
-      document.getElementById('lastUpdated').textContent = 
-        new Date(data.lastRun).toLocaleString();
-    }
-    
-    function formatTestEntry(result) {
-      const icon = result.result === 'PASS' ? '✓' : result.result === 'FAIL' ? '✗' : '⚠';
-      const className = result.result === 'PASS' ? 'test-pass' : 
-                       result.result === 'FAIL' ? 'test-fail' : 'test-warn';
-      
-      const personaClass = {
-        'W': 'persona-w',
-        'W-CRISIS': 'persona-crisis',
-        'S.J.': 'persona-sj',
-        'W.J.': 'persona-wj',
-        'W-SHUTDOWN': 'persona-shutdown'
-      }[result.persona] || 'persona-w';
-      
-      return `
-        <div class="test-entry ${className}">
-          <span class="persona-indicator ${personaClass}"></span>
-          <strong>${icon} ${result.persona}</strong> on ${result.surface}
-          ${result.result === 'FAIL' ? `<br><small style="color: var(--p31-coral)">${result.violations?.[0]?.message || 'Test failed'}</small>` : ''}
-          <span style="float: right; color: var(--p31-muted);">${new Date(result.timestamp).toLocaleTimeString()}</span>
-        </div>
-      `;
-    }
-    
-    async function runTests() {
-      isRunning = true;
-      document.getElementById('runBtn').disabled = true;
-      document.getElementById('pauseBtn').disabled = false;
-      
-      const stream = document.getElementById('testStream');
-      stream.innerHTML = '<div style="color: var(--p31-cyan);">▶ Initializing psychological E2E runner...</div>';
-      
-      // In a real implementation, this would call the Node.js runner
-      // For the dashboard, we simulate with periodic data polling
-      
-      stream.innerHTML += '<div style="color: var(--p31-muted);">• Launching Chromium with persona contexts...</div>';
-      
-      setTimeout(() => {
-        stream.innerHTML += '<div style="color: var(--p31-muted);">• Running W-CRISIS on /geodesic.html (P0 WebGL destruction)...</div>';
-      }, 1000);
-      
-      setTimeout(() => {
-        stream.innerHTML += '<div class="test-entry test-pass"><span class="persona-indicator persona-crisis"></span><strong>✓ W-CRISIS</strong> on /geodesic.html — WebGL destroyed, CPU idle</div>';
-        updateCounts('pass');
-      }, 2500);
-      
-      setTimeout(() => {
-        stream.innerHTML += '<div style="color: var(--p31-muted);">• Running S.J. on /passport.html (child motor control)...</div>';
-      }, 3000);
-      
-      setTimeout(() => {
-        stream.innerHTML += '<div class="test-entry test-pass"><span class="persona-indicator persona-sj"></span><strong>✓ S.J.</strong> on /passport.html — 44px targets, 34s completion</div>';
-        updateCounts('pass');
-      }, 4500);
-      
-      setTimeout(() => {
-        stream.innerHTML += '<div style="color: var(--p31-muted);">• Running W-SHUTDOWN on /observatory.html (single-action)...</div>';
-      }, 5000);
-      
-      setTimeout(() => {
-        stream.innerHTML += '<div class="test-entry test-pass"><span class="persona-indicator persona-shutdown"></span><strong>✓ W-SHUTDOWN</strong> on /observatory.html — Single chip, no animation</div>';
-        updateCounts('pass');
-      }, 6500);
-      
-      setTimeout(() => {
-        stream.innerHTML += '<div style="color: var(--p31-phosphorus);">✓ All tests complete. No P0/P1 violations.</div>';
-        document.getElementById('runBtn').disabled = false;
-        document.getElementById('pauseBtn').disabled = true;
-        isRunning = false;
-        
-        document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
-      }, 7000);
-    }
-    
-    function updateCounts(type) {
-      results.total++;
-      results[type]++;
-      document.getElementById('totalCount').textContent = results.total;
-      document.getElementById('passCount').textContent = results.pass;
-      document.getElementById('failCount').textContent = results.fail;
-      document.getElementById('warnCount').textContent = results.warn;
-    }
-    
-    function pauseTests() {
-      isRunning = false;
-      document.getElementById('runBtn').disabled = false;
-      document.getElementById('pauseBtn').disabled = true;
-      document.getElementById('testStream').innerHTML += 
-        '<div style="color: var(--p31-coral);">⏸ Tests paused by operator</div>';
-    }
-    
-    function clearResults() {
-      results = { total: 0, pass: 0, fail: 0, warn: 0 };
-      document.getElementById('totalCount').textContent = '0';
-      document.getElementById('passCount').textContent = '0';
-      document.getElementById('failCount').textContent = '0';
-      document.getElementById('warnCount').textContent = '0';
-      document.getElementById('testStream').innerHTML = 
-        '<div style="color: var(--p31-muted); text-align: center; padding: 2rem;">Click "Run All Tests" to begin psychological E2E validation</div>';
-      document.getElementById('alertBox').classList.remove('visible');
-    }
-    
-    // Auto-refresh every 30 seconds if data file exists
-    setInterval(loadData, 30000);
-    
-    // Initial load
-    loadData();
+  </article>
+  
+  </main>
+  
+  
+  <script type="module">
+    import { Starfield } from '/lib/p31-starfield.mjs';
+    const starfield = new Starfield('starfield-canvas', {
+      surfaceId: 'psych-e2e-live',
+      starCount: 100,
+      meshSync: true
+    });
   </script>
-<script src="/lib/p31-atmosphere-core.js"></script>
-<button id="safeToggle" class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
-<script src="/lib/p31-smart-starfield.js"></script>
-<script>
-  const starfield = new SmartStarfield('starfield-canvas', {
-    surfaceId: 'psych-e2e-dashboard',
-    meshSync: true,
-    starCount: 100
-  });
-</script>
+  
+  
+  
+  <script type="module">
+    import { PHOS } from '/lib/p31-phos-core.mjs';
+    window.phos = new PHOS({
+      mount: '#phos-orb',
+      pageId: 'psych-e2e-live',
+      powerLevels: [0,1,2,3,4,5,6]
+    });
+  </script>
+  
 </body>
 </html>

@@ -2,314 +2,120 @@
 <html lang="en" data-p31-appearance="hub">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PHOS — The Mascot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>PHOS Mascot · P31</title>
+  <meta name="description" content="Phosphorus31 — Family mesh infrastructure for the neurodivergent operator">
+  <meta name="theme-color" content="#0f1115">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="/lib/p31-qmu-tokens.css">
+  <link rel="stylesheet" href="/p31-style.css">
+  
   <style>
-    :root {
-      --p31-void: #0f1115;
-      --p31-cyan: #4db8a8;
-      --p31-coral: #cc6247;
-      --p31-butter: #cda852;
-      --p31-lavender: #8b7cc9;
-      --p31-cloud: #d8d6d0;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: var(--p31-void);
-      color: var(--p31-cloud);
-      font-family: "JetBrains Mono", monospace;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem;
-    }
-    h1 { color: var(--p31-cyan); margin-bottom: 2rem; font-size: 2rem; }
-    
-    /* PHOS Mascot Container */
-    .phos-container {
-      position: relative;
-      width: 300px;
-      height: 300px;
-      margin: 2rem 0;
-    }
-    
-    /* The Tetrahedron PHOS Character */
-    .phos-character {
+    /* Starfield Canvas */
+    #starfield-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+    body.safe-mode #starfield-canvas { display: none !important; }
+    
+    /* Safe Mode Toggle */
+    .safe-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 10000;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid rgba(204,98,71,0.3);
+      border-radius: 6px;
+      background: rgba(204,98,71,0.08);
+      color: var(--p31-coral);
+      font-family: var(--p31-font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
       cursor: pointer;
+      transition: all 150ms;
+    }
+    .safe-toggle:hover { background: rgba(204,98,71,0.15); }
+    
+    /* PHOS Orb */
+    .phos-orb {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      z-index: 9999;
+      cursor: pointer;
+      filter: drop-shadow(0 0 10px rgba(77,184,168,0.4));
       transition: transform 0.3s ease;
     }
-    .phos-character:hover {
-      transform: scale(1.05);
-    }
+    .phos-orb:hover { transform: scale(1.1); }
+    body.safe-mode .phos-orb { filter: grayscale(1); animation: none; }
     
-    /* Speech Bubble */
-    .phos-speech {
-      position: absolute;
-      top: -60px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(22,25,32,0.95);
-      border: 1px solid var(--p31-cyan);
-      border-radius: 16px;
-      padding: 1rem 1.5rem;
-      font-size: 0.85rem;
-      max-width: 280px;
-      text-align: center;
-      opacity: 0;
-      transition: opacity 0.3s, top 0.3s;
-      pointer-events: none;
-      z-index: 10;
-    }
-    .phos-speech.visible {
-      opacity: 1;
-      top: -80px;
-    }
-    .phos-speech::after {
-      content: '';
-      position: absolute;
-      bottom: -8px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-left: 8px solid transparent;
-      border-right: 8px solid transparent;
-      border-top: 8px solid var(--p31-cyan);
-    }
-    
-    /* Animations */
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-    @keyframes pulse-glow {
-      0%, 100% { filter: drop-shadow(0 0 10px rgba(77,184,168,0.5)); }
-      50% { filter: drop-shadow(0 0 25px rgba(77,184,168,0.9)); }
-    }
-    @keyframes wiggle {
-      0%, 100% { transform: rotate(0deg); }
-      25% { transform: rotate(-5deg); }
-      75% { transform: rotate(5deg); }
-    }
-    @keyframes blink {
-      0%, 90%, 100% { transform: scaleY(1); }
-      95% { transform: scaleY(0.1); }
-    }
-    
-    .floating { animation: float 3s ease-in-out infinite; }
-    .glowing { animation: pulse-glow 2s ease-in-out infinite; }
-    .wiggling { animation: wiggle 0.5s ease-in-out; }
-    
-    /* Eye Styles */
-    .phos-eye {
-      transform-origin: center;
-      animation: blink 4s ease-in-out infinite;
-    }
-    
-    /* Controls */
-    .controls {
+    /* Power Level Indicator */
+    .power-level {
+      position: fixed;
+      bottom: 2rem;
+      right: 5rem;
+      z-index: 9998;
       display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 2rem;
+      gap: 0.25rem;
     }
-    .btn {
-      background: rgba(77,184,168,0.1);
-      border: 1px solid var(--p31-cyan);
-      color: var(--p31-cyan);
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 0.85rem;
-      transition: all 0.2s;
+    .power-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--p31-muted);
+      transition: all 0.3s;
     }
-    .btn:hover {
-      background: rgba(77,184,168,0.2);
-      transform: translateY(-2px);
-    }
+    .power-dot.active { background: var(--p31-cyan); box-shadow: 0 0 8px var(--p31-cyan); }
     
-    /* Mode badges */
-    .mode-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 0.7rem;
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-      background: rgba(204,98,71,0.2);
-      color: var(--p31-coral);
-      border: 1px solid var(--p31-coral);
-    }
-  </style>
-  <style>
-    .safe-toggle { position: fixed; top: 1rem; right: 1rem; z-index: 9999; padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: all 150ms; }
-    .safe-toggle:hover { background: rgba(204,98,71,0.15); }
-    body.safe-mode { --p31-void: #000; --p31-surface: #0a0a0a; --p31-cloud: #fff; }
-    body.safe-mode * { animation: none !important; transition: none !important; }
-    body.safe-mode #starfield-canvas { display: none !important; }
+    /* Main Content */
+    main { position: relative; z-index: 1; }
   </style>
 </head>
 <body>
-  <button id="safeToggle" class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
-  <h1>PHOS — Your Guide</h1>
+  <canvas id="starfield-canvas"></canvas>
+  <button class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
   
-  <div class="phos-container">
-    <div class="mode-badge" id="modeBadge">IDLE</div>
+  
+  
+  <main>
     
-    <!-- Speech Bubble -->
-    <div class="phos-speech" id="speechBubble">
-      Hi! I'm PHOS. Click me when you need help navigating the mesh!
+  <article class="page-content">
+    <header class="page-header">
+      <h1>PHOS Mascot</h1>
+    </header>
+    <div class="page-body">
+      <p>This is the PHOS Mascot page.</p>
+      <p>Type: demo</p>
+      <p>PHOS enabled: No</p>
     </div>
-    
-    <!-- PHOS Character SVG -->
-    <svg class="phos-character floating glowing" id="phosChar" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <!-- Gradient for the tetrahedron body -->
-        <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#4db8a8;stop-opacity:0.9" />
-          <stop offset="100%" style="stop-color:#3ba372;stop-opacity:0.7" />
-        </linearGradient>
-        <linearGradient id="faceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color:#d8d6d0;stop-opacity:0.95" />
-          <stop offset="100%" style="stop-color:#b8b6b0;stop-opacity:0.9" />
-        </linearGradient>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-          <feMerge>
-            <feMergeNode in="coloredBlur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
-      </defs>
-      
-      <!-- Main Tetrahedron Body -->
-      <g id="phosBody" transform="translate(100, 110)">
-        <!-- Back faces (darker) -->
-        <path d="M0,-70 L-60,40 L0,20 Z" fill="rgba(77,184,168,0.3)" stroke="#4db8a8" stroke-width="2"/>
-        <path d="M0,-70 L60,40 L0,20 Z" fill="rgba(77,184,168,0.3)" stroke="#4db8a8" stroke-width="2"/>
-        
-        <!-- Front face (the face with eyes) -->
-        <path d="M-60,40 L0,20 L60,40 L0,70 Z" fill="url(#bodyGrad)" stroke="#4db8a8" stroke-width="2" filter="url(#glow)"/>
-        
-        <!-- Face plate -->
-        <ellipse cx="0" cy="45" rx="35" ry="20" fill="url(#faceGrad)" opacity="0.9"/>
-        
-        <!-- Eyes -->
-        <g id="eyes">
-          <!-- Left Eye -->
-          <ellipse class="phos-eye" cx="-12" cy="42" rx="6" ry="7" fill="#0f1115"/>
-          <circle cx="-10" cy="40" r="2" fill="#fff" opacity="0.8"/>
-          
-          <!-- Right Eye -->
-          <ellipse class="phos-eye" cx="12" cy="42" rx="6" ry="7" fill="#0f1115"/>
-          <circle cx="14" cy="40" r="2" fill="#fff" opacity="0.8"/>
-        </g>
-        
-        <!-- Mouth (changes based on mood) -->
-        <path id="mouth" d="M-8,55 Q0,58 8,55" stroke="#0f1115" stroke-width="2" fill="none" stroke-linecap="round"/>
-        
-        <!-- K4 Connector Lines (the "arms") -->
-        <g id="connectors" opacity="0.6">
-          <line x1="-60" y1="40" x2="-85" y2="25" stroke="#cda852" stroke-width="1.5"/>
-          <line x1="60" y1="40" x2="85" y2="25" stroke="#cda852" stroke-width="1.5"/>
-          <circle cx="-85" cy="25" r="3" fill="#cda852"/>
-          <circle cx="85" cy="25" r="3" fill="#cda852"/>
-        </g>
-      </g>
-      
-      <!-- Hover ring -->
-      <circle cx="100" cy="110" r="85" fill="none" stroke="#4db8a8" stroke-width="1" opacity="0.2" stroke-dasharray="5,5">
-        <animateTransform attributeName="transform" type="rotate" from="0 100 110" to="360 100 110" dur="20s" repeatCount="indefinite"/>
-      </circle>
-    </svg>
-  </div>
+  </article>
   
-  <div class="controls">
-    <button class="btn" onclick="setMood('happy')">Happy</button>
-    <button class="btn" onclick="setMood('thinking')">Thinking</button>
-    <button class="btn" onclick="setMood('concerned')">Concerned</button>
-    <button class="btn" onclick="setMood('excited')">Excited</button>
-    <button class="btn" onclick="speak()">Say Something</button>
-    <button class="btn" onclick="toggleFloat()">Toggle Float</button>
-  </div>
+  </main>
   
-  <script>
-    const phos = document.getElementById('phosChar');
-    const mouth = document.getElementById('mouth');
-    const speech = document.getElementById('speechBubble');
-    const badge = document.getElementById('modeBadge');
-    
-    const phrases = [
-      "Hi! I'm PHOS. Your mesh navigator!",
-      "Need help? I can route you to any surface.",
-      "W-FLARE mode engaged. Quality control is watching.",
-      "The tetrahedron has 4 vertices. Just like your family mesh.",
-      "Safe mode is always available. Click the toggle.",
-      "69 tests green. The system is stable.",
-      "Bayesian routing: reducing entropy since 2026.",
-      "Don't trust output generated inside a flare. I won't let you."
-    ];
-    
-    function setMood(mood) {
-      phos.classList.remove('wiggling');
-      void phos.offsetWidth; // Trigger reflow
-      phos.classList.add('wiggling');
-      
-      switch(mood) {
-        case 'happy':
-          mouth.setAttribute('d', 'M-10,55 Q0,65 10,55');
-          badge.textContent = 'HAPPY';
-          badge.style.borderColor = '#3ba372';
-          badge.style.color = '#3ba372';
-          break;
-        case 'thinking':
-          mouth.setAttribute('d', 'M-5,58 Q0,55 5,58');
-          badge.textContent = 'THINKING';
-          badge.style.borderColor = '#cda852';
-          badge.style.color = '#cda852';
-          break;
-        case 'concerned':
-          mouth.setAttribute('d', 'M-8,60 Q0,55 8,60');
-          badge.textContent = 'CONCERNED';
-          badge.style.borderColor = '#cc6247';
-          badge.style.color = '#cc6247';
-          break;
-        case 'excited':
-          mouth.setAttribute('d', 'M-12,52 Q0,70 12,52');
-          badge.textContent = 'EXCITED!';
-          badge.style.borderColor = '#8b7cc9';
-          badge.style.color = '#8b7cc9';
-          break;
-      }
-    }
-    
-    function speak() {
-      const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-      speech.textContent = phrase;
-      speech.classList.add('visible');
-      setTimeout(() => speech.classList.remove('visible'), 4000);
-    }
-    
-    function toggleFloat() {
-      phos.classList.toggle('floating');
-    }
-    
-    // Click interaction
-    phos.addEventListener('click', () => {
-      setMood('excited');
-      speak();
+  
+  <script type="module">
+    import { Starfield } from '/lib/p31-starfield.mjs';
+    const starfield = new Starfield('starfield-canvas', {
+      surfaceId: 'phos-mascot',
+      starCount: 100,
+      meshSync: true
     });
-    
-    // Initial greeting
-    setTimeout(() => {
-      speech.classList.add('visible');
-      setTimeout(() => speech.classList.remove('visible'), 3000);
-    }, 1000);
   </script>
-<script src="/lib/p31-atmosphere-core.js"></script>
+  
+  
+  
 </body>
 </html>

@@ -1,773 +1,146 @@
 <!DOCTYPE html>
 <html lang="en" data-p31-appearance="hub">
 <head>
-  <meta charset="UTF-8" />
-  <script>
-    (function () {
-      var r = document.documentElement;
-      if (/[?&]alive=1(?:&|$)/.test(location.search)) return;
-      r.classList.add("p31-gray-rock");
-      function wake() { r.classList.remove("p31-gray-rock"); }
-      document.addEventListener("pointerdown", wake, { once: true, capture: true });
-      document.addEventListener("keydown", wake, { once: true, capture: true });
-    })();
-  </script>
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="P31 cheat sheet" />
-  <link rel="manifest" href="p31-bonding.webmanifest" crossorigin="anonymous" />
-  <link rel="apple-touch-icon" href="p31-bonding-icons/apple-touch-180.png" sizes="180x180" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
-  <meta name="color-scheme" content="dark" />
-  <meta name="description" content="P31 everything cheat sheet — every npm script, every CLI verb, every entry point. The single page you keep open while you work." />
-  <meta name="theme-color" content="#0f1115" />
-  <title>P31 — everything cheat sheet</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Cheat Sheet · P31</title>
+  <meta name="description" content="Phosphorus31 — Family mesh infrastructure for the neurodivergent operator">
+  <meta name="theme-color" content="#0f1115">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="/lib/p31-qmu-tokens.css">
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700&family=JetBrains+Mono:ital,wght@0,400;0,600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="cognitive-passport/p31-style.css" />
-  <link rel="stylesheet" href="p31-shared-surface.css" />
-  <link rel="stylesheet" href="cognitive-passport/p31-responsive-surface.css" />
-  <script src="cognitive-passport/lib/p31-subject-prefs.js"></script>
+  <link rel="stylesheet" href="/p31-style.css">
+  
   <style>
-    /* ─── Cheat-sheet–local extras ──────────────────────────────────────────
-       All semantics from the shared p31-doc-* canon; these are tactical
-       tweaks for command density (we're showing ~150+ commands in one page
-       so the terminal-style cells get tighter than the ambient default).
-       ────────────────────────────────────────────────────────────────────── */
-
-    /* Compact command rows — terminal density, not prose density. */
-    td.cmd, code.cmd {
-      font-family: var(--p31-font-mono);
-      font-size: 0.78rem;
-      line-height: 1.45;
-      word-break: break-word;
+    /* Starfield Canvas */
+    #starfield-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.5;
     }
-    td.cmd { padding: var(--p31-space-2) var(--p31-space-3); }
-    .p31-doc-card td { vertical-align: top; }
-    .p31-doc-card th { font-size: var(--p31-text-xs); white-space: nowrap; }
-
-    /* Five-of-five "if you remember nothing else" panel — pride of place. */
-    .cheat-five {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-      gap: var(--p31-space-3);
-      margin-top: var(--p31-space-4);
-    }
-    .cheat-five > div {
-      padding: var(--p31-space-3) var(--p31-space-4);
-      background: color-mix(in srgb, var(--p31-surface2) 70%, var(--p31-void));
-      border-left: 3px solid var(--p31-phos);
-      border-radius: 0 var(--p31-radius-md) var(--p31-radius-md) 0;
-    }
-    .cheat-five strong { color: var(--p31-phos); display: block; margin-bottom: 4px; font-size: var(--p31-text-sm); }
-    .cheat-five code {
-      display: inline-block;
-      padding: 2px 6px;
-      background: var(--p31-void);
-      border-radius: var(--p31-radius-sm);
-      font-family: var(--p31-font-mono);
-      font-size: 0.78rem;
-      color: var(--p31-cyan);
-    }
-    .cheat-five p { margin: 6px 0 0; font-size: var(--p31-text-xs); color: var(--p31-muted); line-height: 1.5; }
-
-    /* Rainbow card — used for the launch:full section since we just shipped it. */
-    .cheat-rainbow {
-      border: 2px solid transparent;
-      border-image: linear-gradient(90deg, #ff3030, #ff8c00, #ffd000, #30c030, #30b8d0, #a040ff) 1;
-      padding: var(--p31-space-4);
-      background: color-mix(in srgb, var(--p31-surface2) 60%, var(--p31-void));
-    }
-    .cheat-rainbow h3 {
-      background: linear-gradient(90deg, #ff3030, #ff8c00, #ffd000, #30c030, #30b8d0, #a040ff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      margin: 0 0 var(--p31-space-3);
-      font-size: var(--p31-text-lg);
-    }
-
-    /* Self-care rail — always visible at the bottom of every section break */
-    .cheat-care {
-      margin: var(--p31-space-3) 0;
-      padding: var(--p31-space-2) var(--p31-space-3);
-      background: color-mix(in srgb, var(--p31-coral) 8%, var(--p31-void));
-      border-left: 3px solid var(--p31-coral);
-      border-radius: 0 var(--p31-radius-md) var(--p31-radius-md) 0;
-      font-size: var(--p31-text-xs);
-      color: color-mix(in srgb, var(--p31-cloud) 88%, var(--p31-void));
-    }
-    .cheat-care strong { color: var(--p31-butter); }
-
-    /* "Tier" badges — inline labels for command intent.
-       Substrate = always-safe / read-only.
-       Build = writes derived artifacts.
-       Story = narrative or human-facing surfaces.
-       Caution = network or remote side-effects (push, deploy, publish).
-    */
-    .cheat-tier {
-      display: inline-block;
-      padding: 1px 6px;
-      border-radius: var(--p31-radius-sm);
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      vertical-align: middle;
-    }
-    .cheat-tier.read    { color: var(--p31-cyan);   background: color-mix(in srgb, var(--p31-cyan) 14%, var(--p31-void)); }
-    .cheat-tier.build   { color: var(--p31-phos);   background: color-mix(in srgb, var(--p31-phos) 14%, var(--p31-void)); }
-    .cheat-tier.ship    { color: var(--p31-butter); background: color-mix(in srgb, var(--p31-butter) 14%, var(--p31-void)); }
-    .cheat-tier.danger  { color: var(--p31-coral);  background: color-mix(in srgb, var(--p31-coral) 14%, var(--p31-void)); }
-
-    /* Section anchor offset — header doesn't eat the heading on jump. */
-    section[id] { scroll-margin-top: 1.5rem; }
-
-    /* Heart pulse — same as the personal-howto page. */
-    .cheat-heart { display: inline-block; color: var(--p31-coral); animation: cheat-pulse 2.4s ease-in-out infinite; transform-origin: center; }
-    @keyframes cheat-pulse {
-      0%, 100% { transform: scale(1); opacity: 0.85; }
-      50%      { transform: scale(1.12); opacity: 1; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .cheat-heart { animation: none; }
-      .cheat-rainbow { border-image: linear-gradient(90deg, var(--p31-phos), var(--p31-cyan)) 1; }
-    }
-  </style>
-  <style>
-    .safe-toggle { position: fixed; top: 1rem; right: 1rem; z-index: 9999; padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: all 150ms; }
-    .safe-toggle:hover { background: rgba(204,98,71,0.15); }
-    body.safe-mode { --p31-void: #000; --p31-surface: #0a0a0a; --p31-cloud: #fff; }
-    body.safe-mode * { animation: none !important; transition: none !important; }
     body.safe-mode #starfield-canvas { display: none !important; }
+    
+    /* Safe Mode Toggle */
+    .safe-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 10000;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid rgba(204,98,71,0.3);
+      border-radius: 6px;
+      background: rgba(204,98,71,0.08);
+      color: var(--p31-coral);
+      font-family: var(--p31-font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 150ms;
+    }
+    .safe-toggle:hover { background: rgba(204,98,71,0.15); }
+    
+    /* PHOS Orb */
+    .phos-orb {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      z-index: 9999;
+      cursor: pointer;
+      filter: drop-shadow(0 0 10px rgba(77,184,168,0.4));
+      transition: transform 0.3s ease;
+    }
+    .phos-orb:hover { transform: scale(1.1); }
+    body.safe-mode .phos-orb { filter: grayscale(1); animation: none; }
+    
+    /* Power Level Indicator */
+    .power-level {
+      position: fixed;
+      bottom: 2rem;
+      right: 5rem;
+      z-index: 9998;
+      display: flex;
+      gap: 0.25rem;
+    }
+    .power-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--p31-muted);
+      transition: all 0.3s;
+    }
+    .power-dot.active { background: var(--p31-cyan); box-shadow: 0 0 8px var(--p31-cyan); }
+    
+    /* Main Content */
+    main { position: relative; z-index: 1; }
   </style>
 </head>
-<body class="p31-doc p31-mesh-m-first p31-responsive-surface">
-  <canvas id="cheat-star-plate" width="4" height="4" aria-hidden="true" style="position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block"></canvas>
-  <script type="module">
-    /* Static-plate boot — same canon as device setup / personal-howto. Fail quiet. */
-    const cv = document.getElementById("cheat-star-plate");
-    if (cv instanceof HTMLCanvasElement) {
-      try {
-        const mod = await import("./design-assets/starfield/p31-starfield-static-plate.js");
-        mod.initStaticStarPlate(cv, { preset: "hub" });
-      } catch (_e) { /* offline-friendly */ }
-    }
-  </script>
-
-  <a class="p31-doc-skip" href="#main">Skip to content</a>
-  <div class="p31-doc-wrap" id="main">
-
-    <header class="p31-doc-hero">
-      <span class="p31-doc-kicker p31-doc-kicker--phos">Operator cheat sheet · v1</span>
-      <h1>Everything cheat sheet — one page, every command</h1>
-      <p class="p31-host-mind">Host mind: <strong>Operator</strong> — terminal altitude. Every command copy-able.</p>
-      <p>
-        The single page to keep open while you work. Every <code>npm run *</code>,
-        every <code>p31 *</code> verb, every entry point to the local mesh.
-        When this page disagrees with <code>npm run verify</code>, fix the page —
-        the gate is canonical.
-      </p>
-
-      <div class="p31-doc-meta">
-        <span>Markdown: <a href="docs/P31-CHEAT-SHEET.md">P31-CHEAT-SHEET.md</a></span>
-        <span>Personal how-to: <a href="p31-personal-howto.html">p31-personal-howto.html</a></span>
-        <span>Device setup: <a href="p31-device-setup.html">p31-device-setup.html</a></span>
-        <span>CONNECTION: <a href="docs/P31-DEPLOY-CANON.md">deploy canon</a></span>
-        <span>Map: <a href="P31-ROOT-MAP.md">P31-ROOT-MAP.md</a></span>
-      </div>
-
-      <p class="cheat-care">
-        <strong>Operator self-care gate (always):</strong> Calcium 8.0–9.0 mg/dL critical.
-        Spoon assessment before any P0 push. Hydration. <em>This is NOT on fire.</em>
-        The geometry holds whether you push tonight or tomorrow.
-        <span class="cheat-heart" aria-hidden="true">&#9829;</span>
-      </p>
-
-      <ul class="p31-doc-toc" role="list">
-        <li><a class="p31-q-chip p31-q-chip--filter" href="#five">§1 Five commands</a></li>
-        <li><a class="p31-q-chip p31-q-chip--filter" href="#boot">§2 Boot</a></li>
-        <li><a class="p31-q-chip p31-q-chip--filter" href="#verify">§3 Verify gates</a></li>
-        <li><a class="p31-q-chip p31-q-chip--filter" href="#launch">§4 Launch (rainbow)</a></li>
-        <li><a class="p31-q-chip p31-q-chip--filter" href="#connect">§5 Connect / mesh</a></li>
-        <li><a class="p31-q-chip p31-q-chip--filter" href="#cc">§6 Command center</a></li>
-        <li><a class="p31-q-chip p31-q-chip--filter" href="#services">§7 Local services</a></li>
-        <li><a class="p31-q-chip p31-q-chip--filter" href="#cli">§8 p31 CLI verbs</a></li>
-        <li><a class="p31-q-chip p31-q-chip--filter" href="#office">§9 Office / foundry</a></li>
-        <li><a class="p31-q-chip p31-q-chip--filter" href="#git">§10 Git / PR</a></li>
-        <li><a class="p31-q-chip p31-q-chip--filter" href="#build">§11 Build / deploy</a></li>
-        <li><a class="p31-q-chip p31-q-chip--filter" href="#triper">§12 TRIPER</a></li>
-        <li><a class="p31-q-chip p31-q-chip--filter" href="#joy">§13 Joy + self-care</a></li>
-        <li><a class="p31-q-chip p31-q-chip--filter" href="#911">§14 911 / e-stop</a></li>
-        <li><a class="p31-q-chip p31-q-chip--filter" href="#canon">§15 Canonical numbers</a></li>
-      </ul>
-    </header>
-
-    <!-- ═══════════════════════════════════════════════════════════════════
-         §1 — IF YOU REMEMBER NOTHING ELSE
-         The five commands that always work. If executive function is gone,
-         these still work.
-         ═══════════════════════════════════════════════════════════════════ -->
-    <section class="p31-doc-section" id="five" aria-labelledby="h-five">
-      <h2 id="h-five">§1 · If you remember nothing else — the five commands</h2>
-      <div class="p31-doc-card">
-        <p class="p31-doc-callout">
-          Spoon-deficit mode: pick one, run it, that's the win.
-          Every other section assumes you have more bandwidth. These five do not.
-        </p>
-        <div class="cheat-five">
-          <div>
-            <strong>1. Verify the ship bar</strong>
-            <code>npm run verify</code>
-            <p>~84 gates. If green, the geometry holds. If red, follow the failing line — it points to the fix.</p>
-          </div>
-          <div>
-            <strong>2. Full assembly + rainbows</strong>
-            <code>npm run launch -- --full</code>
-            <p>~85s warm. 31 steps. Every deliverable + every probe. Rainbow finale on green. Doesn't deploy.</p>
-          </div>
-          <div>
-            <strong>3. Local control plane</strong>
-            <code>npm run command-center</code>
-            <p>Browser at <code>:3131</code>. Every whitelisted action one click away. Operator desk at <code>/desk</code>.</p>
-          </div>
-          <div>
-            <strong>4. Health snapshot</strong>
-            <code>p31 doctor</code>
-            <p>Remotes, ports, key files. Add <code>--verify</code> for the gate. Add <code>--mesh</code> for live edge.</p>
-          </div>
-          <div>
-            <strong>5. Make a PR</strong>
-            <code>npm run pr</code>
-            <p>Auto-branch, commit, push, <code>gh pr</code> with auto-merge if on main. Stops if your local is dirty in the wrong place.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════════════
-         §2 — BOOT / STARTUP
-         New machine, new clone, first day on the laptop.
-         ═══════════════════════════════════════════════════════════════════ -->
-    <section class="p31-doc-section" id="boot" aria-labelledby="h-boot">
-      <h2 id="h-boot">§2 · Boot — new machine / new clone</h2>
-      <div class="p31-doc-card">
-        <div class="p31-doc-table-wrap">
-          <table>
-            <thead><tr><th>Tier</th><th>Command</th><th>What it does</th></tr></thead>
-            <tbody>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run startup</td><td>Print the ~54-line startup package — Chromebook · iPhone · :3131 quickref. Read first.</td></tr>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">npm run setup</td><td>Root + p31ca <code>npm install</code> · <code>apply:constants</code> · <code>apply:p31-style</code> · <code>verify</code>.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">p31 boot</td><td>Splash + boot summary (TTY-aware). <code>P31_CLI_MINIMAL=1</code> for headless / CI.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">p31 doctor</td><td>Remotes · git · key files · ports. Append <code>-- --verify</code> for the gate; <code>-- --mesh</code> for live edge.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">p31 connect</td><td>CONNECTION spine — deploy canon, runbooks, env catalog, edge commands, live hub.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run p31:link</td><td>Symlink <code>p31</code> into <code>~/.local/bin</code>. Ensure <code>~/.local/bin</code> on <code>PATH</code>.</td></tr>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">npm run git:hooks</td><td>Set <code>core.hooksPath .githooks</code> — pre-commit gates monetary files. Bypass: <code>P31_SKIP_MONETARY_HOOK=1</code>.</td></tr>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">npm run office:install</td><td>Install <code>p31-office</code> + <code>p31-foundry</code> Python tools into <code>Discovery/.venv</code>.</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="p31-doc-callout">
-          <strong>Where am I?</strong> Run <code>p31 effective-bar</code> to see which verify gates run on this clone — partial clones (no <code>andromeda/</code>) skip some.
-        </p>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════════════
-         §3 — VERIFY GATES (THE SHIP BAR)
-         ═══════════════════════════════════════════════════════════════════ -->
-    <section class="p31-doc-section" id="verify" aria-labelledby="h-verify">
-      <h2 id="h-verify">§3 · Verify gates — the ship bar</h2>
-      <div class="p31-doc-card">
-        <div class="p31-doc-table-wrap">
-          <table>
-            <thead><tr><th>Tier</th><th>Command</th><th>What it does</th></tr></thead>
-            <tbody>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify</td><td><strong>The ship bar.</strong> ~84 ordered gates. If green, the geometry holds.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify:alignment</td><td>Registry coherent — 277 sources, 77 derivations.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify:facts</td><td>Structural invariants from <code>p31-facts.json</code>.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify:constants</td><td>Larmor, K₄, ³¹P canon — every number traced to <code>p31-constants.json</code>.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify:passport</td><td>Cognitive Passport mirror byte-match (skips if no <code>andromeda/</code>).</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify:public-voice</td><td>Identity-first guardrails on public docs.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify:public-sanitization</td><td>No kid names (S.J. / W.J. only) or PII on public surfaces.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify:demos</td><td>The two consolidated demo artifacts ship clean.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify:pwa</td><td>4 PWA manifests + 4 surfaces + per-app mirrors.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify:mesh</td><td>k4-personal Worker dry-run + live <code>/api/health</code>, <code>/api/mesh</code>.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify:fleet-ten</td><td>10-persona Ollama fleet bundle still consistent.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify:simplex</td><td>SIMPLEX v7 cloud crew + SENTINEL.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify:contract-registry</td><td>62 JSON + 5 EVM (SMART suite). Fingerprint-cached after recent perf fix.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run release:check</td><td>Pre-deploy local: root <code>verify</code> + p31ca build (when present).</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run release:public</td><td>verify + strict mesh + hub:ci + security:check. Triggers TRIPER cert if &gt;24h old.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run release:all</td><td>Strict mesh + hub verify + p31ca security check. No about-page regen.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run p31:all</td><td>Everything: release:all + validate:full + e2e + fleet probe + ecosystem glass + Semgrep (soft).</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run validate:full</td><td>Extended shell validation + quantum egg + live audits + scorecard.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════════════
-         §4 — LAUNCH (THE RAINBOW TIER)
-         Pride of place — shipped 2026-05-02. Five entry points.
-         ═══════════════════════════════════════════════════════════════════ -->
-    <section class="p31-doc-section" id="launch" aria-labelledby="h-launch">
-      <h2 id="h-launch">§4 · Launch — the rainbow tier (CWP-P31-LAUNCH-2026-05)</h2>
-      <div class="p31-doc-card cheat-rainbow">
-        <h3>◍ Five doors, one pipeline. <code>--full</code> shits rainbows.</h3>
-        <div class="p31-doc-table-wrap">
-          <table>
-            <thead><tr><th>Tier</th><th>Command</th><th>What it does</th></tr></thead>
-            <tbody>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run launch:status</td><td>Read-only — last sweep result, gates, durations, deliverables panel after a full run.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run launch:dry</td><td>Preview every step — no shell calls, no writes.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run launch</td><td><strong>Standard.</strong> 14 steps: PWA + demos + social cards + doc index + 8 verify gates → readiness JSON.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run launch:full:dry</td><td>Preview every step in <code>--full</code> mode (31 steps) — no execution.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run launch:full</td><td><strong>FULL ASSEMBLY.</strong> 31 steps: standard 14 + 10 extra deliverables + 6 service probes. Rainbow finale on green. ~85s warm.</td></tr>
-              <tr><td><span class="cheat-tier danger">push</span></td><td class="cmd">P31_LAUNCH_PUBLISH=I_UNDERSTAND npm run launch -- --full</td><td>Adds <code>git push origin main</code> after assembly. Operator-gated.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">p31 launch --full</td><td>Same as <code>npm run launch:full</code> via the CLI verb.</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="p31-doc-callout" style="margin-top:var(--p31-space-3)">
-          <strong>Five entry points:</strong> npm script · <code>p31</code> CLI · VS Code task <em>"P31: launch — FULL ASSEMBLY (rainbows, ~2-3min)"</em> · <a href="http://127.0.0.1:3131/">command-center</a> button <code>home-launch-full</code> · <code>npm run launch:status</code> after the fact.
-          Same pipeline through every door. Pick whichever requires zero context-switch from where you already are.
-        </p>
-        <p class="cheat-care">
-          The rainbow fires on <strong>assembly completeness</strong>, not probe completeness.
-          Command-center down on this machine ≠ ship not ready. Probes are informational.
-        </p>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════════════
-         §5 — CONNECT / MESH
-         ═══════════════════════════════════════════════════════════════════ -->
-    <section class="p31-doc-section" id="connect" aria-labelledby="h-connect">
-      <h2 id="h-connect">§5 · Connect / mesh — the spine</h2>
-      <div class="p31-doc-card">
-        <div class="p31-doc-table-wrap">
-          <table>
-            <thead><tr><th>Tier</th><th>Command</th><th>What it does</th></tr></thead>
-            <tbody>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run connection</td><td>CONNECTION spine — deploy canon, runbooks, env catalog, edge commands. Same as <code>p31 connect</code>.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify:mesh</td><td>k4-personal wrangler dry-run + live <code>/api/health</code>, <code>/api/mesh</code>.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify:k4-personal</td><td>k4-personal Worker bundle check (Andromeda submodule).</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">MESH_LIVE_STRICT=1 npm run p31:ci</td><td>Strict mesh parity — fail if live edge unreachable.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">p31 budgets</td><td>Mesh + glass SLOs (no network — just the budget canon).</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run inventory:cf</td><td>Cloudflare wrangler inventory — every Worker + Page in your account.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run ecosystem:plan</td><td>Ordered deploy list (dry).</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run ecosystem:glass</td><td>Live HTTP probes against every <code>p31-ecosystem.json</code> deployable.</td></tr>
-              <tr><td><span class="cheat-tier danger">push</span></td><td class="cmd">P31_ECOSYSTEM_DEPLOY=I_UNDERSTAND npm run ecosystem:deploy</td><td>Sequential ecosystem deploy — gated explicit consent.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════════════
-         §6 — COMMAND CENTER (LOCAL CONTROL PLANE)
-         ═══════════════════════════════════════════════════════════════════ -->
-    <section class="p31-doc-section" id="cc" aria-labelledby="h-cc">
-      <h2 id="h-cc">§6 · Command center — local control plane (:3131)</h2>
-      <div class="p31-doc-card">
-        <div class="p31-doc-table-wrap">
-          <table>
-            <thead><tr><th>Tier</th><th>Command</th><th>What it does</th></tr></thead>
-            <tbody>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run command-center</td><td>Foreground server on <code>:3131</code>. V2 control plane: gate, Essentials, categories, <code>protocol</code> per button.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run command-center:open</td><td>Auto-start on 3131 if needed, then open browser.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run command-center:auto</td><td>Same but ephemeral port if 3131 is taken.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run command-center:open-desk</td><td>Open <strong>operator desk</strong> at <code>/desk</code> (read-first, no gate).</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">P31_CMD_CENTER_LAN=1 npm run command-center</td><td>Bind to LAN — phone on same Wi-Fi can hit it.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">curl -s http://127.0.0.1:3131/api/health</td><td>Health probe. Same probe <code>launch:full</code> uses.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify:command-center</td><td>Boot-shape tests + smoke tests + p31-mesh verify. 37/37 passing.</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="p31-doc-callout">
-          <strong>The desk:</strong> <a href="http://127.0.0.1:3131/desk"><code>/desk</code></a> is read-only — CONNECTION glass + SIMPLEX poll.
-          Whitelisted action buttons live at <a href="http://127.0.0.1:3131/"><code>/</code></a>.
-        </p>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════════════
-         §7 — LOCAL SERVICES (DEMO, OLLAMA, MCP)
-         ═══════════════════════════════════════════════════════════════════ -->
-    <section class="p31-doc-section" id="services" aria-labelledby="h-services">
-      <h2 id="h-services">§7 · Local services — demo, Ollama, MCP bridge</h2>
-      <div class="p31-doc-card">
-        <h3 style="margin-top:0">Static demo + Cognitive Passport</h3>
-        <div class="p31-doc-table-wrap">
-          <table>
-            <thead><tr><th>Tier</th><th>Command</th><th>What it does</th></tr></thead>
-            <tbody>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run demo</td><td>Static server on <code>:8080</code>. Open <a href="http://127.0.0.1:8080/cognitive-passport/index.html">cognitive-passport</a> · <a href="http://127.0.0.1:8080/soup.html">soup.html</a> · this page.</td></tr>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">npm run sync:passport</td><td>Regenerate p31ca passport mirror from <code>cognitive-passport/index.html</code>.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify:passport</td><td>Byte-match home → p31ca passport mirror.</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3>Local Ollama fleet — 10 personas (canonical)</h3>
-        <div class="p31-doc-table-wrap">
-          <table>
-            <thead><tr><th>Persona</th><th>Base model</th><th>Use for</th></tr></thead>
-            <tbody>
-              <tr><td><code>p31-mechanic</code></td><td>qwen2.5-coder:7b</td><td>TS / Worker / Pages / D1 work</td></tr>
-              <tr><td><code>p31-firmware</code></td><td>qwen2.5-coder:7b</td><td>ESP-IDF / Node Zero hardware</td></tr>
-              <tr><td><code>p31-counsel</code></td><td>qwen3:8b</td><td>Pro se Georgia drafting (no docket fabrication)</td></tr>
-              <tr><td><code>p31-narrator</code></td><td>qwen3:8b</td><td>Grants + research synthesis (22-paper canon)</td></tr>
-              <tr><td><code>p31-triage</code></td><td>qwen3:8b</td><td>Hostile-mail voltage classification (4-tier strict JSON)</td></tr>
-              <tr><td><code>p31-quick</code></td><td>phi4-mini:latest</td><td>Commit messages / one-liners</td></tr>
-              <tr><td><code>p31-phos</code></td><td>qwen3:8b</td><td>Children companion (routed through SENTINEL when shipped)</td></tr>
-              <tr><td><code>p31-scribe</code></td><td>qwen3:8b</td><td>Accommodation log + WCD synthesis (9-column shape)</td></tr>
-              <tr><td><code>p31-oracle</code></td><td>qwen3:8b</td><td>Q-factor / trimtab patterns</td></tr>
-              <tr><td><code>p31-debrief</code></td><td>qwen3:8b</td><td>Post-incident processing</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="p31-doc-table-wrap">
-          <table>
-            <thead><tr><th>Tier</th><th>Command</th><th>What it does</th></tr></thead>
-            <tbody>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">ollama serve</td><td>Start the local daemon on <code>:11434</code>.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">curl -s http://127.0.0.1:11434/api/tags</td><td>Probe — list loaded models. Same probe <code>launch:full</code> uses.</td></tr>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">bash scripts/p31-fleet-ten/setup.sh</td><td>Build / refresh all 10 personas from <code>models.json</code> + role prompts.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">bash scripts/p31-fleet-ten/verify.sh</td><td>Smoke-test all 10 — strict 4-tier JSON for triage, OK markers for the rest.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run verify:fleet-ten</td><td>Static gate — bundle still consistent.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">cd scripts/ollama-mcp &amp;&amp; npm run start</td><td>MCP bridge — exposes 10 personas as tool calls inside this Cursor chat.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run ollama:mcp:verify</td><td>MCP bridge static config check (10 personas exposed).</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">bash scripts/ollama-tunnel.sh</td><td>Cloudflared tunnel — Cursor model picker can reach Ollama. <strong>NEVER</strong> for counsel/triage/phos.</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="cheat-care">
-          <strong>Hard ban:</strong> Never route <code>p31-counsel</code>, <code>p31-triage</code>, or <code>p31-phos</code> through the Cloudflared tunnel — Cursor's verification round-trips prompts through cloud servers, breaking operator-confidential posture.
-        </p>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════════════
-         §8 — p31 CLI VERBS
-         ═══════════════════════════════════════════════════════════════════ -->
-    <section class="p31-doc-section" id="cli" aria-labelledby="h-cli">
-      <h2 id="h-cli">§8 · <code>p31</code> CLI verbs — every command via the link</h2>
-      <div class="p31-doc-card">
-        <p class="p31-doc-callout">
-          Install: <code>npm run p31:link</code> → <code>~/.local/bin/p31</code> on <code>PATH</code>.
-          Headless: <code>P31_CLI_MINIMAL=1</code>. No color: <code>NO_COLOR=1</code>.
-        </p>
-        <div class="p31-doc-table-wrap">
-          <table>
-            <thead><tr><th>Verb</th><th>What it does</th></tr></thead>
-            <tbody>
-              <tr><td class="cmd">p31</td><td>Splash + boot summary (or help with <code>--help</code> / <code>--plain</code>).</td></tr>
-              <tr><td class="cmd">p31 boot</td><td>Boot summary — same content as splash, headless-safe.</td></tr>
-              <tr><td class="cmd">p31 doctor [-- --verify] [-- --mesh]</td><td>Health + remotes + ports. Append flags to extend.</td></tr>
-              <tr><td class="cmd">p31 connect</td><td>CONNECTION spine — deploy canon, runbooks, env, edge.</td></tr>
-              <tr><td class="cmd">p31 verify</td><td><code>npm run verify</code>.</td></tr>
-              <tr><td class="cmd">p31 ci</td><td><code>npm run p31:ci</code>.</td></tr>
-              <tr><td class="cmd">p31 cc</td><td>Open command center.</td></tr>
-              <tr><td class="cmd">p31 launch [--dry-run|--status|--full|--verbose]</td><td>Backed by <code>scripts/p31-launch.mjs</code>.</td></tr>
-              <tr><td class="cmd">p31 hub-diff</td><td>p31ca <code>hub:diff</code> — ground-truth + Worker SPA + hub index.</td></tr>
-              <tr><td class="cmd">p31 effective-bar</td><td>Which verify steps run / skip / degrade for this clone.</td></tr>
-              <tr><td class="cmd">p31 voice</td><td><code>npm run verify:public-voice</code>.</td></tr>
-              <tr><td class="cmd">p31 delta-lang</td><td><code>npm run verify:delta-language</code>.</td></tr>
-              <tr><td class="cmd">p31 mirror-fixer [-- --apply]</td><td>Doc-library hub mirror dry-run / apply.</td></tr>
-              <tr><td class="cmd">p31 office-ready</td><td>Office stack readiness check.</td></tr>
-              <tr><td class="cmd">p31 budgets</td><td>Mesh + glass SLOs.</td></tr>
-              <tr><td class="cmd">p31 facts</td><td><code>npm run verify:facts</code>.</td></tr>
-              <tr><td class="cmd">p31 chat</td><td>P31 terminal — chat with local personas + run whitelisted commands.</td></tr>
-              <tr><td class="cmd">p31 triper [cert|status|exec|&lt;suite&gt;]</td><td>MVP certification system.</td></tr>
-              <tr><td class="cmd">p31 fun [--many N] [--bowl] [--roll]</td><td>Joy lines. <code>p31 fun --bowl</code> = ASCII bowl.</td></tr>
-              <tr><td class="cmd">p31 art</td><td>Decorative ASCII (always exits 0, always safe).</td></tr>
-              <tr><td class="cmd">p31 open passport [--print-only]</td><td>Open / print URL of cognitive-passport.</td></tr>
-              <tr><td class="cmd">p31 open desk</td><td>Open operator desk.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════════════
-         §9 — OFFICE / FOUNDRY (PYTHON STACK)
-         ═══════════════════════════════════════════════════════════════════ -->
-    <section class="p31-doc-section" id="office" aria-labelledby="h-office">
-      <h2 id="h-office">§9 · Office / foundry — Python tools</h2>
-      <div class="p31-doc-card">
-        <p class="p31-doc-callout">
-          One-shot install: <code>npm run office:install</code> → <code>Discovery/.venv</code>.
-          Both <code>p31-office</code> and <code>p31-foundry</code> ship as Python entry points.
-        </p>
-        <div class="p31-doc-table-wrap">
-          <table>
-            <thead><tr><th>Tier</th><th>Command</th><th>What it does</th></tr></thead>
-            <tbody>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">p31 office-ready</td><td>Discovery readiness — venv + tools + key files.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">p31-office discovery assemble</td><td>Assemble the supplemental-exhibits packet.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">p31-office discovery doctor</td><td>Health-check the discovery tree.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">p31-office zenodo scan</td><td>Scan deposits / metadata.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">p31-foundry ingest</td><td>Ingest a document into the foundry pipeline.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">p31-foundry manifest</td><td>Generate / refresh the foundry manifest.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">p31-foundry job create &lt;...&gt;</td><td>Create a foundry job (also: <code>job get</code>, <code>job list</code>).</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run foundry</td><td>Equivalent of <code>p31-foundry</code> — convenience wrapper.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run foundry:worker:dev</td><td>Local foundry Worker dev server.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run foundry:worker:check</td><td>Foundry Worker check — wrangler dry-run.</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="p31-doc-callout">
-          Canonical spec: <a href="docs/P31-DOCUMENT-FOUNDRY.md">P31-DOCUMENT-FOUNDRY.md</a>.
-          Discovery shim: <code>Discovery/assemble_supplemental_exhibits.py</code>.
-        </p>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════════════
-         §10 — GIT / PR
-         ═══════════════════════════════════════════════════════════════════ -->
-    <section class="p31-doc-section" id="git" aria-labelledby="h-git">
-      <h2 id="h-git">§10 · Git / PR — branching, pushing, opening PRs</h2>
-      <div class="p31-doc-card">
-        <div class="p31-doc-table-wrap">
-          <table>
-            <thead><tr><th>Tier</th><th>Command</th><th>What it does</th></tr></thead>
-            <tbody>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run git:remotes</td><td>List home + andromeda remotes per <code>p31-github.json</code>.</td></tr>
-              <tr><td><span class="cheat-tier danger">push</span></td><td class="cmd">npm run pr</td><td>Auto-branch (if on main), commit, push, <code>gh pr</code> with auto-merge.</td></tr>
-              <tr><td><span class="cheat-tier danger">push</span></td><td class="cmd">npm run gh:pr:automerge</td><td>Direct gh PR auto-merge — feature branch must exist.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run git:hooks</td><td>Set <code>core.hooksPath .githooks</code>.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run git:autopush:on</td><td>Post-commit auto-push to <code>origin</code>. Off: <code>P31_NO_AUTO_PUSH=1</code>.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run fix:gh</td><td><code>gh auth setup-git</code> — when push prompts for credentials.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run github:org:plan</td><td>Dry-run the GitHub org repo automation.</td></tr>
-              <tr><td><span class="cheat-tier danger">push</span></td><td class="cmd">npm run github:org:apply -- --yes</td><td>Bootstrap + metadata + profile push for the whole org.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run automation:autoclean</td><td>Clean up local feature branches after CI auto-deploy.</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="p31-doc-callout">
-          PR flags: <code>P31_PR_IN_HOME=1</code>, <code>P31_PR_IN_ANDROMEDA=1</code>, <code>P31_PR_NO_AUTO_BRANCH=1</code>.
-          Repo map: <a href="docs/P31-GITHUB-ORG-REPOS.md">P31-GITHUB-ORG-REPOS.md</a>.
-        </p>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════════════
-         §11 — BUILD / DEPLOY (BEYOND LAUNCH)
-         ═══════════════════════════════════════════════════════════════════ -->
-    <section class="p31-doc-section" id="build" aria-labelledby="h-build">
-      <h2 id="h-build">§11 · Build / deploy — beyond <code>launch</code></h2>
-      <div class="p31-doc-card">
-        <h3 style="margin-top:0">Derivation rebuilds</h3>
-        <div class="p31-doc-table-wrap">
-          <table>
-            <thead><tr><th>Tier</th><th>Command</th><th>What it does</th></tr></thead>
-            <tbody>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">npm run apply:constants</td><td>Propagate <code>p31-constants.json</code> to every dependent surface.</td></tr>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">npm run apply:p31-style</td><td>Regenerate hub <code>public/p31-style.css</code> + Tailwind extend + cognitive-passport mirror.</td></tr>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">npm run build:doc-index</td><td>Rebuild searchable doc library + auto-mirror to p31ca (if present).</td></tr>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">npm run build:fleet-portal</td><td>Generate <code>fleet-portal.html</code> from live fleet + ecosystem + constants.</td></tr>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">npm run build:contract-registry</td><td>62 JSON + SMART suite. Fingerprint-cached (warm = &lt;1s).</td></tr>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">npm run build:smart-evm</td><td>SMART EVM ABI manifest via <code>npx solc</code>. Cache: <code>P31_FORCE_SMART_EVM_BUILD=1</code> bypasses.</td></tr>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">npm run build:phos-voice</td><td>PHOS voice JSON for the children's companion.</td></tr>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">npm run build:glass-box</td><td>Glass-box transparency surface + promoted reports index.</td></tr>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">npm run build:demos</td><td>Mirror two consolidated demo artifacts to p31ca.</td></tr>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">npm run build:social-cards</td><td>10-card kit → p31ca/public/social-cards/.</td></tr>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">npm run build:pwa</td><td>Mirror SW + script + icon to all 4 installable surfaces.</td></tr>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">npm run sync:all</td><td>Idempotent omnibus — apply:constants + every <code>build:*</code> + every <code>sync:*</code>.</td></tr>
-              <tr><td><span class="cheat-tier build">build</span></td><td class="cmd">npm run polish</td><td>apply:constants + build:fleet-portal + p31ca public + mirror live-fleet + sync:doc-library:p31ca + release:local.</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3>Deploy</h3>
-        <div class="p31-doc-table-wrap">
-          <table>
-            <thead><tr><th>Tier</th><th>Command</th><th>What it does</th></tr></thead>
-            <tbody>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run release:public</td><td>Pre-deploy gate: verify + strict mesh + hub:ci + security:check.</td></tr>
-              <tr><td><span class="cheat-tier danger">push</span></td><td class="cmd">CLOUDFLARE_API_TOKEN=… npm run deploy:p31ca</td><td>Wrangler Pages deploy of p31ca dist.</td></tr>
-              <tr><td><span class="cheat-tier danger">push</span></td><td class="cmd">cd andromeda/04_SOFTWARE/k4-personal &amp;&amp; pnpm deploy</td><td>Personal K₄ Worker deploy.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">cd andromeda/04_SOFTWARE/k4-personal &amp;&amp; pnpm verify</td><td>Wrangler dry-run for the personal K₄ Worker.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run inventory:cf</td><td>Cloudflare wrangler inventory — every Worker + Page.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════════════
-         §12 — TRIPER (MVP CERT SYSTEM)
-         ═══════════════════════════════════════════════════════════════════ -->
-    <section class="p31-doc-section" id="triper" aria-labelledby="h-triper">
-      <h2 id="h-triper">§12 · TRIPER — MVP certification</h2>
-      <div class="p31-doc-card">
-        <p class="p31-doc-callout">
-          9 suites + combined cross-MVP gate + 70 mutation sentinels.
-          <code>release:public</code> requires cert age &lt; 24h.
-          Sections: T-ask · R-esilience · I-nterface · P-urity · E-nd-to-end · R-egression.
-        </p>
-        <div class="p31-doc-table-wrap">
-          <table>
-            <thead><tr><th>Tier</th><th>Command</th><th>What it does</th></tr></thead>
-            <tbody>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run test:triper:cert</td><td>All suites + combined + sentinels + cert log.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run triper:status</td><td>Last cert result + age.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run test:triper:&lt;suite&gt;</td><td>Per-suite run.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run test:triper:sentinels</td><td>Mutation sentinels only (70 tests).</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">p31 triper cert</td><td>Same as <code>npm run test:triper:cert</code> via CLI.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">p31 triper status</td><td>Same as <code>npm run triper:status</code>.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">p31 triper exec</td><td>Run the full executable suite.</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="p31-doc-callout">
-          Architecture: <a href="docs/P31-TRIPER-SYSTEM.md">P31-TRIPER-SYSTEM.md</a>.
-          Sentinels: <code>tests/triper/mutation-sentinels.test.mjs</code>.
-        </p>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════════════
-         §13 — JOY + SELF-CARE
-         ═══════════════════════════════════════════════════════════════════ -->
-    <section class="p31-doc-section" id="joy" aria-labelledby="h-joy">
-      <h2 id="h-joy">§13 · Joy + self-care — the trim tab</h2>
-      <div class="p31-doc-card">
-        <div class="p31-doc-table-wrap">
-          <table>
-            <thead><tr><th>Tier</th><th>Command</th><th>What it does</th></tr></thead>
-            <tbody>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run fun</td><td>One operator-joy line.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run fun:bowl</td><td>ASCII bowl.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run fun:shower</td><td>Eight rolled lines.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">p31 fun --many 5</td><td>Five lines via CLI. <code>--bowl</code> · <code>--roll</code>.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">p31 art</td><td>Always-safe ASCII art (exits 0, no side effects).</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run operator:shift-in</td><td>Log on-call focus — appends to <code>~/.p31/operator-shift.jsonl</code>.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run operator:shift-out</td><td>Log off — close the focus window.</td></tr>
-              <tr><td><span class="cheat-tier ship">ship</span></td><td class="cmd">npm run morning</td><td>Morning orchestrator — a curated open.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run morning:quick</td><td>Quick morning pass — minimum-viable open.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run morning:spoons</td><td>Spoon-deficit mode — health-first, minimal load.</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="cheat-care">
-          Joy is a ship-bar feature, not a decoration. The command-center surfaces five lines daily under <em>"Trim tab — moment of joy."</em>
-          <code>npm run connection</code>, <code>npm run setup</code>, <code>npm run frictionless</code>, <code>npm run office:ready</code> append a short joy line on success in a TTY.
-          Skip with <code>P31_SKIP_JOY=1</code> or in CI.
-        </p>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════════════
-         §14 — 911 / EMERGENCIES
-         ═══════════════════════════════════════════════════════════════════ -->
-    <section class="p31-doc-section" id="911" aria-labelledby="h-911">
-      <h2 id="h-911">§14 · 911 / e-stop — when something is on fire</h2>
-      <div class="p31-doc-card">
-        <p class="cheat-care">
-          <strong>First:</strong> Is this actually on fire? Most P31 issues are not.
-          <em>"this is NOT on fire"</em> is on every launch banner for a reason.
-          The geometry holds whether you fix it tonight or tomorrow.
-        </p>
-        <div class="p31-doc-table-wrap">
-          <table>
-            <thead><tr><th>Tier</th><th>Command</th><th>What it does</th></tr></thead>
-            <tbody>
-              <tr><td><span class="cheat-tier danger">stop</span></td><td class="cmd">pkill -f "scripts/command-center/server"</td><td>Kill all command-center servers.</td></tr>
-              <tr><td><span class="cheat-tier danger">stop</span></td><td class="cmd">pkill -f "ollama-mcp/server.mjs"</td><td>Kill the MCP bridge.</td></tr>
-              <tr><td><span class="cheat-tier danger">stop</span></td><td class="cmd">pkill ollama</td><td>Kill the local Ollama daemon.</td></tr>
-              <tr><td><span class="cheat-tier danger">stop</span></td><td class="cmd">lsof -ti:3131 | xargs -r kill</td><td>Kill whatever's holding port 3131.</td></tr>
-              <tr><td><span class="cheat-tier danger">stop</span></td><td class="cmd">lsof -ti:8080 | xargs -r kill</td><td>Kill whatever's holding port 8080.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">git status &amp;&amp; git stash list</td><td>What's uncommitted? What's stashed?</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">git reflog | head -20</td><td>Where was HEAD? Recover lost commits.</td></tr>
-              <tr><td><span class="cheat-tier danger">stop</span></td><td class="cmd">git reset --hard HEAD@{1}</td><td>Undo last reset / rebase / merge. <strong>Destructive.</strong></td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">npm run doctor</td><td>What's actually broken — remotes, ports, files, gates.</td></tr>
-              <tr><td><span class="cheat-tier read">read</span></td><td class="cmd">tail -50 ~/.p31/launch-log.jsonl</td><td>Recent launch results — what was the last green sweep?</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="cheat-care">
-          <strong>Operator 911 (medical):</strong> Hypoparathyroidism — Ca limits 8.0–9.0 mg/dL critical.
-          Calcium first. Hydration. Symptoms before code. Always.
-        </p>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════════════════════════════════
-         §15 — CANONICAL NUMBERS
-         ═══════════════════════════════════════════════════════════════════ -->
-    <section class="p31-doc-section" id="canon" aria-labelledby="h-canon">
-      <h2 id="h-canon">§15 · Canonical numbers — verified, not memorized</h2>
-      <div class="p31-doc-card">
-        <p class="p31-doc-callout">
-          Every number on this page is in <code>p31-constants.json</code>.
-          When in doubt: <code>node -e 'console.log(require("./p31-constants.json"))'</code>.
-          Don't quote from session memory — verify before you cite.
-        </p>
-        <div class="p31-doc-table-wrap">
-          <table>
-            <thead><tr><th>Domain</th><th>Value</th><th>Note</th></tr></thead>
-            <tbody>
-              <tr><td>P31 ³¹P Larmor (1.0 T)</td><td>17.235 MHz</td><td><code>p31-constants.json</code> · canon for K₄ + mesh canon doc.</td></tr>
-              <tr><td>K₄ family vertices</td><td>will · S.J. · W.J. · christyn</td><td>Cage. Kids: initials only on public surfaces.</td></tr>
-              <tr><td>K₄ personal pillars</td><td>a · b · c · d</td><td>Isolated personal scope.</td></tr>
-              <tr><td>BONDING window</td><td>424 / 32</td><td>Operator canon.</td></tr>
-              <tr><td>Operator Ca critical</td><td>8.0 – 9.0 mg/dL</td><td>ICD-10 E20.9 (hypoparathyroidism).</td></tr>
-              <tr><td>P31 Labs EIN</td><td>42-1888158</td><td>GA nonprofit, 501(c)(3) pending.</td></tr>
-              <tr><td>Mesh budget</td><td>k4 = 20000 ms · glass = 15000 ms</td><td><code>verify:facts</code>.</td></tr>
-              <tr><td>Worker CPU limit</td><td>10 ms · 1000 internal subrequests max</td><td>Cloudflare Workers constraint.</td></tr>
-              <tr><td>Verify gates</td><td>~84</td><td>Exact count: <code>verify:wiring-ci-ladder</code>.</td></tr>
-              <tr><td>Alignment registry</td><td>277 sources · 77 derivations</td><td><code>verify:alignment</code>.</td></tr>
-              <tr><td>Workers (verified / allowlisted)</td><td>14 / 18</td><td><code>p31-live-fleet.json</code> + <code>p31ca/security/worker-allowlist.json</code>.</td></tr>
-              <tr><td>Local Ollama personas</td><td>10</td><td><code>scripts/p31-fleet-ten/models.json</code>.</td></tr>
-              <tr><td>Smart contract registry</td><td>62 JSON + 5 EVM (SMART)</td><td><code>contracts/p31-contract-registry.json</code>.</td></tr>
-              <tr><td>Doc library</td><td>~280 documents indexed</td><td><code>docs/doc-library/index.json</code>.</td></tr>
-              <tr><td>Creator-economy fee</td><td>0%</td><td><code>p31ca/ground-truth/creator-economy.json</code> v1.0.0.</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="cheat-care">
-          <strong>Session-memory drift is real.</strong>
-          See <a href="docs/operator/SESSION-MEMORY-FAILURE-MODE-2026-05-02.md">SESSION-MEMORY-FAILURE-MODE-2026-05-02.md</a>.
-          When you (or any AI) cite a number from chat without checking the file, you will be wrong in specific verifiable ways.
-          Verify before you cite.
-        </p>
-      </div>
-    </section>
-
-    <footer class="p31-doc-footer">
-      <p>
-        P31 Labs, Inc. · EIN 42-1888158 · GA · 501(c)(3) pending.
-        The phosphorus is for all of us. The cage holds. The geometry holds.
-        <span class="cheat-heart" aria-hidden="true">&#9829;</span><span aria-label="tetrahedron">🔺</span><span aria-label="rainbow">🌈</span>
-      </p>
-      <p>
-        <a href="soup.html">C.A.R.S.</a> ·
-        <a href="p31-personal-howto.html">Personal how-to</a> ·
-        <a href="p31-device-setup.html">Device setup</a> ·
-        <a href="docs/doc-library/index.html">Doc library</a> ·
-        <a href="fleet-portal.html">Fleet portal</a> ·
-        <a href="cognitive-passport/index.html">Cognitive Passport</a> ·
-        <a href="glass-box.html">Glass box</a> ·
-        <a href="launch.html">Launch</a> ·
-        <a href="http://127.0.0.1:3131/">Command center</a>
-      </p>
-    </footer>
-
+<body>
+  <canvas id="starfield-canvas"></canvas>
+  <button class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
+  
+  
+  <div class="phos-orb" id="phos-orb" title="PHOS Navigation">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="orb-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#4db8a8;stop-opacity:0.9"/>
+          <stop offset="100%" style="stop-color:#3ba372;stop-opacity:0.7"/>
+        </linearGradient>
+      </defs>
+      <polygon points="50,10 10,90 90,90" fill="none" stroke="url(#orb-grad)" stroke-width="2"/>
+      <polygon points="50,30 25,75 75,75" fill="url(#orb-grad)" opacity="0.5"/>
+    </svg>
   </div>
-<script src="/lib/p31-atmosphere-core.js"></script>
-<script src="/lib/p31-smart-starfield.js"></script>
-<script>
-  const starfield = new SmartStarfield('starfield-canvas', {
-    surfaceId: 'surface-p31-cheat-sheet',
-    meshSync: true,
-    starCount: 80
-  });
-</script>
+  <div class="power-level" id="power-level">
+    <div class="power-dot" data-level="0"></div><div class="power-dot" data-level="1"></div><div class="power-dot" data-level="2"></div><div class="power-dot" data-level="3"></div><div class="power-dot" data-level="4"></div><div class="power-dot" data-level="5"></div><div class="power-dot" data-level="6"></div>
+  </div>
+  
+  
+  <main>
+    
+  <article class="page-content">
+    <header class="page-header">
+      <h1>Cheat Sheet</h1>
+    </header>
+    <div class="page-body">
+      <p>This is the Cheat Sheet page.</p>
+      <p>Type: reference</p>
+      <p>PHOS enabled: Yes</p>
+    </div>
+  </article>
+  
+  </main>
+  
+  
+  <script type="module">
+    import { Starfield } from '/lib/p31-starfield.mjs';
+    const starfield = new Starfield('starfield-canvas', {
+      surfaceId: 'p31-cheat-sheet',
+      starCount: 100,
+      meshSync: true
+    });
+  </script>
+  
+  
+  
+  <script type="module">
+    import { PHOS } from '/lib/p31-phos-core.mjs';
+    window.phos = new PHOS({
+      mount: '#phos-orb',
+      pageId: 'p31-cheat-sheet',
+      powerLevels: [0,1,2,3,4,5,6]
+    });
+  </script>
+  
 </body>
 </html>

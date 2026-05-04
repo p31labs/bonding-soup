@@ -1,110 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-p31-appearance="hub">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Phos probe — operator</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Garden Probe · P31</title>
+  <meta name="description" content="Phosphorus31 — Family mesh infrastructure for the neurodivergent operator">
+  <meta name="theme-color" content="#0f1115">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="/lib/p31-qmu-tokens.css">
+  <link rel="stylesheet" href="/p31-style.css">
+  
   <style>
-    :root { color-scheme: dark; --bg: #0a0d14; --fg: #e2e8f0; --accent: #34d399; --muted: #64748b; }
-    body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--fg); margin: 0; padding: 1.25rem; max-width: 52rem; }
-    h1 { font-size: 1.1rem; font-weight: 600; color: var(--accent); }
-    p.note { color: var(--muted); font-size: 0.9rem; line-height: 1.45; }
-    label { display: block; margin-top: 0.75rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
-    input, textarea { width: 100%; box-sizing: border-box; margin-top: 0.25rem; padding: 0.5rem; border-radius: 6px; border: 1px solid #1e293b; background: #020617; color: var(--fg); font: inherit; }
-    textarea { min-height: 12rem; font-family: ui-monospace, monospace; font-size: 0.85rem; }
-    button { margin-top: 1rem; padding: 0.5rem 1rem; border-radius: 6px; border: none; background: var(--accent); color: #022c22; font-weight: 600; cursor: pointer; }
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
-    pre { margin-top: 1rem; padding: 1rem; background: #020617; border-radius: 8px; overflow: auto; font-size: 0.8rem; border: 1px solid #1e293b; }
-    .err { color: #f87171; }
-  </style>
-  <style>
-    .safe-toggle { position: fixed; top: 1rem; right: 1rem; z-index: 9999; padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: all 150ms; }
-    .safe-toggle:hover { background: rgba(204,98,71,0.15); }
-    body.safe-mode { --p31-void: #000; --p31-surface: #0a0a0a; --p31-cloud: #fff; }
-    body.safe-mode * { animation: none !important; transition: none !important; }
+    /* Starfield Canvas */
+    #starfield-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.5;
+    }
     body.safe-mode #starfield-canvas { display: none !important; }
+    
+    /* Safe Mode Toggle */
+    .safe-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 10000;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid rgba(204,98,71,0.3);
+      border-radius: 6px;
+      background: rgba(204,98,71,0.08);
+      color: var(--p31-coral);
+      font-family: var(--p31-font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 150ms;
+    }
+    .safe-toggle:hover { background: rgba(204,98,71,0.15); }
+    
+    /* PHOS Orb */
+    .phos-orb {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      z-index: 9999;
+      cursor: pointer;
+      filter: drop-shadow(0 0 10px rgba(77,184,168,0.4));
+      transition: transform 0.3s ease;
+    }
+    .phos-orb:hover { transform: scale(1.1); }
+    body.safe-mode .phos-orb { filter: grayscale(1); animation: none; }
+    
+    /* Power Level Indicator */
+    .power-level {
+      position: fixed;
+      bottom: 2rem;
+      right: 5rem;
+      z-index: 9998;
+      display: flex;
+      gap: 0.25rem;
+    }
+    .power-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--p31-muted);
+      transition: all 0.3s;
+    }
+    .power-dot.active { background: var(--p31-cyan); box-shadow: 0 0 8px var(--p31-cyan); }
+    
+    /* Main Content */
+    main { position: relative; z-index: 1; }
   </style>
 </head>
 <body>
-  <button id="safeToggle" class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
-<canvas id="starfield-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.5;"></canvas>
-
-  <h1>Phos probe (operator)</h1>
-  <p class="note">
-    HMAC the <strong>exact</strong> JSON body with <code>PHOS_HMAC_SECRET</code>, paste the hex signature, then POST.
-    Run <code>npm run phos:sign --prefix simplex-v7</code> from the repo root (or <code>cd simplex-v7 &amp;&amp; npm run phos:sign</code>) after setting <code>PHOS_HMAC_SECRET</code>.
-    CORS allows <code>https://p31ca.org</code> and <code>http://127.0.0.1:*</code> / <code>http://localhost:*</code> so you can open this file via <code>npm run demo</code> and point at your Worker URL.
-    Set <code>PHOS_CHILD_IDS</code> to include the <code>child_id</code> in your JSON when using the allowlist.
-  </p>
-
-  <label for="base">Worker base (no trailing slash)</label>
-  <input id="base" type="url" value="https://api.phosphorus31.org" autocomplete="off" />
-
-  <label for="sig">X-Phos-Signature (hex)</label>
-  <input id="sig" type="text" placeholder="paste from phos:sign" autocomplete="off" />
-
-  <label for="body">JSON body</label>
-  <textarea id="body" spellcheck="false"></textarea>
-
-  <button type="button" id="go">POST /api/phos/respond</button>
-  <pre id="out">(response)</pre>
-
-  <script>
-    const defaultBody = {
-      child_id: 'dev-garden-child-1',
-      garden_state: { molecules_today: ['H2O'], current_action: 'building', sensory_profile: 'cloud_soft_some' },
-      input_type: 'text',
-      input: 'What does hydrogen like to do?',
-      exchange_count: 0,
-      local_hour: 14,
-      pre_reader: false
-    };
-    document.getElementById('body').value = JSON.stringify(defaultBody, null, 2);
-
-    document.getElementById('go').onclick = async () => {
-      const base = document.getElementById('base').value.replace(/\/$/, '');
-      const sig = document.getElementById('sig').value.trim();
-      const raw = document.getElementById('body').value;
-      const out = document.getElementById('out');
-      const btn = document.getElementById('go');
-      if (!sig) {
-        out.textContent = 'Set X-Phos-Signature (run npm run phos:sign --prefix simplex-v7).';
-        out.classList.add('err');
-        return;
-      }
-      btn.disabled = true;
-      out.classList.remove('err');
-      out.textContent = '…';
-      try {
-        const r = await fetch(base + '/api/phos/respond', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Phos-Signature': sig
-          },
-          body: raw
-        });
-        const text = await r.text();
-        let pretty = text;
-        try { pretty = JSON.stringify(JSON.parse(text), null, 2); } catch (_) {}
-        out.textContent = r.status + ' ' + r.statusText + '\n\n' + pretty;
-        if (!r.ok) out.classList.add('err');
-      } catch (e) {
-        out.textContent = String(e);
-        out.classList.add('err');
-      }
-      btn.disabled = false;
-    };
+  <canvas id="starfield-canvas"></canvas>
+  <button class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
+  
+  
+  <div class="phos-orb" id="phos-orb" title="PHOS Navigation">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="orb-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#4db8a8;stop-opacity:0.9"/>
+          <stop offset="100%" style="stop-color:#3ba372;stop-opacity:0.7"/>
+        </linearGradient>
+      </defs>
+      <polygon points="50,10 10,90 90,90" fill="none" stroke="url(#orb-grad)" stroke-width="2"/>
+      <polygon points="50,30 25,75 75,75" fill="url(#orb-grad)" opacity="0.5"/>
+    </svg>
+  </div>
+  <div class="power-level" id="power-level">
+    <div class="power-dot" data-level="0"></div><div class="power-dot" data-level="1"></div><div class="power-dot" data-level="2"></div><div class="power-dot" data-level="3"></div><div class="power-dot" data-level="4"></div><div class="power-dot" data-level="5"></div><div class="power-dot" data-level="6"></div>
+  </div>
+  
+  
+  <main>
+    
+  <article class="page-content">
+    <header class="page-header">
+      <h1>Garden Probe</h1>
+    </header>
+    <div class="page-body">
+      <p>This is the Garden Probe page.</p>
+      <p>Type: health</p>
+      <p>PHOS enabled: Yes</p>
+    </div>
+  </article>
+  
+  </main>
+  
+  
+  <script type="module">
+    import { Starfield } from '/lib/p31-starfield.mjs';
+    const starfield = new Starfield('starfield-canvas', {
+      surfaceId: 'garden-phos-probe',
+      starCount: 100,
+      meshSync: true
+    });
   </script>
-<script src="/lib/p31-atmosphere-core.js"></script>
-<script src="/lib/p31-smart-starfield.js"></script>
-<script>
-  const starfield = new SmartStarfield('starfield-canvas', {
-    surfaceId: 'surface-garden-phos-probe',
-    meshSync: true,
-    starCount: 80
-  });
-</script>
+  
+  
+  
+  <script type="module">
+    import { PHOS } from '/lib/p31-phos-core.mjs';
+    window.phos = new PHOS({
+      mount: '#phos-orb',
+      pageId: 'garden-phos-probe',
+      powerLevels: [0,1,2,3,4,5,6]
+    });
+  </script>
+  
 </body>
 </html>

@@ -2,452 +2,120 @@
 <html lang="en" data-p31-appearance="hub">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PHOS Core — Phosphorus31 Operating System Documentation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>PHOS Documentation · P31</title>
+  <meta name="description" content="Phosphorus31 — Family mesh infrastructure for the neurodivergent operator">
+  <meta name="theme-color" content="#0f1115">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="/lib/p31-qmu-tokens.css">
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/p31-style.css">
+  
   <style>
-    :root {
-      --p31-void: #0f1115;
-      --p31-surface: #161920;
-      --p31-surface2: #1c2028;
-      --p31-cyan: #4db8a8;
-      --p31-coral: #cc6247;
-      --p31-butter: #cda852;
-      --p31-lavender: #8b7cc9;
-      --p31-phosphorus: #3ba372;
-      --p31-cloud: #d8d6d0;
-      --p31-muted: #6b7280;
-      --p31-glass-border: rgba(255,255,255,0.08);
-      --font-sans: "Atkinson Hyperlegible", system-ui, sans-serif;
-      --font-mono: "JetBrains Mono", monospace;
-    }
-    
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    @page {
-      size: A4;
-      margin: 15mm;
-      @top-center { content: "PHOS Core v2.1.0 — Voice-First Navigation"; font-size: 8pt; color: #6b7280; }
-      @bottom-center { content: counter(page); font-size: 8pt; color: #6b7280; }
-    }
-    
-    body {
-      font-family: var(--font-sans);
-      background: var(--p31-void);
-      color: var(--p31-cloud);
-      line-height: 1.7;
-      font-size: 10pt;
-      max-width: 210mm;
-      margin: 0 auto;
-      padding: 20mm;
-    }
-    
-    /* Cover */
-    .cover {
-      page-break-after: always;
-      text-align: center;
-      padding-top: 30mm;
-    }
-    .cover h1 {
-      font-family: var(--font-mono);
-      font-size: 36pt;
-      color: var(--p31-cyan);
-      letter-spacing: 0.1em;
-      margin-bottom: 5mm;
-      text-shadow: 0 0 30px rgba(77,184,168,0.5);
-    }
-    .cover .subtitle {
-      font-size: 14pt;
-      color: var(--p31-muted);
-      margin-bottom: 15mm;
-    }
-    .cover .tagline {
-      font-family: var(--font-mono);
-      font-size: 11pt;
-      color: var(--p31-butter);
-      letter-spacing: 0.05em;
-      margin-bottom: 30mm;
-    }
-    .cover .meta {
-      font-family: var(--font-mono);
-      font-size: 9pt;
-      color: var(--p31-lavender);
-      line-height: 2;
-    }
-    
-    /* Animated PHOS Mascot on Cover */
-    .phos-mascot {
-      width: 80mm;
-      height: 80mm;
-      margin: 0 auto 20mm;
-    }
-    .phos-mascot svg {
+    /* Starfield Canvas */
+    #starfield-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      filter: drop-shadow(0 0 20px rgba(77,184,168,0.6));
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.5;
     }
-    
-    h2 {
-      font-family: var(--font-mono);
-      font-size: 16pt;
-      color: var(--p31-cyan);
-      margin-top: 12mm;
-      margin-bottom: 5mm;
-      border-bottom: 1px solid var(--p31-glass-border);
-      padding-bottom: 2mm;
-    }
-    h3 {
-      font-family: var(--font-mono);
-      font-size: 12pt;
-      color: var(--p31-butter);
-      margin-top: 8mm;
-      margin-bottom: 3mm;
-    }
-    
-    p { margin-bottom: 4mm; }
-    
-    pre {
-      background: var(--p31-surface);
-      border: 1px solid var(--p31-glass-border);
-      border-radius: 4mm;
-      padding: 4mm;
-      font-family: var(--font-mono);
-      font-size: 8pt;
-      overflow-x: auto;
-      margin: 4mm 0;
-    }
-    code {
-      font-family: var(--font-mono);
-      background: rgba(77,184,168,0.1);
-      padding: 1mm 2mm;
-      border-radius: 1mm;
-      font-size: 9pt;
-    }
-    
-    .feature-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4mm;
-      margin: 5mm 0;
-    }
-    .feature-card {
-      background: var(--p31-surface);
-      border: 1px solid var(--p31-glass-border);
-      border-radius: 3mm;
-      padding: 4mm;
-    }
-    .feature-card h4 {
-      font-family: var(--font-mono);
-      color: var(--p31-cyan);
-      margin-bottom: 2mm;
-      font-size: 10pt;
-    }
-    
-    .intent-flow {
-      background: var(--p31-surface);
-      border: 1px solid var(--p31-cyan);
-      border-radius: 4mm;
-      padding: 5mm;
-      margin: 5mm 0;
-      font-family: var(--font-mono);
-      font-size: 9pt;
-    }
-    .intent-step {
-      display: flex;
-      align-items: center;
-      gap: 3mm;
-      margin: 2mm 0;
-    }
-    .intent-step .arrow {
-      color: var(--p31-muted);
-    }
-    
-    .api-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 5mm 0;
-      font-size: 9pt;
-    }
-    .api-table th {
-      background: var(--p31-surface2);
-      color: var(--p31-cyan);
-      font-family: var(--font-mono);
-      padding: 2mm;
-      text-align: left;
-      border-bottom: 2px solid var(--p31-cyan);
-    }
-    .api-table td {
-      padding: 2mm;
-      border-bottom: 1px solid var(--p31-glass-border);
-      font-family: var(--font-mono);
-      font-size: 8pt;
-    }
-    
-    .callout {
-      background: rgba(77,184,168,0.1);
-      border-left: 3px solid var(--p31-cyan);
-      padding: 4mm;
-      margin: 5mm 0;
-    }
-    .callout-title {
-      font-family: var(--font-mono);
-      font-weight: bold;
-      color: var(--p31-cyan);
-      margin-bottom: 2mm;
-    }
-    
-    .print-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: var(--p31-cyan);
-      color: var(--p31-void);
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      font-family: var(--font-mono);
-      cursor: pointer;
-    }
-    @media print { .print-btn { display: none; } }
-  </style>
-  <style>
-    .safe-toggle { position: fixed; top: 1rem; right: 1rem; z-index: 9999; padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: all 150ms; }
-    .safe-toggle:hover { background: rgba(204,98,71,0.15); }
-    body.safe-mode { --p31-void: #000; --p31-surface: #0a0a0a; --p31-cloud: #fff; }
-    body.safe-mode * { animation: none !important; transition: none !important; }
     body.safe-mode #starfield-canvas { display: none !important; }
+    
+    /* Safe Mode Toggle */
+    .safe-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 10000;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid rgba(204,98,71,0.3);
+      border-radius: 6px;
+      background: rgba(204,98,71,0.08);
+      color: var(--p31-coral);
+      font-family: var(--p31-font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 150ms;
+    }
+    .safe-toggle:hover { background: rgba(204,98,71,0.15); }
+    
+    /* PHOS Orb */
+    .phos-orb {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      z-index: 9999;
+      cursor: pointer;
+      filter: drop-shadow(0 0 10px rgba(77,184,168,0.4));
+      transition: transform 0.3s ease;
+    }
+    .phos-orb:hover { transform: scale(1.1); }
+    body.safe-mode .phos-orb { filter: grayscale(1); animation: none; }
+    
+    /* Power Level Indicator */
+    .power-level {
+      position: fixed;
+      bottom: 2rem;
+      right: 5rem;
+      z-index: 9998;
+      display: flex;
+      gap: 0.25rem;
+    }
+    .power-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--p31-muted);
+      transition: all 0.3s;
+    }
+    .power-dot.active { background: var(--p31-cyan); box-shadow: 0 0 8px var(--p31-cyan); }
+    
+    /* Main Content */
+    main { position: relative; z-index: 1; }
   </style>
 </head>
 <body>
-  <button id="safeToggle" class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
-  <button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+  <canvas id="starfield-canvas"></canvas>
+  <button class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
   
-  <!-- Cover -->
-  <div class="cover">
-    <div class="phos-mascot">
-      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#4db8a8;stop-opacity:0.9"/>
-            <stop offset="100%" style="stop-color:#3ba372;stop-opacity:0.7"/>
-          </linearGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
-        <g transform="translate(100, 110)">
-          <path d="M0,-70 L-60,40 L0,20 Z" fill="rgba(77,184,168,0.3)" stroke="#4db8a8" stroke-width="2"/>
-          <path d="M0,-70 L60,40 L0,20 Z" fill="rgba(77,184,168,0.3)" stroke="#4db8a8" stroke-width="2"/>
-          <path d="M-60,40 L0,20 L60,40 L0,70 Z" fill="url(#bodyGrad)" stroke="#4db8a8" stroke-width="2" filter="url(#glow)"/>
-          <ellipse cx="0" cy="45" rx="35" ry="20" fill="#d8d6d0" opacity="0.9"/>
-          <ellipse cx="-12" cy="42" rx="6" ry="7" fill="#0f1115"/>
-          <circle cx="-10" cy="40" r="2" fill="#fff" opacity="0.8"/>
-          <ellipse cx="12" cy="42" rx="6" ry="7" fill="#0f1115"/>
-          <circle cx="14" cy="40" r="2" fill="#fff" opacity="0.8"/>
-          <path d="M-8,55 Q0,58 8,55" stroke="#0f1115" stroke-width="2" fill="none" stroke-linecap="round"/>
-        </g>
-      </svg>
+  
+  
+  <main>
+    
+  <article class="page-content">
+    <header class="page-header">
+      <h1>PHOS Documentation</h1>
+    </header>
+    <div class="page-body">
+      <p>This is the PHOS Documentation page.</p>
+      <p>Type: docs</p>
+      <p>PHOS enabled: No</p>
     </div>
-    <h1>PHOS</h1>
-    <p class="subtitle">Phosphorus31 Operating System</p>
-    <p class="tagline">「 Voice-First · Inference-Driven · Gray Rock by Default 」</p>
-    <div class="meta">
-      <p><strong>Version:</strong> 2.1.0</p>
-      <p><strong>Classification:</strong> Core Navigation Infrastructure</p>
-      <p><strong>Schema:</strong> p31.phos/2.1.0</p>
-      <p><strong>Date:</strong> 2026-05-03</p>
-      <p><strong>Commit:</strong> 4459dcc</p>
-    </div>
-  </div>
+  </article>
   
-  <!-- Content -->
-  <h2>THE PHILOSOPHY</h2>
-  <p>PHOS is not a navigation bar. PHOS is not a hamburger menu. PHOS is a <strong>voice-first, inference-driven routing system</strong> that reduces Shannon entropy through Bayesian questioning.</p>
-  <p>The core insight: most navigation fails because it presents too many choices upfront. Hick's Law tells us decision time grows logarithmically with choice count. PHOS inverts this — instead of showing all destinations, it asks 2-3 questions and routes efficiently.</p>
+  </main>
   
-  <div class="callout">
-    <div class="callout-title">Core Principle: Gray Rock by Default</div>
-    <p>PHOS surfaces are inert by default. No animation. No auto-play. No surprise modals. The operator must explicitly "wake" the interface through interaction. This respects:</p>
-    <ul>
-      <li>Spoon budgets (cognitive energy reserves)</li>
-      <li>Attention volatility (AuDHD context switching costs)</li>
-      <li>Sensory sensitivity (autistic hyperacusis, photophobia)</li>
-      <li>Physiological limits (hypoparathyroidism calcium crashes)</li>
-    </ul>
-  </div>
   
-  <h2>THE BAYESIAN ROUTER</h2>
-  <p>PHOS uses a 3-question decision tree with Shannon entropy reduction:</p>
+  <script type="module">
+    import { Starfield } from '/lib/p31-starfield.mjs';
+    const starfield = new Starfield('starfield-canvas', {
+      surfaceId: 'phos-core-docs',
+      starCount: 100,
+      meshSync: true
+    });
+  </script>
   
-  <div class="intent-flow">
-    <div class="intent-step">
-      <span style="color: var(--p31-cyan); font-weight: bold;">Q1:</span>
-      <span>Are the children with you?</span>
-      <span class="arrow">→</span>
-      <span>If YES: GARDEN, GEODESIC (child-safe surfaces)</span>
-    </div>
-    <div class="intent-step">
-      <span style="color: var(--p31-cyan); font-weight: bold;">Q2:</span>
-      <span>Is there external deadline/voltage?</span>
-      <span class="arrow">→</span>
-      <span>If YES: BUFFER, OPS, CORTEX (urgency surfaces)</span>
-    </div>
-    <div class="intent-step">
-      <span style="color: var(--p31-cyan); font-weight: bold;">Q3:</span>
-      <span>Are we in 'Mechanic' mode?</span>
-      <span class="arrow">→</span>
-      <span>If YES: OPS, VIBE, GEODESIC, CORTEX, BUILD</span>
-    </div>
-  </div>
   
-  <p>Each question reduces the candidate set by ~50%, achieving O(log n) routing vs O(n) scanning.</p>
   
-  <h2>ARCHITECTURE</h2>
-  
-  <h3>The PHOS Class</h3>
-  <pre><code>class PhosOS {
-  constructor() {
-    this.state = {
-      status: 'IDLE',        // IDLE | THINKING | ROUTING | ACTIVE
-      spoons: 8,             // 1-10 cognitive budget estimate
-      activeAgent: 'FORGE',  // Current intent focus
-      activePool: [],        // Candidate destinations
-      history: []            // Navigation trail
-    };
-    this.intents = [/* 10 destination definitions */];
-    this.questions = [/* 3 Bayesian routing questions */];
-  }
-  
-  // Core methods
-  syncWithCogPass()       // Read cognitive passport preferences
-  injectStyles()          // PHOS UI chrome (orb + bubble)
-  injectFace()            // The tetrahedron mascot
-  resetBrain()            // Clear routing state
-  toggle()                // Show/hide PHOS interface
-  route(intent)           // Navigate to destination
-}</code></pre>
-  
-  <h3>Intent Registry</h3>
-  <table class="api-table">
-    <tr>
-      <th>Intent ID</th>
-      <th>Label</th>
-      <th>Path</th>
-      <th>Trigger Conditions</th>
-    </tr>
-    <tr>
-      <td>PASSPORT</td>
-      <td>Cognitive Passport</td>
-      <td>/passport.html</td>
-      <td>Needs accommodation sharing</td>
-    </tr>
-    <tr>
-      <td>OPS</td>
-      <td>Operator Desk</td>
-      <td>/ops.html</td>
-      <td>G.O.D. mode, system overview</td>
-    </tr>
-    <tr>
-      <td>GARDEN</td>
-      <td>The Garden</td>
-      <td>/garden.html</td>
-      <td>Children present, S.J./W.J. mode</td>
-    </tr>
-    <tr>
-      <td>GEODESIC</td>
-      <td>Geodesic Builder</td>
-      <td>/geodesic.html</td>
-      <td>Building, creating, 3D work</td>
-    </tr>
-    <tr>
-      <td>LIBRARY</td>
-      <td>Document Library</td>
-      <td>/doc-library.html</td>
-      <td>Research, reading, reference</td>
-    </tr>
-    <tr>
-      <td>CORTEX</td>
-      <td>Centaur Pack</td>
-      <td>/cortex.html</td>
-      <td>AI assistance, agent tools</td>
-    </tr>
-    <tr>
-      <td>BUILD</td>
-      <td>WCD Intake</td>
-      <td>/build.html</td>
-      <td>Controlled work package entry</td>
-    </tr>
-  </table>
-  
-  <h2>SAFE MODE PROTOCOL</h2>
-  <p>PHOS implements the most aggressive safe mode in web UI:</p>
-  
-  <div class="feature-grid">
-    <div class="feature-card">
-      <h4>CSS Animation Kill</h4>
-      <p>All transitions set to 0s. Keyframe animations removed. Canvas opacity forced to 0.</p>
-    </div>
-    <div class="feature-card">
-      <h4>WebGL Destruction</h4>
-      <p>loseContext() called on all WebGL contexts. GPU threads released. Prevents calcium crash acceleration.</p>
-    </div>
-    <div class="feature-card">
-      <h4>Color Contrast Maximum</h4>
-      <p>Pure black (#000) background. Pure white (#fff) text. All decorative gradients disabled.</p>
-    </div>
-    <div class="feature-card">
-      <h4>Motion Respect</h4>
-      <p>Respects prefers-reduced-motion automatically. Safe mode toggle for manual override.</p>
-    </div>
-  </div>
-  
-  <h2>THE PHOS MASCOT</h2>
-  <p>The tetrahedron character is not decoration — it's the physical manifestation of the routing system:</p>
-  
-  <ul>
-    <li><strong>Eyes:</strong> Track cursor position (attention indication)</li>
-    <li><strong>Mouth:</strong> Changes shape based on system confidence (smile = high routing confidence)</li>
-    <li><strong>K4 Connectors:</strong> The four gold dots represent the tetrahedron vertices (family mesh topology)</li>
-    <li><strong>Pulse Glow:</strong> Breathes at 1.2Hz — the same rhythm as the 4-4-6 breathing protocol</li>
-    <li><strong>Hover Ring:</strong> Rotates slowly, indicating system activity and mesh connectivity</li>
-  </ul>
-  
-  <h2>INTEGRATION</h2>
-  <pre><code>// One-line PHOS activation on any surface
-&lt;script src="/public/lib/p31-atmosphere-core.js"&gt;&lt;/script&gt;
-
-// PHOS auto-initializes and injects:
-// - Safe mode toggle (top-right)
-// - PHOS mascot (bottom-right orb)
-// - Voice routing interface (when clicked)
-// - Gray Rock wake behavior (first interaction)</code></pre>
-  
-  <h2>VOICE INTERFACE (v2.2 Preview)</h2>
-  <p>PHOS 2.2 will add Web Speech API integration:</p>
-  
-  <div class="callout">
-    <div class="callout-title">Coming Soon</div>
-    <p><strong>Voice Commands:</strong></p>
-    <ul>
-      <li>"PHOS, take me to passport" → Routes to Cognitive Passport</li>
-      <li>"PHOS, safe mode now" → Engages safe mode immediately</li>
-      <li>"PHOS, where am I?" → Reads current surface context</li>
-      <li>"PHOS, go home" → Returns to root index</li>
-    </ul>
-  </div>
-  
-  <div class="callout" style="margin-top: 10mm; text-align: center; background: rgba(77,184,168,0.1);">
-    <p style="margin: 0; font-family: var(--font-mono);">
-      <strong>PHOS v2.1.0</strong> — Voice-first · Inference-driven · Gray Rock by Default<br>
-      P31 Labs — EIN 42-1888158 — Commit 4459dcc
-    </p>
-  </div>
 </body>
 </html>

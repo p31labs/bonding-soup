@@ -1,0 +1,146 @@
+{
+  "$schema": "p31.site/2.0.0",
+  "site": {
+    "name": "P31",
+    "tagline": "Build, Create, Connect",
+    "description": "Phosphorus31 — Family mesh infrastructure for the neurodivergent operator",
+    "baseUrl": "https://p31ca.org",
+    "basePath": "/",
+    "author": "P31 Labs, Inc.",
+    "version": "2.0.0"
+  },
+  "phos": {
+    "enabled": true,
+    "version": "2.0.0",
+    "question": "Whose mesh are we building today?",
+    "tagline": "For every family out there figuring it out as they go — help is on the way.",
+    "powerLevels": [0, 1, 2, 3, 4, 5, 6],
+    "intents": [
+      {
+        "id": "SELF",
+        "label": "For Myself",
+        "icon": "🙋",
+        "hint": "Passport, sovereign tools",
+        "path": "/passport",
+        "patterns": ["myself", "me", "i", "my", "personal", "alone", "individual", "self"],
+        "confidence": 0.9
+      },
+      {
+        "id": "FAMILY",
+        "label": "For My Family",
+        "icon": "🏠",
+        "hint": "Bonding, coordination, kids",
+        "path": "/soup",
+        "patterns": ["family", "household", "kids", "children", "parents", "home", "together", "us", "we", "partner"],
+        "confidence": 0.85
+      },
+      {
+        "id": "PRO",
+        "label": "I'm a Professional",
+        "icon": "💼",
+        "hint": "Research, docs, operator tools",
+        "path": "/glass-box",
+        "patterns": ["professional", "work", "job", "career", "developer", "engineer", "doctor", "therapist", "researcher"],
+        "confidence": 0.8
+      },
+      {
+        "id": "CRISIS",
+        "label": "I need help now",
+        "icon": "🆘",
+        "hint": "Safe mode — minimal stimulation",
+        "path": "/welcome",
+        "patterns": ["help", "crisis", "overwhelm", "panic", "anxiety", "emergency", "stop"],
+        "confidence": 1.0,
+        "urgent": true
+      }
+    ],
+    "akinatorTree": {
+      "root": {
+        "id": "WHO",
+        "question": "Whose mesh are we building today?",
+        "type": "trinary"
+      },
+      "branches": {
+        "SELF": {
+          "question": "What's your energy right now?",
+          "options": [
+            {"label": "Overwhelmed", "route": "/welcome?safe=1", "power": 0},
+            {"label": "Calm but focused", "route": "/passport", "power": 2},
+            {"label": "Creative flow", "route": "/geodesic-builder", "power": 3},
+            {"label": "Learning mode", "route": "/docs", "power": 2}
+          ]
+        },
+        "FAMILY": {
+          "question": "What does your family need?",
+          "options": [
+            {"label": "Connection", "route": "/soup", "power": 2},
+            {"label": "Coordination", "route": "/agents", "power": 2},
+            {"label": "Kids activity", "route": "/geodesic-builder", "power": 3}
+          ]
+        },
+        "PRO": {
+          "question": "What's your domain?",
+          "options": [
+            {"label": "Researcher", "route": "/glass-box", "power": 4},
+            {"label": "Clinician", "route": "/passport", "power": 3},
+            {"label": "Developer", "route": "/fleet-portal", "power": 4},
+            {"label": "Educator", "route": "/docs", "power": 3}
+          ]
+        }
+      }
+    }
+  },
+  "starfield": {
+    "enabled": true,
+    "defaultConfig": {
+      "starCount": 100,
+      "connectionDistance": 100,
+      "maxConnections": 3,
+      "color": "#4db8a8",
+      "pulseSync": true,
+      "meshSync": true,
+      "coherence": 92
+    },
+    "byPage": {
+      "index": {"starCount": 150, "opacity": 0.6},
+      "geodesic-builder": {"starCount": 80, "opacity": 0.4},
+      "soup": {"starCount": 100, "opacity": 0.5},
+      "glass-box": {"starCount": 60, "opacity": 0.3}
+    }
+  },
+  "safeMode": {
+    "enabled": true,
+    "triggerWords": ["help", "crisis", "panic", "emergency", "stop", "overwhelm"],
+    "exitHoldTime": 2000
+  },
+  "pages": [
+    {"id": "index", "title": "PHOS · P31 Labs", "type": "phos-entry", "phos": true, "starfield": {"starCount": 150}},
+    {"id": "geodesic-builder", "title": "Geodesic Builder", "type": "app", "phos": true, "starfield": {"starCount": 80}},
+    {"id": "soup", "title": "C.A.R.S.", "type": "app", "phos": true},
+    {"id": "agents", "title": "K4 Agent Hubs", "type": "info", "phos": true},
+    {"id": "fleet-portal", "title": "Fleet Portal", "type": "info", "phos": true},
+    {"id": "glass-box", "title": "Glass Box", "type": "terminal", "phos": true},
+    {"id": "psych-e2e-live", "title": "Psych E2E Dashboard", "type": "dashboard", "phos": true},
+    {"id": "welcome", "title": "Welcome", "type": "landing", "phos": true},
+    {"id": "passport", "title": "Cognitive Passport", "type": "tool", "phos": true},
+    {"id": "command-center-terminal", "title": "Command Center", "type": "ops", "phos": false},
+    {"id": "demo-tour", "title": "Demo Tour", "type": "guide", "phos": true},
+    {"id": "p31-sovereign-lab", "title": "Sovereign Lab", "type": "lab", "phos": true},
+    {"id": "p31-slicer", "title": "Slicer", "type": "tool", "phos": true},
+    {"id": "poets-room", "title": "Poets Room", "type": "creative", "phos": true},
+    {"id": "phos-core-docs", "title": "PHOS Documentation", "type": "docs", "phos": false},
+    {"id": "phos-mascot", "title": "PHOS Mascot", "type": "demo", "phos": false},
+    {"id": "psych-e2e-docs", "title": "Psych E2E Docs", "type": "docs", "phos": false},
+    {"id": "p31-cheat-sheet", "title": "Cheat Sheet", "type": "reference", "phos": true},
+    {"id": "p31-device-setup", "title": "Device Setup", "type": "guide", "phos": true},
+    {"id": "p31-personal-howto", "title": "Personal How-To", "type": "guide", "phos": true},
+    {"id": "launch-readiness", "title": "Launch Readiness", "type": "ops", "phos": false},
+    {"id": "garden-phos-probe", "title": "Garden Probe", "type": "health", "phos": true},
+    {"id": "p31-quantum-material-u", "title": "Quantum Material U", "type": "design", "phos": true}
+  ],
+  "assets": {
+    "css": ["/lib/p31-qmu-tokens.css", "/p31-style.css"],
+    "js": ["/lib/p31-starfield.js", "/lib/p31-phos-core.mjs"],
+    "fonts": ["https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap"]
+  }
+}

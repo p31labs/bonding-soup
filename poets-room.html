@@ -1,653 +1,146 @@
 <!DOCTYPE html>
-<html lang="en" data-p31-appearance="hub" style="color-scheme: dark;">
+<html lang="en" data-p31-appearance="hub">
 <head>
-  <meta charset="UTF-8" />
-  <script>
-    (function () {
-      var r = document.documentElement;
-      if (/[?&]alive=1(?:&|$)/.test(location.search)) return;
-      r.classList.add("p31-gray-rock");
-      function wake() { r.classList.remove("p31-gray-rock"); }
-      document.addEventListener("pointerdown", wake, { once: true, capture: true });
-      document.addEventListener("keydown", wake, { once: true, capture: true });
-    })();
-  </script>
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="P31 home" />
-  <link rel="manifest" href="p31-bonding.webmanifest" crossorigin="anonymous" />
-  <link rel="apple-touch-icon" href="p31-bonding-icons/p31-icon.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Poets Room</title>
-  <meta name="description" content="A quiet room. No tasks. No metrics. One line a day, a shelf of meaning, and words only you keep." />
-  <meta id="poets-config" data-quotes-href="./poets-room-quotes.json" data-leave-href="soup.html" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Poets Room · P31</title>
+  <meta name="description" content="Phosphorus31 — Family mesh infrastructure for the neurodivergent operator">
+  <meta name="theme-color" content="#0f1115">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="/lib/p31-qmu-tokens.css">
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700&family=JetBrains+Mono:wght@400&family=Playfair+Display:ital,wght@1,400;1,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/p31-style.css">
+  
   <style>
-    :root {
-      --void: #05080c;
-      --chalk: #e8e6e3;
-      --chalk-dim: rgba(232, 230, 227, 0.6);
-      --edge: rgba(255, 255, 255, 0.06);
-    }
-    *, *::before, *::after { box-sizing: border-box; }
-    html {
-      scroll-behavior: smooth;
-    }
-    body {
-      margin: 0;
-      background: var(--void);
-      color: var(--chalk);
-      font-family: "JetBrains Mono", ui-monospace, monospace;
-      min-height: 100vh;
-      min-height: 100dvh;
-    }
-    .skip {
-      position: absolute;
-      left: -9999px;
-      top: 0;
-      padding: 0.5rem 1rem;
-      background: #111;
-      color: var(--chalk);
-      z-index: 100;
-    }
-    .skip:focus {
-      left: 0.5rem;
-      top: 0.5rem;
-    }
-    /* Layer 1 — void + quote (full viewport) */
-    .layer-void {
-      min-height: 100vh;
-      min-height: 100dvh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: clamp(1rem, 4vw, 2.5rem);
-      position: relative;
-    }
-    .daily-quote {
-      max-width: 36rem;
-      margin: 0;
-      text-align: center;
-      opacity: 0;
-      transition: opacity 1.5s ease;
-    }
-    .daily-quote.is-lit {
-      opacity: 0.6;
-    }
-    .daily-quote p {
-      margin: 0;
-      font-family: "Playfair Display", Georgia, serif;
-      font-style: italic;
-      font-weight: 400;
-      font-size: clamp(1.05rem, 2.2vw + 0.85rem, 1.45rem);
-      line-height: 1.55;
-      color: var(--chalk);
-    }
-    .daily-quote footer {
-      margin-top: 1.25rem;
-      font-family: "JetBrains Mono", ui-monospace, monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: rgba(232, 230, 227, 0.45);
-    }
-    .scroll-hint {
-      position: absolute;
-      bottom: 1.25rem;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(232, 230, 227, 0.22);
-      opacity: 0;
-      transition: opacity 1.2s ease 1.6s;
-      pointer-events: none;
-    }
-    .daily-quote.is-lit + .scroll-hint {
-      opacity: 1;
-    }
-    /* Layer 2 — shelf + writing (revealed by scroll) */
-    .layer-deep {
-      padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 2rem) 5rem;
-      max-width: 52rem;
-      margin: 0 auto;
-      border-top: 1px solid var(--edge);
-    }
-    .shelf-title {
-      font-size: 0.65rem;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: rgba(232, 230, 227, 0.28);
-      text-align: center;
-      margin: 0 0 1.5rem;
-    }
-    .poets-tool-strip {
-      text-align: center;
-      margin: -0.5rem 0 1.35rem;
-      font-family: "JetBrains Mono", ui-monospace, monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.06em;
-      line-height: 1.85;
-    }
-    .poets-tool-strip a {
-      color: rgba(94, 234, 212, 0.5);
-      text-decoration: none;
-      margin: 0 0.4rem;
-    }
-    .poets-tool-strip a:hover {
-      color: rgba(170, 230, 215, 0.92);
-      text-decoration: underline;
-    }
-    .shelf {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-end;
-      justify-content: center;
-      gap: clamp(0.75rem, 3vw, 1.75rem);
-      padding: 0.5rem 0 2.5rem;
-    }
-    .shelf-item {
-      width: 5.5rem;
-      text-align: center;
-      color: rgba(232, 230, 227, 0.38);
-      font-size: 0.58rem;
-      line-height: 1.35;
-      letter-spacing: 0.02em;
-    }
-    .shelf-item .thumb {
-      height: 4.25rem;
-      margin: 0 auto 0.45rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid var(--edge);
-      border-radius: 4px;
-      background: rgba(0, 0, 0, 0.35);
-    }
-    .shelf-item a.thumb {
-      text-decoration: none;
-      color: inherit;
-      cursor: pointer;
-      transition: border-color 0.25s ease, background 0.25s ease;
-    }
-    .shelf-item a.thumb:hover,
-    .shelf-item a.thumb:focus-visible {
-      border-color: rgba(232, 230, 227, 0.18);
-      background: rgba(0, 0, 0, 0.5);
-      outline: none;
-    }
-    .shelf-item button.thumb {
-      cursor: pointer;
-      font: inherit;
-      color: inherit;
-      width: 100%;
-      padding: 0;
-      transition: border-color 0.25s ease;
-    }
-    .shelf-item button.thumb:focus-visible {
-      outline: 1px solid rgba(232, 230, 227, 0.25);
-      outline-offset: 2px;
-    }
-    .tetra-stage {
-      perspective: 140px;
-      width: 3rem;
-      height: 3rem;
-    }
-    .tetra {
-      width: 100%;
-      height: 100%;
-      transform-style: preserve-3d;
-      animation: tetra-spin 140s linear infinite;
-    }
-    @keyframes tetra-spin {
-      to { transform: rotateX(360deg) rotateY(19deg); }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .tetra { animation: none; }
-    }
-    .photo-slot {
-      position: relative;
-      overflow: hidden;
-    }
-    .photo-slot img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 2px;
-    }
-    .photo-slot.is-empty::after {
-      content: "Drop a photo";
-      font-size: 0.55rem;
-      letter-spacing: 0.06em;
-      color: rgba(232, 230, 227, 0.22);
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-    }
-    .photo-slot.drag {
-      border-color: rgba(120, 180, 200, 0.35);
-    }
-    .writing-block {
-      position: relative;
-      margin-top: 1rem;
-    }
-    .writing-block label {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      border: 0;
-    }
-    #private-draft {
-      width: 100%;
-      min-height: 14rem;
-      resize: vertical;
-      padding: 1rem 1.1rem;
-      margin: 0;
-      border: 1px solid var(--edge);
-      border-radius: 4px;
-      background: rgba(0, 0, 0, 0.25);
-      color: rgba(232, 230, 227, 0.78);
-      font-family: "JetBrains Mono", ui-monospace, monospace;
-      font-size: 0.88rem;
-      line-height: 1.6;
-      caret-color: rgba(232, 230, 227, 0.85);
-    }
-    #private-draft:focus {
-      outline: none;
-      border-color: rgba(232, 230, 227, 0.12);
-    }
-    #private-draft::placeholder {
-      color: transparent;
-    }
-    .clear-draft {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      width: 1.75rem;
-      height: 1.75rem;
-      border: none;
-      border-radius: 4px;
-      background: rgba(0, 0, 0, 0.45);
-      color: rgba(232, 230, 227, 0.45);
-      font-size: 1.1rem;
-      line-height: 1;
-      cursor: pointer;
-      z-index: 2;
-    }
-    .clear-draft:hover {
-      color: rgba(232, 230, 227, 0.75);
-    }
-    .leave-quiet {
-      margin: 2.5rem 0 0;
-      text-align: center;
-      font-size: 0.72rem;
-    }
-    .leave-quiet a {
-      color: rgba(232, 230, 227, 0.28);
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: color 0.2s ease, border-color 0.2s ease;
-    }
-    .leave-quiet a:hover {
-      color: rgba(232, 230, 227, 0.48);
-      border-bottom-color: rgba(232, 230, 227, 0.2);
-    }
-    canvas.wave-thumb {
-      display: block;
-      width: 100%;
-      height: 3rem;
-    }
-    .layer-void,
-    .layer-deep {
-      position: relative;
-      z-index: 1;
-    }
-    #poets-starfield {
+    /* Starfield Canvas */
+    #starfield-canvas {
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       z-index: 0;
       pointer-events: none;
+      opacity: 0.5;
     }
-  </style>
-  <link rel="stylesheet" href="cognitive-passport/p31-style.css" />
-  <link rel="stylesheet" href="p31-shared-surface.css" />
-  <link rel="stylesheet" href="design-assets/starfield/p31-starfield.css" />
-  <link rel="stylesheet" href="design-assets/starfield/p31-larmor-fields.css" />
-  <style>
-    .safe-toggle { position: fixed; top: 1rem; right: 1rem; z-index: 9999; padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: all 150ms; }
-    .safe-toggle:hover { background: rgba(204,98,71,0.15); }
-    body.safe-mode { --p31-void: #000; --p31-surface: #0a0a0a; --p31-cloud: #fff; }
-    body.safe-mode * { animation: none !important; transition: none !important; }
     body.safe-mode #starfield-canvas { display: none !important; }
+    
+    /* Safe Mode Toggle */
+    .safe-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 10000;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid rgba(204,98,71,0.3);
+      border-radius: 6px;
+      background: rgba(204,98,71,0.08);
+      color: var(--p31-coral);
+      font-family: var(--p31-font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 150ms;
+    }
+    .safe-toggle:hover { background: rgba(204,98,71,0.15); }
+    
+    /* PHOS Orb */
+    .phos-orb {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      z-index: 9999;
+      cursor: pointer;
+      filter: drop-shadow(0 0 10px rgba(77,184,168,0.4));
+      transition: transform 0.3s ease;
+    }
+    .phos-orb:hover { transform: scale(1.1); }
+    body.safe-mode .phos-orb { filter: grayscale(1); animation: none; }
+    
+    /* Power Level Indicator */
+    .power-level {
+      position: fixed;
+      bottom: 2rem;
+      right: 5rem;
+      z-index: 9998;
+      display: flex;
+      gap: 0.25rem;
+    }
+    .power-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--p31-muted);
+      transition: all 0.3s;
+    }
+    .power-dot.active { background: var(--p31-cyan); box-shadow: 0 0 8px var(--p31-cyan); }
+    
+    /* Main Content */
+    main { position: relative; z-index: 1; }
   </style>
 </head>
-<body class="p31-mesh-m-first">
-  <canvas id="poets-starfield" class="p31-starfield-canvas" aria-hidden="true"></canvas>
-  <a class="skip" href="#shelf-anchor">Skip to the shelf and writing space</a>
-  <div class="layer-void">
-    <p class="p31-host-mind" style="position:relative;z-index:2;text-align:center;max-width:32rem;margin:0 auto 0.75rem;color:var(--p31-muted, rgba(232,230,227,0.5))">Host mind: <strong>Poet / Sun</strong> — the quiet band of the same night sky.</p>
-    <blockquote class="daily-quote" id="daily-quote">
-      <p id="quote-text"></p>
-      <footer id="quote-attribution"></footer>
-    </blockquote>
-    <p class="scroll-hint" aria-hidden="true">Scroll</p>
+<body>
+  <canvas id="starfield-canvas"></canvas>
+  <button class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
+  
+  
+  <div class="phos-orb" id="phos-orb" title="PHOS Navigation">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="orb-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#4db8a8;stop-opacity:0.9"/>
+          <stop offset="100%" style="stop-color:#3ba372;stop-opacity:0.7"/>
+        </linearGradient>
+      </defs>
+      <polygon points="50,10 10,90 90,90" fill="none" stroke="url(#orb-grad)" stroke-width="2"/>
+      <polygon points="50,30 25,75 75,75" fill="url(#orb-grad)" opacity="0.5"/>
+    </svg>
   </div>
-
-  <div class="layer-deep" id="shelf-anchor">
-    <p class="p31-translate-bridge">
-      <a href="docs/physics-learn/index.html">Read this same sky as <strong>physics</strong> (measure &amp; proof) →</a>
-    </p>
-    <p class="shelf-title">The shelf</p>
-    <nav class="poets-tool-strip" aria-label="C.A.R.S. lab and mesh">
-      <a href="soup.html">C.A.R.S.</a>
-      <a href="p31-sovereign-lab.html">Lab</a>
-      <a href="p31-slicer.html">Slicer</a>
-      <a href="https://p31ca.org/geodesic" target="_blank" rel="noopener">Geodesic</a>
-    </nav>
-    <div class="shelf" role="list">
-      <div class="shelf-item" role="listitem">
-        <div class="thumb" aria-hidden="true">
-          <div class="tetra-stage">
-            <div class="tetra">
-              <svg viewBox="0 0 64 64" width="48" height="48" aria-hidden="true">
-                <g fill="none" stroke="rgba(180,200,210,0.35)" stroke-width="0.8">
-                  <path d="M32 8 L54 48 L10 48 Z" />
-                  <path d="M32 8 L32 56" />
-                  <path d="M10 48 L44 30" />
-                  <path d="M54 48 L20 30" />
-                </g>
-              </svg>
-            </div>
-          </div>
-        </div>
-        K₄ — the shape holds
-      </div>
-      <div class="shelf-item" role="listitem">
-        <div class="thumb" aria-hidden="true" title="Posner cluster — Ca₉(PO₄)₆">
-          <svg viewBox="0 0 64 64" width="52" height="52" aria-hidden="true">
-            <polygon points="32,10 52,42 12,42" fill="none" stroke="rgba(160,190,210,0.3)" stroke-width="0.7" />
-            <circle cx="32" cy="28" r="5" fill="rgba(200,210,230,0.15)" stroke="rgba(160,190,210,0.35)" />
-            <circle cx="22" cy="40" r="3" fill="rgba(180,200,220,0.12)" />
-            <circle cx="42" cy="40" r="3" fill="rgba(180,200,220,0.12)" />
-            <circle cx="28" cy="44" r="2.5" fill="rgba(180,200,220,0.1)" />
-            <circle cx="36" cy="44" r="2.5" fill="rgba(180,200,220,0.1)" />
-          </svg>
-        </div>
-        Posner — cage of calcium
-      </div>
-      <div class="shelf-item" role="listitem">
-        <div class="thumb" aria-hidden="true" title="First BONDING molecule">
-          <svg viewBox="0 0 64 64" width="50" height="50" aria-hidden="true">
-            <circle cx="22" cy="32" r="8" fill="none" stroke="rgba(160,200,255,0.35)" stroke-width="1" />
-            <circle cx="42" cy="32" r="8" fill="none" stroke="rgba(160,200,255,0.35)" stroke-width="1" />
-            <circle cx="32" cy="20" r="6" fill="none" stroke="rgba(255,200,160,0.35)" stroke-width="1" />
-            <line x1="28" y1="24" x2="26" y2="28" stroke="rgba(255,255,255,0.2)" stroke-width="0.8" />
-            <line x1="36" y1="24" x2="38" y2="28" stroke="rgba(255,255,255,0.2)" stroke-width="0.8" />
-          </svg>
-        </div>
-        March 10, 2026 — BONDING shipped · birthday
-      </div>
-      <div class="shelf-item" role="listitem">
-        <a class="thumb" href="https://doi.org/10.5281/zenodo.19503542" rel="noopener noreferrer" title="Zenodo — Paper IV">
-          <span style="display:block;padding:0.35rem 0.25rem;font-family:'Playfair Display',serif;font-style:italic;font-size:0.52rem;line-height:1.25;color:rgba(232,230,227,0.42);">
-            Universal Bridge at the Phase Transition
-          </span>
-        </a>
-        <span style="display:block;margin-top:0.2rem;font-size:0.5rem;">10.5281/zenodo.19503542</span>
-      </div>
-      <div class="shelf-item" role="listitem">
-        <button type="button" class="thumb wave-btn" id="wave-863" aria-label="Play 863 Hz for one second (Larmor)">
-          <canvas class="wave-thumb" id="wave-canvas" width="88" height="48" aria-hidden="true"></canvas>
-        </button>
-        863 Hz — one second, then silence
-      </div>
-      <div class="shelf-item" role="listitem">
-        <div
-          class="thumb photo-slot is-empty"
-          id="photo-slot"
-          tabindex="0"
-          role="button"
-          aria-label="Photo place — drop an image file from your device"
-        ></div>
-        Your picture — local only
-      </div>
-    </div>
-
-    <div class="writing-block">
-      <label for="private-draft">Words that never leave this browser</label>
-      <button type="button" class="clear-draft" id="clear-draft" aria-label="Clear writing" title="Clear">×</button>
-      <textarea id="private-draft" class="p31-larmor-field" spellcheck="false" autocomplete="off" rows="12"></textarea>
-    </div>
-
-    <p class="leave-quiet"><a id="poets-leave" href="soup.html">When you need the rest of the house</a></p>
+  <div class="power-level" id="power-level">
+    <div class="power-dot" data-level="0"></div><div class="power-dot" data-level="1"></div><div class="power-dot" data-level="2"></div><div class="power-dot" data-level="3"></div><div class="power-dot" data-level="4"></div><div class="power-dot" data-level="5"></div><div class="power-dot" data-level="6"></div>
   </div>
-
-  <script>
-(function () {
-  var STORAGE_KEY = 'poets-room-private-v1';
-  var PHOTO_KEY = 'poets-room-shelf-photo-v1';
-
-  function dayOfYearLocal(d) {
-    var start = new Date(d.getFullYear(), 0, 0);
-    return Math.floor((d - start) / 86400000);
-  }
-
-  function suspendLooseAudio() {
-    if (typeof window.__p31SuspendAllAudio === 'function') {
-      try { window.__p31SuspendAllAudio(); } catch (e) {}
-    }
-    var auds = document.querySelectorAll('audio');
-    for (var i = 0; i < auds.length; i++) {
-      try { auds[i].pause(); } catch (e) {}
-    }
-  }
-
-  function pickQuote(data) {
-    var list = data && data.quotes;
-    if (!list || !list.length) return null;
-    var idx = dayOfYearLocal(new Date()) % list.length;
-    return list[idx];
-  }
-
-  function showQuote(q) {
-    document.getElementById('quote-text').textContent = q.text;
-    document.getElementById('quote-attribution').textContent = '— ' + q.attribution;
-  }
-
-  function fallbackQuote() {
-    showQuote({
-      text: 'Something hit me very hard once, thinking about what one little man could do.',
-      attribution: 'Buckminster Fuller'
-    });
-  }
-
-  function lightQuote() {
-    var el = document.getElementById('daily-quote');
-    el.classList.add('is-lit');
-  }
-
-  function drawWave() {
-    var c = document.getElementById('wave-canvas');
-    if (!c || !c.getContext) return;
-    var ctx = c.getContext('2d');
-    var w = c.width;
-    var h = c.height;
-    ctx.clearRect(0, 0, w, h);
-    ctx.strokeStyle = 'rgba(180, 200, 210, 0.35)';
-    ctx.lineWidth = 1.2;
-    ctx.beginPath();
-    for (var x = 0; x <= w; x++) {
-      var t = (x / w) * Math.PI * 2;
-      var y = h / 2 + Math.sin(t) * (h * 0.35);
-      if (x === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-  }
-
-  function play863() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    suspendLooseAudio();
-    var AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return;
-    var ctx = new AC();
-    var osc = ctx.createOscillator();
-    var gain = ctx.createGain();
-    gain.gain.value = 0.08;
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(863, ctx.currentTime);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + 1);
-    osc.onended = function () {
-      ctx.close().catch(function () {});
-    };
-  }
-
-  function loadDraft() {
-    var ta = document.getElementById('private-draft');
-    try {
-      ta.value = localStorage.getItem(STORAGE_KEY) || '';
-    } catch (e) {
-      ta.value = '';
-    }
-    ta.addEventListener('input', function () {
-      try {
-        localStorage.setItem(STORAGE_KEY, ta.value);
-      } catch (e) {}
-    });
-  }
-
-  function wireClear() {
-    document.getElementById('clear-draft').addEventListener('click', function () {
-      if (!confirm('Clear everything in the writing space? This cannot be undone.')) return;
-      document.getElementById('private-draft').value = '';
-      try {
-        localStorage.removeItem(STORAGE_KEY);
-      } catch (e) {}
-    });
-  }
-
-  function wirePhoto() {
-    var slot = document.getElementById('photo-slot');
-    function applyDataUrl(url) {
-      slot.innerHTML = '';
-      if (!url) {
-        slot.classList.add('is-empty');
-        return;
-      }
-      var img = document.createElement('img');
-      img.src = url;
-      img.alt = 'Your photo on the shelf';
-      slot.appendChild(img);
-      slot.classList.remove('is-empty');
-    }
-    try {
-      applyDataUrl(localStorage.getItem(PHOTO_KEY) || '');
-    } catch (e) {
-      slot.classList.add('is-empty');
-    }
-    slot.addEventListener('dragover', function (e) {
-      e.preventDefault();
-      slot.classList.add('drag');
-    });
-    slot.addEventListener('dragleave', function () {
-      slot.classList.remove('drag');
-    });
-    slot.addEventListener('drop', function (e) {
-      e.preventDefault();
-      slot.classList.remove('drag');
-      var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
-      if (!f || !f.type || f.type.indexOf('image') !== 0) return;
-      var reader = new FileReader();
-      reader.onload = function () {
-        var url = String(reader.result || '');
-        try {
-          localStorage.setItem(PHOTO_KEY, url);
-        } catch (err) {}
-        applyDataUrl(url);
-      };
-      reader.readAsDataURL(f);
-    });
-  }
-
-  document.getElementById('wave-863').addEventListener('click', play863);
-  drawWave();
-  window.addEventListener('resize', drawWave);
-
-  var cfg = document.getElementById('poets-config');
-  var quotesHref = (cfg && cfg.getAttribute('data-quotes-href')) || './poets-room-quotes.json';
-  var leaveHref = (cfg && cfg.getAttribute('data-leave-href')) || 'soup.html';
-  var leaveA = document.getElementById('poets-leave');
-  if (leaveA) leaveA.setAttribute('href', leaveHref);
-
-  fetch(quotesHref)
-    .then(function (r) {
-      if (!r.ok) throw new Error('quotes');
-      return r.json();
-    })
-    .then(function (data) {
-      var q = pickQuote(data);
-      if (!q) throw new Error('empty');
-      showQuote(q);
-    })
-    .catch(function () {
-      fallbackQuote();
-    })
-    .then(function () {
-      setTimeout(lightQuote, 2000);
-    });
-
-  loadDraft();
-  wireClear();
-  wirePhoto();
-})();
-  </script>
+  
+  
+  <main>
+    
+  <article class="page-content">
+    <header class="page-header">
+      <h1>Poets Room</h1>
+    </header>
+    <div class="page-body">
+      <p>This is the Poets Room page.</p>
+      <p>Type: creative</p>
+      <p>PHOS enabled: Yes</p>
+    </div>
+  </article>
+  
+  </main>
+  
+  
   <script type="module">
-    import { initStarfield, resolveStarfieldConfig } from "./design-assets/starfield/p31-starfield.js";
-    import * as atm from "./design-assets/atmosphere/p31-atmosphere-client.js";
-
-    const cv = document.getElementById("poets-starfield");
-    if (cv instanceof HTMLCanvasElement) {
-      const resolved = await atm.resolveAtmosphere("poets");
-      atm.applyRampCssHints(document.documentElement, resolved);
-      const mode = atm.starfieldMountMode(resolved);
-      if (mode === "none") {
-        cv.style.display = "none";
-      } else if (mode === "static") {
-        const plate = await import("./design-assets/starfield/p31-starfield-static-plate.js");
-        const preset = resolved ? atm.staticPlatePreset(resolved) : "hub";
-        plate.initStaticStarPlate(cv, { preset });
-      } else {
-        const { config, hints } = await resolveStarfieldConfig();
-        const cfg = atm.mergeResolvedIntoStarfieldConfig(config, resolved);
-        const api = initStarfield(cv, cfg, { surface: "poets", poetsMode: true, touchRipple: false });
-        api.ingestTouchHints(hints);
-        function inferTone() {
-          const a = document.getElementById("quote-attribution")?.textContent || "";
-          if (/fuller/i.test(a)) return "fuller";
-          if (/S\.J\.|W\.J\.|Willow|Bash/i.test(a)) return "children";
-          return "operator";
-        }
-        setInterval(() => api.setPoetsTone(inferTone()), 12000);
-        api.setPoetsTone(inferTone());
-      }
-    }
+    import { Starfield } from '/lib/p31-starfield.mjs';
+    const starfield = new Starfield('starfield-canvas', {
+      surfaceId: 'poets-room',
+      starCount: 100,
+      meshSync: true
+    });
   </script>
-  <script src="cognitive-passport/lib/p31-return-ribbon.js" data-local-soup="soup.html" defer></script>
-<script src="/lib/p31-atmosphere-core.js"></script>
+  
+  
+  
+  <script type="module">
+    import { PHOS } from '/lib/p31-phos-core.mjs';
+    window.phos = new PHOS({
+      mount: '#phos-orb',
+      pageId: 'poets-room',
+      powerLevels: [0,1,2,3,4,5,6]
+    });
+  </script>
+  
 </body>
 </html>

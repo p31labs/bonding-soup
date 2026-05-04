@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Sovereign Lab · P31</title>
+  <title>Cognitive Passport · P31</title>
   <meta name="description" content="Phosphorus31 — Family mesh infrastructure for the neurodivergent operator">
   <meta name="theme-color" content="#0f1115">
   
@@ -110,11 +110,11 @@
     
   <article class="page-content">
     <header class="page-header">
-      <h1>Sovereign Lab</h1>
+      <h1>Cognitive Passport</h1>
     </header>
     <div class="page-body">
-      <p>This is the Sovereign Lab page.</p>
-      <p>Type: lab</p>
+      <p>This is the Cognitive Passport page.</p>
+      <p>Type: tool</p>
       <p>PHOS enabled: Yes</p>
     </div>
   </article>
@@ -125,7 +125,7 @@
   <script type="module">
     import { Starfield } from '/lib/p31-starfield.mjs';
     const starfield = new Starfield('starfield-canvas', {
-      surfaceId: 'p31-sovereign-lab',
+      surfaceId: 'passport',
       starCount: 100,
       meshSync: true
     });
@@ -137,7 +137,7 @@
     import { PHOS } from '/lib/p31-phos-core.mjs';
     window.phos = new PHOS({
       mount: '#phos-orb',
-      pageId: 'p31-sovereign-lab',
+      pageId: 'passport',
       powerLevels: [0,1,2,3,4,5,6]
     });
   </script>

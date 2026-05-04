@@ -132,9 +132,10 @@ if (lg) {
     fail("launchGovernance.minGovernedFloorPerDimension missing or invalid");
   }
   const pagesIds = Array.isArray(lg.governedPagesIds) ? lg.governedPagesIds : [];
+  const ungovernedWorkerIds = new Set(Array.isArray(lg.ungovernedWorkerIds) ? lg.ungovernedWorkerIds : []);
   const governedIds = new Set();
   for (const it of prs.items) {
-    if (it.kind === "worker") governedIds.add(it.id);
+    if (it.kind === "worker" && !ungovernedWorkerIds.has(it.id)) governedIds.add(it.id);
     if (it.kind === "pages" && pagesIds.includes(it.id)) governedIds.add(it.id);
   }
   const breaches = [];

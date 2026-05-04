@@ -541,6 +541,68 @@
       ]
     },
     {
+      "id": "p31-ecosystem-bridge",
+      "kind": "worker",
+      "label": "p31-ecosystem-bridge (Cross-site nervous system; CORS bridge phosphorus31.org ↔ p31ca.org)",
+      "score": {
+        "liveReachable": 8,
+        "deployability": 9,
+        "verificationHooks": 9,
+        "testingDepth": 9,
+        "contractsSchemas": 8,
+        "observability": 9,
+        "securityPosture": 9,
+        "operationalClarity": 9,
+        "uxCompleteness": 7,
+        "ephemeralizationAlignment": 10
+      },
+      "proof": {
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "p31-constants.json",
+          "workers/p31-ecosystem-bridge/src/index.ts",
+          "phosphorus31.org/website/p31-status.json"
+        ],
+        "verifyCommands": [
+          "npm run verify:ecosystem-bridge",
+          "npm run test:ecosystem"
+        ]
+      },
+      "nextSteps": [
+        "Deploy workers/p31-ecosystem-bridge via wrangler deploy",
+        "Enable live HTTP probes in ecosystem test suite (P31_OFFLINE=0)"
+      ]
+    },
+    {
+      "id": "p31-buffer-api",
+      "kind": "worker",
+      "label": "p31-buffer-api (phosphorus31.org buffer/rewrite Worker)",
+      "score": {
+        "liveReachable": 6,
+        "deployability": 7,
+        "verificationHooks": 6,
+        "testingDepth": 5,
+        "contractsSchemas": 6,
+        "observability": 6,
+        "securityPosture": 8,
+        "operationalClarity": 7,
+        "uxCompleteness": 6,
+        "ephemeralizationAlignment": 7
+      },
+      "proof": {
+        "canonicalSources": [
+          "p31-live-fleet.json",
+          "p31-constants.json",
+          "phosphorus31.org/apps/buffer-api"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Deploy phosphorus31.org/apps/buffer-api via wrangler deploy",
+        "Add /health route and wire into verify:ecosystem-bridge"
+      ]
+    },
+    {
       "id": "bonding",
       "kind": "hubCard",
       "label": "BONDING",
@@ -2224,7 +2286,7 @@
   ],
   "launchGovernance": {
     "schema": "p31.prs.launchGovernance/0.1.0",
-    "updated": "2026-04-30",
+    "updated": "2026-05-04",
     "minGovernedScore": 85,
     "minGovernedFloorPerDimension": 6,
     "governedKinds": [
@@ -2234,6 +2296,9 @@
     "governedPagesIds": [
       "p31ca"
     ],
-    "note": "`verify-production-readiness` derives the governed SKU set automatically from these rules (workers + governed pages ids). Catalog hub cards remain out of governed gate until intentionally promoted."
+    "ungovernedWorkerIds": [
+      "p31-buffer-api"
+    ],
+    "note": "`verify-production-readiness` derives the governed SKU set automatically from these rules (workers + governed pages ids). Catalog hub cards remain out of governed gate until intentionally promoted. `ungovernedWorkerIds` lists pre-production workers that are catalogued in the fleet but not yet promoted to the governed gate — promote by removing the id here once deployment CI and test depth meet the bar."
   }
 }

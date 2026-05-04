@@ -1,0 +1,186 @@
+/**
+ * P31 Quantum Material U (QMU) Universal Tokens
+ * Document ID: p31.qmuTokens/1.0.0
+ * 
+ * Canonical color, typography, and spacing tokens for all P31 surfaces.
+ * Import this file in every HTML surface for consistent theming.
+ */
+
+:root {
+  /* ========================================
+     CORE COLOR PALETTE (P31 Canon)
+     ======================================== */
+  
+  /* Void & Surfaces */
+  --p31-void: #0f1115;
+  --p31-surface: #161920;
+  --p31-surface2: #1c2028;
+  --p31-elevated: #232830;
+  
+  /* Brand Colors */
+  --p31-cyan: #4db8a8;
+  --p31-teal: #25897d;
+  --p31-coral: #cc6247;
+  --p31-butter: #cda852;
+  --p31-lavender: #8b7cc9;
+  --p31-phosphorus: #3ba372;
+  
+  /* Text Colors */
+  --p31-cloud: #d8d6d0;
+  --p31-muted: #6b7280;
+  --p31-subtle: #4a5059;
+  
+  /* Utility */
+  --p31-glass-border: rgba(255, 255, 255, 0.08);
+  --p31-glass-bg: rgba(22, 25, 32, 0.8);
+  
+  /* Safe Mode Overrides */
+  --p31-safe-void: #000000;
+  --p31-safe-surface: #0a0a0a;
+  --p31-safe-text: #ffffff;
+  --p31-safe-muted: #888888;
+  
+  /* ========================================
+     TYPOGRAPHY
+     ======================================== */
+  --p31-font-sans: "Atkinson Hyperlegible", system-ui, -apple-system, sans-serif;
+  --p31-font-mono: "JetBrains Mono", "Fira Code", "SF Mono", monospace;
+  --p31-font-serif: "Playfair Display", Georgia, serif;
+  
+  /* Font Sizes */
+  --p31-text-xs: 0.75rem;
+  --p31-text-sm: 0.875rem;
+  --p31-text-base: 1rem;
+  --p31-text-lg: 1.125rem;
+  --p31-text-xl: 1.25rem;
+  --p31-text-2xl: 1.5rem;
+  --p31-text-3xl: 1.875rem;
+  
+  /* Line Heights */
+  --p31-leading-tight: 1.25;
+  --p31-leading-normal: 1.6;
+  --p31-leading-relaxed: 1.8;
+  
+  /* Letter Spacing */
+  --p31-tracking-tight: -0.02em;
+  --p31-tracking-normal: 0;
+  --p31-tracking-wide: 0.05em;
+  
+  /* ========================================
+     SPACING
+     ======================================== */
+  --p31-space-1: 0.25rem;
+  --p31-space-2: 0.5rem;
+  --p31-space-3: 0.75rem;
+  --p31-space-4: 1rem;
+  --p31-space-5: 1.25rem;
+  --p31-space-6: 1.5rem;
+  --p31-space-8: 2rem;
+  --p31-space-10: 2.5rem;
+  --p31-space-12: 3rem;
+  
+  /* ========================================
+     MOTION & TRANSITIONS
+     ======================================== */
+  --p31-duration-fast: 150ms;
+  --p31-duration-normal: 250ms;
+  --p31-duration-slow: 400ms;
+  --p31-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --p31-ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --p31-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  
+  /* ========================================
+     BORDERS & RADIUS
+     ======================================== */
+  --p31-border-width: 1px;
+  --p31-border-color: rgba(255, 255, 255, 0.08);
+  
+  --p31-radius-sm: 4px;
+  --p31-radius-md: 8px;
+  --p31-radius-lg: 12px;
+  --p31-radius-xl: 16px;
+  --p31-radius-full: 9999px;
+  
+  /* ========================================
+     SHADOWS & EFFECTS
+     ======================================== */
+  --p31-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --p31-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --p31-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+  --p31-shadow-glow: 0 0 20px rgba(77, 184, 168, 0.3);
+  
+  --p31-backdrop: blur(10px) saturate(180%);
+}
+
+/* ========================================
+   SAFE MODE OVERRIDES
+   ======================================== */
+body.safe-mode {
+  --p31-void: var(--p31-safe-void);
+  --p31-surface: var(--p31-safe-surface);
+  --p31-cloud: var(--p31-safe-text);
+  --p31-muted: var(--p31-safe-muted);
+  
+  /* Disable all motion */
+  --p31-duration-fast: 0ms;
+  --p31-duration-normal: 0ms;
+  --p31-duration-slow: 0ms;
+}
+
+body.safe-mode * {
+  animation: none !important;
+  transition: none !important;
+  filter: none !important;
+}
+
+/* ========================================
+   PREFERS REDUCED MOTION
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --p31-duration-fast: 0ms;
+    --p31-duration-normal: 0ms;
+    --p31-duration-slow: 0ms;
+  }
+  
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ========================================
+   BASE STYLES
+   ======================================== */
+.p31-surface {
+  background: var(--p31-void);
+  color: var(--p31-cloud);
+  font-family: var(--p31-font-sans);
+  line-height: var(--p31-leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.p31-glass {
+  background: var(--p31-glass-bg);
+  border: 1px solid var(--p31-glass-border);
+  backdrop-filter: var(--p31-backdrop);
+}
+
+.p31-glow {
+  box-shadow: var(--p31-shadow-glow);
+}
+
+/* Focus styles */
+.p31-focus:focus-visible {
+  outline: 2px solid var(--p31-cyan);
+  outline-offset: 2px;
+  border-radius: var(--p31-radius-sm);
+}
+
+/* Selection */
+::selection {
+  background: rgba(77, 184, 168, 0.3);
+  color: var(--p31-cloud);
+}

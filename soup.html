@@ -394,37 +394,169 @@ body.safe-mode .show-safe { display: block !important; }
       });
     }
 
-    function draw() {
-      ctx.clearRect(0, 0, width, height);
-      
-      // Draw Edges
-      edges.forEach(e => {
+    // Quantum Molecular Visual System
+    const time = Date.now() * 0.001;
+    
+    function drawQuantumEdges() {
+      edges.forEach((e, idx) => {
         const n1 = nodes[e.source];
         const n2 = nodes[e.target];
+        const midX = (n1.x + n2.x) / 2;
+        const midY = (n1.y + n2.y) / 2;
+        
+        // Calculate distance for energy intensity
+        const dist = Math.hypot(n2.x - n1.x, n2.y - n1.y);
+        const energyIntensity = Math.max(0.3, 1 - dist / 400);
+        
+        // Create gradient for the connection band
+        const grad = ctx.createLinearGradient(n1.x, n1.y, n2.x, n2.y);
+        grad.addColorStop(0, `${n1.color}44`); // 28% opacity
+        grad.addColorStop(0.5, `rgba(77, 184, 168, ${energyIntensity * 0.6})`);
+        grad.addColorStop(1, `${n2.color}44`);
+        
+        // Outer glow band
         ctx.beginPath();
         ctx.moveTo(n1.x, n1.y);
         ctx.lineTo(n2.x, n2.y);
-        ctx.strokeStyle = `rgba(216, 214, 208, ${e.weight / 20})`; // Opacity based on weight
-        ctx.lineWidth = e.weight / 2;
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = e.weight * 1.5;
+        ctx.lineCap = 'round';
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = 'rgba(77, 184, 168, 0.4)';
         ctx.stroke();
-      });
-
-      // Draw Nodes
-      nodes.forEach(n => {
+        ctx.shadowBlur = 0;
+        
+        // Inner energy core
         ctx.beginPath();
-        ctx.arc(n.x, n.y, 25, 0, Math.PI * 2);
-        ctx.fillStyle = n.color;
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+        ctx.moveTo(n1.x, n1.y);
+        ctx.lineTo(n2.x, n2.y);
+        ctx.strokeStyle = `rgba(216, 214, 208, ${energyIntensity})`;
         ctx.lineWidth = 2;
         ctx.stroke();
-
+        
+        // Flowing energy particles along the edge
+        const flowOffset = (time * 50 + idx * 100) % dist;
+        const particleX = n1.x + (n2.x - n1.x) * (flowOffset / dist);
+        const particleY = n1.y + (n2.y - n1.y) * (flowOffset / dist);
+        
+        ctx.beginPath();
+        ctx.arc(particleX, particleY, 3, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#4db8a8';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        
+        // Secondary particle (trailing)
+        const flowOffset2 = (flowOffset - 20 + dist) % dist;
+        const particleX2 = n1.x + (n2.x - n1.x) * (flowOffset2 / dist);
+        const particleY2 = n1.y + (n2.y - n1.y) * (flowOffset2 / dist);
+        
+        ctx.beginPath();
+        ctx.arc(particleX2, particleY2, 2, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.6)';
+        ctx.fill();
+      });
+    }
+    
+    function drawQuantumNodes() {
+      nodes.forEach((n, idx) => {
+        const pulseScale = 1 + Math.sin(time * 2 + idx) * 0.05;
+        const outerRadius = 35 * pulseScale;
+        
+        // Outer orbital ring (rotating)
+        ctx.save();
+        ctx.translate(n.x, n.y);
+        ctx.rotate(time * 0.5 + idx * Math.PI / 2);
+        
+        ctx.beginPath();
+        ctx.arc(0, 0, outerRadius, 0, Math.PI * 1.5);
+        ctx.strokeStyle = `${n.color}33`; // 20% opacity
+        ctx.lineWidth = 2;
+        ctx.setLineDash([10, 5]);
+        ctx.stroke();
+        ctx.restore();
+        
+        // Middle glow ring (pulsing)
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 30 * pulseScale, 0, Math.PI * 2);
+        const glowGrad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, 30 * pulseScale);
+        glowGrad.addColorStop(0, `${n.color}88`); // 53% opacity
+        glowGrad.addColorStop(0.7, `${n.color}22`); // 13% opacity
+        glowGrad.addColorStop(1, 'transparent');
+        ctx.fillStyle = glowGrad;
+        ctx.fill();
+        
+        // Core sphere with 3D effect
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 22, 0, Math.PI * 2);
+        const coreGrad = ctx.createRadialGradient(
+          n.x - 7, n.y - 7, 0,
+          n.x, n.y, 22
+        );
+        coreGrad.addColorStop(0, lightenColor(n.color, 40));
+        coreGrad.addColorStop(0.3, n.color);
+        coreGrad.addColorStop(1, darkenColor(n.color, 30));
+        ctx.fillStyle = coreGrad;
+        ctx.fill();
+        
+        // Inner energy core
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 15, 0, Math.PI * 2);
+        const innerGrad = ctx.createRadialGradient(
+          n.x - 5, n.y - 5, 0,
+          n.x, n.y, 15
+        );
+        innerGrad.addColorStop(0, 'rgba(255,255,255,0.8)');
+        innerGrad.addColorStop(0.5, 'rgba(255,255,255,0.2)');
+        innerGrad.addColorStop(1, 'transparent');
+        ctx.fillStyle = innerGrad;
+        ctx.fill();
+        
+        // Label with glow
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = n.color;
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 16px sans-serif';
+        ctx.font = 'bold 14px "JetBrains Mono", monospace';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(n.id, n.x, n.y);
+        ctx.fillText(n.id, n.x, n.y + 1);
+        ctx.shadowBlur = 0;
+        
+        // Full label below
+        ctx.fillStyle = 'rgba(216, 214, 208, 0.8)';
+        ctx.font = '11px "JetBrains Mono", monospace';
+        ctx.fillText(n.label, n.x, n.y + 38);
       });
+    }
+    
+    // Color utility functions
+    function lightenColor(color, percent) {
+      const num = parseInt(color.replace('#', ''), 16);
+      const amt = Math.round(2.55 * percent);
+      const R = Math.min(255, (num >> 16) + amt);
+      const G = Math.min(255, ((num >> 8) & 0x00FF) + amt);
+      const B = Math.min(255, (num & 0x0000FF) + amt);
+      return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
+    }
+    
+    function darkenColor(color, percent) {
+      const num = parseInt(color.replace('#', ''), 16);
+      const amt = Math.round(2.55 * percent);
+      const R = Math.max(0, (num >> 16) - amt);
+      const G = Math.max(0, ((num >> 8) & 0x00FF) - amt);
+      const B = Math.max(0, (num & 0x0000FF) - amt);
+      return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      
+      // Draw quantum molecular edges
+      drawQuantumEdges();
+      
+      // Draw quantum molecular nodes
+      drawQuantumNodes();
     }
 
     function animate() {
@@ -447,7 +579,8 @@ body.safe-mode .show-safe { display: block !important; }
       const rect = canvas.getBoundingClientRect();
       const mx = e.clientX - rect.left;
       const my = e.clientY - rect.top;
-      draggedNode = nodes.find(n => Math.hypot(n.x - mx, n.y - my) < 30);
+      // Match the visual radius of quantum nodes (35px + padding)
+      draggedNode = nodes.find(n => Math.hypot(n.x - mx, n.y - my) < 40);
     });
     
     window.addEventListener('mousemove', e => {

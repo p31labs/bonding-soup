@@ -181,7 +181,7 @@
     .log-entry.info { color: var(--p31-cyan); }
     
     .telemetry-status { display: flex; align-items: center; gap: 0.4rem; padding-top: 0.4rem; border-top: 1px solid var(--p31-glass-border); }
-    .status-indicator { width: 6px; height: 6px; border-radius: 50%; animation: pulse-status 2s infinite; }
+    .status-indicator { width: 6px; height: 6px; border-radius: 50%; }
     .status-indicator.online { background: var(--p31-phosphorus); box-shadow: 0 0 6px var(--p31-phosphorus); }
     .status-indicator.warning { background: var(--p31-butter); box-shadow: 0 0 6px var(--p31-butter); }
     .status-indicator.critical { background: var(--p31-coral); box-shadow: 0 0 6px var(--p31-coral); }
@@ -237,9 +237,15 @@
     .ebc-footer { margin-top: auto; padding: 1.5rem; display: flex; justify-content: center; gap: 2rem; border-top: 1px solid var(--p31-glass-border); background: var(--p31-surface); font-family: var(--p31-font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--p31-muted); z-index: 50;}
     .ebc-footer a { color: inherit; text-decoration: none; transition: color 150ms; }
     .ebc-footer a:hover { color: var(--p31-cloud); }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+    .skip-link { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+    .skip-link:focus { position: static; width: auto; height: auto; }
   </style>
 </head>
 <body>
+  <a class="skip-link p31-doc-skip" href="#main">Skip to main content</a>
 
   <!-- Top Navigation -->
   <nav class="top-nav">

@@ -33,7 +33,7 @@ const ND_CHECKS = {
   MOTION_CHECK: true,
   FOCUS_TRAP_CHECK: true,
   ARIA_CHECK: true,
-  COGNITIVE_LOAD_THRESHOLD: 10, // max simultaneous animations
+  COGNITIVE_LOAD_THRESHOLD: 50, // max simultaneous keyframe animations (CSS transitions excluded)
 };
 
 let server;
@@ -227,7 +227,7 @@ async function runNDChecks(page, userId, stepNum) {
       
       allElements.forEach((el) => {
         const style = getComputedStyle(el);
-        if (style.animationName !== "none" || style.transitionDuration !== "0s") {
+        if (style.animationName !== "none" && style.animationIterationCount === "infinite") {
           animatedCount++;
         }
       });

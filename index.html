@@ -268,9 +268,15 @@
     }
     .safe-name { font-weight: 700; color: #fff; margin-bottom: 0.22rem; }
     .safe-desc { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+    .skip-link { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+    .skip-link:focus { position: static; width: auto; height: auto; }
   </style>
 </head>
 <body>
+  <a class="skip-link p31-doc-skip" href="#main">Skip to main content</a>
 
 <nav class="nav">
   <div class="brand">

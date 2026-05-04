@@ -21,11 +21,12 @@ const MEASURE_DOM = /* js */ `
   const body = document.body;
   if (!body) return {};
 
-  // 1. Interactive elements
+  // 1. Interactive elements (skip links excluded — off-screen by design, distort Fitts)
   const interactiveAll = Array.from(
     body.querySelectorAll('a, button, input, select, textarea, [role="button"], [role="link"], [tabindex]')
   ).filter((el) => {
     const s = window.getComputedStyle(el);
+    if (el.classList.contains('skip-link') || el.classList.contains('p31-doc-skip')) return false;
     return s.display !== "none" && s.visibility !== "hidden" && el.offsetParent !== null;
   });
   const interactiveCount = interactiveAll.length;

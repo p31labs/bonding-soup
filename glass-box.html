@@ -94,6 +94,11 @@
       main { grid-template-columns: 1fr; grid-template-rows: minmax(360px,52vh) auto }
       .term { border-right:none; border-bottom:1px solid var(--line) }
     }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+    .skip-link { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+    .skip-link:focus { position: static; width: auto; height: auto; }
   </style>
   <style>
     .safe-toggle { position: fixed; top: 1rem; right: 1rem; z-index: 9999; padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: all 150ms; }
@@ -104,6 +109,7 @@
   </style>
 </head>
 <body>
+  <a class="skip-link p31-doc-skip" href="#main">Skip to main content</a>
   <button id="safeToggle" class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
 <canvas id="starfield-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.6;"></canvas>
 

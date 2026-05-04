@@ -245,9 +245,15 @@
       .print-btn { display: none; }
       body { padding: 0; }
     }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+    .skip-link { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+    .skip-link:focus { position: static; width: auto; height: auto; }
   </style>
 </head>
 <body>
+  <a class="skip-link p31-doc-skip" href="#main">Skip to main content</a>
   <button class="print-btn" onclick="window.print()">Print / Save PDF</button>
   
   <!-- Cover Page -->

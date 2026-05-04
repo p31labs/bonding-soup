@@ -1,0 +1,133 @@
+{
+  "schema": "p31.phosIntentCatalog/1.0.0",
+  "version": "1.0.0",
+  "description": "Phrase-to-surface intent mappings for the PHOS Router. Every surface in public-line.json must have at least one entry.",
+  "intents": [
+    {
+      "id": "passport",
+      "label": "Cognitive Passport",
+      "path": "/passport.html",
+      "icon": "🧬",
+      "phrases": ["cognitive passport", "cogpass", "passport", "identity card", "my profile", "who am i", "cognitive profile", "neurodivergent profile", "disability profile", "about me"]
+    },
+    {
+      "id": "ops",
+      "label": "Operator Desk",
+      "path": "/ops.html",
+      "icon": "⚙️",
+      "phrases": ["ops", "operator desk", "dashboard", "status", "system status", "command", "operator", "control", "admin", "god mode"]
+    },
+    {
+      "id": "garden",
+      "label": "The Garden",
+      "path": "/garden.html",
+      "icon": "🌱",
+      "phrases": ["garden", "kids", "children", "sj", "wj", "family", "kids zone", "safe zone", "play", "family space", "for the kids"]
+    },
+    {
+      "id": "buffer",
+      "label": "The Buffer",
+      "path": "/buffer.html",
+      "icon": "🛡️",
+      "phrases": ["buffer", "fawn guard", "safe space", "legal stress", "decompression", "calm", "overwhelmed", "protect", "court", "legal", "stress"]
+    },
+    {
+      "id": "vibe",
+      "label": "Vibe Environment",
+      "path": "/vibe.html",
+      "icon": "💻",
+      "phrases": ["vibe", "vibe ide", "code", "build", "develop", "editor", "coding", "work environment", "dev", "ide"]
+    },
+    {
+      "id": "geodesic",
+      "label": "Geodesic Builder",
+      "path": "/geodesic.html",
+      "icon": "🔺",
+      "phrases": ["geodesic", "builder", "3d", "geometry", "shape", "tetrahedron", "mesh", "molecular", "spatial", "structure", "dome", "polyhedron"]
+    },
+    {
+      "id": "doc-library",
+      "label": "Document Library",
+      "path": "/doc-library.html",
+      "icon": "📚",
+      "phrases": ["docs", "documents", "library", "documentation", "papers", "research", "files", "archive", "reference"]
+    },
+    {
+      "id": "cortex",
+      "label": "Centaur Pack",
+      "path": "/cortex.html",
+      "icon": "🧬",
+      "phrases": ["cortex", "centaur", "agents", "forge", "sentinel", "medic", "scribe", "bots"]
+    },
+    {
+      "id": "build",
+      "label": "WCD Intake",
+      "path": "/build.html",
+      "icon": "🔧",
+      "phrases": ["wcd", "work context", "intake", "dispatch", "task", "build task", "work package", "new task", "create task", "wcd intake"]
+    },
+    {
+      "id": "observatory",
+      "label": "Data Observatory",
+      "path": "/observatory.html",
+      "icon": "🔭",
+      "phrases": ["observatory", "data", "metrics", "analytics", "stats", "monitor", "watch", "observe", "telemetry"]
+    },
+    {
+      "id": "soup",
+      "label": "C.A.R.S. Hub",
+      "path": "/soup.html",
+      "icon": "⚛️",
+      "phrases": ["cars", "hub", "home", "soup", "main", "start", "landing", "posner", "k4", "ca9", "calcium", "molecule", "bonding"]
+    },
+    {
+      "id": "glass-box",
+      "label": "Glass Box",
+      "path": "/glass-box.html",
+      "icon": "🔬",
+      "phrases": ["glass box", "transparency", "health", "system health", "verify", "public", "open", "audit", "verification"]
+    },
+    {
+      "id": "fleet-portal",
+      "label": "Fleet Portal",
+      "path": "/fleet-portal.html",
+      "icon": "🛸",
+      "phrases": ["fleet", "fleet portal", "workers", "cloudflare", "deployed", "production", "live workers", "edge"]
+    },
+    {
+      "id": "physics-learn",
+      "label": "Physics Learning Lab",
+      "path": "/docs/physics-learn/index.html",
+      "icon": "⚛️",
+      "phrases": ["physics", "learn", "education", "learning lab", "quantum", "lessons", "study"]
+    },
+    {
+      "id": "delta-language",
+      "label": "DELTA Glossary",
+      "path": "/public/delta-language.html",
+      "icon": "📖",
+      "phrases": ["delta", "glossary", "terminology", "terms", "definitions", "vocabulary", "language", "wiki"]
+    },
+    {
+      "id": "psych-e2e",
+      "label": "Psych E2E Docs",
+      "path": "/psych-e2e-docs.html",
+      "icon": "🧠",
+      "phrases": ["psych", "psychology", "e2e", "testing", "cognitive load", "fitts", "hick", "sweller", "science"]
+    },
+    {
+      "id": "launch",
+      "label": "Launch Readiness",
+      "path": "/launch.html",
+      "icon": "🚀",
+      "phrases": ["launch", "readiness", "ship", "deploy", "release", "go live", "checklist"]
+    },
+    {
+      "id": "welcome",
+      "label": "Welcome",
+      "path": "/welcome.html",
+      "icon": "👋",
+      "phrases": ["welcome", "intro", "introduction", "new here", "start here", "onboarding", "getting started"]
+    }
+  ]
+}

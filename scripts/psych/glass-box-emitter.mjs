@@ -139,6 +139,106 @@ function writePromoted(root, id, ts, headline, severity, md) {
   }, null, 2) + "\n", "utf8");
 }
 
+// ─── Design health ────────────────────────────────────────────────────────────
+
+const DESIGN_HEALTH_FILE = path.join(ROOT, "docs", "design-health.json");
+const DESIGN_HEALTH_SCHEMA = "p31.designHealth/1.0.0";
+
+/**
+ * Compute design health metrics from static file analysis of the 4 Bin A surfaces.
+ * Grades are derived only from verifiable, public file content — no operator-private data.
+ */
+export function computeDesignHealth() {
+  const BIN_A = [
+    path.join(ROOT, "public", "passport.html"),
+    path.join(ROOT, "public", "geodesic.html"),
+    path.join(ROOT, "public", "delta-language.html"),
+    path.join(ROOT, "public", "observatory.html"),
+  ];
+
+  let safeModeCompliant = 0;
+  let phosRouterActive = 0;
+  let hardcodedHex = 0;
+  let touchTargetSurfaces = 0;
+  let validSurfaces = 0;
+
+  for (const file of BIN_A) {
+    if (!fs.existsSync(file)) continue;
+    const html = fs.readFileSync(file, "utf8");
+    validSurfaces++;
+
+    if (html.includes("p31-safe-mode.js")) safeModeCompliant++;
+
+    // PHOS router active = script tag present and NOT commented out
+    const hasRouter = html.includes('src="/public/lib/p31-phos-router.js"') ||
+                      html.includes("src='/public/lib/p31-phos-router.js'");
+    const commented = /<!--[^>]*p31-phos-router\.js[^>]*-->/.test(html);
+    if (hasRouter && !commented) phosRouterActive++;
+
+    // Hardcoded hex: #[0-9a-fA-F]{3,8} outside CSS var() and :root blocks
+    const lines = html.split("\n");
+    for (const line of lines) {
+      if (line.trim().startsWith("//") || line.trim().startsWith("*")) continue;
+      if (line.includes("--p31-") || line.includes("stroke=\"var") || line.includes("fill=\"var")) continue;
+      const hexMatches = line.match(/#[0-9a-fA-F]{6}\b/g) || [];
+      // Exclude canonical teal + common values in SVG stroke attributes
+      const forbidden = hexMatches.filter(h => !["#5DCAA5","#0f1115","#000000","#000","#fff","#ffffff"].includes(h.toLowerCase()));
+      hardcodedHex += forbidden.length;
+    }
+
+    if (html.includes("min-height: 44px") || html.includes("min-height:44px")) touchTargetSurfaces++;
+  }
+
+  function grade(ratio) {
+    if (ratio >= 1.0) return "A";
+    if (ratio >= 0.9) return "A-";
+    if (ratio >= 0.8) return "B";
+    if (ratio >= 0.7) return "B-";
+    return "C";
+  }
+
+  const n = validSurfaces || 1;
+  return {
+    schema: DESIGN_HEALTH_SCHEMA,
+    generatedAt: new Date().toISOString(),
+    surfaces: validSurfaces,
+    metrics: {
+      safeModeCompliance: {
+        surfaces: validSurfaces, compliant: safeModeCompliant,
+        grade: grade(safeModeCompliant / n),
+      },
+      phosRouterCoverage: {
+        surfaces: validSurfaces, active: phosRouterActive,
+        grade: grade(phosRouterActive / n),
+      },
+      tokenCompliance: {
+        hardcodedHex, grade: hardcodedHex === 0 ? "A" : hardcodedHex < 5 ? "B" : "C",
+      },
+      touchTargets: {
+        surfaces: validSurfaces, compliant: touchTargetSurfaces,
+        note: "compliant = surface declares min-height: 44px",
+        grade: grade(touchTargetSurfaces / n),
+      },
+    },
+  };
+}
+
+/**
+ * Write design health metrics to docs/design-health.json.
+ * Called from emit-design-health.mjs and optionally after verify runs.
+ */
+export function writeDesignHealth() {
+  const data = computeDesignHealth();
+  try {
+    fs.mkdirSync(path.dirname(DESIGN_HEALTH_FILE), { recursive: true });
+    fs.writeFileSync(DESIGN_HEALTH_FILE, JSON.stringify(data, null, 2) + "\n", "utf8");
+    return data;
+  } catch (e) {
+    console.warn("glass-box-emitter: failed to write design-health.json —", e.message);
+    return null;
+  }
+}
+
 // ─── Markdown renderer ────────────────────────────────────────────────────────
 
 function renderReport({ id, ts, runReport }) {

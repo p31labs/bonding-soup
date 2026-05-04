@@ -6,21 +6,14 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --p31-void: #0f1115;  /* CORRECTED per canon */ --p31-surface: #161920; --p31-surface2: #1c2028;
-      --p31-teal: var(--p31-cyan);  /* CORRECTED per canon: shared surface aliases teal to cyan */ --p31-coral: #cc6247; --p31-butter: #cda852;
-      --p31-lavender: #8b7cc9; --p31-phosphorus: #3ba372; --p31-cyan: #4db8a8;
-      --p31-cloud: #d8d6d0; --p31-muted: #6b7280;
-      --p31-glass-border: rgba(255, 255, 255, 0.08);
-      --p31-font-sans: "Atkinson Hyperlegible", system-ui, sans-serif;
-      --p31-font-mono: "JetBrains Mono", monospace;
-      --p31-font-serif: "Playfair Display", serif;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/public/lib/p31-qmu-tokens.css">
+  <link rel="stylesheet" href="/p31-style.css">
+  <style>    * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--p31-void); color: var(--p31-cloud); font-family: var(--p31-font-sans); display: flex; flex-direction: column; min-height: 100vh; -webkit-font-smoothing: antialiased; line-height: 1.6; }
     a { color: inherit; text-decoration: none; }
     :focus-visible { outline: 2px solid var(--p31-teal); outline-offset: 2px; border-radius: 4px; }
@@ -63,49 +56,30 @@
     <div class="rigidity-badge" id="rigidityBadge" style="color: var(--p31-phosphorus);">RIGID (Isostatic)</div>
     <button class="add-btn" onclick="addShape()">+ Add Tetrahedron</button>
   </div>
-  <script src="/lib/p31-atmosphere-core.js"></script>
+  <!-- PHOS Router active — CWP-DESIGN-03 -->
+  <script src="/public/lib/p31-phos-router.js"></script>
   <!-- MIGRATION TODO: Convert to .astro component with BaseLayout -->
   <!-- MIGRATION TODO: Import Three.js via npm, not CDN -->
-  <script>
-    const safeBtn = document.getElementById('safeModeBtn');
-    if(safeBtn) safeBtn.addEventListener('click', () => document.body.classList.toggle('safe-mode'));
-  </script>
+  <script src="/public/lib/p31-safe-mode.js"></script>
   <script>
     let isSafe = false;
     let animationId = null;
     let renderer = null;
     let scene = null;
     let controls = null;
-    
-    // CANONICAL SAFE MODE: Full WebGL teardown (not just display:none)
-    function engageSafeMode() {
-      isSafe = true;
-      if (animationId) cancelAnimationFrame(animationId);
-      if (renderer) {
-        renderer.dispose();
-        renderer.forceContextLoss();
-        renderer.domElement.remove();
-      }
-      if (scene) scene.clear();
-      if (controls) controls.dispose();
-      document.body.classList.add('safe-mode');
-      document.getElementById('glContainer').style.display = 'none';
-    }
-    
-    function disengageSafeMode() {
-      isSafe = false;
-      document.body.classList.remove('safe-mode');
-      document.getElementById('glContainer').style.display = 'block';
-      // Re-initialize WebGL context here if needed
-      location.reload(); // Simplest recovery for standalone HTML
-    }
-    
-    const safeBtnOverlay = document.getElementById('safeModeBtn');
-    safeBtnOverlay.addEventListener('click', () => { 
-      if (document.body.classList.contains('safe-mode')) {
-        disengageSafeMode();
+
+    // Full WebGL teardown on safe mode engage (p31:safe-mode event from p31-safe-mode.js)
+    document.addEventListener('p31:safe-mode', (e) => {
+      if (e.detail.active) {
+        isSafe = true;
+        if (animationId) cancelAnimationFrame(animationId);
+        if (renderer) { renderer.dispose(); renderer.forceContextLoss(); renderer.domElement.remove(); }
+        if (scene) scene.clear();
+        if (controls) controls.dispose();
+        const gl = document.getElementById('glContainer');
+        if (gl) gl.style.display = 'none';
       } else {
-        engageSafeMode();
+        location.reload();
       }
     });
     
@@ -135,7 +109,7 @@
     camera.position.z = 15;
     controls.enableDamping = true;
 
-    const tet = new THREE.Mesh(new THREE.TetrahedronGeometry(3), new THREE.MeshBasicMaterial({ color: 0x25897d, wireframe: true }));
+    const tet = new THREE.Mesh(new THREE.TetrahedronGeometry(3), new THREE.MeshBasicMaterial({ color: 0x5DCAA5, wireframe: true }));
     scene.add(tet);
 
     function addShape() {
@@ -162,5 +136,6 @@
       engageSafeMode();
     }
   </script>
+  <script src="/public/lib/phos-os.js"></script>
 </body>
 </html>

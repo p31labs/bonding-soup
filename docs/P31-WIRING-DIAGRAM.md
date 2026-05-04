@@ -911,6 +911,8 @@ npm run verify  (root, ordered)
 ├── verify:quantum-material-u
 ├── verify:canon-css
 ├── verify:phos-truth
+├── verify:phos-router
+├── verify:safe-mode
 ├── verify:starfield
 ├── verify:fleet-ten
 ├── verify:fleet-llm-bridge

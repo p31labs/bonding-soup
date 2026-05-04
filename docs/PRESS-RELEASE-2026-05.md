@@ -10,7 +10,7 @@
 
 Traditional navigation assumes users have infinite executive function — the ability to parse menus, remember hierarchies, and make sequential decisions without cognitive overload. For the 15-20% of the population who are neurodivergent (AuDHD, autism, anxiety disorders), this assumption creates barriers.
 
-"I built P31 because I couldn't find tools that worked for my brain," said Will Johnson, founder of P31 Labs. "With hypoparathyroidism and late-diagnosed AuDHD, I have about 3 'spoons' of executive function per day. Most systems assume I have 30. PHOS assumes I have 3 and builds accordingly."
+"I built P31 because I couldn't find tools that worked for my brain," said the founder of P31 Labs. "With hypoparathyroidism and late-diagnosed AuDHD, I have about 3 'spoons' of executive function per day. Most systems assume I have 30. PHOS assumes I have 3 and builds accordingly."
 
 ## The SIC-POVM Solution
 
@@ -70,7 +70,7 @@ P31 Labs, Inc. is a Georgia nonprofit corporation founded in 2026. The organizat
 
 ## Media Contact
 
-Will Johnson  
+W.J. (Operator)  
 Founder, P31 Labs, Inc.  
 will@p31labs.com  
 p31ca.org/contact

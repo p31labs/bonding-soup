@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>DELTA Language - P31</title>
+  <title>DELTA Glossary — P31 Labs</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="The canonical vocabulary of the P31 architecture. Plain-language and technical definitions for terms used across the P31 K₄ mesh.">
+  <meta property="og:title" content="DELTA Glossary — P31 Labs">
+  <meta property="og:description" content="Plain-language and technical definitions for P31 architecture terminology: K₄, SOULSAFE, L.O.V.E., Floating Neutral, and more.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/public/og/glossary-og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/public/lib/p31-qmu-tokens.css">
+  <link rel="stylesheet" href="/p31-style.css">
   <style>
-    :root {
-      --p31-void: #0f1115;  /* CORRECTED per canon */ --p31-surface: #161920; --p31-surface2: #1c2028;
-      --p31-teal: #25897d; --p31-coral: #cc6247; --p31-butter: #cda852;
-      --p31-lavender: #8b7cc9; --p31-phosphorus: #3ba372; --p31-cyan: #4db8a8;
-      --p31-cloud: #d8d6d0; --p31-muted: #6b7280;
-      --p31-glass-border: rgba(255, 255, 255, 0.08);
-      --p31-font-sans: "Atkinson Hyperlegible", system-ui, sans-serif;
-      --p31-font-mono: "JetBrains Mono", monospace;
-      --p31-font-serif: "Playfair Display", serif;
-    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--p31-void); color: var(--p31-cloud); font-family: var(--p31-font-sans); display: flex; flex-direction: column; min-height: 100vh; -webkit-font-smoothing: antialiased; line-height: 1.6; }
     a { color: inherit; text-decoration: none; }
@@ -26,91 +26,218 @@
     body.safe-mode { --p31-void: #000; --p31-surface: #0a0a0a; --p31-surface2: #111; --p31-cloud: #fff; --p31-muted: #888; }
     body.safe-mode * { animation: none !important; transition: none !important; }
     body.safe-mode canvas, body.safe-mode .hide-safe { display: none !important; }
-    .btn-safe { padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; z-index: 100; transition: all 150ms; }
-    .btn-safe:hover { background: rgba(204,98,71,0.15); }
-    .skip-link { position: absolute; top: -40px; left: 0; background: var(--p31-teal); color: #000; padding: 8px 16px; z-index: 1000; font-weight: 700; transition: top 0.2s; }
+    .skip-link { position: absolute; top: -40px; left: 0; background: var(--p31-teal); color: #000; padding: 8px 16px; z-index: 1000; font-weight: 700; transition: top 0.2s; border-radius: 0 0 4px 0; }
     .skip-link:focus { top: 0; }
+    .btn-safe { padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: all 150ms; min-height: 44px; }
+    .btn-safe:hover { background: rgba(204,98,71,0.15); }
     .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--p31-glass-border); background: rgba(11,13,16,0.8); z-index: 50; backdrop-filter: blur(10px); }
     .nav-brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--p31-cloud); font-size: 0.9rem; }
     .page-wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem 2rem; width: 100%; flex-grow: 1; display: flex; flex-direction: column; }
-    .glass-card { background: color-mix(in srgb, var(--p31-surface2) 60%, transparent); border: 1px solid var(--p31-glass-border); border-radius: 12px; padding: 2rem; backdrop-filter: blur(20px); }
     .header-row { display: flex; justify-content: space-between; align-items: flex-end; margin: 2rem 0; flex-wrap: wrap; gap: 1rem; }
     .title-group h1 { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
     .tagline { color: var(--p31-muted); font-size: 1.1rem; max-width: 600px; }
     .ebc-footer { margin-top: auto; padding: 1.5rem; display: flex; justify-content: center; gap: 2rem; border-top: 1px solid var(--p31-glass-border); background: var(--p31-surface); font-family: var(--p31-font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--p31-muted); }
     .ebc-footer a:hover { color: var(--p31-cloud); }
-    .search-input { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--p31-glass-border); border-radius: 6px; padding: 0.8rem 1rem; color: var(--p31-cloud); font-family: var(--p31-font-sans); font-size: 1rem; transition: all 200ms; margin-bottom: 2rem;}
-    .search-input:focus { background: rgba(0,0,0,0.4); border-color: var(--p31-lavender); outline: none; }
-    .term-card { background: color-mix(in srgb, var(--p31-surface) 60%, transparent); border: 1px solid var(--p31-glass-border); border-left: 3px solid var(--p31-lavender); border-radius: 8px; padding: 1.5rem; transition: all 200ms ease; margin-bottom: 1rem;}
-    .term-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.75rem; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 0.5rem;}
-    .term-name { font-size: 1.25rem; font-weight: 700; color: var(--p31-cloud); font-family: var(--p31-font-mono); }
-    .term-def { font-size: 1.05rem; color: var(--p31-cloud); line-height: 1.6; }
-    .term-def strong { color: var(--p31-teal); }
-    .empty-state { text-align: center; padding: 4rem; color: var(--p31-muted); display: none; }
+    .search-wrap { position: relative; margin-bottom: 1.5rem; }
+    .search-input { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--p31-glass-border); border-radius: 8px; padding: 0.9rem 1rem 0.9rem 2.75rem; color: var(--p31-cloud); font-family: var(--p31-font-sans); font-size: 1rem; transition: border-color 200ms; }
+    .search-input:focus { border-color: var(--p31-lavender); outline: none; }
+    .search-input::placeholder { color: var(--p31-muted); }
+    .search-icon { position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); color: var(--p31-muted); pointer-events: none; font-size: 1rem; }
+    .term-count { font-size: 0.8rem; font-family: var(--p31-font-mono); color: var(--p31-muted); margin-bottom: 1.5rem; }
+    .term-card { background: color-mix(in srgb, var(--p31-surface) 60%, transparent); border: 1px solid var(--p31-glass-border); border-left: 3px solid var(--p31-lavender); border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; scroll-margin-top: 1.5rem; }
+    .term-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.75rem; gap: 0.75rem; }
+    .term-name { font-size: 1.2rem; font-weight: 700; color: var(--p31-cloud); font-family: var(--p31-font-mono); }
+    .term-anchor { color: var(--p31-muted); font-size: 0.85rem; text-decoration: none; flex-shrink: 0; padding: 0.25rem 0.5rem; border-radius: 4px; min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+    .term-anchor:hover, .term-anchor:focus { color: var(--p31-lavender); background: rgba(139,124,201,0.1); }
+    .term-plain { font-size: 1rem; color: var(--p31-cloud); line-height: 1.6; margin-bottom: 0.5rem; }
+    .term-tech { font-size: 0.88rem; color: var(--p31-muted); line-height: 1.5; font-family: var(--p31-font-mono); border-top: 1px solid var(--p31-glass-border); padding-top: 0.5rem; margin-top: 0.5rem; }
+    .term-tech strong { color: var(--p31-lavender); }
+    .term-plain strong { color: var(--p31-teal); }
+    .no-results { text-align: center; padding: 3rem 1rem; color: var(--p31-muted); }
+    .no-results p { margin-bottom: 0.5rem; }
+    .no-results .hint { font-size: 0.85rem; }
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
   <nav class="top-nav">
     <a href="/" class="nav-brand">
-      <svg viewBox="0 0 100 100" width="24" height="24" fill="none">
+      <svg viewBox="0 0 100 100" width="24" height="24" fill="none" aria-hidden="true" focusable="false">
         <path d="M50 10 L90 85 L10 85 Z" stroke="var(--p31-teal)" stroke-width="5" stroke-linejoin="round"/>
         <path d="M50 10 L50 60 L90 85" stroke="var(--p31-coral)" stroke-width="5" stroke-linejoin="round" opacity="0.8"/>
         <path d="M50 60 L10 85" stroke="var(--p31-butter)" stroke-width="5" stroke-linejoin="round" opacity="0.6"/>
       </svg>
-      DELTA Language Glossary
+      DELTA Glossary
     </a>
-    <button id="safeModeBtn" class="btn-safe">Safe Mode</button>
+    <button class="btn-safe safe-toggle" aria-pressed="false" aria-label="Toggle safe mode — reduces animations and motion">Safe Mode</button>
   </nav>
-  <!-- MIGRATION TODO: Convert to .astro component with BaseLayout -->
-<!-- MIGRATION TODO: Wire into public-line.json as draft -->
-<main class="page-wrapper">
+
+  <main id="main-content" class="page-wrapper">
     <div class="header-row">
       <div class="title-group">
         <h1><span aria-hidden="true">📖</span> Canonical Glossary</h1>
+        <p class="tagline">The vocabulary of the P31 architecture.</p>
       </div>
-      <p class="tagline">The vocabulary of the P31 Architecture.</p>
     </div>
-    <input type="search" id="termSearch" class="search-input" placeholder="Search terms (e.g., K4, Spoons, L.O.V.E.)...">
-    <div id="dictList">
-      <article class="term-card">
-        <div class="term-header"><span class="term-name">Decoherence</span></div>
-        <p class="term-def">Loss of authentic internal state under external pressure. The psychological equivalent of the fawn response.</p>
-      </article>
-      <article class="term-card">
-        <div class="term-header"><span class="term-name">Floating neutral</span></div>
-        <p class="term-def">To <strong>triangulate truth through your own systems</strong> rather than relying on external validation.</p>
-      </article>
-      <article class="term-card">
-        <div class="term-header"><span class="term-name">L.O.V.E.</span></div>
-        <p class="term-def"><strong>Ledger of Ontological Volume and Entropy.</strong> Soulbound reputation token earned through connection.</p>
-      </article>
-      <article class="term-card">
-        <div class="term-header"><span class="term-name">SIC-POVM</span></div>
-        <p class="term-def">Symmetric Informationally Complete Positive Operator-Valued Measure. The minimum complete measurement forming a tetrahedron.</p>
-      </article>
+
+    <div class="search-wrap">
+      <span class="search-icon" aria-hidden="true">🔍</span>
+      <input type="search" id="termSearch" class="search-input"
+             placeholder="Search P31 terminology (e.g. K₄, Spoons, L.O.V.E.)..."
+             aria-label="Search glossary terms"
+             autocomplete="off">
     </div>
-    <div id="emptyState" class="empty-state">No terms found.</div>
+
+    <p class="term-count" id="termCount" aria-live="polite" aria-atomic="true"></p>
+
+    <div id="dictList" role="list" aria-label="Glossary terms">
+
+      <article class="term-card" id="term-decoherence" role="listitem">
+        <div class="term-header">
+          <span class="term-name">Decoherence</span>
+          <a href="#term-decoherence" class="term-anchor" aria-label="Permalink to Decoherence">#</a>
+        </div>
+        <p class="term-plain">When you lose track of your own feelings and opinions under pressure — often without noticing it's happening. You start reflecting what others want instead of what you actually think.</p>
+        <p class="term-tech"><strong>Technical:</strong> Loss of authentic internal state under sustained external pressure. In quantum mechanics, the collapse of superposition due to environmental interaction. In P31 psychology: the fawn response — suppression of true self-state to reduce perceived threat.</p>
+      </article>
+
+      <article class="term-card" id="term-floating-neutral" role="listitem">
+        <div class="term-header">
+          <span class="term-name">Floating Neutral</span>
+          <a href="#term-floating-neutral" class="term-anchor" aria-label="Permalink to Floating Neutral">#</a>
+        </div>
+        <p class="term-plain">Figuring out what is true by checking your own internal evidence — rather than waiting for someone else to tell you. Like a circuit that measures its own voltage without being tied to an outside reference.</p>
+        <p class="term-tech"><strong>Technical:</strong> From electrical engineering: a node with no defined reference potential, free to self-determine its voltage through internal measurement. In P31: the practice of triangulating ground truth through internal systems rather than external validation. Prevents relational gaslighting from overwriting self-knowledge.</p>
+      </article>
+
+      <article class="term-card" id="term-love" role="listitem">
+        <div class="term-header">
+          <span class="term-name">L.O.V.E.</span>
+          <a href="#term-love" class="term-anchor" aria-label="Permalink to L.O.V.E.">#</a>
+        </div>
+        <p class="term-plain">A score that tracks how much you have connected with and cared for others in the P31 mesh. It can only be earned through real relationships — not bought or transferred.</p>
+        <p class="term-tech"><strong>Technical:</strong> <strong>Ledger of Ontological Volume and Entropy.</strong> A soulbound reputation token earned through authentic connection within the K₄ mesh. Non-transferable. Increases via mutual-care interactions; decays slowly without engagement. Implemented as a Durable Object aggregate in the Cloudflare Workers mesh.</p>
+      </article>
+
+      <article class="term-card" id="term-sic-povm" role="listitem">
+        <div class="term-header">
+          <span class="term-name">SIC-POVM</span>
+          <a href="#term-sic-povm" class="term-anchor" aria-label="Permalink to SIC-POVM">#</a>
+        </div>
+        <p class="term-plain">The smallest set of measurements that can fully describe any quantum state. It takes exactly four probes — and those four probes form a tetrahedron. P31 uses this shape as the foundation for its four-node family structure.</p>
+        <p class="term-tech"><strong>Technical:</strong> Symmetric Informationally Complete Positive Operator-Valued Measure. The minimum overcomplete measurement frame for a qubit: four rank-1 projectors forming a regular tetrahedron in Bloch-sphere geometry. In P31, the K₄ topology mirrors this structure — four vertices, six edges, every node connected to every other.</p>
+      </article>
+
+      <article class="term-card" id="term-k4" role="listitem">
+        <div class="term-header">
+          <span class="term-name">K₄ Mesh</span>
+          <a href="#term-k4" class="term-anchor" aria-label="Permalink to K₄ Mesh">#</a>
+        </div>
+        <p class="term-plain">A four-node network where every person is directly connected to every other person. No one is at the center. No one is cut off. The P31 family is structured as a K₄ — four vertices, six edges, total mutual connection.</p>
+        <p class="term-tech"><strong>Technical:</strong> The complete graph on four vertices (K₄). Six bidirectional edges; every vertex has degree 3. Structurally identical to a tetrahedron and the SIC-POVM probe geometry. In P31 infrastructure: implemented as a Cloudflare Durable Object cage with per-edge love totals and real-time sync.</p>
+      </article>
+
+      <article class="term-card" id="term-spoon" role="listitem">
+        <div class="term-header">
+          <span class="term-name">Spoon</span>
+          <a href="#term-spoon" class="term-anchor" aria-label="Permalink to Spoon">#</a>
+        </div>
+        <p class="term-plain">A unit of energy or mental capacity. From Spoon Theory: people with chronic illness or disability start each day with a limited number of spoons. Every task costs spoons. When you run out, you're done — recovery takes time. P31 uses spoon counts to size tasks and protect the operator.</p>
+        <p class="term-tech"><strong>Technical:</strong> From Christine Miserandino's Spoon Theory (2003). In P31: a discrete unit used to estimate cognitive and executive load in work context documents (WCDs). Tasks are labeled with estimated spoon cost. The operator's daily envelope varies with Ca²⁺ level (hypoparathyroidism, ICD-10 E20.9) and AuDHD executive function capacity.</p>
+      </article>
+
+      <article class="term-card" id="term-soulsafe" role="listitem">
+        <div class="term-header">
+          <span class="term-name">SOULSAFE</span>
+          <a href="#term-soulsafe" class="term-anchor" aria-label="Permalink to SOULSAFE">#</a>
+        </div>
+        <p class="term-plain">The P31 safe mode system. When activated, it strips away all visual effects, animations, and complex UI. Named after the Gray Rock method — a way to reduce harm by making yourself a less interesting target. SOULSAFE is a medical accommodation, not just a preference.</p>
+        <p class="term-tech"><strong>Technical:</strong> The SOULSAFE / Gray Rock protocol. Triggered by: OS <code>prefers-reduced-motion</code>, URL param <code>?safe=1</code>, or <code>localStorage['p31-safe-mode'] === 'on'</code>. Applies <code>body.safe-mode</code> class: disables all CSS animations and transitions, hides canvas elements, removes backdrop filters. Required on every P31 surface. Implemented in <code>public/lib/p31-safe-mode.js</code>.</p>
+      </article>
+
+      <article class="term-card" id="term-wcd" role="listitem">
+        <div class="term-header">
+          <span class="term-name">WCD</span>
+          <a href="#term-wcd" class="term-anchor" aria-label="Permalink to WCD">#</a>
+        </div>
+        <p class="term-plain">A structured task card. WCD stands for Work Context Document. It replaces informal to-do items with a clear format: what you are building, why it matters, what "done" looks like, and how long it will take. Every significant task in P31 has a WCD.</p>
+        <p class="term-tech"><strong>Technical:</strong> Work Context Document. A structured dispatch format combining: intent (what + why), scope boundaries (tag-out), spoon estimate, acceptance criteria, and downstream dependencies. Intake surface: <code>/build.html</code>. WCDs are numbered monotonically per product area and never reused for a different intent.</p>
+      </article>
+
+      <article class="term-card" id="term-isostasis" role="listitem">
+        <div class="term-header">
+          <span class="term-name">Isostatic Rigidity</span>
+          <a href="#term-isostasis" class="term-anchor" aria-label="Permalink to Isostatic Rigidity">#</a>
+        </div>
+        <p class="term-plain">A stable structure that holds its shape by distributing pressure evenly — not by being stiff, but by being balanced. When one part is stressed, the whole system adjusts instead of breaking. P31 infrastructure is designed to be isostatic: if one service fails, the mesh reroutes rather than going dark.</p>
+        <p class="term-tech"><strong>Technical:</strong> From structural geology: isostasy is the state where lithospheric pressure is in equilibrium — loads distribute across the crust rather than concentrating at failure points. In P31: the architectural principle that mesh nodes absorb failures via local caching, degraded-mode fallbacks, and Cloudflare KV / Durable Object redundancy rather than hard dependencies on single services.</p>
+      </article>
+
+    </div>
+
+    <div id="noResults" class="no-results" role="status" aria-live="polite" style="display:none;">
+      <p id="noResultsMsg">No terms found.</p>
+      <p class="hint">Try a shorter word or browse the full list by clearing the search.</p>
+    </div>
   </main>
+
   <footer class="ebc-footer">
     <a href="/build.html">Build</a>
     <a href="/geodesic.html">Create</a>
     <a href="/connect.html">Connect</a>
   </footer>
-  <script src="/lib/p31-atmosphere-core.js"></script>
+
+  <script src="/public/lib/p31-safe-mode.js"></script>
+  <script src="/public/lib/p31-phos-router.js"></script>
   <script>
-    const safeBtn = document.getElementById('safeModeBtn');
-    if(safeBtn) safeBtn.addEventListener('click', () => document.body.classList.toggle('safe-mode'));
-  </script>
-  <script>
-    document.getElementById('termSearch').addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase();
-      let c = 0;
-      document.querySelectorAll('.term-card').forEach(card => {
-        if(card.textContent.toLowerCase().includes(q)) { card.style.display = 'block'; c++; }
-        else card.style.display = 'none';
+    const searchInput = document.getElementById('termSearch');
+    const dictList = document.getElementById('dictList');
+    const noResults = document.getElementById('noResults');
+    const noResultsMsg = document.getElementById('noResultsMsg');
+    const termCount = document.getElementById('termCount');
+    const cards = Array.from(dictList.querySelectorAll('.term-card'));
+    const total = cards.length;
+
+    function updateCount(visible) {
+      if (searchInput.value.trim()) {
+        termCount.textContent = visible === total ? `${total} terms` : `${visible} of ${total} terms`;
+      } else {
+        termCount.textContent = `${total} terms`;
+      }
+    }
+
+    function filterTerms() {
+      const q = searchInput.value.toLowerCase().trim();
+      let visible = 0;
+      cards.forEach(card => {
+        const match = !q || card.textContent.toLowerCase().includes(q);
+        card.style.display = match ? '' : 'none';
+        if (match) visible++;
       });
-      document.getElementById('emptyState').style.display = c === 0 ? 'block' : 'none';
-    });
+
+      const empty = visible === 0;
+      noResults.style.display = empty ? 'block' : 'none';
+      if (empty && q) {
+        noResultsMsg.textContent = `No terms match "${q}". Try a different search?`;
+      }
+      updateCount(visible);
+    }
+
+    searchInput.addEventListener('input', filterTerms);
+    updateCount(total);
+
+    // Highlight active anchor on hash change
+    function highlightAnchor() {
+      const hash = location.hash;
+      cards.forEach(card => {
+        card.style.outline = card.id && ('#' + card.id) === hash
+          ? '2px solid var(--p31-lavender)'
+          : '';
+      });
+    }
+    window.addEventListener('hashchange', highlightAnchor);
+    highlightAnchor();
   </script>
+  <script src="/public/lib/phos-os.js"></script>
 </body>
 </html>

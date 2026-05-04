@@ -28,8 +28,8 @@
       "gate": "live",
       "phosSlot": "passport",
       "phosReady": true,
-      "lastVerified": "2026-05-03",
-      "notes": "PHOS bus bar slot 2. OG image added 2026-05-03. _redirects: /passport → /passport-generator.html 301."
+      "lastVerified": "2026-05-04",
+      "notes": "PHOS bus bar slot 2. Gate 2 polish complete (CWP-DESIGN-05). Four states: empty/loading/error/normal. p31-safe-mode.js, PHOS router active."
     },
     {
       "path": "/glass-box",
@@ -188,10 +188,10 @@
       "path": "/delta-language",
       "resolves": "delta-language.html",
       "gate": "live",
-      "phosSlot": null,
+      "phosSlot": "delta-language",
       "phosReady": true,
-      "lastVerified": "2026-05-03",
-      "notes": "P31 glossary. Live."
+      "lastVerified": "2026-05-04",
+      "notes": "P31 canonical glossary. Gate 2 polish complete (CWP-DESIGN-05). Anchor links, a11y, PHOS router active."
     },
     {
       "path": "/fluid",

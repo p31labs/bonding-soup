@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Cognitive Passport - P31</title>
+  <title>Cognitive Passport — P31 Labs</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Generate your Cognitive Passport — a local identity context card encoding your information density preferences and neurodivergent profile.">
+  <meta property="og:title" content="Cognitive Passport — P31 Labs">
+  <meta property="og:description" content="Your local identity context card. Set information density, generate your CogPass schema, save to device.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/public/og/passport-og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/public/lib/p31-qmu-tokens.css">
+  <link rel="stylesheet" href="/p31-style.css">
   <style>
-    :root {
-      --p31-void: #0f1115;  /* CORRECTED per canon */ --p31-surface: #161920; --p31-surface2: #1c2028;
-      --p31-teal: #25897d; --p31-coral: #cc6247; --p31-butter: #cda852;
-      --p31-lavender: #8b7cc9; --p31-phosphorus: #3ba372; --p31-cyan: #4db8a8;
-      --p31-cloud: #d8d6d0; --p31-muted: #6b7280;
-      --p31-glass-border: rgba(255, 255, 255, 0.08);
-      --p31-font-sans: "Atkinson Hyperlegible", system-ui, sans-serif;
-      --p31-font-mono: "JetBrains Mono", monospace;
-      --p31-font-serif: "Playfair Display", serif;
-    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--p31-void); color: var(--p31-cloud); font-family: var(--p31-font-sans); display: flex; flex-direction: column; min-height: 100vh; -webkit-font-smoothing: antialiased; line-height: 1.6; }
     a { color: inherit; text-decoration: none; }
@@ -26,10 +26,10 @@
     body.safe-mode { --p31-void: #000; --p31-surface: #0a0a0a; --p31-surface2: #111; --p31-cloud: #fff; --p31-muted: #888; }
     body.safe-mode * { animation: none !important; transition: none !important; }
     body.safe-mode canvas, body.safe-mode .hide-safe { display: none !important; }
-    .btn-safe { padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; z-index: 100; transition: all 150ms; }
-    .btn-safe:hover { background: rgba(204,98,71,0.15); }
-    .skip-link { position: absolute; top: -40px; left: 0; background: var(--p31-teal); color: #000; padding: 8px 16px; z-index: 1000; font-weight: 700; transition: top 0.2s; }
+    .skip-link { position: absolute; top: -40px; left: 0; background: var(--p31-teal); color: #000; padding: 8px 16px; z-index: 1000; font-weight: 700; transition: top 0.2s; border-radius: 0 0 4px 0; }
     .skip-link:focus { top: 0; }
+    .btn-safe { padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; z-index: 100; transition: all 150ms; min-height: 44px; min-width: 44px; }
+    .btn-safe:hover { background: rgba(204,98,71,0.15); }
     .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--p31-glass-border); background: rgba(11,13,16,0.8); z-index: 50; backdrop-filter: blur(10px); }
     .nav-brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--p31-cloud); font-size: 0.9rem; }
     .page-wrapper { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem 2rem; width: 100%; flex-grow: 1; display: flex; flex-direction: column; }
@@ -37,71 +37,235 @@
     .header-row { display: flex; justify-content: space-between; align-items: flex-end; margin: 2rem 0; flex-wrap: wrap; gap: 1rem; }
     .title-group h1 { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
     .tagline { color: var(--p31-muted); font-size: 1.1rem; max-width: 600px; }
-    input[type=range] { width: 100%; margin: 1rem 0; accent-color: var(--p31-teal); cursor: pointer; }
+    input[type=range] { width: 100%; margin: 1rem 0; accent-color: var(--p31-teal); cursor: pointer; height: 44px; }
     pre { background: var(--p31-void); padding: 1.5rem; border-radius: 8px; font-family: var(--p31-font-mono); font-size: 0.85rem; overflow-x: auto; color: var(--p31-teal); border: 1px solid var(--p31-glass-border); }
-    .btn-primary { background: var(--p31-teal); color: #000; padding: 0.8rem 1.5rem; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-family: var(--p31-font-sans); }
+    .btn-primary { background: var(--p31-teal); color: #000; padding: 0.8rem 1.5rem; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-family: var(--p31-font-sans); min-height: 44px; font-size: 1rem; }
     .btn-primary:hover { filter: brightness(1.1); }
+    .btn-secondary { background: transparent; color: var(--p31-cloud); padding: 0.8rem 1.5rem; border: 1px solid var(--p31-glass-border); border-radius: 8px; font-weight: 600; cursor: pointer; font-family: var(--p31-font-sans); min-height: 44px; font-size: 1rem; }
+    .btn-secondary:hover { border-color: var(--p31-teal); color: var(--p31-teal); }
+    .save-notice { color: var(--p31-muted); font-size: 0.85rem; font-family: var(--p31-font-mono); margin-top: 0.75rem; min-height: 1.4em; }
+
+    /* ── Four states ── */
+    #state-loading, #state-empty, #state-error, #state-normal { display: none; }
+    #state-loading.active, #state-empty.active, #state-error.active, #state-normal.active { display: block; }
+
+    /* Loading skeleton */
+    .skeleton { background: linear-gradient(90deg, var(--p31-surface) 25%, var(--p31-surface2) 50%, var(--p31-surface) 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: 8px; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    .sk-line { height: 1rem; margin-bottom: 0.75rem; }
+    .sk-line.wide { width: 100%; }
+    .sk-line.medium { width: 60%; }
+    .sk-line.short { width: 35%; }
+    .sk-block { height: 8rem; width: 100%; margin-bottom: 1rem; }
+    body.safe-mode .skeleton { animation: none; background: var(--p31-surface2); }
+
+    /* Empty state */
+    .empty-state-card { text-align: center; padding: 3rem 2rem; }
+    .empty-state-card .empty-icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+    .empty-state-card h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .empty-state-card p { color: var(--p31-muted); margin-bottom: 2rem; }
+
+    /* Error state */
+    .error-card { border-color: rgba(204,98,71,0.3); background: rgba(204,98,71,0.05); }
+    .error-card h2 { color: var(--p31-coral); margin-bottom: 0.5rem; }
+    .error-card p { color: var(--p31-muted); margin-bottom: 1.5rem; }
+
+    /* Saved badge */
+    .saved-badge { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(93,202,165,0.1); border: 1px solid rgba(93,202,165,0.3); color: var(--p31-teal); padding: 0.3rem 0.75rem; border-radius: 99px; font-size: 0.8rem; font-family: var(--p31-font-mono); margin-bottom: 1.5rem; }
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
   <nav class="top-nav">
     <a href="/" class="nav-brand">
-      <svg viewBox="0 0 100 100" width="24" height="24" fill="none">
+      <svg viewBox="0 0 100 100" width="24" height="24" fill="none" aria-hidden="true" focusable="false">
         <path d="M50 10 L90 85 L10 85 Z" stroke="var(--p31-teal)" stroke-width="5" stroke-linejoin="round"/>
         <path d="M50 10 L50 60 L90 85" stroke="var(--p31-coral)" stroke-width="5" stroke-linejoin="round" opacity="0.8"/>
         <path d="M50 60 L10 85" stroke="var(--p31-butter)" stroke-width="5" stroke-linejoin="round" opacity="0.6"/>
       </svg>
       P31 Labs
     </a>
-    <button id="safeModeBtn" class="btn-safe">Safe Mode</button>
+    <button class="btn-safe safe-toggle" aria-pressed="false" aria-label="Toggle safe mode — reduces animations and motion">Safe Mode</button>
   </nav>
-  <!-- MIGRATION TODO: Convert to .astro component with BaseLayout -->
-<!-- MIGRATION TODO: Wire into public-line.json as draft -->
-<main class="page-wrapper">
+
+  <main id="main-content" class="page-wrapper">
     <div class="header-row">
       <div class="title-group">
         <h1><span aria-hidden="true">🧬</span> Cognitive Passport</h1>
-      </div>
-      <p class="tagline">Your local identity context card.</p>
-    </div>
-    <div class="glass-card" style="margin-bottom: 2rem;">
-      <h3 style="margin-bottom:1rem; color: var(--p31-cloud);">Information Density Target</h3>
-      <input type="range" id="densitySlider" min="0" max="100" value="80">
-      <div style="display:flex; justify-content:space-between; color:var(--p31-muted); font-size:0.85rem; font-family: var(--p31-font-mono);">
-        <span>0 (Gray Rock)</span><span id="densityVal" style="color:var(--p31-teal); font-weight:700;">80</span><span>100 (High Ops)</span>
+        <p class="tagline">Your local identity context card.</p>
       </div>
     </div>
-    <div class="glass-card">
-      <h3 style="margin-bottom:1rem; color: var(--p31-cloud);">Generated Schema (p31.cognitivePassport/1.1.0)</h3>
-      <pre id="jsonOutput"></pre>
-      <button class="btn-primary" id="saveBtn" style="margin-top:1.5rem;">Save to Device LocalStorage</button>
+
+    <!-- Loading state -->
+    <div id="state-loading" role="status" aria-label="Loading your passport">
+      <div class="glass-card" style="margin-bottom: 2rem;">
+        <div class="skeleton sk-line short" style="margin-bottom: 1.5rem;"></div>
+        <div class="skeleton sk-block"></div>
+        <div class="skeleton sk-line medium"></div>
+      </div>
+      <div class="glass-card">
+        <div class="skeleton sk-line short" style="margin-bottom: 1.5rem;"></div>
+        <div class="skeleton sk-block" style="height: 12rem;"></div>
+        <div class="skeleton sk-line medium" style="margin-top: 1.5rem;"></div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div id="state-empty">
+      <div class="glass-card empty-state-card">
+        <span class="empty-icon" aria-hidden="true">🧬</span>
+        <h2>No passport created yet</h2>
+        <p>Let's build your first one. Adjust the information density dial to match how your brain works today.</p>
+        <button class="btn-primary" id="createPassportBtn">Create your first passport</button>
+      </div>
+    </div>
+
+    <!-- Error state -->
+    <div id="state-error">
+      <div class="glass-card error-card">
+        <h2>Storage unavailable</h2>
+        <p>Your passport can't be saved — local storage is blocked (private browsing mode or browser settings). You can still generate and copy your passport schema.</p>
+        <button class="btn-secondary" id="continueAnywayBtn">Continue without saving</button>
+      </div>
+    </div>
+
+    <!-- Normal state -->
+    <div id="state-normal">
+      <div id="savedBadgeContainer"></div>
+      <div class="glass-card" style="margin-bottom: 2rem;">
+        <h2 style="margin-bottom:1rem; color: var(--p31-cloud);">Information Density Target</h2>
+        <label for="densitySlider" class="sr-only">Information density: 0 is Gray Rock (minimal), 100 is High Ops (maximum)</label>
+        <input type="range" id="densitySlider" min="0" max="100" value="80"
+               aria-valuemin="0" aria-valuemax="100" aria-valuenow="80"
+               aria-label="Information density target">
+        <div style="display:flex; justify-content:space-between; color:var(--p31-muted); font-size:0.85rem; font-family: var(--p31-font-mono);" aria-hidden="true">
+          <span>0 (Gray Rock)</span>
+          <span id="densityVal" style="color:var(--p31-teal); font-weight:700;">80</span>
+          <span>100 (High Ops)</span>
+        </div>
+      </div>
+      <div class="glass-card">
+        <h2 style="margin-bottom:1rem; color: var(--p31-cloud);">Generated Schema</h2>
+        <pre id="jsonOutput" aria-label="Generated passport schema" tabindex="0"></pre>
+        <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap;">
+          <button class="btn-primary" id="saveBtn">Save to device</button>
+          <button class="btn-secondary" id="copyBtn">Copy schema</button>
+        </div>
+        <div class="save-notice" id="saveNotice" aria-live="polite" aria-atomic="true"></div>
+      </div>
     </div>
   </main>
-  <script src="/lib/p31-atmosphere-core.js"></script>
+
+  <style>.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }</style>
+
+  <script src="/public/lib/p31-safe-mode.js"></script>
+  <script src="/public/lib/p31-phos-router.js"></script>
   <script>
-    const safeBtn = document.getElementById('safeModeBtn');
-    if(safeBtn) safeBtn.addEventListener('click', () => document.body.classList.toggle('safe-mode'));
-  </script>
-  <script>
+    const STORAGE_KEY = 'p31_cognitive_passport';
     const slider = document.getElementById('densitySlider');
     const out = document.getElementById('jsonOutput');
-    const update = () => {
-      const val = parseInt(slider.value);
-      document.getElementById('densityVal').textContent = val;
-      out.textContent = JSON.stringify({
+    const saveNotice = document.getElementById('saveNotice');
+    let storageAvailable = true;
+
+    function checkStorage() {
+      try { localStorage.setItem('_p31_test', '1'); localStorage.removeItem('_p31_test'); return true; }
+      catch (e) { return false; }
+    }
+
+    function generateSchema(val) {
+      return JSON.stringify({
         $schema: "p31.cognitivePassport/1.1.0",
+        generatedAt: new Date().toISOString(),
         preferences: { informationDensity: val, screenComfort: val > 20 ? 100 : 0 },
         routing: { safeModeTrigger: val === 0 }
       }, null, 2);
-    };
-    slider.addEventListener('input', update);
-    document.getElementById('saveBtn').addEventListener('click', (e) => {
-      localStorage.setItem('p31_cognitive_passport', out.textContent);
-      const o = e.target.textContent;
-      e.target.textContent = "✓ Saved";
-      setTimeout(() => e.target.textContent = o, 2000);
+    }
+
+    function updateSlider() {
+      const val = parseInt(slider.value);
+      document.getElementById('densityVal').textContent = val;
+      slider.setAttribute('aria-valuenow', val);
+      out.textContent = generateSchema(val);
+    }
+
+    function showState(id) {
+      ['state-loading', 'state-empty', 'state-error', 'state-normal'].forEach(s => {
+        const el = document.getElementById(s);
+        el.classList.toggle('active', s === id);
+      });
+    }
+
+    function showSavedBadge(timestamp) {
+      const c = document.getElementById('savedBadgeContainer');
+      c.innerHTML = '';
+      if (!timestamp) return;
+      const badge = document.createElement('div');
+      badge.className = 'saved-badge';
+      badge.innerHTML = `<span aria-hidden="true">✓</span> Loaded from device · ${new Date(timestamp).toLocaleDateString()}`;
+      c.appendChild(badge);
+    }
+
+    function init() {
+      showState('state-loading');
+      storageAvailable = checkStorage();
+
+      setTimeout(() => {
+        if (!storageAvailable) {
+          const saved = null;
+          showState('state-error');
+          return;
+        }
+
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            const density = parsed?.preferences?.informationDensity ?? 80;
+            slider.value = density;
+            showSavedBadge(parsed?.generatedAt);
+          } catch (e) { /* corrupt data — start fresh */ }
+          showState('state-normal');
+          updateSlider();
+        } else {
+          showState('state-empty');
+        }
+      }, 80);
+    }
+
+    document.getElementById('createPassportBtn').addEventListener('click', () => {
+      showState('state-normal');
+      updateSlider();
     });
-    update();
+
+    document.getElementById('continueAnywayBtn').addEventListener('click', () => {
+      showState('state-normal');
+      updateSlider();
+    });
+
+    slider.addEventListener('input', updateSlider);
+
+    document.getElementById('saveBtn').addEventListener('click', () => {
+      if (!storageAvailable) {
+        saveNotice.textContent = 'Storage unavailable — copy the schema instead.';
+        return;
+      }
+      localStorage.setItem(STORAGE_KEY, out.textContent);
+      saveNotice.textContent = '✓ Saved to device';
+      showSavedBadge(JSON.parse(out.textContent)?.generatedAt);
+      setTimeout(() => { saveNotice.textContent = ''; }, 3000);
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      navigator.clipboard.writeText(out.textContent).then(() => {
+        saveNotice.textContent = '✓ Copied to clipboard';
+        setTimeout(() => { saveNotice.textContent = ''; }, 3000);
+      }).catch(() => {
+        saveNotice.textContent = 'Copy failed — select the schema text manually.';
+      });
+    });
+
+    init();
   </script>
+  <script src="/public/lib/phos-os.js"></script>
 </body>
 </html>

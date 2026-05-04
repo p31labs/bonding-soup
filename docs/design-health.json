@@ -1,0 +1,27 @@
+{
+  "schema": "p31.designHealth/1.0.0",
+  "generatedAt": "2026-05-04T13:52:54.942Z",
+  "surfaces": 4,
+  "metrics": {
+    "safeModeCompliance": {
+      "surfaces": 4,
+      "compliant": 4,
+      "grade": "A"
+    },
+    "phosRouterCoverage": {
+      "surfaces": 4,
+      "active": 4,
+      "grade": "A"
+    },
+    "tokenCompliance": {
+      "hardcodedHex": 0,
+      "grade": "A"
+    },
+    "touchTargets": {
+      "surfaces": 4,
+      "compliant": 2,
+      "note": "compliant = surface declares min-height: 44px",
+      "grade": "C"
+    }
+  }
+}

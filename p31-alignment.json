@@ -1471,77 +1471,88 @@
       "path": "docs/architecture/PGLITE-SYNC-DESIGN.md",
       "type": "architecture",
       "description": "PGLite multi-device sync design: Yjs CRDT, 5 namespaces, CF Worker endpoint, BONDING KV isolation proof",
-      "tier": "A"
+      "tier": "A",
+      "role": "CWP-SOV-01: Yjs CRDT multi-device sync design \u2014 5 namespaces, CF Worker endpoint, BONDING KV isolation, offline queue"
     },
     {
       "id": "p31-arch-esim-comparison",
       "path": "docs/architecture/ESIM-CARRIER-COMPARISON.md",
       "type": "architecture",
       "description": "eSIM carrier comparison for 31558/32211: US Mobile AT&T recommended, iPhone 11 activation steps",
-      "tier": "B"
+      "tier": "B",
+      "role": "CWP-SOV-05: eSIM carrier comparison for 31558/32211 \u2014 US Mobile AT&T recommended, iPhone 11 activation steps, <$15/mo"
     },
     {
       "id": "p31-arch-matrix-zero-budget",
       "path": "docs/architecture/MATRIX-ZERO-BUDGET-OPTIONS.md",
       "type": "architecture",
       "description": "Matrix homeserver zero-budget options: Pi4+Conduit primary, Oracle ARM standby, Workers relay fallback",
-      "tier": "B"
+      "tier": "B",
+      "role": "CWP-SOV-06: Matrix zero-budget options \u2014 Pi4+Conduit primary, Oracle ARM standby, CF Workers relay fallback (660 lines)"
     },
     {
       "id": "p31-legal-daubert-genesis",
       "path": "docs/legal/DAUBERT-GENESIS-BLOCK-BRIEF.md",
       "type": "legal",
       "description": "Daubert admissibility brief for Genesis Block SHA-256 hash evidence in Johnson v. Johnson 2025CV936",
-      "tier": "A"
+      "tier": "A",
+      "role": "CWP-SOV-03: Daubert admissibility brief \u2014 5 factors, GA evidence code, judge summary, foundation testimony; 2025CV936"
     },
     {
       "id": "p31-cwp-sovereign-2026-05",
       "path": "docs/CWP-P31-SOVEREIGN-2026-05.md",
       "type": "cwp",
       "description": "Sovereign infrastructure CWP batch: PGLite sync, post-quantum, Daubert, FHIR, eSIM, Matrix (6 CWPs + 12 meatspace)",
-      "tier": "A"
+      "tier": "A",
+      "role": "CWP-P31-SOVEREIGN-2026-05 \u2014 6 sovereign infra CWPs + 12 meatspace actions + 3 decision points; Opus/Gemini batch"
     },
     {
       "id": "p31-doc-phosphorus-thesis",
       "path": "docs/P31_THE_PHOSPHORUS_THESIS.md",
       "type": "publication",
       "description": "Phosphorus Thesis v2.0: Tetrahedron Protocol, monotropism-Shannon synthesis, P31 engineering evidence chain",
-      "tier": "A"
+      "tier": "A",
+      "role": "P31 Phosphorus Thesis v2.0 \u2014 Tetrahedron Protocol, monotropism-Shannon synthesis, engineering evidence chain; Zenodo candidate"
     },
     {
       "id": "p31-cogpass-v5",
       "path": "docs/P31_COGNITIVE_PASSPORT_v4.md",
       "type": "operator",
       "description": "Cognitive Passport v4 (post-Phosphorus-Thesis edition): diagnoses, cognitive profile, family, entity filings",
-      "tier": "A"
+      "tier": "A",
+      "role": "Cognitive Passport v4 post-Phosphorus-Thesis edition \u2014 diagnoses, cognitive profile, family K4, P31 Labs entity filings"
     },
     {
       "id": "p31-master-context-2026-05-04",
       "path": "docs/P31_MASTER_CONTEXT_2026-05-04.md",
       "type": "operator",
       "description": "Canonical operator context snapshot 2026-05-04: tech state, legal status, meatspace actions",
-      "tier": "A"
+      "tier": "A",
+      "role": "Canonical operator context snapshot 2026-05-04 \u2014 tech state, legal status (2025CV936), meatspace action queue"
     },
     {
       "id": "p31-doc-phos-for-us-posner",
       "path": "docs/PHOS-FOR-US-POSNER-RECONCEPT.md",
       "type": "design",
       "description": "Posner molecule Ca9(PO4)6 as family metaphor \u2014 PHOS-for-US landing concept doc",
-      "tier": "B"
+      "tier": "B",
+      "role": "PHOS-for-US concept \u2014 Ca9(PO4)6 Posner molecule as family metaphor, 4 Ca vertices, 6 PO4 bond edges, landing design seed"
     },
     {
       "id": "p31-doc-prompt-gemini-landing",
       "path": "docs/PROMPT-GEMINI-PHOS-LANDING.md",
       "type": "design",
       "description": "Full implementation spec for index.html Posner molecule landing page (Gemini-authored)",
-      "tier": "B"
+      "tier": "B",
+      "role": "Full implementation spec for index.html Posner molecule landing page \u2014 spatial nav, Akinator engine, swarm layer (Gemini)"
     },
     {
       "id": "p31-doc-smart-starfield",
       "path": "docs/SMART-STARFIELD-EXPLANATION.md",
       "type": "design",
       "description": "Technical explanation of dual-layer canvas starfield in soup.html and index.html",
-      "tier": "B"
+      "tier": "B",
+      "role": "Technical explainer for dual-layer canvas starfield in soup.html + index.html \u2014 K4 mesh constellation, boid particles"
     }
   ],
   "derivations": [

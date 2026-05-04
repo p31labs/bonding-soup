@@ -1,9 +1,18 @@
 {
   "schema": "p31.reportsPromoted/0.1.0",
   "version": "1.0.0",
-  "generatedAt": "2026-05-04T13:53:30.108Z",
-  "count": 3,
+  "generatedAt": "2026-05-04T16:48:26.208Z",
+  "count": 4,
   "entries": [
+    {
+      "id": "psych-e2e-20260504-1645-dkl9",
+      "file": "/docs/reports/promoted/psych-e2e-20260504-1645-dkl9.md",
+      "ts": "2026-05-04T16:45:21.996Z",
+      "kind": "psych-e2e",
+      "severity": "low",
+      "headline": "psych-e2e-20260504-1645-dkl9",
+      "bytes": 1604
+    },
     {
       "id": "psych-e2e-20260503-1334-oasy",
       "file": "/docs/reports/promoted/psych-e2e-20260503-1334-oasy.md",

@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="/lib/p31-qmu-tokens.css">
+  <link rel="stylesheet" href="/public/lib/p31-qmu-tokens.css">
   <link rel="stylesheet" href="/p31-style.css">
   
   <style>
@@ -123,7 +123,7 @@
   
   
   <script type="module">
-    import { Starfield } from '/lib/p31-starfield.mjs';
+    import { Starfield } from '/public/lib/p31-starfield.mjs';
     const starfield = new Starfield('starfield-canvas', {
       surfaceId: 'demo-tour',
       starCount: 100,
@@ -134,7 +134,7 @@
   
   
   <script type="module">
-    import { PHOS } from '/lib/p31-phos-core.mjs';
+    import { PHOS } from '/public/lib/p31-phos-core.mjs';
     window.phos = new PHOS({
       mount: '#phos-orb',
       pageId: 'demo-tour',

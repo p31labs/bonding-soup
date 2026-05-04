@@ -23,7 +23,7 @@ const TEMPLATES = {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="${SITE_CONFIG.assets.fonts[0]}" rel="stylesheet">
   
-  <link rel="stylesheet" href="/lib/p31-qmu-tokens.css">
+  <link rel="stylesheet" href="/public/lib/p31-qmu-tokens.css">
   <link rel="stylesheet" href="/p31-style.css">
   
   <style>
@@ -108,7 +108,7 @@ const TEMPLATES = {
   
   ${page.starfield !== false ? `
   <script type="module">
-    import { Starfield } from '/lib/p31-starfield.mjs';
+    import { Starfield } from '/public/lib/p31-starfield.mjs';
     const starfield = new Starfield('starfield-canvas', {
       surfaceId: '${page.id}',
       starCount: ${page.starfield?.starCount || SITE_CONFIG.starfield.defaultConfig.starCount},
@@ -119,7 +119,7 @@ const TEMPLATES = {
   
   ${page.phos ? `
   <script type="module">
-    import { PHOS } from '/lib/p31-phos-core.mjs';
+    import { PHOS } from '/public/lib/p31-phos-core.mjs';
     window.phos = new PHOS({
       mount: '#phos-orb',
       pageId: '${page.id}',
@@ -246,7 +246,7 @@ const TEMPLATES = {
     </div>
   </div>
   <script type="module">
-    import { GeodesicBuilder } from '/lib/p31-geodesic-builder.mjs';
+    import { GeodesicBuilder } from '/public/lib/p31-geodesic-builder.mjs';
     window.builder = new GeodesicBuilder('builder-canvas');
   </script>
   `,
@@ -273,7 +273,7 @@ const TEMPLATES = {
     </div>
   </div>
   <script type="module">
-    import { CARSSim } from '/lib/p31-cars.mjs';
+    import { CARSSim } from '/public/lib/p31-cars.mjs';
     window.cars = new CARSSim('cars-canvas');
   </script>
   `,

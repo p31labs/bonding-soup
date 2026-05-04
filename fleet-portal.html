@@ -1,3 +1,10 @@
+<style>
+.safe-toggle { position: fixed; top: 1rem; right: 1rem; z-index: 9999; padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: #cc6247; font-family: "JetBrains Mono", monospace; font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: all 150ms; }
+.safe-toggle:hover { background: rgba(204,98,71,0.15); }
+body.safe-mode { --p31-void: #000; --p31-surface: #0a0a0a; --p31-cloud: #fff; }
+body.safe-mode * { animation: none !important; transition: none !important; }
+</style>
+<button id="safeToggle" class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
 <!DOCTYPE html>
 <html lang="en" data-p31-appearance="hub" style="color-scheme: dark;">
 <head>
@@ -10,6 +17,7 @@
   <meta name="theme-color" content="#0f1115" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="/lib/p31-qmu-tokens.css">
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700&family=JetBrains+Mono:ital,wght@0,400;0,600&display=swap" rel="stylesheet" />
   <link rel="manifest" href="/p31-bonding.webmanifest" crossorigin="anonymous" />
   <link rel="stylesheet" href="/p31-style.css" />

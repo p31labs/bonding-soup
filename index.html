@@ -189,6 +189,44 @@
       fill: none;
     }
     
+    /* PHOS Mascot Animation */
+    .phos-mascot {
+      cursor: pointer;
+      animation: phos-float 3s ease-in-out infinite, phos-glow 2s ease-in-out infinite;
+      filter: drop-shadow(0 0 15px rgba(77,184,168,0.4));
+      transition: transform 0.3s ease;
+    }
+    .phos-mascot:hover {
+      transform: scale(1.1) rotate(5deg);
+    }
+    .phos-mascot:active {
+      transform: scale(0.95);
+    }
+    @keyframes phos-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes phos-glow {
+      0%, 100% { filter: drop-shadow(0 0 15px rgba(77,184,168,0.4)); }
+      50% { filter: drop-shadow(0 0 25px rgba(77,184,168,0.8)); }
+    }
+    @keyframes phos-blink {
+      0%, 90%, 100% { transform: scaleY(1); }
+      95% { transform: scaleY(0.1); }
+    }
+    .phos-eye {
+      transform-origin: center;
+      animation: phos-blink 4s ease-in-out infinite;
+    }
+    @keyframes phos-wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-10deg); }
+      75% { transform: rotate(10deg); }
+    }
+    .phos-wiggle {
+      animation: phos-wiggle 0.5s ease-in-out;
+    }
+    
     /* Footer - Centered & Styled */
     footer {
       position: relative;
@@ -244,10 +282,41 @@
   </button>
   
   <main>
-    <!-- K4 Logo -->
-    <div class="logo" aria-hidden="true">
-      <svg viewBox="0 0 100 100">
-        <path d="M50 10 L20 85 L80 85 Z M50 10 L50 50 M20 85 L50 50 M80 85 L50 50"/>
+    <!-- PHOS Mascot -->
+    <div class="logo phos-mascot" aria-hidden="true" onclick="phosInteract()" title="Click me! I'm PHOS!">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#4db8a8;stop-opacity:0.9"/>
+            <stop offset="100%" style="stop-color:#3ba372;stop-opacity:0.7"/>
+          </linearGradient>
+          <linearGradient id="faceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#d8d6d0;stop-opacity:0.95"/>
+            <stop offset="100%" style="stop-color:#b8b6b0;stop-opacity:0.9"/>
+          </linearGradient>
+          <filter id="phosGlow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <g id="phosBody" transform="translate(100, 110)">
+          <path d="M0,-70 L-60,40 L0,20 Z" fill="rgba(77,184,168,0.3)" stroke="#4db8a8" stroke-width="2"/>
+          <path d="M0,-70 L60,40 L0,20 Z" fill="rgba(77,184,168,0.3)" stroke="#4db8a8" stroke-width="2"/>
+          <path d="M-60,40 L0,20 L60,40 L0,70 Z" fill="url(#bodyGrad)" stroke="#4db8a8" stroke-width="2" filter="url(#phosGlow)"/>
+          <ellipse cx="0" cy="45" rx="35" ry="20" fill="url(#faceGrad)" opacity="0.9"/>
+          <ellipse class="phos-eye" cx="-12" cy="42" rx="6" ry="7" fill="#0f1115"/>
+          <circle cx="-10" cy="40" r="2" fill="#fff" opacity="0.8"/>
+          <ellipse class="phos-eye" cx="12" cy="42" rx="6" ry="7" fill="#0f1115"/>
+          <circle cx="14" cy="40" r="2" fill="#fff" opacity="0.8"/>
+          <path id="phosMouth" d="M-8,55 Q0,58 8,55" stroke="#0f1115" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <line x1="-60" y1="40" x2="-85" y2="25" stroke="#cda852" stroke-width="1.5" opacity="0.6"/>
+          <line x1="60" y1="40" x2="85" y2="25" stroke="#cda852" stroke-width="1.5" opacity="0.6"/>
+          <circle cx="-85" cy="25" r="3" fill="#cda852" opacity="0.8"/>
+          <circle cx="85" cy="25" r="3" fill="#cda852" opacity="0.8"/>
+        </g>
       </svg>
     </div>
     
@@ -299,11 +368,12 @@
     <p>
       <a href="/soup.html">C.A.R.S.</a>
       <a href="/psych-e2e-live.html">Live Testing</a>
-      <a href="/docs/P31-PSYCHOLOGICAL-E2E-TESTING.md">Psych E2E Docs</a>
-      <a href="/public/lib/p31-atmosphere-core.js">PHOS Core</a>
+      <a href="/psych-e2e-docs.html">Psych E2E Docs</a>
+      <a href="/phos-core-docs.html">PHOS Core</a>
+      <a href="/phos-mascot.html">Meet PHOS</a>
     </p>
     <p class="commit">
-      P31 Labs — EIN 42-1888158 — commit 5f47d9c — Mesh Status: Online
+      P31 Labs — EIN 42-1888158 — commit 4459dcc — Mesh Status: Online — PHOS v2.1.0
     </p>
   </footer>
   
@@ -335,8 +405,52 @@
       if (window.phosOS) {
         window.phosOS.toggle();
       } else {
-        alert('PHOS v2.1 — Voice navigation initializing...');
+        phosInteract();
       }
+    }
+    
+    // PHOS Mascot Interaction
+    const phosPhrases = [
+      "Hi! I'm PHOS! Need help navigating?",
+      "The mesh is online. Where would you like to go?",
+      "69 tests green. All systems stable!",
+      "Click any button to explore the P31 ecosystem.",
+      "Safe mode is always available in the top right!",
+      "I'm your voice-first navigator. PHOS v2.1.0!",
+      "W-FLARE persona is watching for quality control.",
+      "The tetrahedron has 4 vertices — like your family mesh!"
+    ];
+    
+    function phosInteract() {
+      const mascot = document.querySelector('.phos-mascot');
+      const mouth = document.getElementById('phosMouth');
+      
+      // Wiggle animation
+      mascot.classList.remove('phos-wiggle');
+      void mascot.offsetWidth;
+      mascot.classList.add('phos-wiggle');
+      
+      // Happy mouth
+      mouth.setAttribute('d', 'M-10,52 Q0,65 10,52');
+      
+      // Show random phrase as tooltip
+      const phrase = phosPhrases[Math.floor(Math.random() * phosPhrases.length)];
+      
+      // Create temporary speech bubble
+      let bubble = document.getElementById('phos-bubble');
+      if (!bubble) {
+        bubble = document.createElement('div');
+        bubble.id = 'phos-bubble';
+        bubble.style.cssText = 'position:fixed;top:25%;left:50%;transform:translateX(-50%);background:rgba(22,25,32,0.95);border:1px solid var(--p31-cyan);border-radius:16px;padding:1rem 1.5rem;font-size:0.85rem;max-width:300px;text-align:center;z-index:1000;pointer-events:none;transition:opacity 0.3s;color:var(--p31-cloud);font-family:var(--p31-font-mono);';
+        document.body.appendChild(bubble);
+      }
+      bubble.textContent = phrase;
+      bubble.style.opacity = '1';
+      
+      setTimeout(() => {
+        bubble.style.opacity = '0';
+        mouth.setAttribute('d', 'M-8,55 Q0,58 8,55');
+      }, 3000);
     }
     
     // Respect prefers-reduced-motion

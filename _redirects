@@ -1,0 +1,7 @@
+# Cloudflare Pages redirect rules
+# Format: /old-path  /new-path  [status]
+
+# delta-language: file lives at public/delta-language.html
+# serve clean URL until file is promoted to root level
+/delta-language  /public/delta-language.html  301
+/delta-language.html  /public/delta-language.html  301

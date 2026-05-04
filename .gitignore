@@ -131,6 +131,10 @@ Discovery/SUPPLEMENTAL_DISCOVERY_ASSEMBLY_PROMPT.md
 Discovery/monthly-statement*.pdf
 Discovery/Gmail*.pdf
 
+# Legal documents in docs/ — belong in Drive (01_LEGAL/), not git
+docs/*.docx
+docs/*.pdf
+
 # Scratch / generated reports
 final_validation_report.md
 audit_runner.py

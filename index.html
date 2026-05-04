@@ -3,19 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>PHOS · P31 Labs · P31</title>
-  <meta name="description" content="Phosphorus31 — Family mesh infrastructure for the neurodivergent operator">
-  <meta name="theme-color" content="#0f1115">
-  
+  <title>P31 | Phosphorus31 Operating System</title>
+  <meta name="description" content="PHOS — Voice-first, inference-driven navigation for the P31 mesh. Gray Rock by default. Safe mode always available.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  
   <link rel="stylesheet" href="/public/lib/p31-qmu-tokens.css">
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/p31-style.css">
-  
   <style>
-    /* Starfield Canvas */
+    :root {
+      --p31-void: #0f1115;
+      --p31-surface: #161920;
+      --p31-surface2: #1c2028;
+      --p31-cyan: #4db8a8;
+      --p31-coral: #cc6247;
+      --p31-butter: #cda852;
+      --p31-lavender: #8b7cc9;
+      --p31-phosphorus: #3ba372;
+      --p31-cloud: #d8d6d0;
+      --p31-muted: #6b7280;
+      --p31-glass-border: rgba(255,255,255,0.08);
+      --p31-font-sans: "Atkinson Hyperlegible", system-ui, sans-serif;
+      --p31-font-mono: "JetBrains Mono", monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: var(--p31-void);
+      color: var(--p31-cloud);
+      font-family: var(--p31-font-sans);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    body.safe-mode {
+      --p31-void: #000;
+      --p31-surface: #0a0a0a;
+      --p31-cloud: #fff;
+    }
+    body.safe-mode * { animation: none !important; transition: none !important; }
+    
+    /* Smart Starfield Background */
     #starfield-canvas {
       position: fixed;
       top: 0;
@@ -24,7 +51,7 @@
       height: 100%;
       z-index: 0;
       pointer-events: none;
-      opacity: 0.5;
+      opacity: 0.6;
     }
     body.safe-mode #starfield-canvas { display: none !important; }
     
@@ -33,7 +60,7 @@
       position: fixed;
       top: 1rem;
       right: 1rem;
-      z-index: 10000;
+      z-index: 9999;
       padding: 0.5rem 0.75rem;
       border: 1px solid rgba(204,98,71,0.3);
       border-radius: 6px;
@@ -46,161 +73,583 @@
       transition: all 150ms;
     }
     .safe-toggle:hover { background: rgba(204,98,71,0.15); }
+    .safe-toggle.active { background: rgba(204,98,71,0.25); border-color: var(--p31-coral); }
     
-    /* PHOS Orb */
-    .phos-orb {
+    /* Main Layout */
+    main {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+      min-height: calc(100vh - 200px);
+    }
+    
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 2rem;
+    }
+    .logo svg {
+      width: 100%;
+      height: 100%;
+      stroke: var(--p31-cyan);
+      stroke-width: 2;
+      fill: none;
+      filter: drop-shadow(0 0 20px rgba(77,184,168,0.3));
+    }
+    
+    h1 {
+      font-family: var(--p31-font-mono);
+      font-size: clamp(1.5rem, 5vw, 2.5rem);
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      color: var(--p31-cloud);
+    }
+    
+    .subtitle {
+      font-size: 1rem;
+      color: var(--p31-muted);
+      margin-bottom: 3rem;
+      max-width: 450px;
+    }
+    
+    /* Intent Grid */
+    .intent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      max-width: 700px;
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+    
+    .intent-btn {
+      background: rgba(22,25,32,0.8);
+      border: 1px solid var(--p31-glass-border);
+      border-radius: 12px;
+      padding: 1.5rem 1rem;
+      color: var(--p31-cloud);
+      font-family: var(--p31-font-sans);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 200ms ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      backdrop-filter: blur(4px);
+    }
+    .intent-btn:hover {
+      background: var(--p31-surface2);
+      border-color: var(--p31-cyan);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(77,184,168,0.15);
+    }
+    .intent-btn svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--p31-cyan);
+      stroke-width: 1.5;
+      fill: none;
+    }
+    
+    /* PHOS Direct Access Orb */
+    .phos-direct {
       position: fixed;
       bottom: 2rem;
       right: 2rem;
-      width: 60px;
-      height: 60px;
-      z-index: 9999;
+      width: 64px;
+      height: 64px;
+      background: rgba(22,25,32,0.9);
+      border: 1px solid var(--p31-cyan);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      filter: drop-shadow(0 0 10px rgba(77,184,168,0.4));
+      box-shadow: 0 0 30px rgba(77,184,168,0.2);
+      transition: all 0.3s ease;
+      z-index: 10001;
+      backdrop-filter: blur(4px);
+    }
+    .phos-direct:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 40px rgba(77,184,168,0.4);
+    }
+    .phos-direct svg {
+      width: 32px;
+      height: 32px;
+      stroke: var(--p31-cyan);
+      stroke-width: 2;
+      fill: none;
+    }
+    
+    /* PHOS Mascot Animation */
+    .phos-mascot {
+      cursor: pointer;
+      animation: phos-float 3s ease-in-out infinite, phos-glow 2s ease-in-out infinite;
+      filter: drop-shadow(0 0 15px rgba(77,184,168,0.4));
       transition: transform 0.3s ease;
     }
-    .phos-orb:hover { transform: scale(1.1); }
-    body.safe-mode .phos-orb { filter: grayscale(1); animation: none; }
-    
-    /* Power Level Indicator */
-    .power-level {
-      position: fixed;
-      bottom: 2rem;
-      right: 5rem;
-      z-index: 9998;
-      display: flex;
-      gap: 0.25rem;
+    .phos-mascot:hover {
+      transform: scale(1.1) rotate(5deg);
     }
-    .power-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--p31-muted);
-      transition: all 0.3s;
+    .phos-mascot:active {
+      transform: scale(0.95);
     }
-    .power-dot.active { background: var(--p31-cyan); box-shadow: 0 0 8px var(--p31-cyan); }
+    @keyframes phos-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes phos-glow {
+      0%, 100% { filter: drop-shadow(0 0 15px rgba(77,184,168,0.4)); }
+      50% { filter: drop-shadow(0 0 25px rgba(77,184,168,0.8)); }
+    }
+    @keyframes phos-blink {
+      0%, 90%, 100% { transform: scaleY(1); }
+      95% { transform: scaleY(0.1); }
+    }
+    .phos-eye {
+      transform-origin: center;
+      animation: phos-blink 4s ease-in-out infinite;
+    }
+    @keyframes phos-wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-10deg); }
+      75% { transform: rotate(10deg); }
+    }
+    .phos-wiggle {
+      animation: phos-wiggle 0.5s ease-in-out;
+    }
     
-    /* Main Content */
-    main { position: relative; z-index: 1; }
+    /* Footer - Centered & Styled */
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 2rem;
+      text-align: center;
+      font-family: var(--p31-font-mono);
+      font-size: 0.75rem;
+      color: var(--p31-muted);
+      border-top: 1px solid var(--p31-glass-border);
+      background: rgba(15,17,21,0.5);
+      backdrop-filter: blur(4px);
+    }
+    footer p {
+      margin: 0.25rem 0;
+      line-height: 1.8;
+    }
+    footer a {
+      color: var(--p31-cyan);
+      text-decoration: none;
+      margin: 0 0.5rem;
+      transition: color 150ms;
+    }
+    footer a:hover {
+      color: var(--p31-butter);
+      text-decoration: underline;
+    }
+    footer .commit {
+      color: var(--p31-lavender);
+      font-size: 0.7rem;
+    }
+    
+    /* Mobile */
+    @media (max-width: 600px) {
+      .intent-grid { grid-template-columns: 1fr 1fr; }
+      .phos-direct { bottom: 1rem; right: 1rem; width: 56px; height: 56px; }
+      footer { padding: 1.5rem 1rem; }
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      #starfield-canvas { display: none !important; }
+    }
   </style>
 </head>
 <body>
+  <button id="safeToggle" class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
+  <!-- Smart Starfield Canvas -->
   <canvas id="starfield-canvas"></canvas>
-  <button class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
   
-  
-  <div class="phos-orb" id="phos-orb" title="PHOS Navigation">
-    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="orb-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#4db8a8;stop-opacity:0.9"/>
-          <stop offset="100%" style="stop-color:#3ba372;stop-opacity:0.7"/>
-        </linearGradient>
-      </defs>
-      <polygon points="50,10 10,90 90,90" fill="none" stroke="url(#orb-grad)" stroke-width="2"/>
-      <polygon points="50,30 25,75 75,75" fill="url(#orb-grad)" opacity="0.5"/>
-    </svg>
-  </div>
-  <div class="power-level" id="power-level">
-    <div class="power-dot" data-level="0"></div><div class="power-dot" data-level="1"></div><div class="power-dot" data-level="2"></div><div class="power-dot" data-level="3"></div><div class="power-dot" data-level="4"></div><div class="power-dot" data-level="5"></div><div class="power-dot" data-level="6"></div>
-  </div>
-  
+  <!-- Safe Mode Toggle -->
+  <button class="safe-toggle" id="safeToggle" onclick="toggleSafeMode()">
+    Safe Mode
+  </button>
   
   <main>
-    
-  <div class="hero">
-    <div class="hero-logo">
-      <svg viewBox="0 0 200 200" width="120" height="120">
+    <!-- PHOS Mascot -->
+    <div id="phos-mascot" class="logo phos-mascot" aria-hidden="true" onclick="phosInteract()" title="Click me! I'm PHOS!">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="hero-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#4db8a8"/>
-            <stop offset="100%" style="stop-color:#3ba372"/>
+          <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#4db8a8;stop-opacity:0.9"/>
+            <stop offset="100%" style="stop-color:#3ba372;stop-opacity:0.7"/>
           </linearGradient>
+          <linearGradient id="faceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#d8d6d0;stop-opacity:0.95"/>
+            <stop offset="100%" style="stop-color:#b8b6b0;stop-opacity:0.9"/>
+          </linearGradient>
+          <filter id="phosGlow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
         </defs>
-        <polygon points="100,20 20,160 100,120 180,160" fill="none" stroke="url(#hero-grad)" stroke-width="3"/>
-        <polygon points="100,40 50,130 100,110 150,130" fill="url(#hero-grad)" opacity="0.5"/>
+        <g id="phosBody" transform="translate(100, 110)">
+          <path d="M0,-70 L-60,40 L0,20 Z" fill="rgba(77,184,168,0.3)" stroke="#4db8a8" stroke-width="2"/>
+          <path d="M0,-70 L60,40 L0,20 Z" fill="rgba(77,184,168,0.3)" stroke="#4db8a8" stroke-width="2"/>
+          <path d="M-60,40 L0,20 L60,40 L0,70 Z" fill="url(#bodyGrad)" stroke="#4db8a8" stroke-width="2" filter="url(#phosGlow)"/>
+          <ellipse cx="0" cy="45" rx="35" ry="20" fill="url(#faceGrad)" opacity="0.9"/>
+          <ellipse class="phos-eye" cx="-12" cy="42" rx="6" ry="7" fill="#0f1115"/>
+          <circle cx="-10" cy="40" r="2" fill="#fff" opacity="0.8"/>
+          <ellipse class="phos-eye" cx="12" cy="42" rx="6" ry="7" fill="#0f1115"/>
+          <circle cx="14" cy="40" r="2" fill="#fff" opacity="0.8"/>
+          <path id="phosMouth" d="M-8,55 Q0,58 8,55" stroke="#0f1115" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <line x1="-60" y1="40" x2="-85" y2="25" stroke="#cda852" stroke-width="1.5" opacity="0.6"/>
+          <line x1="60" y1="40" x2="85" y2="25" stroke="#cda852" stroke-width="1.5" opacity="0.6"/>
+          <circle cx="-85" cy="25" r="3" fill="#cda852" opacity="0.8"/>
+          <circle cx="85" cy="25" r="3" fill="#cda852" opacity="0.8"/>
+        </g>
       </svg>
     </div>
-    <h1>P31</h1>
-    <p class="tagline">For every family out there figuring it out as they go — help is on the way.</p>
-    <p class="subtitle">Phosphorus31 — Family mesh infrastructure for the neurodivergent operator</p>
-  </div>
-  
-  <div class="phos-panel" id="phos-panel">
-    <div class="phos-greeting">
-      <h1>Hello.</h1>
-      <p>For every family out there figuring it out as they go — help is on the way.</p>
+    
+    <h1>PHOS</h1>
+    <p class="subtitle">Phosphorus31 Operating System — Voice-first, inference-driven navigation for the mesh.</p>
+    
+    <!-- Direct Intent Navigation -->
+    <div class="intent-grid" role="navigation" aria-label="Primary navigation">
+      <button class="intent-btn" onclick="location.href='/cognitive-passport/index.html'">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z"/><path d="M12 12v10"/><path d="M12 12L2 7"/><path d="M12 12l10-5"/></svg>
+        Cognitive Passport
+      </button>
+      <button class="intent-btn" onclick="location.href='/fleet-portal.html'">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
+        Fleet Portal
+      </button>
+      <button class="intent-btn" onclick="location.href='/public/geodesic.html'">
+        <svg viewBox="0 0 24 24"><path d="M12 2l10 17H2L12 2z"/></svg>
+        Geodesic
+      </button>
+      <button class="intent-btn" onclick="location.href='/psych-e2e-live.html'">
+        <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10v4M10 10v4M14 10v4M18 10v4"/></svg>
+        Psych E2E
+      </button>
+      <button class="intent-btn" onclick="location.href='/glass-box.html'">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Glass Box
+      </button>
+      <button class="intent-btn" onclick="location.href='/agents.html'">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
+        Agents
+      </button>
     </div>
-    <div class="phos-question">
-      <h2>Whose mesh are we building today?</h2>
-      <div class="phos-choices">
-        
-        <a href="/passport" class="phos-choice" data-intent="SELF">
-          <span class="phos-icon">🙋</span>
-          <span class="phos-text">
-            <span class="phos-label">For Myself</span>
-            <span class="phos-hint">Passport, sovereign tools</span>
-          </span>
-          <span class="phos-arrow">→</span>
-        </a>
-        
-        <a href="/soup" class="phos-choice" data-intent="FAMILY">
-          <span class="phos-icon">🏠</span>
-          <span class="phos-text">
-            <span class="phos-label">For My Family</span>
-            <span class="phos-hint">Bonding, coordination, kids</span>
-          </span>
-          <span class="phos-arrow">→</span>
-        </a>
-        
-        <a href="/glass-box" class="phos-choice" data-intent="PRO">
-          <span class="phos-icon">💼</span>
-          <span class="phos-text">
-            <span class="phos-label">I'm a Professional</span>
-            <span class="phos-hint">Research, docs, operator tools</span>
-          </span>
-          <span class="phos-arrow">→</span>
-        </a>
-        
-        <a href="/welcome" class="phos-choice" data-intent="CRISIS">
-          <span class="phos-icon">🆘</span>
-          <span class="phos-text">
-            <span class="phos-label">I need help now</span>
-            <span class="phos-hint">Safe mode — minimal stimulation</span>
-          </span>
-          <span class="phos-arrow">→</span>
-        </a>
-        
-      </div>
-    </div>
-  </div>
-  
-  <footer class="site-footer">
-    <p>P31 Labs, Inc. · <a href="/welcome">Welcome</a> · <a href="/passport">Passport</a></p>
-  </footer>
-  
+    
+    <p style="font-size: 0.8rem; color: var(--p31-muted); max-width: 500px;">
+      WCD-PSYCH-MERGE-20260503 • 69 tests green • W-FLARE active • Bayesian routing
+    </p>
   </main>
   
+  <!-- PHOS Direct Access Orb -->
+  <div class="phos-direct" onclick="activatePhos()" role="button" aria-label="Activate PHOS voice navigation">
+    <svg viewBox="0 0 100 100">
+      <path d="M50 15 L15 80 L85 80 Z M50 15 L50 55 M15 80 L50 55 M85 80 L50 55"/>
+    </svg>
+  </div>
   
-  <script type="module">
-    import { Starfield } from '/public/lib/p31-starfield.mjs';
-    const starfield = new Starfield('starfield-canvas', {
-      surfaceId: 'index',
-      starCount: 150,
-      meshSync: true
-    });
+  <!-- Centered Footer -->
+  
+  <!-- PHOS Command & Control Panel -->
+  <section id="phos-command" style="margin-top: 3rem; padding: 2rem; background: var(--p31-surface); border-radius: 12px; border: 1px solid var(--p31-glass-border);">
+    <h2 style="color: var(--p31-cyan); font-size: 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+      PHOS Command & Control
+    </h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+      <!-- API Connections -->
+      <div style="padding: 1.5rem; background: var(--p31-surface2); border-radius: 8px; border: 1px solid var(--p31-glass-border);">
+        <h3 style="color: var(--p31-butter); font-size: 1rem; margin-bottom: 0.75rem;">🔌 API Connections</h3>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.875rem;">
+          <li><a href="/fleet-portal.html" style="color: var(--p31-cyan);">Fleet Portal</a> — Worker status</li>
+          <li><a href="/agents.html" style="color: var(--p31-cyan);">K4 Agents</a> — Agent hubs</li>
+          <li><a href="https://p31ca.org/api/passkey/" style="color: var(--p31-cyan);">Passkey API</a> — Auth endpoints</li>
+          <li><a href="https://p31ca.org/api/hubs" style="color: var(--p31-cyan);">Hubs API</a> — Life context</li>
+        </ul>
+      </div>
+      
+      <!-- Admin Access -->
+      <div style="padding: 1.5rem; background: var(--p31-surface2); border-radius: 8px; border: 1px solid var(--p31-glass-border);">
+        <h3 style="color: var(--p31-coral); font-size: 1rem; margin-bottom: 0.75rem;">🔐 Admin Access</h3>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.875rem;">
+          <li><a href="/command-center-terminal.html" style="color: var(--p31-cyan);">Command Center</a> — Local ops</li>
+          <li><a href="http://127.0.0.1:3131/" style="color: var(--p31-cyan);">EPCP Glass</a> — :3131</li>
+          <li><a href="/glass-box.html" style="color: var(--p31-cyan);">Glass Box</a> — Transparency</li>
+          <li><a href="/psych-e2e-live.html" style="color: var(--p31-cyan);">Psych E2E</a> — Testing</li>
+        </ul>
+      </div>
+      
+      <!-- Training -->
+      <div style="padding: 1.5rem; background: var(--p31-surface2); border-radius: 8px; border: 1px solid var(--p31-glass-border);">
+        <h3 style="color: var(--p31-phosphorus); font-size: 1rem; margin-bottom: 0.75rem;">📚 Training</h3>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.875rem;">
+          <li><a href="/p31-personal-howto.html" style="color: var(--p31-cyan);">Personal How-To</a> — Commands</li>
+          <li><a href="/docs/P31-STARTUP-PACKAGE.md" style="color: var(--p31-cyan);">Startup Package</a> — Begin</li>
+          <li><a href="/docs/P31-DEEP-DIVE.md" style="color: var(--p31-cyan);">Deep Dive</a> — Architecture</li>
+          <li><a href="/demo-tour.html" style="color: var(--p31-cyan);">Demo Tour</a> — Walkthrough</li>
+        </ul>
+      </div>
+      
+      <!-- SIC-POVM Fleet -->
+      <div style="padding: 1.5rem; background: var(--p31-surface2); border-radius: 8px; border: 1px solid var(--p31-glass-border);">
+        <h3 style="color: var(--p31-lavender); font-size: 1rem; margin-bottom: 0.75rem;">🔺 SIC-POVM Fleet</h3>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.875rem;">
+          <li><a href="/p31-sovereign-lab.html" style="color: var(--p31-cyan);">Sovereign Lab</a> — Dome</li>
+          <li><a href="/p31-quantum-material-u.html" style="color: var(--p31-cyan);">Quantum Material U</a> — Design</li>
+          <li><a href="/p31-slicer.html" style="color: var(--p31-cyan);">Slicer</a> — Kiri:Moto</li>
+          <li><a href="/soup.html" style="color: var(--p31-cyan);">C.A.R.S.</a> — Social Molecules</li>
+        </ul>
+      </div>
+      
+      <!-- Bots & Workers -->
+      <div style="padding: 1.5rem; background: var(--p31-surface2); border-radius: 8px; border: 1px solid var(--p31-glass-border);">
+        <h3 style="color: var(--p31-cyan); font-size: 1rem; margin-bottom: 0.75rem;">🤖 Bots & Workers</h3>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.875rem;">
+          <li><span style="color: var(--p31-butter);">FORGE</span> — Build/Deploy</li>
+          <li><span style="color: var(--p31-lavender);">COUNSEL</span> — Pro se/Legal</li>
+          <li><span style="color: var(--p31-coral);">SCHOLAR</span> — Research/Grants</li>
+          <li><span style="color: var(--p31-phosphorus);">SCRIBE</span> — Logging/WCD</li>
+        </ul>
+      </div>
+      
+      <!-- Sentinel Swarms -->
+      <div style="padding: 1.5rem; background: var(--p31-surface2); border-radius: 8px; border: 1px solid var(--p31-glass-border);">
+        <h3 style="color: var(--p31-coral); font-size: 1rem; margin-bottom: 0.75rem;">🛡️ Sentinel Swarms</h3>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.875rem;">
+          <li><a href="/garden-phos-probe.html" style="color: var(--p31-cyan);">Garden Probe</a> — Health check</li>
+          <li><a href="/p31-device-setup.html" style="color: var(--p31-cyan);">Device Setup</a> — Onboard</li>
+          <li><a href="/launch-readiness.html" style="color: var(--p31-cyan);">Launch Readiness</a> — Verify</li>
+          <li><span style="color: var(--p31-muted);">SENTINEL</span> — Edge security</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      <a href="/soup.html">C.A.R.S.</a>
+      <a href="/psych-e2e-live.html">Live Testing</a>
+      <a href="/psych-e2e-docs.html">Psych E2E Docs</a>
+      <a href="/phos-core-docs.html">PHOS Core</a>
+      <a href="/phos-mascot.html">Meet PHOS</a>
+    </p>
+    <p class="commit">
+      P31 Labs — EIN 42-1888158 — commit 4459dcc — Mesh Status: Online — PHOS v2.1.0
+    </p>
+  </footer>
+  
+  <!-- PHOS Atmosphere Core -->
+  <script src="/public/lib/p31-atmosphere-core.js"></script>
+  <script>
+    // Safe Mode Toggle
+    function toggleSafeMode() {
+      document.body.classList.toggle('safe-mode');
+      const btn = document.getElementById('safeToggle');
+      btn.classList.toggle('active');
+      localStorage.setItem('p31_safe_mode', document.body.classList.contains('safe-mode'));
+      
+      // Hide/show starfield
+      const starfield = document.getElementById('starfield-canvas');
+      if (starfield) {
+        starfield.style.display = document.body.classList.contains('safe-mode') ? 'none' : 'block';
+      }
+    }
+    
+    // Restore safe mode preference
+    if (localStorage.getItem('p31_safe_mode') === 'true') {
+      document.body.classList.add('safe-mode');
+      document.getElementById('safeToggle').classList.add('active');
+    }
+    
+    // PHOS Activation
+    function activatePhos() {
+      if (window.phosOS) {
+        window.phosOS.toggle();
+      } else {
+        phosInteract();
+      }
+    }
+    
+    // PHOS Mascot Interaction
+    const phosPhrases = [
+      "Hi! I'm PHOS! Need help navigating?",
+      "The mesh is online. Where would you like to go?",
+      "69 tests green. All systems stable!",
+      "Click any button to explore the P31 ecosystem.",
+      "Safe mode is always available in the top right!",
+      "I'm your voice-first navigator. PHOS v2.1.0!",
+      "W-FLARE persona is watching for quality control.",
+      "The tetrahedron has 4 vertices — like your family mesh!"
+    ];
+    
+    function phosInteract() {
+      const mascot = document.querySelector('.phos-mascot');
+      const mouth = document.getElementById('phosMouth');
+      
+      // Wiggle animation
+      mascot.classList.remove('phos-wiggle');
+      void mascot.offsetWidth;
+      mascot.classList.add('phos-wiggle');
+      
+      // Happy mouth
+      mouth.setAttribute('d', 'M-10,52 Q0,65 10,52');
+      
+      // Show random phrase as tooltip
+      const phrase = phosPhrases[Math.floor(Math.random() * phosPhrases.length)];
+      
+      // Create temporary speech bubble
+      let bubble = document.getElementById('phos-bubble');
+      if (!bubble) {
+        bubble = document.createElement('div');
+        bubble.id = 'phos-bubble';
+        bubble.style.cssText = 'position:fixed;top:25%;left:50%;transform:translateX(-50%);background:rgba(22,25,32,0.95);border:1px solid var(--p31-cyan);border-radius:16px;padding:1rem 1.5rem;font-size:0.85rem;max-width:300px;text-align:center;z-index:1000;pointer-events:none;transition:opacity 0.3s;color:var(--p31-cloud);font-family:var(--p31-font-mono);';
+        document.body.appendChild(bubble);
+      }
+      bubble.textContent = phrase;
+      bubble.style.opacity = '1';
+      
+      setTimeout(() => {
+        bubble.style.opacity = '0';
+        mouth.setAttribute('d', 'M-8,55 Q0,58 8,55');
+      }, 3000);
+    }
+    
+    // Respect prefers-reduced-motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.body.classList.add('safe-mode');
+    }
   </script>
   
-  
-  
+  <!-- Smart Starfield Implementation -->
   <script type="module">
-    import { PHOS } from '/public/lib/p31-phos-core.mjs';
-    window.phos = new PHOS({
-      mount: '#phos-orb',
-      pageId: 'index',
-      powerLevels: [0,1,2,3,4,5,6]
-    });
+    const canvas = document.getElementById('starfield-canvas');
+    if (!canvas || document.body.classList.contains('safe-mode')) {
+      if (canvas) canvas.style.display = 'none';
+    } else {
+      try {
+        // Dynamic import of starfield
+        const { initStarfield } = await import('/design-assets/starfield/p31-starfield.js');
+        
+        const ctx = canvas.getContext('2d');
+        let width, height, stars = [];
+        const STAR_COUNT = 150;
+        const CONNECTION_DISTANCE = 100;
+        const MAX_CONNECTIONS = 3;
+        
+        function resize() {
+          width = canvas.width = window.innerWidth;
+          height = canvas.height = window.innerHeight;
+        }
+        
+        function initStars() {
+          stars = [];
+          for (let i = 0; i < STAR_COUNT; i++) {
+            stars.push({
+              x: Math.random() * width,
+              y: Math.random() * height,
+              vx: (Math.random() - 0.5) * 0.3,
+              vy: (Math.random() - 0.5) * 0.3,
+              size: Math.random() * 1.5 + 0.5,
+              alpha: Math.random() * 0.5 + 0.3,
+              pulse: Math.random() * Math.PI * 2
+            });
+          }
+        }
+        
+        function draw() {
+          ctx.fillStyle = 'rgba(15, 17, 21, 0.3)';
+          ctx.fillRect(0, 0, width, height);
+          
+          const time = Date.now() * 0.001;
+          
+          // Update and draw stars
+          stars.forEach((star, i) => {
+            // Update position
+            star.x += star.vx;
+            star.y += star.vy;
+            star.pulse += 0.02;
+            
+            // Wrap around edges
+            if (star.x < 0) star.x = width;
+            if (star.x > width) star.x = 0;
+            if (star.y < 0) star.y = height;
+            if (star.y > height) star.y = 0;
+            
+            // Draw star with pulsing alpha
+            const pulseAlpha = star.alpha + Math.sin(star.pulse) * 0.1;
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(77, 184, 168, ${Math.max(0.1, pulseAlpha)})`;
+            ctx.fill();
+            
+            // Draw connections (K4 mesh visualization)
+            let connections = 0;
+            for (let j = i + 1; j < stars.length && connections < MAX_CONNECTIONS; j++) {
+              const other = stars[j];
+              const dx = star.x - other.x;
+              const dy = star.y - other.y;
+              const dist = Math.sqrt(dx * dx + dy * dy);
+              
+              if (dist < CONNECTION_DISTANCE) {
+                const alpha = (1 - dist / CONNECTION_DISTANCE) * 0.15;
+                ctx.beginPath();
+                ctx.moveTo(star.x, star.y);
+                ctx.lineTo(other.x, other.y);
+                ctx.strokeStyle = `rgba(77, 184, 168, ${alpha})`;
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+                connections++;
+              }
+            }
+          });
+          
+          requestAnimationFrame(draw);
+        }
+        
+        // Handle resize
+        window.addEventListener('resize', () => {
+          resize();
+          initStars();
+        });
+        
+        // Pause when tab hidden
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            // Starfield pauses automatically with requestAnimationFrame
+          }
+        });
+        
+        // Initialize SmartStarfield module
+        const starfield = new SmartStarfield('starfield-canvas', {
+          surfaceId: 'phos-landing',
+          meshSync: true,
+          coherenceSource: 'coherence-value'
+        });
+        
+        console.log('PHOS Starfield: K4 mesh visualization active');
+      } catch (e) {
+        console.log('Starfield disabled — Gray Rock fallback');
+        canvas.style.display = 'none';
+      }
+    }
   </script>
-  
 </body>
 </html>

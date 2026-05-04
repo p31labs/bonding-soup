@@ -1,160 +1,519 @@
 <!DOCTYPE html>
-<html lang="en" data-p31-appearance="hub">
+<html lang="en">
 <head>
+  <title>C.A.R.S. - Social Molecules</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>C.A.R.S. · P31</title>
-  <meta name="description" content="Phosphorus31 — Family mesh infrastructure for the neurodivergent operator">
-  <meta name="theme-color" content="#0f1115">
-  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  
   <link rel="stylesheet" href="/public/lib/p31-qmu-tokens.css">
-  <link rel="stylesheet" href="/p31-style.css">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
   <style>
-    /* Starfield Canvas */
-    #starfield-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.5;
-    }
-    body.safe-mode #starfield-canvas { display: none !important; }
-    
-    /* Safe Mode Toggle */
-    .safe-toggle {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      z-index: 10000;
-      padding: 0.5rem 0.75rem;
-      border: 1px solid rgba(204,98,71,0.3);
-      border-radius: 6px;
-      background: rgba(204,98,71,0.08);
-      color: var(--p31-coral);
-      font-family: var(--p31-font-mono);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 150ms;
-    }
-    .safe-toggle:hover { background: rgba(204,98,71,0.15); }
-    
-    /* PHOS Orb */
-    .phos-orb {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      width: 60px;
-      height: 60px;
-      z-index: 9999;
-      cursor: pointer;
-      filter: drop-shadow(0 0 10px rgba(77,184,168,0.4));
-      transition: transform 0.3s ease;
-    }
-    .phos-orb:hover { transform: scale(1.1); }
-    body.safe-mode .phos-orb { filter: grayscale(1); animation: none; }
-    
-    /* Power Level Indicator */
-    .power-level {
-      position: fixed;
-      bottom: 2rem;
-      right: 5rem;
-      z-index: 9998;
-      display: flex;
-      gap: 0.25rem;
-    }
-    .power-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--p31-muted);
-      transition: all 0.3s;
-    }
-    .power-dot.active { background: var(--p31-cyan); box-shadow: 0 0 8px var(--p31-cyan); }
-    
-    /* Main Content */
-    main { position: relative; z-index: 1; }
-  </style>
+:root {
+  --p31-void: #0b0d10; --p31-surface: #161920; --p31-surface2: #1c2028;
+  --p31-teal: #25897d; --p31-coral: #cc6247; --p31-butter: #cda852;
+  --p31-lavender: #8b7cc9; --p31-phosphorus: #3ba372; --p31-cyan: #4db8a8;
+  --p31-cloud: #d8d6d0; --p31-muted: #6b7280;
+  --p31-glass-border: rgba(255, 255, 255, 0.08);
+  --p31-font-sans: "Atkinson Hyperlegible", system-ui, sans-serif;
+  --p31-font-mono: "JetBrains Mono", monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--p31-void); color: var(--p31-cloud); font-family: var(--p31-font-sans); display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; -webkit-font-smoothing: antialiased; }
+:focus-visible { outline: 2px solid var(--p31-teal); outline-offset: 2px; border-radius: 4px; }
+a { color: inherit; text-decoration: none; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+body.safe-mode { --p31-void: #000; --p31-surface: #0a0a0a; --p31-surface2: #111; --p31-cloud: #fff; --p31-muted: #888; }
+body.safe-mode * { animation: none !important; transition: none !important; filter: none !important; }
+body.safe-mode .hide-safe { display: none !important; }
+body.safe-mode .show-safe { display: block !important; }
+.show-safe { display: none; }
+.btn-safe { padding: 0.5rem 0.75rem; border: 1px solid rgba(204,98,71,0.3); border-radius: 6px; background: rgba(204,98,71,0.08); color: var(--p31-coral); font-family: var(--p31-font-mono); font-size: 0.75rem; text-transform: uppercase; cursor: pointer; z-index: 100; transition: all 150ms; }
+.btn-safe:hover { background: rgba(204,98,71,0.15); }
+.top-nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--p31-glass-border); background: rgba(11,13,16,0.8); z-index: 50; backdrop-filter: blur(10px); }
+.ebc-footer { position: absolute; bottom: 0; width: 100%; padding: 1.5rem; display: flex; justify-content: center; gap: 2rem; border-top: 1px solid var(--p31-glass-border); background: var(--p31-surface); font-family: var(--p31-font-mono); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--p31-muted); z-index: 50;}
+.ebc-footer a:hover { color: var(--p31-cloud); }
+
+/* PHOS Mascot Personalities & Animations */
+.phos-wrap { display: flex; align-items: center; gap: 1rem; position: relative; z-index: 100; }
+.phos-character { width: 48px; height: 48px; cursor: pointer; filter: drop-shadow(0 0 10px rgba(37,137,125,0.4)); animation: float 4s ease-in-out infinite; transition: transform 0.2s; }
+.phos-character:hover { transform: scale(1.1) rotate(5deg); filter: drop-shadow(0 0 15px rgba(37,137,125,0.8)); }
+.phos-eye { animation: blink 4s infinite; transform-origin: center; }
+.phos-bubble { position: absolute; left: 60px; top: 10px; background: var(--p31-surface2); border: 1px solid var(--p31-teal); padding: 0.75rem 1rem; border-radius: 8px 8px 8px 0; font-family: var(--p31-font-mono); font-size: 0.8rem; color: var(--p31-cloud); opacity: 0; pointer-events: none; transform: translateX(-10px); transition: all 0.3s cubic-bezier(0.19,1,0.22,1); white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+.phos-bubble.active { opacity: 1; transform: translateX(0); }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes blink { 0%, 96%, 98% { transform: scaleY(1); } 97%, 99% { transform: scaleY(0.1); } }
+
+.layout { display: flex; height: calc(100vh - 146px); width: 100%; position: relative; }
+.canvas-container { flex: 1; position: relative; background: radial-gradient(circle at center, rgba(37,137,125,0.1) 0%, var(--p31-void) 70%); }
+canvas { display: block; width: 100%; height: 100%; }
+.hud-panel { width: 320px; background: var(--p31-surface2); border-left: 1px solid var(--p31-glass-border); padding: 2rem; overflow-y: auto; z-index: 10; display: flex; flex-direction: column; gap: 1.5rem;}
+.hud-title { font-family: var(--p31-font-mono); font-size: 0.8rem; color: var(--p31-teal); text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--p31-glass-border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;}
+.ledger-item { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: rgba(255,255,255,0.02); border: 1px solid var(--p31-glass-border); border-radius: 6px; font-family: var(--p31-font-mono); font-size: 0.85rem;}
+.ledger-item span.vol { color: var(--p31-butter); font-weight: 700; }
+.coherence-score { font-size: 2.5rem; font-weight: 700; color: var(--p31-phosphorus); letter-spacing: -0.02em; }
+
+/* Gray Rock Fallback List */
+.safe-ledger { padding: 2rem; max-width: 600px; margin: 0 auto; width: 100%; }
+.safe-ledger table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+.safe-ledger th, .safe-ledger td { text-align: left; padding: 0.75rem; border-bottom: 1px solid #333; font-family: var(--p31-font-mono); font-size: 0.9rem;}
+.safe-ledger th { color: #888; text-transform: uppercase; font-size: 0.75rem; }
+</style>
 </head>
 <body>
-  <canvas id="starfield-canvas"></canvas>
-  <button class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
-  
-  
-  <div class="phos-orb" id="phos-orb" title="PHOS Navigation">
-    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="orb-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#4db8a8;stop-opacity:0.9"/>
-          <stop offset="100%" style="stop-color:#3ba372;stop-opacity:0.7"/>
-        </linearGradient>
-      </defs>
-      <polygon points="50,10 10,90 90,90" fill="none" stroke="url(#orb-grad)" stroke-width="2"/>
-      <polygon points="50,30 25,75 75,75" fill="url(#orb-grad)" opacity="0.5"/>
-    </svg>
-  </div>
-  <div class="power-level" id="power-level">
-    <div class="power-dot" data-level="0"></div><div class="power-dot" data-level="1"></div><div class="power-dot" data-level="2"></div><div class="power-dot" data-level="3"></div><div class="power-dot" data-level="4"></div><div class="power-dot" data-level="5"></div><div class="power-dot" data-level="6"></div>
-  </div>
-  
-  
-  <main>
-    
-  <div class="cars-container">
-    <header class="cars-header">
-      <h1>C.A.R.S.</h1>
-      <p>Cooperative Affective Realtime Sim · Social Molecules</p>
-    </header>
-    <div class="cars-stage">
-      <canvas id="cars-canvas"></canvas>
-      <div class="k4-overlay">
-        <div class="vertex" data-vertex="will">Will</div>
-        <div class="vertex" data-vertex="sj">S.J.</div>
-        <div class="vertex" data-vertex="wj">W.J.</div>
-        <div class="vertex" data-vertex="christyn">Christyn</div>
+<canvas id="starfield-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.6;"></canvas>
+
+  <nav class="top-nav">
+    <div style="display:flex; align-items:center; gap: 1.5rem;">
+      <div class="phos-wrap hide-safe">
+        <svg class="phos-character" viewBox="0 0 100 100" onclick="triggerPhos()">
+          <defs>
+            <linearGradient id="phosGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="var(--p31-teal)" />
+              <stop offset="100%" stop-color="var(--p31-phosphorus)" />
+            </linearGradient>
+          </defs>
+          <path d="M50 15 L15 80 L85 80 Z" fill="url(#phosGrad)" stroke="var(--p31-void)" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M50 15 L50 55 M15 80 L50 55 M85 80 L50 55" stroke="rgba(255,255,255,0.2)" stroke-width="2" />
+          <g class="phos-eye">
+            <ellipse cx="40" cy="65" rx="3" ry="5" fill="#0b0d10" />
+            <ellipse cx="60" cy="65" rx="3" ry="5" fill="#0b0d10" />
+            <circle cx="41" cy="63" r="1" fill="#ffffff" />
+            <circle cx="61" cy="63" r="1" fill="#ffffff" />
+          </g>
+        </svg>
+        <div class="phos-bubble" id="phosSpeech">Hi! I'm PHOS!</div>
       </div>
+      <script>
+        const phrases = [
+          "The mesh is holding strong today.",
+          "Larmor frequency optimized at 863Hz.",
+          "Adjusting ontological volume...",
+          "Remember: It's okay to hit Safe Mode.",
+          "I see 4 vertices and 6 edges. Perfect.",
+          "Buffering high-voltage emotional data.",
+          () => { const coherence = document.getElementById('coherenceDisplay').textContent; return `Starfield pulsing at ${coherence} coherence. Beautiful.`; },
+          () => { const count = Math.floor(Math.random() * 20) + 100; return `${count} stars in the field. Each one a connection.`; },
+          "The constellation shifts as you drag the nodes.",
+          "Stars breathe with the same rhythm as the mesh.",
+          "Can you see the K4 pattern in the starfield?"
+        ];
+        function triggerPhos() {
+          const bubble = document.getElementById('phosSpeech');
+          let phrase = phrases[Math.floor(Math.random() * phrases.length)];
+          if(typeof phrase === 'function') phrase = phrase();
+          bubble.textContent = phrase;
+          bubble.classList.add('active');
+          setTimeout(() => bubble.classList.remove('active'), 4000);
+        }
+        setInterval(() => {
+          if(Math.random() > 0.7 && !document.body.classList.contains('safe-mode')) {
+            const coherence = parseInt(document.getElementById('coherenceDisplay').textContent) || 92;
+            if(coherence > 90 && Math.random() > 0.5) {
+              const bubble = document.getElementById('phosSpeech');
+              bubble.textContent = "The stars align with high coherence!";
+              bubble.classList.add('active');
+              setTimeout(() => bubble.classList.remove('active'), 3000);
+            }
+          }
+        }, 15000);
+      </script>
+      <div style="font-weight: 700; font-size: 1.1rem; letter-spacing: -0.02em;">C.A.R.S. <span style="font-weight:400; color:var(--p31-muted)">| Social Molecules</span></div>
     </div>
-    <div class="cars-controls">
-      <button onclick="cars.reset()">Reset</button>
-      <button onclick="cars.togglePhysics()">Physics</button>
-      <button onclick="cars.toggleMesh()">Mesh</button>
+    <button id="safeModeBtn" class="btn-safe">Safe Mode</button>
+  </nav>
+
+  <div class="layout">
+    <div class="canvas-container hide-safe" id="canvasWrapper">
+      <canvas id="moleculeCanvas"></canvas>
+    </div>
+    <aside class="hud-panel hide-safe">
+      <div>
+        <div class="hud-title">System Coherence</div>
+        <div class="coherence-score" id="coherenceDisplay">92%</div>
+        <div style="font-size: 0.8rem; color: var(--p31-muted);">Larmor synchronization stable.</div>
+      </div>
+      <div>
+        <div class="hud-title">L.O.V.E. Ledger (Edges)</div>
+        <div style="display:flex; flex-direction:column; gap:0.5rem;" id="ledgerList"></div>
+      </div>
+      <div style="margin-top:auto; font-size:0.75rem; color:var(--p31-muted); text-align:center;">
+        $$\text{Coherence} = \frac{\sum E_w}{V \times (V-1) / 2}$$ <br/>
+        Drag nodes to adjust tension.
+      </div>
+    </aside>
+    <div class="safe-ledger show-safe">
+      <h2 style="font-weight:400; margin-bottom: 0.5rem;">Static Relational Ledger</h2>
+      <p style="color:#888; font-size: 0.85rem; margin-bottom: 2rem;">Physics simulation suspended to preserve executive function.</p>
+      <table>
+        <thead><tr><th>Vertex A</th><th>Vertex B</th><th>Ontological Volume</th></tr></thead>
+        <tbody id="safeTableBody"></tbody>
+      </table>
     </div>
   </div>
-  <script type="module">
-    import { CARSSim } from '/public/lib/p31-cars.mjs';
-    window.cars = new CARSSim('cars-canvas');
+
+  <footer class="ebc-footer">
+    <a href="/index.html">PHOS Home</a>
+    <a href="/psych-e2e-docs.html">Psych E2E Docs</a>
+    <span>P31 Labs — EIN 42-1888158 — C.A.R.S. v2.2 — PHOS Protected</span>
+  </footer>
+
+  <script src="/public/lib/p31-smart-starfield.js"></script>
+<script src="/public/lib/p31-atmosphere-core.js"></script>
+  <script>
+    // ============================================
+    // 1. DATA STRUCTURES (K4 Mesh)
+    // ============================================
+    const nodes = [
+      { id: 'W', label: 'FORGE', color: '#25897d', x: 0, y: 0, vx: 0, vy: 0 },
+      { id: 'C', label: 'COUNSEL', color: '#cc6247', x: 0, y: 0, vx: 0, vy: 0 },
+      { id: 'SJ', label: 'SCHOLAR', color: '#3ba372', x: 0, y: 0, vx: 0, vy: 0 },
+      { id: 'WJ', label: 'SCRIBE', color: '#8b7cc9', x: 0, y: 0, vx: 0, vy: 0 }
+    ];
+
+    const edges = [
+      { source: 0, target: 1, weight: 8 },
+      { source: 0, target: 2, weight: 10 },
+      { source: 0, target: 3, weight: 7 },
+      { source: 1, target: 2, weight: 6 },
+      { source: 1, target: 3, weight: 9 },
+      { source: 2, target: 3, weight: 5 }
+    ];
+
+    // ============================================
+    // 2. CANVAS & ENGINE SETUP
+    // ============================================
+    const canvas = document.getElementById('moleculeCanvas');
+    let ctx = canvas.getContext('2d');
+    let animationId;
+    let width, height;
+    let draggedNode = null;
+    let dpr = window.devicePixelRatio || 1;
+
+    // ============================================
+    // 3. VISUAL EFFECT CLASSES
+    // ============================================
+    class QuantumFoam {
+      constructor(count = 70) {
+        this.particles = Array.from({length: count}, () => this.createParticle());
+      }
+      createParticle() {
+        return {
+          x: Math.random() * width, y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
+          size: Math.random() * 1.5, life: Math.random() * 100
+        };
+      }
+      update() {
+        this.particles.forEach(p => {
+          p.x += p.vx; p.y += p.vy; p.life -= 0.3;
+          if(p.life <= 0 || p.x < 0 || p.x > width || p.y < 0 || p.y > height) {
+            Object.assign(p, this.createParticle(), {life: 100});
+          }
+        });
+      }
+      draw() {
+        this.particles.forEach(p => {
+          const alpha = Math.min(1, p.life / 20) * 0.2;
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(77, 184, 168, ${alpha})`; ctx.fill();
+        });
+      }
+    }
+
+    class DragTrail {
+      constructor(maxPoints = 12) { this.points = []; this.maxPoints = maxPoints; }
+      addPoint(x, y) {
+        this.points.push({x, y, age: 0});
+        if(this.points.length > this.maxPoints) this.points.shift();
+      }
+      update() {
+        this.points.forEach(p => p.age++);
+        this.points = this.points.filter(p => p.age < this.maxPoints);
+      }
+      draw() {
+        if(this.points.length < 2) return;
+        ctx.beginPath();
+        ctx.moveTo(this.points[0].x, this.points[0].y);
+        for(let i = 1; i < this.points.length; i++) ctx.lineTo(this.points[i].x, this.points[i].y);
+        ctx.strokeStyle = 'rgba(77, 184, 168, 0.4)';
+        ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        ctx.stroke();
+      }
+    }
+
+    class ParticleStream {
+      constructor(count = 5) {
+        this.particles = Array.from({length: count}, (_, i) => ({
+          offset: (i / count) * 100, speed: 0.15 + Math.random() * 0.2, size: 1.5 + Math.random() * 1.5
+        }));
+      }
+      update() {
+        this.particles.forEach(p => { p.offset += p.speed; if(p.offset > 100) p.offset = 0; });
+      }
+      draw(n1, n2, cpX, cpY) {
+        this.particles.forEach(p => {
+          const t = p.offset / 100;
+          const x = (1-t)*(1-t)*n1.x + 2*(1-t)*t*cpX + t*t*n2.x;
+          const y = (1-t)*(1-t)*n1.y + 2*(1-t)*t*cpY + t*t*n2.y;
+          ctx.beginPath(); ctx.arc(x, y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${0.3 + (p.size / 3) * 0.5})`; ctx.fill();
+        });
+      }
+    }
+
+    const foam = new QuantumFoam(70);
+    const mouseTrail = new DragTrail();
+    edges.forEach(e => e.stream = new ParticleStream(5));
+
+    // ============================================
+    // 4. COLOR UTILITIES
+    // ============================================
+    function adjustColor(color, amount) {
+      return '#' + color.replace(/^#/, '').match(/.{2}/g).map(c => 
+        Math.max(0, Math.min(255, parseInt(c, 16) + amount)).toString(16).padStart(2, '0')
+      ).join('');
+    }
+
+    // ============================================
+    // 5. DRAWING ROUTINES
+    // ============================================
+    function drawCurvedEdge(n1, n2, weight, idx, time) {
+      const midX = (n1.x + n2.x) / 2;
+      const midY = (n1.y + n2.y) / 2;
+      const dx = n2.x - n1.x; const dy = n2.y - n1.y;
+      const len = Math.sqrt(dx*dx + dy*dy) || 1;
+      const dir = idx % 2 === 0 ? 1 : -1;
+      const controlOffset = 30 * dir;
+      const cpX = midX + (-dy / len * controlOffset);
+      const cpY = midY + (dx / len * controlOffset);
+      
+      const grad = ctx.createLinearGradient(n1.x, n1.y, n2.x, n2.y);
+      grad.addColorStop(0, `${n1.color}66`);
+      grad.addColorStop(0.5, `rgba(77, 184, 168, ${Math.min(1, weight/10)})`);
+      grad.addColorStop(1, `${n2.color}66`);
+      
+      ctx.beginPath();
+      ctx.moveTo(n1.x, n1.y);
+      ctx.quadraticCurveTo(cpX, cpY, n2.x, n2.y);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = weight;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      const wavePos = (time * 100 + idx * 50) % len;
+      const t = wavePos / len;
+      const waveX = (1-t)*(1-t)*n1.x + 2*(1-t)*t*cpX + t*t*n2.x;
+      const waveY = (1-t)*(1-t)*n1.y + 2*(1-t)*t*cpY + t*t*n2.y;
+      
+      ctx.beginPath();
+      ctx.arc(waveX, waveY, 4 + (weight/2), 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(255,255,255,0.4)`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      return { cpX, cpY };
+    }
+
+    function drawUpgradedNode(n, idx, time) {
+      const pulseScale = 1 + Math.sin(time * 3 + idx) * 0.05;
+      const baseRadius = 24;
+      const r = baseRadius * pulseScale;
+
+      const rings = [
+        { rad: r + 15, speed: 0.5, dash: [10, 8], w: 1, alpha: 0.4 },
+        { rad: r + 8,  speed: -0.8, dash: [4, 4], w: 1.5, alpha: 0.6 }
+      ];
+      rings.forEach(ring => {
+        ctx.save(); ctx.translate(n.x, n.y); ctx.rotate(time * ring.speed + idx);
+        ctx.beginPath(); ctx.arc(0, 0, ring.rad, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(255,255,255,${ring.alpha})`;
+        ctx.lineWidth = ring.w; ctx.setLineDash(ring.dash); ctx.stroke();
+        ctx.restore();
+      });
+
+      for(let i=0; i<5; i++) {
+        const angle = time + (i * Math.PI * 2 / 5) + idx;
+        const dist = r + 4 + Math.sin(time * 5 + i)*2;
+        ctx.beginPath();
+        ctx.arc(n.x + Math.cos(angle)*dist, n.y + Math.sin(angle)*dist, 1.5, 0, Math.PI*2);
+        ctx.fillStyle = n.color; ctx.fill();
+      }
+
+      const grad = ctx.createRadialGradient(n.x - r*0.3, n.y - r*0.3, 0, n.x, n.y, r);
+      grad.addColorStop(0, adjustColor(n.color, 60));
+      grad.addColorStop(0.4, n.color);
+      grad.addColorStop(1, adjustColor(n.color, -50));
+      
+      ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = grad; ctx.fill();
+
+      const hGrad = ctx.createRadialGradient(n.x - r*0.35, n.y - r*0.35, 0, n.x - r*0.35, n.y - r*0.35, r*0.4);
+      hGrad.addColorStop(0, 'rgba(255,255,255,0.8)');
+      hGrad.addColorStop(1, 'transparent');
+      ctx.beginPath(); ctx.arc(n.x - r*0.35, n.y - r*0.35, r*0.4, 0, Math.PI*2);
+      ctx.fillStyle = hGrad; ctx.fill();
+
+      ctx.font = 'bold 12px "JetBrains Mono", monospace';
+      const tw = ctx.measureText(n.id).width;
+      ctx.fillStyle = 'rgba(11, 13, 16, 0.85)';
+      ctx.beginPath(); ctx.roundRect(n.x - tw/2 - 6, n.y - 10, tw + 12, 20, 4); ctx.fill();
+      ctx.strokeStyle = n.color; ctx.lineWidth = 1; ctx.stroke();
+      
+      ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(n.id, n.x, n.y);
+      
+      ctx.font = '10px "JetBrains Mono", monospace';
+      ctx.fillStyle = 'rgba(216, 214, 208, 0.8)';
+      ctx.fillText(n.label, n.x, n.y + r + 22);
+    }
+
+    function drawCoherenceBurst(x, y) {
+      for(let i=0; i<8; i++) {
+        foam.particles.push({
+          x: x, y: y,
+          vx: (Math.random()-0.5)*8, vy: (Math.random()-0.5)*8,
+          size: Math.random()*3 + 1, life: 30
+        });
+      }
+    }
+
+    // ============================================
+    // 6. PHYSICS & ENGINE LOOP
+    // ============================================
+    function resize() {
+      const wrapper = document.getElementById('canvasWrapper');
+      if(!wrapper) return;
+      width = wrapper.clientWidth; height = wrapper.clientHeight;
+      canvas.width = width * dpr; canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+      
+      if(!animationId) {
+        nodes.forEach((n, i) => {
+          n.x = width/2 + Math.cos(i*Math.PI/2)*100;
+          n.y = height/2 + Math.sin(i*Math.PI/2)*100;
+        });
+      }
+    }
+
+    function physicsStep() {
+      const center = { x: width / 2, y: height / 2 };
+      for(let i=0; i<nodes.length; i++) {
+        for(let j=i+1; j<nodes.length; j++) {
+          const dx = nodes[j].x - nodes[i].x; const dy = nodes[j].y - nodes[i].y;
+          const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+          const force = 6000 / (dist * dist);
+          nodes[i].vx -= (dx/dist)*force; nodes[i].vy -= (dy/dist)*force;
+          nodes[j].vx += (dx/dist)*force; nodes[j].vy += (dy/dist)*force;
+        }
+      }
+      edges.forEach(e => {
+        const n1 = nodes[e.source]; const n2 = nodes[e.target];
+        const dx = n2.x - n1.x; const dy = n2.y - n1.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const targetDist = 280 - (e.weight * 12); 
+        const force = (dist - targetDist) * 0.03;
+        n1.vx += (dx/dist)*force; n1.vy += (dy/dist)*force;
+        n2.vx -= (dx/dist)*force; n2.vy -= (dy/dist)*force;
+      });
+      nodes.forEach(n => {
+        if(draggedNode !== n) {
+          n.vx += (center.x - n.x) * 0.003; n.vy += (center.y - n.y) * 0.003;
+          n.vx *= 0.85; n.vy *= 0.85;
+          n.x += n.vx; n.y += n.vy;
+        }
+      });
+    }
+
+    function updateLedger() {
+      const list = document.getElementById('ledgerList');
+      const safeBody = document.getElementById('safeTableBody');
+      list.innerHTML = ''; safeBody.innerHTML = '';
+      let totalWeight = 0;
+      
+      edges.forEach(e => {
+        totalWeight += e.weight;
+        const n1 = nodes[e.source]; const n2 = nodes[e.target];
+        list.innerHTML += `<div class="ledger-item"><span>${n1.id} ⟷ ${n2.id}</span><span class="vol">${e.weight}u</span></div>`;
+        safeBody.innerHTML += `<tr><td>${n1.label}</td><td>${n2.label}</td><td>${e.weight}u</td></tr>`;
+      });
+
+      const coherence = Math.round((totalWeight / 60) * 100);
+      document.getElementById('coherenceDisplay').textContent = `${coherence}%`;
+    }
+
+    function animate() {
+      if(document.body.classList.contains('safe-mode')) return;
+      
+      const time = Date.now() * 0.001;
+      ctx.clearRect(0, 0, width, height);
+      
+      physicsStep();
+      
+      foam.update(); foam.draw();
+      mouseTrail.update(); mouseTrail.draw();
+
+      edges.forEach((e, idx) => {
+        const { cpX, cpY } = drawCurvedEdge(nodes[e.source], nodes[e.target], e.weight, idx, time);
+        e.stream.update();
+        e.stream.draw(nodes[e.source], nodes[e.target], cpX, cpY);
+      });
+
+      nodes.forEach((n, idx) => drawUpgradedNode(n, idx, time));
+      
+      animationId = requestAnimationFrame(animate);
+    }
+
+    // ============================================
+    // 7. EVENT LISTENERS
+    // ============================================
+    canvas.addEventListener('mousedown', e => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left; const my = e.clientY - rect.top;
+      draggedNode = nodes.find(n => Math.hypot(n.x - mx, n.y - my) < 35);
+      if(draggedNode) drawCoherenceBurst(draggedNode.x, draggedNode.y);
+    });
+
+    window.addEventListener('mousemove', e => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left; const my = e.clientY - rect.top;
+      if(draggedNode) {
+        draggedNode.x = mx; draggedNode.y = my;
+        mouseTrail.addPoint(mx, my);
+      }
+    });
+
+    window.addEventListener('mouseup', () => draggedNode = null);
+    window.addEventListener('resize', resize);
+
+    document.getElementById('safeModeBtn').addEventListener('click', () => {
+      const isSafe = document.body.classList.toggle('safe-mode');
+      if (isSafe) {
+        cancelAnimationFrame(animationId);
+        ctx.clearRect(0, 0, width, height);
+      } else {
+        resize();
+        animate();
+      }
+    });
+
+    window.onload = () => {
+      resize();
+      updateLedger();
+      animate();
+      if(document.body.classList.contains('safe-mode')) {
+        cancelAnimationFrame(animationId);
+      }
+    };
   </script>
-  
-  </main>
-  
-  
-  <script type="module">
-    import { Starfield } from '/public/lib/p31-starfield.mjs';
-    const starfield = new Starfield('starfield-canvas', {
-      surfaceId: 'soup',
-      starCount: 100,
-      meshSync: true
+<button id="safeToggle" class="safe-toggle" onclick="document.body.classList.toggle('safe-mode')">Safe Mode</button>
+<script>
+    // Initialize Smart Starfield
+    const starfield = new SmartStarfield('starfield-canvas', {
+      surfaceId: 'surface-soup',
+      meshSync: true,
+      starCount: 100
     });
   </script>
-  
-  
-  
-  <script type="module">
-    import { PHOS } from '/public/lib/p31-phos-core.mjs';
-    window.phos = new PHOS({
-      mount: '#phos-orb',
-      pageId: 'soup',
-      powerLevels: [0,1,2,3,4,5,6]
-    });
-  </script>
-  
 </body>
 </html>

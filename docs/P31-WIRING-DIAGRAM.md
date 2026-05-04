@@ -903,6 +903,7 @@ npm run verify  (root, ordered)
 ├── verify:constants                    ← apply:constants golden behavior
 ├── verify:mesh-canon
 ├── verify:ecosystem
+├── verify:ecosystem-bridge
 ├── verify:live-fleet:p31ca-mirror
 ├── verify:production-readiness
 ├── verify:launch-lane-sync
@@ -925,6 +926,7 @@ npm run verify  (root, ordered)
 ├── verify:command-center
 ├── verify:p31ca-contracts              ← ground-truth + synergetic + lattice oracle + economy
 ├── verify:egg-hunt
+├── verify:bug-bounty
 ├── verify:onboarding                   ← planetary onboard anchors
 ├── verify:fleet-portal
 ├── verify:cars-wire                    ← C.A.R.S. WS message alignment

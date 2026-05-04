@@ -29,7 +29,10 @@ export function writeLiveStatus(status) {
       JSON.stringify({ schema: LIVE_SCHEMA, ...status, updatedAt: new Date().toISOString() }, null, 2),
       "utf8"
     );
-  } catch (_) {}
+  } catch (err) {
+    // Log to stderr for visibility - don't swallow errors silently
+    console.error(`[glass-box-emitter] Failed to write live status: ${err.message}`);
+  }
 }
 
 /** Clear the live file (written on run completion). */

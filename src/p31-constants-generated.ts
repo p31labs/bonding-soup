@@ -5,7 +5,7 @@
  * Cross-artefact map: p31-alignment.json (p31.alignment/1.0.0) — docs/P31-ALIGNMENT-SYSTEM.md
  */
 export const P31_CONSTANTS = {
-  "updated": "2026-04-30",
+  "updated": "2026-05-04",
   "organization": {
     "legalName": "P31 Labs, Inc.",
     "ein": "42-1888158",
@@ -18,16 +18,30 @@ export const P31_CONSTANTS = {
     "registeredAgent": "William Johnson",
     "registeredAgentAddress": "401 Powder Horn Rd, Saint Marys, GA, 31558",
     "registeredAgentCounty": "Camden",
-    "status501c3": "filed_pending_irs",
+    "status501c3": "determined_active",
     "filedDate": "2026-04-30",
+    "determinationDate": "2026-05-04",
+    "determinationLetterReceived": true,
+    "irsDeterminationLetterDate": "2026-05-04",
     "payGovTrackingId": "281TLBGO",
     "agencyTrackingId": "77374172589",
-    "applicationFee": 275
+    "applicationFee": 275,
+    "deductibilityStatus": "tax_deductible_donations_enabled",
+    "publicCharityStatus": "170(b)(1)(A)(vi)"
   },
   "contact": {
     "primaryEmail": "will@p31ca.org",
+    "adminEmail": "admin@p31ca.org",
     "githubOrg": "p31labs",
-    "kofiUrl": "https://ko-fi.com/trimtab69420"
+    "kofiUrl": "https://ko-fi.com/trimtab69420",
+    "googleWorkspace": {
+      "domain": "p31ca.org",
+      "adminConsole": "https://admin.google.com/p31ca.org",
+      "mxRecords": true,
+      "dkimConfigured": true,
+      "dmarcPolicy": "quarantine",
+      "bridgeWorker": "p31-google-bridge.trimtab-signal.workers.dev"
+    }
   },
   "payment": {
     "stripeWorkerHost": "donate-api.phosphorus31.org",
@@ -66,7 +80,8 @@ export const P31_CONSTANTS = {
   "research": {
     "orcid": "0009-0002-2492-9079",
     "zenodoPublicationCount": 22,
-    "researchSeriesCount": 20,
+    "zenodoDraftCount": 2,
+    "researchSeriesCount": 22,
     "standalonePublicationCount": 2,
     "paperXiiStatus": "published",
     "zenodoSearchUrl": "https://zenodo.org/search?q=creators.name:%22Johnson%2C%20William%20R.%22&l=list&p=1&s=25&sort=newest",

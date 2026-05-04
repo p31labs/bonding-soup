@@ -105,13 +105,16 @@ export function shannonEntropy(tokens) {
 }
 
 /**
- * Normalized entropy H / log₂(N) → [0, 1]
+ * Normalized entropy H / log₂(U) → [0, 1]  [Opus2026 correction]
  * 0 = perfectly repetitive; 1 = maximum variety (high cognitive density)
+ * CORRECTION: Normalizes against UNIQUE tokens, not total tokens.
+ * A page with 1000 tokens but only 50 unique words has max entropy log₂(50).
  */
 export function shannonNorm(tokens) {
   if (!tokens || tokens.length <= 1) return 0;
   const H = shannonEntropy(tokens);
-  return H / Math.log2(tokens.length);
+  const uniqueCount = new Set(tokens).size;
+  return uniqueCount <= 1 ? 0 : H / Math.log2(uniqueCount);
 }
 
 // ─── WCAG 2.2 Contrast ─────────────────────────────────────────────────────────
@@ -253,8 +256,24 @@ export function targetSizePass(widthPx, heightPx) {
 // ─── Bootstrap 95% CI ──────────────────────────────────────────────────────────
 
 /**
+ * Lookup table for t-critical values (two-tailed, α=0.05) [Student1908]
+ * Normal approximation (1.96) unreliable for n < 30 [Opus2026 correction]
+ */
+const T_CRIT = { 1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571,
+                 6: 2.447, 7: 2.365, 8: 2.306, 9: 2.262, 10: 2.228,
+                 15: 2.131, 20: 2.086, 25: 2.060, 30: 2.042 };
+
+function tCritical(df) {
+  if (df >= 30) return 1.96;
+  const keys = Object.keys(T_CRIT).map(Number);
+  const closest = keys.reduce((a, b) => Math.abs(b - df) < Math.abs(a - df) ? b : a);
+  return T_CRIT[closest];
+}
+
+/**
  * Parametric 95% CI from a sample of scores
- * Uses normal approximation: x̄ ± 1.96 × σ/√n
+ * Uses t-distribution: x̄ ± t(α/2, n-1) × σ/√n  [Opus2026 correction]
+ * More honest about uncertainty with small samples (n < 30 typical in E2E runs)
  * @param {number[]} scores
  * @returns {[number, number]}  [lo, hi]
  */
@@ -265,8 +284,9 @@ export function ci95(scores) {
   if (n === 1) return [Math.max(0, mean - 10), Math.min(100, mean + 10)];
   const variance = scores.reduce((s, x) => s + (x - mean) ** 2, 0) / (n - 1);
   const se = Math.sqrt(variance / n);
+  const t = tCritical(n - 1);
   return [
-    Math.max(0, Math.round((mean - 1.96 * se) * 10) / 10),
-    Math.min(100, Math.round((mean + 1.96 * se) * 10) / 10),
+    Math.max(0, Math.round((mean - t * se) * 10) / 10),
+    Math.min(100, Math.round((mean + t * se) * 10) / 10),
   ];
 }

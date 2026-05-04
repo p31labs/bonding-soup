@@ -98,8 +98,16 @@ const MEASURE_DOM = /* js */ `
   if (smallestFontPx === 999) smallestFontPx = 16;
 
   // 9. Reduced-motion — check if any CSS animation ignores prefers-reduced-motion
-  //    Proxy: if animationCount > 0, assume violation (conservative; good pages honour it)
-  const motionViolation = animations > 3;
+  //    [Opus2026 correction]: Safe-mode aware detection
+  const motionViolation = (() => {
+    if (!document.getAnimations) return false;
+    const total = document.getAnimations().length;
+    const safeMode = document.body.classList.contains('safe-mode');
+    // If safe mode is engaged and animations remain, it is a hard violation
+    if (safeMode && total > 0) return true;
+    // Without safe mode, conservative heuristic: >3 animations is suspicious
+    return total > 3;
+  })();
 
   // 10. Text token entropy (Shannon)
   const rawText = (body.innerText || "").replace(/\\s+/g, " ").slice(0, 3000);
@@ -114,10 +122,10 @@ const MEASURE_DOM = /* js */ `
     const fg = cs.color;
     const bg = cs.backgroundColor;
     if (fg && bg && fg !== "rgba(0, 0, 0, 0)" && bg !== "rgba(0, 0, 0, 0)") {
-      // Parse rgb(r,g,b)
-      const parseRgb = (s) => { const m = s.match(/rgb[a]?\\((\\d+),(\\d+),(\\d+)/i); return m ? [+m[1],+m[2],+m[3]] : null; };
-      const fgRgb = parseRgb(fg.replace(/\\s/g, ""));
-      const bgRgb = parseRgb(bg.replace(/\\s/g, ""));
+      // Parse rgb(r,g,b) — [Opus2026 correction]: handles Chrome's spaced output
+      const parseRgb = (s) => { const m = s.match(/rgb[a]?\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)/i); return m ? [+m[1],+m[2],+m[3]] : null; };
+      const fgRgb = parseRgb(fg);  // no .replace needed with improved regex
+      const bgRgb = parseRgb(bg);
       if (fgRgb && bgRgb) {
         const lin = (c) => { const s = c / 255; return s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4); };
         const lum = ([r,g,b]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);

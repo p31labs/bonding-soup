@@ -81,7 +81,13 @@ function weightedPick(items, weights) {
  * All derived values carry their formula/citation in comments.
  * @returns {import("./types.d.ts").PersonaRecord}
  */
-export function generatePersona() {
+/**
+ * Generate a single PersonaRecord.
+ * All derived values carry their formula/citation in comments.
+ * @param {string|null} overrideId  Optional persona ID (e.g. 'W-FLARE' for testing)
+ * @returns {import("./types.d.ts").PersonaRecord}
+ */
+export function generatePersona(overrideId = null) {
   const ocean = generateOCEAN();
   const ndProfile = generateNDProfile();
   const deviceProfile = weightedPick(DEVICES, DEV_WGTS);
@@ -137,7 +143,8 @@ export function generatePersona() {
     wander:    Math.max(0.10, ndProfile.adhd * 0.5 + (1 - ocean.C) * 0.3),
   };
 
-  return {
+  // PersonaRecord structure (base)
+  let record = {
     id: crypto.randomUUID(),
     ocean,
     ndProfile,
@@ -152,7 +159,21 @@ export function generatePersona() {
     taskWeights,
     stepsCompleted: 0,
     frustrationHistory: [frustration],
+    qualityControlDegraded: false,  // Default: normal output reliability
   };
+
+  // ─── W-FLARE persona injection [Opus2026 correction] ─────────────────────────
+  // Simulates the operator's calcium flare state: producing output but quality
+  // control is degraded. This tests MEDIC agent's threshold detection.
+  if (overrideId === 'W-FLARE') {
+    record.id = 'W-FLARE';
+    record.label = 'W-FLARE (Calcium 7.2)';
+    record.wmCapacity = Math.max(3, record.wmCapacity * 0.6); // 40% cognitive hit
+    record.frustrationThreshold = 0.4; // Highly volatile
+    record.qualityControlDegraded = true; // Output is generated, but unreliable
+  }
+
+  return record;
 }
 
 // ─── Bayesian step update ──────────────────────────────────────────────────────

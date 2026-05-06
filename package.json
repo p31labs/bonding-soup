@@ -46,6 +46,7 @@
     "edge-lab:install": "npm --prefix packages/cf-edge-lab install",
     "edge-lab:dev": "npm --prefix packages/cf-edge-lab run dev",
     "edge-lab:deploy": "npm --prefix packages/cf-edge-lab run deploy",
+    "tetra-hub:deploy": "npx wrangler deploy --config workers/tetra-hub/wrangler.toml",
     "edge-lab:check": "npm --prefix packages/cf-edge-lab run check",
     "connection": "node scripts/p31-connection.mjs",
     "frictionless": "node scripts/p31-frictionless.mjs",

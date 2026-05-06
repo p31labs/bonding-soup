@@ -18,6 +18,11 @@
 | [CONFLICT-OF-INTEREST-DISCLOSURE-FORM.md](CONFLICT-OF-INTEREST-DISCLOSURE-FORM.md) | ⬜ Each director completes | Annually; at meeting |
 | [WHISTLEBLOWER-POLICY.md](WHISTLEBLOWER-POLICY.md) | ⬜ Board adopts | Agenda item 10 |
 | [DOCUMENT-RETENTION-POLICY.md](DOCUMENT-RETENTION-POLICY.md) | ⬜ Board adopts | Agenda item 10 |
+| [EXECUTIVE-COMPENSATION-POLICY.md](EXECUTIVE-COMPENSATION-POLICY.md) | ⬜ Board adopts | Agenda item 10 |
+| [GIFT-ACCEPTANCE-POLICY.md](GIFT-ACCEPTANCE-POLICY.md) | ⬜ Board adopts | Agenda item 10 |
+| [BYLAWS-AMENDED-2026.md](BYLAWS-AMENDED-2026.md) | ⬜ Board adopts (supersedes prior bylaws) | After board expansion to 3+ |
+| [BOARD-MEETING-MINUTES-TEMPLATE.md](BOARD-MEETING-MINUTES-TEMPLATE.md) | ✅ Reference | Use for all future meetings |
+| [P31-COMPLIANCE-CALENDAR.ics](P31-COMPLIANCE-CALENDAR.ics) | ✅ Import to calendar | Import to Google / Apple Calendar |
 | [C-100-EXEMPTION-MEMO.md](C-100-EXEMPTION-MEMO.md) | ⬜ President + Secretary sign | After meeting |
 | [BOARD-RESOLUTION-TEMPLATES.md](BOARD-RESOLUTION-TEMPLATES.md) | ✅ Reference | Use for future resolutions |
 | [ANNUAL-MEETING-NOTICE-TEMPLATE.md](ANNUAL-MEETING-NOTICE-TEMPLATE.md) | ✅ Reference | Use for 2026 annual meeting |
@@ -46,7 +51,7 @@ Use this order at the meeting:
 7. ☐ Ratify prior actions (articles, EIN, 501c3, SAM, Stripe, Ko-fi, sites)
 8. ☐ Legal review authorization → flip `legal-counsel-review` gate
 9. ☐ Name successor operator → flip `successor-operator-named` gate
-10. ☐ Adopt Whistleblower + Document Retention policies
+10. ☐ Adopt Whistleblower + Document Retention + Executive Compensation + Gift Acceptance policies
 11. ☐ Bank account authorization
 12. ☐ Set next annual meeting date
 13. ☐ Secretary prepares Minutes → all directors review

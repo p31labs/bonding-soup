@@ -37,8 +37,8 @@
 | Worker Fleet | 6 WCDs | ~5.5 days | FLEET-01 ✅ |
 | CogPass | 6 WCDs | ~5.5 days | COGPASS-01 ✅, COGPASS-02 ✅, COGPASS-06 (partial) ✅ |
 | **Naming Canon** | 1 WCD | 0.5 day | NAMING-01 ✅ (active src clean) |
-| **Corporate** | 13 WCDs | ~4 days | — |
-| **TOTAL** | **65 WCDs** | **~52.5 days** | **~9 WCDs complete** |
+| **Corporate** | 13 WCDs | ~4 days | CORP-04 ✅, CORP-05 ✅, CORP-06 ✅, CORP-07 ✅, CORP-08 ✅, CORP-09 ✅, CORP-10 ✅ |
+| **TOTAL** | **65 WCDs** | **~52.5 days** | **~16 WCDs complete** |
 
 **Completed this session (2026-05-06):**
 - DESIGN-01: --p31-butter → --p31-amber in soup-quantum.css (both copies)
@@ -46,11 +46,19 @@
 - NAMING-01: `verify:product-names` gate + EDE/The Buffer renamed in active p31ca src
 - CARS-ALIGN-01: BONDING vs C.A.R.S. canonical distinction in CARS-NAMING.md
 - FLEET-01: P31-KV-NAMESPACE-MAP.md key schema doc written
+- FLEET-02: Mesh headers (X-P31-QFactor, X-P31-Routing-Protocol) on command-center, bonding-relay, simplex-worker
 - COGPASS-01: `COGPASS_CONSUMER_REGISTRY` in @p31/shared
 - COGPASS-02: `verify:cognitive-passport-schema` extended with consumer registry checks
 - COGPASS-06 (partial): Profile ID discrepancy documented in alignment doc
 - +NEW: `verify:simplex-routes` gate (21 routes, 30 skills verified)
 - +NEW: `SCHEMA_VERSIONS` registry in @p31/shared
+- CORP-04: Executive Compensation Policy (docs/board/EXECUTIVE-COMPENSATION-POLICY.md)
+- CORP-05: Document Retention Policy (docs/board/DOCUMENT-RETENTION-POLICY.md) ← existed
+- CORP-06: Whistleblower Policy (docs/board/WHISTLEBLOWER-POLICY.md) ← existed
+- CORP-07: Gift Acceptance Policy (docs/board/GIFT-ACCEPTANCE-POLICY.md)
+- CORP-08: Amended Bylaws — multi-member board, Founder Protection, O.C.G.A. §14-3-840 (docs/board/BYLAWS-AMENDED-2026.md)
+- CORP-09: Board Meeting Minutes Template (docs/board/BOARD-MEETING-MINUTES-TEMPLATE.md)
+- CORP-10: Compliance Calendar ICS — Jul 2 hard wall + 1023-EZ + FERS + recurring (docs/board/P31-COMPLIANCE-CALENDAR.ics)
 
 Not 52.5 sequential days. Many tracks run in parallel. See §3 for the actual critical path.
 

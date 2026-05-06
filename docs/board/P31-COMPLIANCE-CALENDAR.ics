@@ -1,0 +1,298 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//P31 Labs Inc//Compliance Calendar 2026-2028//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:P31 Labs Compliance
+X-WR-CALDESC:P31 Labs Inc (EIN 42-1888158) corporate compliance deadlines
+X-WR-TIMEZONE:America/New_York
+
+BEGIN:VTIMEZONE
+TZID:America/New_York
+BEGIN:STANDARD
+DTSTART:19701101T020000
+RRULE:FREQ=YEARLY;BYDAY=1SU;BYMONTH=11
+TZNAME:EST
+TZOFFSETFROM:-0400
+TZOFFSETTO:-0500
+END:STANDARD
+BEGIN:DAYLIGHT
+DTSTART:19700308T020000
+RRULE:FREQ=YEARLY;BYDAY=2SU;BYMONTH=3
+TZNAME:EDT
+TZOFFSETFROM:-0500
+TZOFFSETTO:-0400
+END:DAYLIGHT
+END:VTIMEZONE
+
+BEGIN:VEVENT
+UID:p31-ar-initial-2026@p31labs.inc
+DTSTART;TZID=America/New_York:20260702T090000
+DTEND;TZID=America/New_York:20260702T100000
+SUMMARY:🔴 HARD DEADLINE — GA Initial Annual Registration Due
+DESCRIPTION:File at eCorp.ga.gov. $30 fee. 3 officers required (CEO\, Secretary\, CFO — all different people). 90 days from April 3 incorporation. PENALTY: Forfeiture of corporate charter.\n\nSteps:\n1. Log in at ecorp.sos.ga.gov\n2. File CD-122 (Initial Annual Registration)\n3. List all 3 officers\n4. Pay $30\n5. Save confirmation number\n\nEIN: 42-1888158
+LOCATION:ecorp.sos.ga.gov
+BEGIN:VALARM
+TRIGGER:-P30D
+ACTION:DISPLAY
+DESCRIPTION:30 days until GA Initial Annual Registration — start gathering officer info
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P14D
+ACTION:DISPLAY
+DESCRIPTION:14 days until GA Initial Annual Registration — URGENT: file now
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P7D
+ACTION:DISPLAY
+DESCRIPTION:7 DAYS — GA Annual Registration MUST be filed by July 2
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:TOMORROW: GA Initial Annual Registration deadline (Jul 2)
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:p31-board-resolution-001@p31labs.inc
+DTSTART;TZID=America/New_York:20260601T090000
+DTEND;TZID=America/New_York:20260601T100000
+SUMMARY:⚠ Target: Board Resolution #001 Adopted
+DESCRIPTION:Initial Board Resolution authorizing:\n- All corporate filings\n- Officer appointments\n- Adoption of 4 governance policies\n- Banking authorizations\n\nRequired before 1023-EZ filing. Use WRITTEN-CONSENT-ORGANIZATIONAL-ACTIONS.md template.
+BEGIN:VALARM
+TRIGGER:-P7D
+ACTION:DISPLAY
+DESCRIPTION:1 week: Board Resolution #001 target date
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:p31-c100-2026@p31labs.inc
+DTSTART;TZID=America/New_York:20260630T090000
+DTEND;TZID=America/New_York:20260630T100000
+SUMMARY:⚠ Target: GA Charitable Solicitation Registration (C-100)
+DESCRIPTION:Required before soliciting donations in Georgia.\nAlready accepting Stripe and Ko-fi — this is overdue.\n\nFile with GA Secretary of State Securities & Charities Division.\n$35 fee. Form C-100.\n\nWebsite: sos.ga.gov/charitable-solicitations
+BEGIN:VALARM
+TRIGGER:-P14D
+ACTION:DISPLAY
+DESCRIPTION:2 weeks: File C-100 Charitable Solicitation Registration ($35)
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P7D
+ACTION:DISPLAY
+DESCRIPTION:1 week: C-100 target deadline — file immediately
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:p31-board-expansion-2026@p31labs.inc
+DTSTART;TZID=America/New_York:20260801T090000
+DTEND;TZID=America/New_York:20260801T100000
+SUMMARY:⚠ Target: Board Expansion to 3+ Directors
+DESCRIPTION:Required before IRS Form 1023-EZ filing.\n\nCandidates:\n- Tyler Cisco (beta tester\, Tailscale mesh) — needs formal appointment\n- Hunter McFeron (GA Tools for Life) — needs outreach\n\nBoth must be unrelated to CEO and to each other.\nExecute DIRECTOR-CONSENT-TO-SERVE.md for each.\nAmend officer roster at eCorp (update annual registration if needed).
+BEGIN:VALARM
+TRIGGER:-P30D
+ACTION:DISPLAY
+DESCRIPTION:30 days: Begin board expansion outreach (Tyler Cisco\, Hunter McFeron)
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P7D
+ACTION:DISPLAY
+DESCRIPTION:1 week: Board expansion target date — schedule written consent
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:p31-accounting-setup-2026@p31labs.inc
+DTSTART;TZID=America/New_York:20260630T090000
+DTEND;TZID=America/New_York:20260630T100000
+SUMMARY:Target: Accounting System Setup (Wave or GnuCash)
+DESCRIPTION:Set up accounting before end of Q2.\n\nOptions:\n- Wave (free)\: wave.com — easiest\n- GnuCash (open-source)\: gnucash.org\n\nSteps:\n1. Create chart of accounts\n2. Link Mercury bank (CSV import)\n3. Categorize all transactions since April 3\n4. Set up monthly reconciliation workflow
+BEGIN:VALARM
+TRIGGER:-P7D
+ACTION:DISPLAY
+DESCRIPTION:1 week: Set up accounting system (Wave or GnuCash)
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:p31-transparency-page-2026@p31labs.inc
+DTSTART;TZID=America/New_York:20260731T090000
+DTEND;TZID=America/New_York:20260731T100000
+SUMMARY:Target: Launch phosphorus31.org/transparency
+DESCRIPTION:Required for grant reviewer credibility.\n\nContent needed:\n1. Mission statement\n2. Board roster with independence designations\n3. Governing documents (Articles\, Bylaws)\n4. Adopted policies (COI\, Whistleblower\, Doc Retention\, Gift Acceptance\, Exec Comp)\n5. 990-N filing link when filed\n6. EIN\, state of incorporation\n7. Security contact PGP B8C0CE8E\n8. IRC §6104 records request statement
+BEGIN:VALARM
+TRIGGER:-P14D
+ACTION:DISPLAY
+DESCRIPTION:2 weeks: Launch transparency page on phosphorus31.org
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:p31-1023ez-2028@p31labs.inc
+DTSTART;TZID=America/New_York:20280703T090000
+DTEND;TZID=America/New_York:20280703T100000
+SUMMARY:🔴 HARD DEADLINE — IRS Form 1023-EZ (501(c)(3)) 27-Month Window Closes
+DESCRIPTION:27-month window from date of incorporation (April 3\, 2026) closes July 3\, 2028.\n\nPrerequisites before filing:\n✅ EIN (42-1888158)\n☐ Board expanded to 3+ directors\n☐ Whistleblower Policy adopted\n☐ Document Retention Policy adopted\n☐ Executive Compensation Policy adopted\n☐ Conflict of Interest Policy adopted\n☐ Form C-100 filed\n\n$275 fee. File at pay.gov. Use Form 1023-EZ (organizations with projected receipts < $50K for 3 years).
+BEGIN:VALARM
+TRIGGER:-P365D
+ACTION:DISPLAY
+DESCRIPTION:1 year until 1023-EZ deadline — begin preparation
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P180D
+ACTION:DISPLAY
+DESCRIPTION:6 months: 1023-EZ filing window — all prerequisites must be met
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P90D
+ACTION:DISPLAY
+DESCRIPTION:90 days: 1023-EZ window closing — file within 3 months
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P30D
+ACTION:DISPLAY
+DESCRIPTION:30 days: 1023-EZ deadline — URGENT: file immediately
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:p31-990n-fy2026@p31labs.inc
+DTSTART;TZID=America/New_York:20270515T090000
+DTEND;TZID=America/New_York:20270515T100000
+SUMMARY:IRS Form 990-N Due (FY2026 e-Postcard)
+DESCRIPTION:Form 990-N (e-Postcard) for fiscal year ending December 31\, 2026.\nDue 4.5 months after fiscal year end (May 15\, 2027).\n\n$0 fee. File at apps.irs.gov/app/ePostcard.\n\nRequired if gross receipts ≤ $50\,000. If receipts exceed $50K\, file Form 990-EZ instead.\n\nEIN: 42-1888158\nFiscal year: January 1 – December 31\, 2026
+BEGIN:VALARM
+TRIGGER:-P30D
+ACTION:DISPLAY
+DESCRIPTION:30 days: File IRS Form 990-N for FY2026
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P7D
+ACTION:DISPLAY
+DESCRIPTION:1 week: 990-N due May 15 — file at apps.irs.gov/app/ePostcard
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:p31-ar-2027@p31labs.inc
+DTSTART;TZID=America/New_York:20270401T090000
+DTEND;TZID=America/New_York:20270401T100000
+SUMMARY:GA Annual Registration 2027 Deadline
+DESCRIPTION:File January 1 – April 1 window each year.\n$30 fee. eCorp.ga.gov.\nUpdate all 3 officer names and addresses.\nConfirm registered agent.\n\nEIN: 42-1888158
+BEGIN:VALARM
+TRIGGER:-P30D
+ACTION:DISPLAY
+DESCRIPTION:30 days: File 2027 GA Annual Registration (Jan 1 – Apr 1)
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P7D
+ACTION:DISPLAY
+DESCRIPTION:1 week: 2027 GA Annual Registration due April 1
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:p31-ar-2028@p31labs.inc
+DTSTART;TZID=America/New_York:20280401T090000
+DTEND;TZID=America/New_York:20280401T100000
+SUMMARY:GA Annual Registration 2028 Deadline
+DESCRIPTION:File January 1 – April 1 window each year.\n$30 fee. eCorp.ga.gov.\nUpdate all 3 officer names and addresses.\n\nEIN: 42-1888158
+BEGIN:VALARM
+TRIGGER:-P30D
+ACTION:DISPLAY
+DESCRIPTION:30 days: File 2028 GA Annual Registration
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:p31-c100-renewal-2028@p31labs.inc
+DTSTART;TZID=America/New_York:20280701T090000
+DTEND;TZID=America/New_York:20280701T100000
+SUMMARY:GA Charitable Solicitation Renewal (C-100) ~2 Year Mark
+DESCRIPTION:GA Charitable Solicitation registration renews every 24 months from approval date.\nApproximate renewal due: 24 months after C-100 is approved (estimated July 2028).\n$20 renewal fee. Financials required.\n\nUpdate this date once C-100 approval date is known.
+BEGIN:VALARM
+TRIGGER:-P30D
+ACTION:DISPLAY
+DESCRIPTION:30 days: C-100 Charitable Solicitation renewal due
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:p31-fers-sep-2026@p31labs.inc
+DTSTART;TZID=America/New_York:20260930T090000
+DTEND;TZID=America/New_York:20260930T100000
+SUMMARY:⚠ FERS Disability Application ~150-Day Mark
+DESCRIPTION:FERS disability retirement application. ~150 days remaining from 2026-05-06.\nForms: SF-3112A/B/C complete. Awaiting SF-3112D/E from agency.\n\nAnnuity (estimated):\n- Year 1: 60% high-3 minus SSDI offset\n- Year 2+: 40% high-3 minus 60% SSDI offset\n\nBoth OPM exams complete (telehealth psych + in-person medical/ROM). Awaiting determination.\n\nOfficial separation: ~September 30\, 2025 (GS-0802-12)\nStatute: 5 CFR §844.201\n\nNOTE: Update this event with actual agency response date when received.
+BEGIN:VALARM
+TRIGGER:-P30D
+ACTION:DISPLAY
+DESCRIPTION:30 days: FERS application 150-day window approaching — follow up with agency
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P14D
+ACTION:DISPLAY
+DESCRIPTION:2 weeks: FERS deadline — contact OPM/agency for status
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:p31-monthly-reconcile-2026@p31labs.inc
+DTSTART;TZID=America/New_York:20260601T090000
+DTEND;TZID=America/New_York:20260601T100000
+SUMMARY:📊 Monthly Financial Reconciliation
+DESCRIPTION:Monthly financial reconciliation checklist:\n1. Download Mercury bank statement (CSV)\n2. Import to Wave/GnuCash\n3. Categorize all transactions\n4. Reconcile Stripe settlements\n5. Record Ko-fi payouts\n6. Note any outstanding grants received\n7. Save reconciled report to docs/financials/\n\nEIN: 42-1888158
+RRULE:FREQ=MONTHLY;BYDAY=1SA;BYMONTH=1,2,3,4,5,6,7,8,9,10,11,12
+BEGIN:VALARM
+TRIGGER:-P2D
+ACTION:DISPLAY
+DESCRIPTION:Monthly financial reconciliation due this weekend
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:p31-quarterly-board-q3-2026@p31labs.inc
+DTSTART;TZID=America/New_York:20260801T140000
+DTEND;TZID=America/New_York:20260801T160000
+SUMMARY:Q3 2026 Board Meeting
+DESCRIPTION:Quarterly Board meeting. Agenda:\n1. Q2 financial report\n2. AR filing confirmation (Jul 2 deadline)\n3. Board expansion vote (Tyler\, Hunter)\n4. C-100 status\n5. 1023-EZ preparation checklist\n6. Accounting system review\n\nSend 10-day notice per bylaws. Confirm quorum before meeting.
+BEGIN:VALARM
+TRIGGER:-P10D
+ACTION:DISPLAY
+DESCRIPTION:10 days: Q3 Board Meeting — send formal notice to all directors
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:Tomorrow: Q3 2026 Board Meeting
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:p31-quarterly-board-q4-2026@p31labs.inc
+DTSTART;TZID=America/New_York:20261101T140000
+DTEND;TZID=America/New_York:20261101T160000
+SUMMARY:Q4 2026 Board Meeting / Annual Meeting
+DESCRIPTION:Annual Board meeting. Agenda:\n1. Q3 financial report\n2. Officer elections\n3. 1023-EZ status / timeline\n4. FY2026 budget review\n5. 990-N filing plan (due May 15\, 2027)\n6. Transparency page status\n\nPrepare annual report for board review.
+BEGIN:VALARM
+TRIGGER:-P14D
+ACTION:DISPLAY
+DESCRIPTION:2 weeks: Annual Board Meeting — prepare financial report and election slate
+END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+UID:p31-quarterly-board-q1-2027@p31labs.inc
+DTSTART;TZID=America/New_York:20270201T140000
+DTEND;TZID=America/New_York:20270201T160000
+SUMMARY:Q1 2027 Board Meeting
+DESCRIPTION:Quarterly Board meeting. Agenda:\n1. Q4 2026 financial close\n2. GA Annual Registration filing (due Apr 1)\n3. 990-N filing preparation\n4. Grant report status\n5. 1023-EZ timeline check
+BEGIN:VALARM
+TRIGGER:-P10D
+ACTION:DISPLAY
+DESCRIPTION:10 days: Q1 2027 Board Meeting — send formal notice
+END:VALARM
+END:VEVENT
+
+END:VCALENDAR

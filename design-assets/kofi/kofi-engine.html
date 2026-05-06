@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="antialiased bg-[#05080c]" style="color-scheme: dark;">
+<html lang="en" class="antialiased bg-[#0f1115]" style="color-scheme: dark;">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,14 +13,14 @@
       theme: {
         extend: {
           colors: {
-            void: '#05080c',
+            void: '#0f1115',
             surface: '#11151c',
             teal: '#25897d',
             cyan: '#4db8a8',
             coral: '#cc6247',
             cloud: '#e8e6e3',
             phosphorus: '#3ba372',
-            butter: '#cda852',
+            amber: '#cda852',
             muted: '#5a6b7c'
           }
         }
@@ -35,7 +35,7 @@
       border-radius: 12px;
       cursor: copy;
       overflow: hidden;
-      background: #05080c;
+      background: #0f1115;
     }
     .wrap:hover { border-color: rgba(77, 184, 168, 0.4); }
     .hud {
@@ -81,7 +81,7 @@
           <defs>
             <radialGradient id="header-glow" cx="50%" cy="100%" r="90%">
               <stop offset="0%" stop-color="#25897d" stop-opacity="0.35" />
-              <stop offset="100%" stop-color="#05080c" stop-opacity="1" />
+              <stop offset="100%" stop-color="#0f1115" stop-opacity="1" />
             </radialGradient>
             <pattern id="header-grid" width="40" height="40" patternUnits="userSpaceOnUse">
               <rect width="40" height="40" fill="none" stroke="#e8e6e3" stroke-opacity="0.04" stroke-width="1" />
@@ -91,7 +91,7 @@
               <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
           </defs>
-          <rect width="1200" height="600" fill="#05080c" />
+          <rect width="1200" height="600" fill="#0f1115" />
           <rect width="1200" height="600" fill="url(#header-glow)" />
           <rect width="1200" height="600" fill="url(#header-grid)" />
           <text x="600" y="260" class="svg-text-serif" font-size="72" fill="#e8e6e3" text-anchor="middle">Sovereign Cognitive</text>
@@ -112,7 +112,7 @@
         <div class="wrap aspect-square" onclick="downloadPNG('svg-shop-centaur','P31_Store_CentaurPack')">
           <div class="hud"><span>PNG export</span></div>
           <svg id="svg-shop-centaur" width="600" height="600" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
-            <rect width="600" height="600" fill="#05080c" />
+            <rect width="600" height="600" fill="#0f1115" />
             <text x="300" y="260" text-anchor="middle" fill="#cda852" font-family="'Playfair Display',serif" font-style="italic" font-size="72">◇</text>
             <text x="300" y="380" class="svg-text-serif" font-size="28" fill="#e8e6e3" text-anchor="middle">Super-Centaur Pack</text>
             <text x="300" y="420" class="svg-text-mono" font-size="12" fill="#cda852" text-anchor="middle" letter-spacing="3">OPERATOR STARTER (DRAFT)</text>
@@ -121,7 +121,7 @@
         <div class="wrap aspect-square" onclick="downloadPNG('svg-shop-node0','P31_Store_NodeZero')">
           <div class="hud"><span>PNG export</span></div>
           <svg id="svg-shop-node0" width="600" height="600" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
-            <rect width="600" height="600" fill="#05080c" />
+            <rect width="600" height="600" fill="#0f1115" />
             <rect x="210" y="200" width="180" height="200" rx="10" fill="none" stroke="#cc6247" stroke-width="2" />
             <circle cx="300" cy="300" r="24" fill="#cc6247" opacity="0.25" />
             <text x="300" y="480" class="svg-text-serif" font-size="28" fill="#e8e6e3" text-anchor="middle">Node Zero Firmware</text>
@@ -131,7 +131,7 @@
         <div class="wrap aspect-square" onclick="downloadPNG('svg-shop-grant','P31_Store_OperatorGrant')">
           <div class="hud"><span>PNG export</span></div>
           <svg id="svg-shop-grant" width="600" height="600" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
-            <rect width="600" height="600" fill="#05080c" />
+            <rect width="600" height="600" fill="#0f1115" />
             <circle cx="300" cy="270" r="80" fill="none" stroke="#3ba372" stroke-width="2" stroke-dasharray="4 12" />
             <circle cx="300" cy="270" r="12" fill="#3ba372" />
             <text x="300" y="420" class="svg-text-serif" font-size="28" fill="#e8e6e3" text-anchor="middle">Operator Grant</text>
@@ -161,7 +161,7 @@
         canvas.width = w;
         canvas.height = h;
         const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#05080c';
+        ctx.fillStyle = '#0f1115';
         ctx.fillRect(0, 0, w, h);
         ctx.drawImage(img, 0, 0);
         URL.revokeObjectURL(url);

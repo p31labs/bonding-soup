@@ -177,6 +177,37 @@ if (existsSync(STYLE_PATH)) {
   warn('p31-style.css not found — skipping token value verification');
 }
 
+// ── 6. Scan design-assets/ HTML/SVG for known-wrong void hex ────────────────
+
+const DESIGN_ASSETS_DIR = join(ROOT, 'design-assets');
+const VOID_WRONG = /#05080c/gi;   // retired void — canonical is #0f1115
+const BUTTER_WRONG = /butter:/gi; // retired name — canonical is amber:
+
+if (existsSync(DESIGN_ASSETS_DIR)) {
+  let assetDrift = 0;
+  function scanDesignAssets(dir, depth = 0) {
+    if (depth > 4) return;
+    for (const entry of readdirSync(dir)) {
+      if (entry.startsWith('.') || entry === 'node_modules') continue;
+      const full = join(dir, entry);
+      if (statSync(full).isDirectory()) { scanDesignAssets(full, depth + 1); continue; }
+      if (!['.html', '.svg', '.js', '.css'].includes(extname(entry))) continue;
+      const src = readFileSync(full, 'utf-8');
+      const rel = full.replace(ROOT + '/', '');
+      const wrongVoid = (src.match(VOID_WRONG) || []).length;
+      const wrongButter = (src.match(BUTTER_WRONG) || []).length;
+      if (wrongVoid > 0) { warn(`${rel}: ${wrongVoid} retired void #05080c (use #0f1115)`); assetDrift += wrongVoid; }
+      if (wrongButter > 0) { warn(`${rel}: ${wrongButter} "butter:" token (rename to amber:)`); assetDrift += wrongButter; }
+    }
+  }
+  scanDesignAssets(DESIGN_ASSETS_DIR);
+  if (assetDrift === 0) {
+    pass('design-assets/: no retired void hex or butter token name');
+  }
+} else {
+  warn('design-assets/ not found — skipping asset hex scan');
+}
+
 // ── REPORT ───────────────────────────────────────────────────────────────────
 
 console.log(`\n  Passed: ${passed} | Warned: ${warned} | Failed: ${failed}`);

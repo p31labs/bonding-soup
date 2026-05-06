@@ -1,5 +1,16 @@
 # C.A.R.S. — product naming (canonical)
 
+## BONDING vs C.A.R.S. (read first)
+
+| Term | What it is | Where it appears |
+|------|-----------|-----------------|
+| **C.A.R.S.** | The technical framework — sim engine, wire protocol, SoupEngine, SoupPhysics | Code, docs, engineering specs |
+| **BONDING** | The product/vertical — the multiplayer room experience deployed at bonding.p31ca.org | Marketing copy, surface routes, p31ca hub card |
+
+**Rule:** Use **C.A.R.S.** in engineering docs and code comments. Use **BONDING** in user-facing copy, routes, and p31ca surface labels. Never use "BONDING" to name a code module. Never use "C.A.R.S." as a URL slug.
+
+---
+
 **C.A.R.S.** expansions spell **Collaborative Affective Realtime Sim**.
 
 **Social molecules:** people and local sim entities share one field — your molecules plus **ghost molecules** interpolated from networked peers (`SoupEngine`). Not “social soup”; the medium is simulated chemistry + affect overlay.

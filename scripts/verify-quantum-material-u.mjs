@@ -65,7 +65,7 @@ const required = [
   "--p31-tone-teal-5",
   "--p31-tone-coral-2",
   "--p31-tone-phosphorus-2",
-  "--p31-tone-butter-2",
+  "--p31-tone-amber-2",
   "--p31-tone-lavender-2",
   // elevation
   "--p31-elev-0-tone",
@@ -160,7 +160,7 @@ if (fs.existsSync(canonPath)) {
     if (!canon || typeof canon !== "object") fail("canon JSON did not parse to an object");
     if (!canon.quantum) fail("canon missing `quantum` block — bump version and add quantum tokens");
     const q = canon.quantum;
-    const expectedAnchors = ["teal", "coral", "phosphorus", "butter", "lavender"];
+    const expectedAnchors = ["teal", "coral", "phosphorus", "amber", "lavender"];
     const haveAnchors = Array.isArray(q.tonalAnchors) ? q.tonalAnchors : [];
     for (const a of expectedAnchors) {
       if (!haveAnchors.includes(a)) fail(`canon.quantum.tonalAnchors missing "${a}"`);

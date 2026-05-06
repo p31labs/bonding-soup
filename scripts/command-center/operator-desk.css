@@ -417,7 +417,7 @@ body.od-root::before {
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.04);
 }
 .od-list li[data-status="up"]::before {
-  background: var(--p31-phosphorus, #3ba372);
+  background: var(--p31-phosphorus, var(--p31-phosphorus));
   box-shadow: 0 0 0 2px rgba(59, 163, 114, 0.25);
 }
 .od-list li[data-status="warn"]::before {

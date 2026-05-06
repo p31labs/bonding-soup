@@ -90,11 +90,11 @@
       .phos-router-toggle:hover { border-color: rgba(93,202,165,0.6); box-shadow: 0 0 24px rgba(93,202,165,0.4); }
       .phos-router-panel { background: rgba(15,17,21,0.97); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1rem; margin-top: 0.5rem; display: none; box-shadow: 0 16px 48px rgba(0,0,0,0.6); }
       .phos-router-panel.open { display: block; }
-      .phos-router-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.6rem 0.75rem; color: var(--p31-cloud, #d8d6d0); font-family: inherit; font-size: 0.8rem; outline: none; margin-bottom: 0.75rem; box-sizing: border-box; }
+      .phos-router-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.6rem 0.75rem; color: var(--p31-cloud, var(--p31-cloud)); font-family: inherit; font-size: 0.8rem; outline: none; margin-bottom: 0.75rem; box-sizing: border-box; }
       .phos-router-input:focus { border-color: var(--p31-teal, #5DCAA5); }
       .phos-router-input::placeholder { color: var(--p31-muted, #6b7280); }
       .phos-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem; }
-      .phos-chip { padding: 0.35rem 0.7rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 99px; background: rgba(255,255,255,0.04); color: var(--p31-cloud, #d8d6d0); font-size: 0.72rem; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+      .phos-chip { padding: 0.35rem 0.7rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 99px; background: rgba(255,255,255,0.04); color: var(--p31-cloud, var(--p31-cloud)); font-size: 0.72rem; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
       .phos-chip:hover, .phos-chip:focus { border-color: var(--p31-teal, #5DCAA5); color: var(--p31-teal, #5DCAA5); background: rgba(93,202,165,0.08); outline: none; }
       .phos-chip.active { border-color: var(--p31-teal, #5DCAA5); color: var(--p31-teal, #5DCAA5); background: rgba(93,202,165,0.12); }
       .phos-confirm { background: rgba(93,202,165,0.08); border: 1px solid rgba(93,202,165,0.3); border-radius: 8px; padding: 0.75rem; margin-top: 0.5rem; font-size: 0.78rem; }
@@ -104,9 +104,9 @@
       .phos-go { flex: 1; padding: 0.5rem; border: 1px solid rgba(93,202,165,0.5); border-radius: 6px; background: rgba(93,202,165,0.15); color: var(--p31-teal, #5DCAA5); font-family: inherit; font-size: 0.75rem; cursor: pointer; transition: all 0.15s; }
       .phos-go:hover { background: rgba(93,202,165,0.25); }
       .phos-cancel { padding: 0.5rem 0.75rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; background: transparent; color: var(--p31-muted, #6b7280); font-family: inherit; font-size: 0.75rem; cursor: pointer; transition: all 0.15s; }
-      .phos-cancel:hover { color: var(--p31-cloud, #d8d6d0); }
+      .phos-cancel:hover { color: var(--p31-cloud, var(--p31-cloud)); }
       .phos-back { font-size: 0.7rem; color: var(--p31-muted, #6b7280); cursor: pointer; margin-bottom: 0.5rem; display: inline-block; }
-      .phos-back:hover { color: var(--p31-cloud, #d8d6d0); }
+      .phos-back:hover { color: var(--p31-cloud, var(--p31-cloud)); }
       body.safe-mode .phos-router { transition: none !important; }
       body.safe-mode .phos-router * { transition: none !important; animation: none !important; }
       @media (max-width: 480px) { .phos-router { right: 1rem; width: calc(100vw - 2rem); } }

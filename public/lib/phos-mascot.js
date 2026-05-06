@@ -53,7 +53,7 @@ class PhosMascot {
             <!-- Body gradient -->
             <linearGradient id="phos-body-grad" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" style="stop-color:#4db8a8;stop-opacity:0.95" />
-              <stop offset="50%" style="stop-color:#3ba372;stop-opacity:0.85" />
+              <stop offset="50%" style="stop-color:var(--p31-phosphorus);stop-opacity:0.85" />
               <stop offset="100%" style="stop-color:#2d8a6e;stop-opacity:0.75" />
             </linearGradient>
             
@@ -107,8 +107,8 @@ class PhosMascot {
             
             <!-- Eyes -->
             <g id="phos-eyes">
-              <ellipse class="phos-eye" cx="85" cy="120" rx="6" ry="8" fill="#1a1a1a" />
-              <ellipse class="phos-eye" cx="115" cy="120" rx="6" ry="8" fill="#1a1a1a" />
+              <ellipse class="phos-eye" cx="85" cy="120" rx="6" ry="8" fill="#0f1115" />
+              <ellipse class="phos-eye" cx="115" cy="120" rx="6" ry="8" fill="#0f1115" />
               
               <!-- Eye shine -->
               <circle cx="87" cy="118" r="2" fill="white" opacity="0.8" />
@@ -117,11 +117,11 @@ class PhosMascot {
             
             <!-- Eyebrows -->
             <path id="phos-brows" d="M78,110 Q85,108 92,110 M108,110 Q115,108 122,110" 
-                  stroke="#1a1a1a" stroke-width="1.5" fill="none" stroke-linecap="round" />
+                  stroke="#0f1115" stroke-width="1.5" fill="none" stroke-linecap="round" />
             
             <!-- Mouth -->
             <path id="phos-mouth" d="M90,135 Q100,142 110,135" 
-                  stroke="#1a1a1a" stroke-width="2" fill="none" stroke-linecap="round" />
+                  stroke="#0f1115" stroke-width="2" fill="none" stroke-linecap="round" />
             
             <!-- Blush (when happy) -->
             <ellipse id="phos-blush-left" cx="75" cy="130" rx="5" ry="3" fill="#cc6247" opacity="0" />
@@ -131,9 +131,9 @@ class PhosMascot {
           <!-- Accessories -->
           <g id="phos-accessories" opacity="0">
             <!-- Sunglasses (sassy mode) -->
-            <path d="M70,115 L95,115 L95,125 L85,125 L80,120 L75,125 L70,125 Z" fill="#1a1a1a" />
-            <path d="M105,115 L130,115 L130,125 L125,125 L120,120 L115,125 L105,125 Z" fill="#1a1a1a" />
-            <line x1="95" y1="118" x2="105" y2="118" stroke="#1a1a1a" stroke-width="2" />
+            <path d="M70,115 L95,115 L95,125 L85,125 L80,120 L75,125 L70,125 Z" fill="#0f1115" />
+            <path d="M105,115 L130,115 L130,125 L125,125 L120,120 L115,125 L105,125 Z" fill="#0f1115" />
+            <line x1="95" y1="118" x2="105" y2="118" stroke="#0f1115" stroke-width="2" />
           </g>
           
           <!-- Speech bubble (hidden by default) -->
@@ -144,7 +144,7 @@ class PhosMascot {
             <polygon points="-10,25 0,20 0,30" fill="none" stroke="#4db8a8" stroke-width="1.5" 
                      stroke-linejoin="round" />
             <text id="phos-speech-text" x="70" y="30" text-anchor="middle" 
-                  fill="#d8d6d0" font-family="JetBrains Mono, monospace" font-size="11">
+                  fill="var(--p31-cloud)" font-family="JetBrains Mono, monospace" font-size="11">
               Hello!
             </text>
           </g>

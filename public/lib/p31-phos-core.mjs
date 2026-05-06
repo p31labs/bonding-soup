@@ -218,7 +218,7 @@ export class PHOS {
       .phos-close {
         background: none;
         border: none;
-        color: var(--p31-cloud, #d8d6d0);
+        color: var(--p31-cloud, var(--p31-cloud));
         font-size: 1.5rem;
         cursor: pointer;
       }
@@ -231,7 +231,7 @@ export class PHOS {
       .phos-content h2 {
         margin: 0 0 1rem;
         font-size: 1.1rem;
-        color: var(--p31-cloud, #d8d6d0);
+        color: var(--p31-cloud, var(--p31-cloud));
       }
       .phos-options {
         display: flex;

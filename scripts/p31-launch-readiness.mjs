@@ -253,7 +253,7 @@ function renderHtml(report) {
   .lr-check { font-family:"JetBrains Mono",ui-monospace,monospace; word-break:break-word; }
   .lr-pass { color:#a7f3d0; } .lr-warn { color:#fcd34d; } .lr-fail { color:#fca5a5; } .lr-skip { color:var(--muted); }
   .lr-dot { display:inline-block; width:0.6rem; height:0.6rem; border-radius:999px; margin-right:0.4rem; vertical-align:middle; }
-  .lr-dot.pass { background:#34d399; } .lr-dot.warn { background:#fbbf24; } .lr-dot.fail { background:#f87171; }
+  .lr-dot.pass { background:#34d399; } .lr-dot.warn { background:#fbbf24; } .lr-dot.fail { background:var(--p31-coral); }
   footer { margin-top:2rem; color:var(--muted); font-size:0.8rem; }
   footer a { color:var(--cyan); }
 </style></head>

@@ -326,7 +326,7 @@ function generateHTMLFlowChart(flowChart) {
 <head>
   <title>Flow Chart: ${flowChart.personality}</title>
   <style>
-    body { font-family: monospace; background: #1a1a1a; color: #e0e0e0; padding: 20px; }
+    body { font-family: monospace; background: #0f1115; color: #e0e0e0; padding: 20px; }
     .container { max-width: 1200px; margin: 0 auto; }
     .header { border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
     .node { background: #2a2a2a; border: 1px solid #444; padding: 10px; margin: 10px 0; border-radius: 5px; }

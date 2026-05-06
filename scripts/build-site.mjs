@@ -136,7 +136,7 @@ const TEMPLATES = {
       <defs>
         <linearGradient id="orb-grad" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style="stop-color:#4db8a8;stop-opacity:0.9"/>
-          <stop offset="100%" style="stop-color:#3ba372;stop-opacity:0.7"/>
+          <stop offset="100%" style="stop-color:var(--p31-phosphorus);stop-opacity:0.7"/>
         </linearGradient>
       </defs>
       <polygon points="50,10 10,90 90,90" fill="none" stroke="url(#orb-grad)" stroke-width="2"/>
@@ -179,7 +179,7 @@ const TEMPLATES = {
         <defs>
           <linearGradient id="hero-grad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" style="stop-color:#4db8a8"/>
-            <stop offset="100%" style="stop-color:#3ba372"/>
+            <stop offset="100%" style="stop-color:var(--p31-phosphorus)"/>
           </linearGradient>
         </defs>
         <polygon points="100,20 20,160 100,120 180,160" fill="none" stroke="url(#hero-grad)" stroke-width="3"/>
@@ -233,7 +233,7 @@ const TEMPLATES = {
       <aside class="properties">
         <h3>Colors</h3>
         <div class="color-grid">
-          ${['#4db8a8', '#cc6247', '#cda852', '#8b7cc9', '#3ba372', '#e74c3c', '#3498db', '#9b59b6'].map(c => 
+          ${['#4db8a8', '#cc6247', '#cda852', '#8b7cc9', 'var(--p31-phosphorus)', '#e74c3c', '#3498db', '#9b59b6'].map(c => 
             `<button class="color-btn" style="background:${c}" data-color="${c}"></button>`
           ).join('')}
         </div>

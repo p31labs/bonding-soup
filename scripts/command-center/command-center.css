@@ -267,7 +267,7 @@ body[data-cc-sections-all-closed] .cc-safety {
   box-shadow: 0 0 0 3px rgba(204, 98, 71, 0.25);
 }
 .cc-safety__state[data-state="armed"] .cc-safety__dot {
-  background: #3ba372;
+  background: var(--p31-phosphorus);
   box-shadow: 0 0 0 3px rgba(59, 163, 114, 0.25);
 }
 .cc-safety__dot {

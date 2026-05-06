@@ -55,7 +55,7 @@ const html = `<!DOCTYPE html>
   <meta charset="UTF-8">
   <title>Donation Receipt · ${legalName}</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 640px; margin: 40px auto; padding: 0 24px; color: #1a1a1a; line-height: 1.6; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 640px; margin: 40px auto; padding: 0 24px; color: #0f1115; line-height: 1.6; }
     .header { border-bottom: 2px solid #0f1115; padding-bottom: 16px; margin-bottom: 24px; }
     .org-name { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
     .org-meta { font-size: 13px; color: #555; }

@@ -962,6 +962,7 @@ npm run verify  (root, ordered)
 ├── build
 ├── soup:prep:check                     ← C.A.R.S. dist + assets fresh
 ├── verify:triper
+├── verify:canon
 └── verify:public-line
 ```
 

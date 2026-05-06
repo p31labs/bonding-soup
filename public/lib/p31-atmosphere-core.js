@@ -1,8 +1,8 @@
 /**
- * PhosOS OMNI-WRAPPER CORE (v2.1.0)
+ * PHOS OMNI-WRAPPER CORE (v2.1.0)
  * Bayesian Shannon Entropy Reduction & Global Ribbon Anchor
  */
-class PhosOS {
+class PHOS {
   constructor() {
     this.state = { status: 'IDLE', spoons: 8, activeAgent: 'FORGE', activePool: [], history: [] };
     this.intents = [
@@ -48,7 +48,7 @@ class PhosOS {
       @keyframes jitterbug { 0%, 100% { transform: rotate(0deg) scale(1); } 33% { transform: rotate(5deg) scale(1.1); } 66% { transform: rotate(-5deg) scale(0.9); } }
       .phos-bubble { position: absolute; bottom: 80px; right: 0; width: 320px; background: rgba(15,17,21,0.98); border: 1px solid rgba(255,255,255,0.1); border-radius: 1.5rem; padding: 1.5rem; opacity: 0; pointer-events: none; transform: translateY(10px); transition: all 0.4s cubic-bezier(0.19,1,0.22,1); font-family: "JetBrains Mono", monospace; color: #fff; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
       .phos-bubble.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
-      .phos-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #d8d6d0; padding: 0.8rem; border-radius: 0.75rem; font-size: 0.8rem; cursor: pointer; text-align: left; transition: all 0.2s; width: 100%; margin-bottom: 0.5rem; }
+      .phos-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: var(--p31-cloud); padding: 0.8rem; border-radius: 0.75rem; font-size: 0.8rem; cursor: pointer; text-align: left; transition: all 0.2s; width: 100%; margin-bottom: 0.5rem; }
       .phos-btn:hover { background: rgba(93,202,165,0.1); border-color: #5DCAA5; color: #fff; }
       body.safe-mode .phos-container { filter: grayscale(1); }
     `;
@@ -64,7 +64,7 @@ class PhosOS {
         <div style="font-size:0.95rem; margin-bottom:1.5rem;" id="phos-display"></div>
         <div id="phos-options"></div>
       </div>
-      <div class="phos-orb" onclick="window.phosOS.toggle()">
+      <div class="phos-orb" onclick="window.phos.toggle()">
         <svg class="k4-icon" viewBox="0 0 100 100">
           <path d="M50 15 L15 80 L85 80 Z M50 15 L50 55 M15 80 L50 55 M85 80 L50 55" />
         </svg>
@@ -97,8 +97,8 @@ class PhosOS {
     document.getElementById('phos-jarvis').className = `phos-container status-${this.state.status}`;
     document.getElementById('phos-display').innerHTML = `<span style="color:#5DCAA5">[PROBE]</span> ${q.text}`;
     document.getElementById('phos-options').innerHTML = `
-      <button class="phos-btn" onclick="window.phosOS.handle(true, '${q.id}')">Affirmative</button>
-      <button class="phos-btn" onclick="window.phosOS.handle(false, '${q.id}')">Negative</button>
+      <button class="phos-btn" onclick="window.phos.handle(true, '${q.id}')">Affirmative</button>
+      <button class="phos-btn" onclick="window.phos.handle(false, '${q.id}')">Negative</button>
     `;
   }
 
@@ -123,8 +123,8 @@ class PhosOS {
     document.getElementById('phos-display').innerHTML = `<span style="color:#5DCAA5">[AMBIGUOUS]</span> Coordinate unclear. Select destination:`;
     document.getElementById('phos-options').innerHTML = this.state.activePool.map(i =>
       `<button class="phos-btn" onclick="window.location.href='${i.path}'">${i.label}</button>`
-    ).join('') + `<button class="phos-btn" onclick="window.phosOS.resetBrain(); window.phosOS.think();">Reset</button>`;
+    ).join('') + `<button class="phos-btn" onclick="window.phos.resetBrain(); window.phos.think();">Reset</button>`;
   }
 }
 
-if (typeof window !== 'undefined') window.phosOS = new PhosOS();
+if (typeof window !== 'undefined') window.phos = new PHOS();

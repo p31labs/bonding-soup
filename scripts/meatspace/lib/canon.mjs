@@ -25,18 +25,18 @@ const CANON_PATH = path.join(
 const FALLBACK = Object.freeze({
   palette: {
     coral: '#cc6247',
-    teal: '#25897d',
+    teal: 'var(--p31-teal)',
     cyan: '#4db8a8',
     butter: '#cda852',
     lavender: '#8b7cc9',
-    phosphorus: '#3ba372',
+    phosphorus: 'var(--p31-phosphorus)',
     phosphor: '#00FF88',
   },
   surfaces: {
     hub: {
       void: '#0f1115',
       surface: '#161920',
-      cloud: '#d8d6d0',
+      cloud: 'var(--p31-cloud)',
       paper: '#f4f4f5',
       muted: '#6b7280',
     },

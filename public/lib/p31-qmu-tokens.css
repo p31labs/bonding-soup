@@ -1,5 +1,5 @@
 /**
- * P31 Quantum Material U (QMU) Universal Tokens
+ * P31 Legacy Token Map (pre-rename)
  * Document ID: p31.qmuTokens/1.0.0
  * 
  * Canonical color, typography, and spacing tokens for all P31 surfaces.
@@ -23,10 +23,10 @@
   --p31-coral: #cc6247;
   --p31-butter: #cda852;
   --p31-lavender: #8b7cc9;
-  --p31-phosphorus: #3ba372;
+  --p31-phosphorus: #5dca5d;
   
   /* Text Colors */
-  --p31-cloud: #d8d6d0;
+  --p31-cloud: #e8e6e3;
   --p31-muted: #6b7280;
   --p31-subtle: #4a5059;
   

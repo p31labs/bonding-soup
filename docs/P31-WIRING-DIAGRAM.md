@@ -963,6 +963,8 @@ npm run verify  (root, ordered)
 ├── soup:prep:check                     ← C.A.R.S. dist + assets fresh
 ├── verify:triper
 ├── verify:canon
+├── verify:verify
+├── verify:monotonic
 └── verify:public-line
 ```
 

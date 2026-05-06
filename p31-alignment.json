@@ -2973,6 +2973,8 @@
       "soup:prep:check",
       "verify:triper",
       "verify:canon",
+      "verify:verify",
+      "verify:monotonic",
       "verify:public-line"
     ]
   },

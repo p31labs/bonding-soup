@@ -26,19 +26,31 @@
 
 ## 2. UNIFIED WCD COUNT
 
-| Document | WCDs | Total Effort |
-|----------|------|-------------|
-| CARS | 12 WCDs | ~10.5 days |
-| SIMPLEX | 8 WCDs | ~7 days |
-| Design Doctrine | 5 WCDs | ~3 days |
-| Spaceship Earth | 7 WCDs | ~9 days |
-| Node Zero | 7 WCDs | ~7.5 days |
-| Verify Pipeline | (embedded in other WCDs) | — |
-| Worker Fleet | 6 WCDs | ~5.5 days |
-| CogPass | 6 WCDs | ~5.5 days |
-| **Naming Canon** | 1 WCD (grep + replace) | 0.5 day |
-| **Corporate** | 13 WCDs | ~4 days |
-| **TOTAL** | **65 WCDs** | **~52.5 days** |
+| Document | WCDs | Total Effort | Completed |
+|----------|------|-------------|-----------|
+| CARS | 12 WCDs | ~10.5 days | CARS-ALIGN-01 ✅ |
+| SIMPLEX | 8 WCDs | ~7 days | — |
+| Design Doctrine | 5 WCDs | ~3 days | DESIGN-01 ✅, DESIGN-02 ✅ |
+| Spaceship Earth | 7 WCDs | ~9 days | — |
+| Node Zero | 7 WCDs | ~7.5 days | — |
+| Verify Pipeline | (embedded in other WCDs) | — | +3 gates ✅ |
+| Worker Fleet | 6 WCDs | ~5.5 days | FLEET-01 ✅ |
+| CogPass | 6 WCDs | ~5.5 days | COGPASS-01 ✅, COGPASS-02 ✅, COGPASS-06 (partial) ✅ |
+| **Naming Canon** | 1 WCD | 0.5 day | NAMING-01 ✅ (active src clean) |
+| **Corporate** | 13 WCDs | ~4 days | — |
+| **TOTAL** | **65 WCDs** | **~52.5 days** | **~9 WCDs complete** |
+
+**Completed this session (2026-05-06):**
+- DESIGN-01: --p31-butter → --p31-amber in soup-quantum.css (both copies)
+- DESIGN-02: `verify:design-tokens` gate wired (95 gates)
+- NAMING-01: `verify:product-names` gate + EDE/The Buffer renamed in active p31ca src
+- CARS-ALIGN-01: BONDING vs C.A.R.S. canonical distinction in CARS-NAMING.md
+- FLEET-01: P31-KV-NAMESPACE-MAP.md key schema doc written
+- COGPASS-01: `COGPASS_CONSUMER_REGISTRY` in @p31/shared
+- COGPASS-02: `verify:cognitive-passport-schema` extended with consumer registry checks
+- COGPASS-06 (partial): Profile ID discrepancy documented in alignment doc
+- +NEW: `verify:simplex-routes` gate (21 routes, 30 skills verified)
+- +NEW: `SCHEMA_VERSIONS` registry in @p31/shared
 
 Not 52.5 sequential days. Many tracks run in parallel. See §3 for the actual critical path.
 

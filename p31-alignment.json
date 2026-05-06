@@ -1553,6 +1553,14 @@
       "description": "Technical explanation of dual-layer canvas starfield in soup.html and index.html",
       "tier": "B",
       "role": "Technical explainer for dual-layer canvas starfield in soup.html + index.html \u2014 K4 mesh constellation, boid particles"
+    },
+    {
+      "id": "cwp-sov-exec-01-pglite-sync",
+      "path": "docs/CWP-SOV-EXEC-01-PGLITE-ARCH.md",
+      "type": "architecture",
+      "description": "PGLite multi-device sync architecture: T1 (PGLite/IndexedDB) \u2194 T2 (KV relay) \u2194 T3 (D1). Yjs CRDT, BONDING isolation, conflict UX.",
+      "tier": "A",
+      "role": "Architecture spec for offline-first multi-device sync \u2014 PGLite WASM + Yjs CRDT + Cloudflare KV relay + D1 audit log"
     }
   ],
   "derivations": [

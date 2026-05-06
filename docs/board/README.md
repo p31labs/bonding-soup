@@ -10,8 +10,8 @@
 | Office | Person | Appointed |
 |--------|--------|-----------|
 | CEO / Chair | Will Johnson | Incorporated 2026-04-03 |
-| Secretary | Tyler Cisco | Board Meeting #001 |
-| CFO / Treasurer | Brenda Johnson | Board Meeting #001 |
+| Secretary | Joseph Tyler Cisco | Board Meeting #001 |
+| CFO / Treasurer | Brenda O'dell | Board Meeting #001 |
 
 ---
 

@@ -46,7 +46,7 @@
 | Director | Role | Status |
 |----------|------|--------|
 | Will Johnson | Chair / CEO | Active — Founder |
-| Tyler Cisco | Independent Director | Candidate — pending formal appointment |
+| Joseph Tyler Cisco | Independent Director | Candidate — pending formal appointment |
 | Hunter McFeron | Independent Director | Candidate — pending outreach |
 
 **§4.4 Terms.** Directors shall serve staggered two-year terms to provide continuity:
@@ -109,8 +109,8 @@ The CEO and Secretary **must be different individuals**. One person may hold any
 | Office | Person | Notes |
 |--------|--------|-------|
 | CEO / Chair | Will Johnson | Founder |
-| Secretary | Tyler Cisco | Appointed Board Meeting #001 |
-| CFO / Treasurer | Brenda Johnson | Appointed Board Meeting #001 |
+| Secretary | Joseph Tyler Cisco | Appointed Board Meeting #001 |
+| CFO / Treasurer | Brenda O'dell | Appointed Board Meeting #001 |
 
 **§6.3 Election and Term.** Officers shall be elected by the Board at each annual meeting. Officers serve one-year terms and may be re-elected without limit.
 

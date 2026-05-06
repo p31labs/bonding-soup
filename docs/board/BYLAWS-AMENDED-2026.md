@@ -109,8 +109,8 @@ The CEO and Secretary **must be different individuals**. One person may hold any
 | Office | Person | Notes |
 |--------|--------|-------|
 | CEO / Chair | Will Johnson | Founder |
-| Secretary | ___________________________ | Must differ from CEO — appointment pending |
-| CFO / Treasurer | ___________________________ | Appointment pending |
+| Secretary | Tyler Cisco | Appointed Board Meeting #001 |
+| CFO / Treasurer | Brenda Johnson | Appointed Board Meeting #001 |
 
 **§6.3 Election and Term.** Officers shall be elected by the Board at each annual meeting. Officers serve one-year terms and may be re-elected without limit.
 

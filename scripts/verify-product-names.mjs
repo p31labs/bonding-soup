@@ -56,6 +56,7 @@ const EXEMPT_PATTERNS = [
   'node_modules/',
   '.git/',
   // Alignment docs that reference retired names in definitional/historical context
+  'P31-ALIGNMENT-INDEX.md',
   'P31-SIMPLEX-AGENT-FLEET-ALIGNMENT.md',
   'P31-VERIFY-PIPELINE-ALIGNMENT.md',
   'P31-EDE-PARALLEL-AGENT-PROMPTS.md',

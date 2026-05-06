@@ -62,7 +62,9 @@ These fields flow through `p31-subject-prefs.js` → CSS custom properties → e
 **Version:** 1.0.0 (locked)  
 **Verify:** `npm run verify:cognitive-passport-profiles`
 
-| # | Profile ID | Audience | What They See |
+**Conceptual profile taxonomy** (generator target — WCD-COGPASS-03):
+
+| # | Conceptual ID | Audience | What They See |
 |---|-----------|----------|---------------|
 | 1 | operator | Will (full context) | Everything — full cognitive passport |
 | 2 | clinician | Doctors, therapists | Diagnoses, medications, cognitive profile, accessibility needs |
@@ -72,6 +74,21 @@ These fields flow through `p31-subject-prefs.js` → CSS custom properties → e
 | 6 | family | Trusted contacts | Family context, schedule, medical basics |
 | 7 | public | Website visitors, social followers | Mission, published research, product descriptions |
 | 8 | sentinel | SIMPLEX agent context | Full system state, device context, spoon budget |
+
+**Actual `PROFILE_IDS` in `cognitive-passport-profiles.ts`** (current implementation):
+
+| Code ID | Maps to Conceptual | Notes |
+|---------|-------------------|-------|
+| `cursor-agent` | operator (agent context) | Cursor IDE AI session |
+| `claude-session` | operator (agent context) | Claude Code / API session |
+| `clinician` | clinician | Direct match |
+| `ssa` | legal | SSA disability exam context |
+| `court` | legal | Court/custody proceedings |
+| `ada-support` | collaborator | ADA accommodation requests |
+| `beta` | collaborator | Beta tester onboarding |
+| `child` | family | S.J. / W.J. child-safe view |
+
+**WCD-COGPASS-06:** Reconcile conceptual IDs with code IDs. Generator UX (WCD-COGPASS-03) should present conceptual names; underlying profiles.ts uses implementation IDs. A mapping layer in the generator bridges the two.
 
 **Profile derivation:** Each profile is a projection (in the geometric sense) of the full operator passport. The generator takes the complete document and projects it onto the audience's plane, filtering fields they shouldn't see.
 
@@ -119,9 +136,9 @@ CogPass feeds data to multiple consumers:
 | Hub cards | products | Product status indicators |
 | Legal document generator | legal, financial, subject | Court filing templates |
 
-**Gap:** No automated check that CogPass field additions propagate to all consumers. If `accessibility` gains a new field (e.g., `audio_description`), none of the consumers will know.
+**Gap (resolved — WCD-COGPASS-01 ✅):** `COGPASS_CONSUMER_REGISTRY` added to `@p31/shared/src/cogpass-consumer-registry.ts`. Lists all 9 consumers and their field groups. `consumersOf(field)` helper available.
 
-**Fix:** `COGPASS_CONSUMER_REGISTRY` in @p31/shared — lists every consumer and which fields it reads. When schema bumps, verify script checks each consumer's field list against the new schema.
+**Gap (resolved — WCD-COGPASS-02 ✅):** `verify:cognitive-passport-schema` extended to check consumer location existence and field group coverage. Runs in the verify chain.
 
 ---
 

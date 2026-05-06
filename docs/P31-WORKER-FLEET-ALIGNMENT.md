@@ -60,9 +60,7 @@ The existing Worker (Worker #6) serves routes at api.phosphorus31.org. SIMPLEX v
 | WAVE_CONTENT | social-engine | `queue:{platform}` | Social media post queue |
 | (personal) | k4-personal | `subject:{id}` | Personal agent state |
 
-**Gap:** No KV namespace inventory doc exists. Each Worker manages its own namespace without cross-reference.
-
-**Fix:** Add `P31-KV-NAMESPACE-MAP.md` to docs. Each namespace declares its key schema. `verify:ecosystem` checks that no two Workers write to the same KV key pattern.
+**Gap (resolved — WCD-FLEET-01 ✅):** `P31-KV-NAMESPACE-MAP.md` added to docs. Key schema declared for all 4 namespaces: `system_state`, `relay_rooms`, `WAVE_CONTENT`, `k4-personal`.
 
 ---
 
@@ -105,9 +103,7 @@ The k4-cage Worker established the mesh header standard:
 | X-P31-QFactor | 1 | Mesh quality factor |
 | X-P31-Routing-Protocol | custom_dsdv | Mesh routing identifier |
 
-**Standard:** All Workers serving P31 surfaces should include `X-P31-QFactor` and `X-P31-Routing-Protocol` headers. Currently only k4-cage does.
-
-**Action:** Add standard headers to command-center, bonding-relay, and simplex-worker response middleware.
+**Standard (resolved — WCD-FLEET-02 ✅):** `X-P31-QFactor: 1` and `X-P31-Routing-Protocol: custom_dsdv` now set on command-center (jsonResponse), bonding-relay (CORS_HEADERS), and simplex-worker (http-json.ts jsonResponse). All 4 production Workers now carry mesh headers.
 
 ---
 
@@ -149,8 +145,8 @@ Pages sites deploy independently via git push → CF Pages auto-build.
 
 | WCD | Scope | Effort | Dep |
 |-----|-------|--------|-----|
-| WCD-FLEET-01 | KV namespace inventory doc | 0.5 day | None |
-| WCD-FLEET-02 | Standard mesh headers on all Workers | 0.5 day | None |
+| WCD-FLEET-01 | KV namespace inventory doc | 0.5 day | None | ✅ Done — P31-KV-NAMESPACE-MAP.md |
+| WCD-FLEET-02 | Standard mesh headers on all Workers | 0.5 day | None | ✅ Done — command-center, bonding-relay, simplex-worker |
 | WCD-FLEET-03 | api.phosphorus31.org route discovery + merge plan | 1 day | None |
 | WCD-FLEET-04 | Passkey Worker deploy (4 WebAuthn routes) | 2 days | None |
 | WCD-FLEET-05 | Glass probe additions (4 new probes) | 0.5 day | Relevant Workers deployed |

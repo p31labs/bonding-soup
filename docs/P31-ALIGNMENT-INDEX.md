@@ -34,11 +34,11 @@
 | Spaceship Earth | 7 WCDs | ~9 days | — |
 | Node Zero | 7 WCDs | ~7.5 days | — |
 | Verify Pipeline | (embedded in other WCDs) | — | +3 gates ✅ |
-| Worker Fleet | 6 WCDs | ~5.5 days | FLEET-01 ✅ |
+| Worker Fleet | 6 WCDs | ~5.5 days | FLEET-01 ✅, FLEET-03 ✅ |
 | CogPass | 6 WCDs | ~5.5 days | COGPASS-01 ✅, COGPASS-02 ✅, COGPASS-06 (partial) ✅ |
 | **Naming Canon** | 1 WCD | 0.5 day | NAMING-01 ✅ (active src clean) |
 | **Corporate** | 13 WCDs | ~4 days | CORP-02 ✅ (filed 2026-04-30), CORP-04 ✅, CORP-05 ✅, CORP-06 ✅, CORP-07 ✅, CORP-08 ✅, CORP-09 ✅, CORP-10 ✅ |
-| **TOTAL** | **65 WCDs** | **~52.5 days** | **~17 WCDs complete** |
+| **TOTAL** | **65 WCDs** | **~52.5 days** | **~18 WCDs complete** |
 
 **Completed this session (2026-05-06):**
 - DESIGN-01: --p31-butter → --p31-amber in soup-quantum.css (both copies)
@@ -47,6 +47,7 @@
 - CARS-ALIGN-01: BONDING vs C.A.R.S. canonical distinction in CARS-NAMING.md
 - FLEET-01: P31-KV-NAMESPACE-MAP.md key schema doc written
 - FLEET-02: Mesh headers (X-P31-QFactor, X-P31-Routing-Protocol) on command-center, bonding-relay, simplex-worker
+- FLEET-03: api.phosphorus31.org route discovery — no existing routes, SIMPLEX can deploy directly
 - COGPASS-01: `COGPASS_CONSUMER_REGISTRY` in @p31/shared
 - COGPASS-02: `verify:cognitive-passport-schema` extended with consumer registry checks
 - COGPASS-06 (partial): Profile ID discrepancy documented in alignment doc

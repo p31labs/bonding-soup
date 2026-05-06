@@ -24,6 +24,11 @@ export function skillCorsHeaders(request?: Request): Record<string, string> {
 export function jsonResponse(data: unknown, status = 200, request?: Request): Response {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { 'Content-Type': 'application/json', ...skillCorsHeaders(request) },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-P31-QFactor': '1',
+      'X-P31-Routing-Protocol': 'custom_dsdv',
+      ...skillCorsHeaders(request),
+    },
   });
 }

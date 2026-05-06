@@ -80,6 +80,8 @@ const EXEMPT_PATHS = new Set([
   "docs/CWP-K4-AGENT-HUB.md",        // API spec — "child-mesh-unlock" is a token identifier
   "docs/CWP-P31-K4-AGENT-HUB-FAMILY-CAGE-WIRE.md", // same
   "docs/P31-K4-AGENT-HUBS.md",       // same
+  "docs/P31-CARS-CONNECT-MESH-ALIGNMENT.md",         // internal alignment doc — operator name in governance context
+  "docs/P31-CORPORATE-COMPLIANCE-ALIGNMENT.md",      // internal compliance doc — operator name in officer roster
   "AGENTS.md",
   "P31 COGNITIVE PASSPORT — v5.md",
   "docs/P31-COGNITIVE-PASSPORT-v4-PUBLIC.md", // CogPass v4 quotes the avoid-list terms inside the rule about them

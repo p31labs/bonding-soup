@@ -37,8 +37,8 @@
 | Worker Fleet | 6 WCDs | ~5.5 days | FLEET-01 ✅ |
 | CogPass | 6 WCDs | ~5.5 days | COGPASS-01 ✅, COGPASS-02 ✅, COGPASS-06 (partial) ✅ |
 | **Naming Canon** | 1 WCD | 0.5 day | NAMING-01 ✅ (active src clean) |
-| **Corporate** | 13 WCDs | ~4 days | CORP-04 ✅, CORP-05 ✅, CORP-06 ✅, CORP-07 ✅, CORP-08 ✅, CORP-09 ✅, CORP-10 ✅ |
-| **TOTAL** | **65 WCDs** | **~52.5 days** | **~16 WCDs complete** |
+| **Corporate** | 13 WCDs | ~4 days | CORP-02 ✅ (filed 2026-04-30), CORP-04 ✅, CORP-05 ✅, CORP-06 ✅, CORP-07 ✅, CORP-08 ✅, CORP-09 ✅, CORP-10 ✅ |
+| **TOTAL** | **65 WCDs** | **~52.5 days** | **~17 WCDs complete** |
 
 **Completed this session (2026-05-06):**
 - DESIGN-01: --p31-butter → --p31-amber in soup-quantum.css (both copies)
@@ -59,6 +59,11 @@
 - CORP-08: Amended Bylaws — multi-member board, Founder Protection, O.C.G.A. §14-3-840 (docs/board/BYLAWS-AMENDED-2026.md)
 - CORP-09: Board Meeting Minutes Template (docs/board/BOARD-MEETING-MINUTES-TEMPLATE.md)
 - CORP-10: Compliance Calendar ICS — Jul 2 hard wall + 1023-EZ + FERS + recurring (docs/board/P31-COMPLIANCE-CALENDAR.ics)
+- DESIGN-03: design-assets void hex drift fixed + verify:design-tokens §6 extended (gate 111)
+- DESIGN-04: Confirmed complete — spinner pipeline already wired (server-smoke passes)
+- DESIGN-05: verify:p31-layout-declarations gate + 27/27 p31ca pages annotated Focus|Workshop|Gallery
+- COGPASS-03: 4 missing profiles added (grant-reviewer, public, sentinel, family) → 12 profiles total
+- CORP-02 (OPERATOR): IRS Form 1023-EZ FILED 2026-04-30, $275, Pay.gov 281TLBGO, Agency 77374172589
 
 Not 52.5 sequential days. Many tracks run in parallel. See §3 for the actual critical path.
 

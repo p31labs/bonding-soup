@@ -130,30 +130,28 @@ END:VALARM
 END:VEVENT
 
 BEGIN:VEVENT
-UID:p31-1023ez-2028@p31labs.inc
-DTSTART;TZID=America/New_York:20280703T090000
-DTEND;TZID=America/New_York:20280703T100000
-SUMMARY:🔴 HARD DEADLINE — IRS Form 1023-EZ (501(c)(3)) 27-Month Window Closes
-DESCRIPTION:27-month window from date of incorporation (April 3\, 2026) closes July 3\, 2028.\n\nPrerequisites before filing:\n✅ EIN (42-1888158)\n☐ Board expanded to 3+ directors\n☐ Whistleblower Policy adopted\n☐ Document Retention Policy adopted\n☐ Executive Compensation Policy adopted\n☐ Conflict of Interest Policy adopted\n☐ Form C-100 filed\n\n$275 fee. File at pay.gov. Use Form 1023-EZ (organizations with projected receipts < $50K for 3 years).
+UID:p31-1023ez-filed-2026@p31labs.inc
+DTSTART;TZID=America/New_York:20260430T185855
+DTEND;TZID=America/New_York:20260430T195855
+SUMMARY:✅ FILED — IRS Form 1023-EZ (501(c)(3)) — $275 Paid
+DESCRIPTION:Form 1023-EZ filed April 30\, 2026 — 27 days after incorporation.\n\nPay.gov Tracking ID: 281TLBGO\nAgency Tracking ID: 77374172589\nTransaction Amount: $275.00\nCard: Visa ****1203\nEIN: 42-1888158\n\nIRS typical processing: 2–6 months.\nExpected determination letter: July–October 2026.\n\nWHEN LETTER ARRIVES (within 30 days):\n1. File copy with GA Department of Revenue → state tax exemption\n2. File copy with GA SoS Securities & Charities Division (O.C.G.A. § 43-17-5)\n3. Post determination letter on phosphorus31.org/transparency\n4. Update IRS Form 990-N filing address if needed
+END:VEVENT
+
+BEGIN:VEVENT
+UID:p31-1023ez-determination-2026@p31labs.inc
+DTSTART;TZID=America/New_York:20261001T090000
+DTEND;TZID=America/New_York:20261001T100000
+SUMMARY:⚠ Check: IRS 1023-EZ Determination Letter (expected by ~Oct 2026)
+DESCRIPTION:Determination letter expected 2–6 months after April 30 filing.\nIf not received by this date\, call IRS Customer Account Services:\n877-829-5500\, Mon–Fri 8am–5pm local\n\nHave ready: EIN 42-1888158\, Pay.gov tracking 281TLBGO\, agency ID 77374172589\n\nStatus check: IRS.gov "Where's My Application"\n\nOnce received:\n☐ File with GA Dept of Revenue (state exemption)\n☐ File with GA SoS per O.C.G.A. § 43-17-5\n☐ Post to phosphorus31.org/transparency
 BEGIN:VALARM
-TRIGGER:-P365D
+TRIGGER:-P14D
 ACTION:DISPLAY
-DESCRIPTION:1 year until 1023-EZ deadline — begin preparation
+DESCRIPTION:2 weeks: Check IRS "Where's My Application" for 1023-EZ status (filed Apr 30)
 END:VALARM
 BEGIN:VALARM
-TRIGGER:-P180D
+TRIGGER:PT0S
 ACTION:DISPLAY
-DESCRIPTION:6 months: 1023-EZ filing window — all prerequisites must be met
-END:VALARM
-BEGIN:VALARM
-TRIGGER:-P90D
-ACTION:DISPLAY
-DESCRIPTION:90 days: 1023-EZ window closing — file within 3 months
-END:VALARM
-BEGIN:VALARM
-TRIGGER:-P30D
-ACTION:DISPLAY
-DESCRIPTION:30 days: 1023-EZ deadline — URGENT: file immediately
+DESCRIPTION:IRS determination letter checkpoint — call 877-829-5500 if not received
 END:VALARM
 END:VEVENT
 

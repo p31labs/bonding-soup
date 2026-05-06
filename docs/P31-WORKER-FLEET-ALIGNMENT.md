@@ -36,18 +36,17 @@
 
 ## 2. ROUTE CONFLICTS
 
-**Critical conflict: api.phosphorus31.org**
+**Route Discovery Results: api.phosphorus31.org**
 
-The existing Worker (Worker #6) serves routes at api.phosphorus31.org. SIMPLEX v7 (Worker #8) wants to deploy to the same domain with 15 new routes.
+✅ **RESOLVED: No existing routes found.** `api.phosphorus31.org` is not currently live. The discovery script (`discover-current-api-routes.mjs`) tested 28 common API routes and found zero live endpoints.
 
-**Options:**
-- **A. Replace:** Deploy simplex-worker as the sole Worker on api.phosphorus31.org. Existing routes either get ported into simplex-worker or deprecated.
-- **B. Namespace:** Deploy simplex-worker routes under `/api/v7/`. Existing routes remain. Gradual migration.
-- **C. Merge:** Port existing Worker routes into simplex-worker codebase. Deploy unified Worker.
+**Current API landscape:**
+- **donate-api.phosphorus31.org**: Live Stripe Worker (checkout/webhook)
+- **command-center.trimtab-signal.workers.dev**: Live command center
+- **bonding-relay.trimtab-signal.workers.dev**: Live relay
+- Various *.workers.dev domains for other services
 
-**Recommendation:** Option C (merge). One Worker per domain. The discovery script (`discover-current-api-routes.mjs`) inventories what's live, and simplex-worker absorbs those routes. Stripe remains as a sub-route.
-
-**Action:** Run discovery, document existing routes, add them to simplex-worker, verify parity, deploy.
+**Resolution:** SIMPLEX v7 can deploy directly to `api.phosphorus31.org` with zero route conflicts. No merge required.
 
 ---
 
@@ -147,7 +146,7 @@ Pages sites deploy independently via git push → CF Pages auto-build.
 |-----|-------|--------|-----|
 | WCD-FLEET-01 | KV namespace inventory doc | 0.5 day | None | ✅ Done — P31-KV-NAMESPACE-MAP.md |
 | WCD-FLEET-02 | Standard mesh headers on all Workers | 0.5 day | None | ✅ Done — command-center, bonding-relay, simplex-worker |
-| WCD-FLEET-03 | api.phosphorus31.org route discovery + merge plan | 1 day | None |
+| WCD-FLEET-03 | api.phosphorus31.org route discovery + merge plan | 1 day | None | ✅ Done — no existing routes, SIMPLEX can deploy directly |
 | WCD-FLEET-04 | Passkey Worker deploy (4 WebAuthn routes) | 2 days | None |
 | WCD-FLEET-05 | Glass probe additions (4 new probes) | 0.5 day | Relevant Workers deployed |
 | WCD-FLEET-06 | simplex-worker deploy (D1 + 15 routes) | 1 day | D1 created |

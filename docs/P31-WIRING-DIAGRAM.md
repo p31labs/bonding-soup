@@ -909,6 +909,8 @@ npm run verify  (root, ordered)
 ├── verify:launch-lane-sync
 ├── verify:map-pipeline
 ├── verify:p31-style                    ← universal canon
+├── verify:design-tokens
+├── verify:product-names
 ├── verify:quantum-material-u
 ├── verify:canon-css
 ├── verify:phos-truth
@@ -958,6 +960,8 @@ npm run verify  (root, ordered)
 ├── verify:simplex                      ← simplex-v7 SIMPLEX + SENTINEL
 ├── verify:simplex-email
 ├── verify:simplex-bootstrap
+├── verify:simplex-routes
+├── verify:p31-layout-declarations
 ├── verify:edge-lab                     ← cf-edge-lab wrangler dry-run
 ├── build
 ├── soup:prep:check                     ← C.A.R.S. dist + assets fresh

@@ -21,7 +21,7 @@ Instrumentation tone: precise, dark-room, instrumentation-first.
 
 | Token / role | Hex | Usage |
 |----------------|-----|--------|
-| **Void (EDE)** | `#05080c` | Deepest framing (portals, command strips) |
+| **Void** | `#0f1115` | Deepest framing (portals, command strips) |
 | **Surface 1** | `#11151c` | Translucent shells |
 | **Surface 2** | `#1a1f29` | Elevated panels, inputs |
 | **Cloud** | `#e8e6e3` | Primary prose |

@@ -1,0 +1,11 @@
+[
+  { "path": "/", "status": "live", "label": "Orbital Root" },
+  { "path": "/passport", "status": "live", "label": "Cognitive Passport" },
+  { "path": "/dome", "status": "live", "label": "Dome Builder" },
+  { "path": "/god", "status": "live", "label": "Command Center" },
+  { "path": "/garden", "status": "live", "label": "Garden" },
+  { "path": "/doc-library", "status": "live", "label": "Document Library" },
+  { "path": "/soup", "status": "external", "label": "Soup" },
+  { "path": "/support", "status": "live", "label": "Support" },
+  { "path": "/compliance", "status": "live", "label": "Compliance Tracker" }
+]

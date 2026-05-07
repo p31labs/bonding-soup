@@ -1,0 +1,34 @@
+{
+  "name": "p31-ecosystem-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo for the P31 Ecosystem rebuild",
+  "keywords": [
+    "p31",
+    "astro",
+    "react",
+    "monorepo"
+  ],
+  "author": "P31 Labs",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/p31labs/p31-ecosystem-monorepo.git"
+  },
+  "workspaces": [
+    "packages/*",
+    "scripts/*",
+    "shared/*"
+  ],
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm -r dev",
+    "verify": "pnpm -r verify",
+    "launch": "echo 'Implement launch pipeline'",
+    "clean": "pnpm -r clean && rm -rf node_modules",
+    "test": "pnpm -r test"
+  },
+  "dependencies": {
+    "fuse.js": "^7.3.0"
+  }
+}

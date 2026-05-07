@@ -1,0 +1,239 @@
+:root {
+  /* ── Universal Canon — Hub Theme (Default Dark) ── */
+  --p31-void: #0f1115;           /* Deep void - page background */
+  --p31-surface: #161920;        /* Cards, panels */
+  --p31-surface2: #1c2028;      /* Elevated surfaces */
+  --p31-coral: #cc6247;         /* CTAs, warnings, accent */
+  --p31-teal: #25897d;          /* Links, interactive */
+  --p31-cyan: #4db8a8;          /* Highlights, focus states */
+  --p31-cloud: #d8d6d0;         /* Primary text */
+  --p31-butter: #cda852;        /* Warm accents, prototyping */
+  --p31-lavender: #8b7cc9;      /* Hub-specific, secondary */
+  --p31-phosphorus: #3ba372;    /* Success, live status */
+  --p31-muted: #6b7280;         /* Secondary text */
+  --p31-border-subtle: rgba(255, 255, 255, 0.06);
+  --p31-glass-surface: rgba(255, 255, 255, 0.04);
+  --p31-glass-border: rgba(255, 255, 255, 0.08);
+
+  /* ── Typography Scale ── */
+  --p31-font-sans: "Atkinson Hyperlegible", system-ui, sans-serif;
+  --p31-font-mono: "JetBrains Mono", monospace;
+
+  --p31-text-xs: 0.75rem;       /* 12px */
+  --p31-text-sm: 0.875rem;      /* 14px */
+  --p31-text-base: 1rem;        /* 16px */
+  --p31-text-md: 1.0625rem;     /* 17px */
+  --p31-text-lg: 1.125rem;      /* 18px */
+  --p31-text-xl: 1.25rem;       /* 20px */
+  --p31-text-2xl: 1.5rem;       /* 24px */
+  --p31-text-3xl: 1.875rem;     /* 30px */
+  --p31-text-4xl: 2.25rem;      /* 36px */
+
+  --p31-leading-tight: 1.25;
+  --p31-leading-snug: 1.4;
+  --p31-leading-normal: 1.6;
+  --p31-leading-relaxed: 1.75;
+
+  --p31-tracking-tight: -0.02em;
+  --p31-tracking-normal: 0;
+  --p31-tracking-wide: 0.08em;
+  --p31-tracking-caps: 0.12em;
+
+  /* ── Spacing Scale ── */
+  --p31-space-1: 0.25rem;   /* 4px  */
+  --p31-space-2: 0.5rem;  /* 8px  */
+  --p31-space-3: 0.75rem; /* 12px */
+  --p31-space-4: 1rem;    /* 16px */
+  --p31-space-5: 1.25rem; /* 20px */
+  --p31-space-6: 1.5rem;  /* 24px */
+  --p31-space-8: 2rem;    /* 32px */
+  --p31-space-10: 2.5rem; /* 40px */
+  --p31-space-12: 3rem;   /* 48px */
+  --p31-space-16: 4rem;   /* 64px */
+
+  /* ── Border Radius ── */
+  --p31-radius-sm: 4px;
+  --p31-radius-md: 8px;
+  --p31-radius-lg: 12px;
+  --p31-radius-xl: 16px;
+  --p31-radius-2xl: 1.25rem;
+  --p31-radius-full: 9999px;
+
+  /* ── Shadows & Elevation ── */
+  --p31-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --p31-shadow-md: 0 4px 14px rgba(0, 0, 0, 0.08);
+  --p31-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+  --p31-shadow-glowTeal: 0 0 24px rgba(37, 137, 125, 0.25);
+
+  /* ── Animation Timing ── */
+  --p31-duration-instant: 100ms;
+  --p31-duration-fast: 150ms;
+  --p31-duration-normal: 250ms;
+  --p31-duration-slow: 400ms;
+  --p31-duration-glacial: 800ms;
+
+  --p31-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --p31-ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --p31-ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+
+  /* ── Z-Index Scale ── */
+  --p31-z-base: 0;
+  --p31-z-dropdown: 50;
+  --p31-z-sticky: 100;
+  --p31-z-overlay: 200;
+  --p31-z-modal: 300;
+  --p31-z-toast: 400;
+
+  /* ── Focus States ── */
+  --p31-focus-ring: 2px;
+  --p31-focus-offset: 2px;
+  --p31-focus-color-hub: rgba(77, 184, 168, 0.55);
+}
+
+/* ── Org Theme (Light Mode Variant) ── */
+[data-p31-appearance="org"] {
+  --p31-void: #f5f4f0;          /* Cream background */
+  --p31-surface: #ffffff;       /* White cards */
+  --p31-surface2: #ebeae4;      /* Subtle elevation */
+  --p31-cloud: #1e293b;         /* Dark text */
+  --p31-muted: #64748b;         /* Secondary text */
+  --p31-border-subtle: rgba(15, 23, 42, 0.09);
+  --p31-glass-surface: rgba(255, 255, 255, 0.8);
+  --p31-glass-border: rgba(15, 23, 42, 0.1);
+}
+
+/* ── Global Base Styles ── */
+body {
+  background-color: var(--p31-void);
+  color: var(--p31-cloud);
+  font-family: var(--p31-font-sans);
+  font-size: var(--p31-text-base);
+  line-height: var(--p31-leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+}
+
+:focus-visible {
+  outline: var(--p31-focus-ring) solid var(--p31-focus-color-hub);
+  outline-offset: var(--p31-focus-offset);
+}
+
+.mono {
+  font-family: var(--p31-font-mono);
+}
+
+/* ── Glass Panel Pattern ── */
+.glass-panel {
+  background: color-mix(in srgb, var(--p31-surface2) 78%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--p31-glass-border);
+  border-radius: var(--p31-radius-lg);
+}
+
+/* ── Component Library ── */
+
+/* Buttons */
+.btn-primary {
+  background: color-mix(in srgb, var(--p31-teal) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--p31-teal) 45%, transparent);
+  color: var(--p31-cloud);
+  font-weight: 700;
+  min-height: 3rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: 0.65rem;
+  transition: filter 140ms ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-primary:hover {
+  filter: brightness(1.07);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--p31-cloud);
+  min-height: 2.85rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: 0.65rem;
+  transition: all 140ms ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-safe {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(255, 100, 100, 0.3);
+  border-radius: 6px;
+  background: rgba(255, 100, 100, 0.08);
+  color: var(--p31-coral, #ff8080);
+  font-family: var(--p31-font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+/* Cards */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 200ms ease;
+  text-decoration: none;
+  color: var(--p31-cloud);
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.3);
+}
+
+/* Badges */
+.badge-live {
+  background: color-mix(in srgb, var(--p31-phosphorus) 12%, transparent);
+  color: var(--p31-phosphorus);
+  border: 1px solid color-mix(in srgb, var(--p31-phosphorus) 30%, transparent);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.badge-research {
+  background: color-mix(in srgb, var(--p31-cyan) 12%, transparent);
+  color: var(--p31-cyan);
+  border: 1px solid color-mix(in srgb, var(--p31-cyan) 30%, transparent);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.badge-hardware {
+  background: color-mix(in srgb, var(--p31-butter) 12%, transparent);
+  color: var(--p31-butter);
+  border: 1px solid color-mix(in srgb, var(--p31-butter) 30%, transparent);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-weight: 700;
+}

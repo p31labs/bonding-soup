@@ -1,0 +1,178 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//P31 Labs Inc//Compliance Calendar//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:P31 Labs Compliance
+X-WR-TIMEZONE:America/New_York
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260702
+DTEND;VALUE=DATE:20260703
+SUMMARY:🔴 GA Initial Annual Registration DUE
+DESCRIPTION:File with GA Secretary of State within 90 days of incorporation (Apr 3).\n$30 fee.\n3 officers required: CEO, Secretary, CFO.\nFile at ecorp.sos.ga.gov\nPhone: (404) 656-2817
+LOCATION:https://ecorp.sos.ga.gov
+STATUS:CONFIRMED
+CATEGORIES:CRITICAL,GA SoS
+BEGIN:VALARM
+TRIGGER:-P30D
+ACTION:DISPLAY
+DESCRIPTION:30 days until GA Initial Annual Registration deadline
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P14D
+ACTION:DISPLAY
+DESCRIPTION:14 days until GA Initial Annual Registration deadline
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P7D
+ACTION:DISPLAY
+DESCRIPTION:7 days until GA Initial Annual Registration deadline
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:TOMORROW: GA Initial Annual Registration deadline
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260630
+DTEND;VALUE=DATE:20260701
+SUMMARY:🟡 GA Charitable Solicitation (C-100) — File
+DESCRIPTION:Register with GA SoS Securities & Charities Division.\n$35 fee.\nRequired before soliciting GA donations.\nAlready accepting Stripe/Ko-fi — this is overdue.\nForm: C-100\nChecklist: https://sos.ga.gov/how-to-guide/how-guide-charities
+LOCATION:https://sos.ga.gov/how-to-guide/how-guide-charities
+STATUS:CONFIRMED
+CATEGORIES:HIGH,GA SoS
+BEGIN:VALARM
+TRIGGER:-P14D
+ACTION:DISPLAY
+DESCRIPTION:14 days to file Form C-100
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260601
+DTEND;VALUE=DATE:20260602
+SUMMARY:🔴 Board Resolution — Adopt Policies & Authorize Filings
+DESCRIPTION:Adopt: Bylaws, COI, Whistleblower, Doc Retention, Exec Comp, Gift Acceptance.\nAuthorize: Annual Registration, 1023-EZ, C-100, SAM.gov.\nElect officers: CEO, Secretary, CFO.\nUse P31-Initial-Board-Resolution.docx template.
+STATUS:CONFIRMED
+CATEGORIES:CRITICAL,Governance
+BEGIN:VALARM
+TRIGGER:-P7D
+ACTION:DISPLAY
+DESCRIPTION:7 days to adopt Board Resolution
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260801
+DTEND;VALUE=DATE:20260802
+SUMMARY:🟡 Board Expansion — 3+ Directors for 1023-EZ
+DESCRIPTION:Formal appointment of Tyler Cisco and Hunter McFeron (or alternates).\nIRS strongly prefers 3+ unrelated directors for 1023-EZ.\nMust be independent (not employees or family).
+STATUS:CONFIRMED
+CATEGORIES:HIGH,Governance
+BEGIN:VALARM
+TRIGGER:-P30D
+ACTION:DISPLAY
+DESCRIPTION:30 days to complete Board expansion
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260901
+DTEND;VALUE=DATE:20260902
+SUMMARY:🟡 Form 1023-EZ — Target Filing Date
+DESCRIPTION:501(c)(3) application.\n$275 fee.\nDeadline: ~Jul 3 2028 (27-month window) but target Sep 2026.\nPrereqs: Board expanded, all policies adopted, bylaws updated.\nEligibility: gross receipts ≤$50K, assets ≤$250K.\nFile at pay.gov
+LOCATION:https://www.pay.gov/public/form/start/29067782
+STATUS:CONFIRMED
+CATEGORIES:HIGH,IRS
+BEGIN:VALARM
+TRIGGER:-P30D
+ACTION:DISPLAY
+DESCRIPTION:30 days to target 1023-EZ filing
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260930
+DTEND;VALUE=DATE:20261001
+SUMMARY:🔴 FERS Disability Retirement — Filing Deadline
+DESCRIPTION:Per 5 CFR §844.201.\nSF-3112A (with nexus), 3112B (Robby Allen signed), 3112C (psychiatrist complete).\nStill needed: 3112D/E from agency, SF-3107 from you.\nNuclear option: file direct to OPM Boyers PA.\nNavy Benefits Center: 1-888-320-2917
+STATUS:CONFIRMED
+CATEGORIES:CRITICAL,Federal
+BEGIN:VALARM
+TRIGGER:-P60D
+ACTION:DISPLAY
+DESCRIPTION:60 days until FERS deadline
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P30D
+ACTION:DISPLAY
+DESCRIPTION:30 days until FERS deadline
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P7D
+ACTION:DISPLAY
+DESCRIPTION:7 DAYS until FERS deadline
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20270101
+DTEND;VALUE=DATE:20270402
+SUMMARY:🟢 GA Annual Registration Window (2027)
+DESCRIPTION:File between Jan 1 and Apr 1, 2027.\n$30 nonprofit fee.\nCan file up to 3 years in advance.\nhttps://ecorp.sos.ga.gov
+LOCATION:https://ecorp.sos.ga.gov
+STATUS:CONFIRMED
+CATEGORIES:MEDIUM,GA SoS
+BEGIN:VALARM
+TRIGGER:-P14D
+ACTION:DISPLAY
+DESCRIPTION:GA Annual Registration window opens in 14 days
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20270515
+DTEND;VALUE=DATE:20270516
+SUMMARY:🟢 IRS Form 990-N (FY2026) DUE
+DESCRIPTION:e-Postcard for FY2026 (Jan 1 - Dec 31, 2026).\n$0 fee.\nDue 4.5 months after FY end.\nFile online only at irs.gov.\nFailing to file for 3 consecutive years = revocation.
+LOCATION:https://www.irs.gov/charities-non-profits/annual-electronic-filing-requirement-for-small-exempt-organizations-form-990-n-e-postcard
+STATUS:CONFIRMED
+CATEGORIES:MEDIUM,IRS
+BEGIN:VALARM
+TRIGGER:-P30D
+ACTION:DISPLAY
+DESCRIPTION:30 days until Form 990-N due
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260630
+DTEND;VALUE=DATE:20260701
+SUMMARY:🟢 Accounting System Setup Deadline
+DESCRIPTION:Set up Wave (free) or GnuCash.\nLink to Mercury bank.\nCategorize all transactions since Apr 13.\nNeeded for 990-N and grant reporting.
+STATUS:CONFIRMED
+CATEGORIES:MEDIUM,Financial
+BEGIN:VALARM
+TRIGGER:-P14D
+ACTION:DISPLAY
+DESCRIPTION:14 days to set up accounting
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+RRULE:FREQ=MONTHLY;BYMONTHDAY=1
+DTSTART;VALUE=DATE:20260701
+DTEND;VALUE=DATE:20260702
+SUMMARY:📊 Monthly Financial Reconciliation
+DESCRIPTION:Reconcile Mercury transactions.\nCategorize expenses.\nUpdate monthly report.\nUse P31-Monthly-Report-Template.docx.
+STATUS:CONFIRMED
+CATEGORIES:Recurring,Financial
+END:VEVENT
+BEGIN:VEVENT
+RRULE:FREQ=YEARLY;BYMONTH=3;BYMONTHDAY=15
+DTSTART;VALUE=DATE:20270315
+DTEND;VALUE=DATE:20270316
+SUMMARY:📊 Quarterly Board Meeting (Q1)
+DESCRIPTION:Regular quarterly Board meeting.\nAgenda: Financial report, CEO report, compliance status.\nUse P31-Board-Meeting-Minutes-Template.docx.
+STATUS:CONFIRMED
+CATEGORIES:Recurring,Governance
+BEGIN:VALARM
+TRIGGER:-P7D
+ACTION:DISPLAY
+DESCRIPTION:Board meeting in 7 days
+END:VALARM
+END:VEVENT
+END:VCALENDAR

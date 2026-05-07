@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@shared/*": ["./shared/*"]
+    }
+  },
+  "files": [],
+  "references": [
+    { "path": "./packages/phosphorus31-org" },
+    { "path": "./packages/p31ca-org" }
+  ]
+}

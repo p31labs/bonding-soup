@@ -1,5 +1,12 @@
 # C.A.R.S.
 
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/p31labs/bonding-soup/badge)](https://securityscorecards.dev/viewer/?uri=github.com/p31labs/bonding-soup)
+[![Open Collective](https://opencollective.com/p31-labs/backers.svg)](https://opencollective.com/p31-labs)
+[![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/p31labs)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+
+
 **Collaborative Affective Realtime Sim** — a browser sim of **social molecules** (local atoms + networked **ghost molecules** in shared rooms). TypeScript engine in **`src/`**, built to **`dist/`**. Entry: **`soup.html`**.
 
 **Naming:** **`docs/CARS-NAMING.md`**. npm package name remains **`bonding-soup`**; live deploy path unchanged (`bonding.p31ca.org/soup`).

@@ -1,8 +1,86 @@
 {
   "schema": "p31.chainAnchor/0.1.0",
-  "updated": "2026-04-30T00:00:00.000Z",
+  "updated": "2026-06-12T04:50:00.000Z",
   "sovereignLayersManifest": "p31-sovereign-layers.json",
   "contracts": [
+    {
+      "name": "P31TransparencyAnchor",
+      "source": "packages/p31-sovereign-chain/src/P31TransparencyAnchor.sol",
+      "solidity": "0.8.24",
+      "role": "Append-only digest + URI commitments (manifest proofs).",
+      "note": "digest in anchor() is operator-chosen bytes32 (typically sha256 of UTF-8 JSON)."
+    },
+    {
+      "name": "P31ContentRoot",
+      "source": "packages/p31-sovereign-chain/src/P31ContentRoot.sol",
+      "solidity": "0.8.24",
+      "role": "Owner-managed key → CID map for IPFS/Arweave hub snapshots.",
+      "note": "Transfer owner to Safe multisig for production (see p31-sovereign-layers L10)."
+    },
+    {
+      "name": "P31ManifestRegistry",
+      "source": "packages/p31-sovereign-chain/src/P31ManifestRegistry.sol",
+      "solidity": "0.8.24",
+      "role": "SMART M — manifest id → latest digest + URI (permissionless publish).",
+      "note": "manifestId e.g. keccak256(bytes(schema string))."
+    },
+    {
+      "name": "P31AccessAllowlist",
+      "source": "packages/p31-sovereign-chain/src/P31AccessAllowlist.sol",
+      "solidity": "0.8.24",
+      "role": "SMART A — capability → address allowlist (owner).",
+      "note": "Use for gated hooks; rotate owner to multisig."
+    },
+    {
+      "name": "P31TreasuryConfig",
+      "source": "packages/p31-sovereign-chain/src/P31TreasuryConfig.sol",
+      "solidity": "0.8.24",
+      "role": "SMART T — Safe + USDC + chain id; lock after configure.",
+      "note": "Pairs with L8 on-chain payments in p31-sovereign-layers.json."
+    },
+    {
+      "name": "LOVEToken",
+      "source": "packages/p31-sovereign-chain/src/LOVEToken.sol",
+      "solidity": "0.8.24",
+      "role": "Soulbound ERC-20 with 50/50 sovereignty/performance pool split.",
+      "note": "No external transfer — mint/burn only. Architects can abdicate to ZERO_ADDRESS."
+    },
+    {
+      "name": "ProofOfCare",
+      "source": "packages/p31-sovereign-chain/src/ProofOfCare.sol",
+      "solidity": "0.8.24",
+      "role": "Oracle contract computing care scores = sum(T_prox × Q_res) + tasks_verified.",
+      "note": "Authorized relay pushes HRV telemetry. Decay: -0.005/day after 7d grace, floor 0.1."
+    },
+    {
+      "name": "PayrollStream",
+      "source": "packages/p31-sovereign-chain/src/PayrollStream.sol",
+      "solidity": "0.8.24",
+      "role": "Sablier-style closed-ended USDC streaming for operational payroll.",
+      "note": "Cancelable. Unstreamed tokens return to sender. Van Camp compliance."
+    },
+    {
+      "name": "SlicingPieLedger",
+      "source": "packages/p31-sovereign-chain/src/SlicingPieLedger.sol",
+      "solidity": "0.8.24",
+      "role": "Deferred compensation tracker with GHRR and risk multipliers.",
+      "note": "2× for time, 4× for cash. Segregated from L.O.V.E. tokens."
+    },
+    {
+      "name": "TrancheWaterfall",
+      "source": "packages/p31-sovereign-chain/src/TrancheWaterfall.sol",
+      "solidity": "0.8.24",
+      "role": "Three-tier distribution: (1) OpEx+payroll, (2) PPT sweep, (3) PoC dividends.",
+      "note": "Strict sequential waterfall. Tranche 1 must clear before Tranche 2/3."
+    },
+    {
+      "name": "PerpetualPurposeTrust",
+      "source": "packages/p31-sovereign-chain/src/PerpetualPurposeTrust.sol",
+      "solidity": "0.8.24",
+      "role": "PPT vault holding DUNA/DAO ownership, GME shares, and USDC reserve.",
+      "note": "Non-charitable, purpose-driven. No human beneficiaries. Van Camp shield."
+    }
+  ],
     {
       "name": "P31TransparencyAnchor",
       "source": "packages/p31-sovereign-chain/src/P31TransparencyAnchor.sol",

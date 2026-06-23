@@ -3,7 +3,7 @@
  * Emotional kinematics for molecule behavior; maps 7 archetypes to movement patterns
  */
 
-import { Atom } from './soupPhysics';
+import type { Atom } from './soupPhysics';
 
 export enum PersonalityType {
   MEDIATOR = 'mediator',
@@ -355,7 +355,7 @@ export class PersonalitiesEngine {
   /**
    * Update emotional state based on environment and interactions
    */
-  updateEmotionalState(atomId: string, nearbyAtoms: Atom[], zoneEffects: any) {
+  updateEmotionalState(atomId: string, nearbyAtoms: Atom[], zoneEffects: { arousalModifier?: number; cognitiveModifier?: number; valenceShift?: number }) {
     const emotionalState = this.emotionalStates.get(atomId);
     if (!emotionalState) return;
 

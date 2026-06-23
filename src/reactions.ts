@@ -3,7 +3,7 @@
  * Chemical metaphor for emotional events in the sim — 6 reaction types (affective chemistry spec)
  */
 
-import { Atom, Bond } from './soupPhysics';
+import type { Atom, Bond } from './soupPhysics';
 
 export enum ReactionType {
   SYNTHESIS = 'synthesis',           // A + B → AB (falling in love)

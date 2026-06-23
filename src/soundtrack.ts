@@ -42,6 +42,8 @@ export class SoundtrackEngine {
   private zones: AudioZone[] = [];
   private activeOscillators = 0;
   private maxOscillators = 8;
+  private worldWidth: number;
+  private worldHeight: number;
 
   /**
    * Master gain baseline (matches the `0.3` set in `initializeAudio`). Kept here so the
@@ -76,7 +78,9 @@ export class SoundtrackEngine {
     }
   };
 
-  constructor() {
+  constructor(worldWidth = 4000, worldHeight = 4000) {
+    this.worldWidth = worldWidth;
+    this.worldHeight = worldHeight;
     this.initializeAudio();
     this.setupZones();
   }
@@ -86,7 +90,7 @@ export class SoundtrackEngine {
    */
   private initializeAudio() {
     try {
-      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
     } catch (e) {
       console.warn('Web Audio API not supported');
       return;
@@ -143,33 +147,35 @@ export class SoundtrackEngine {
    * Set up the four audio zones
    */
   private setupZones() {
+    const { worldWidth: w, worldHeight: h } = this;
+    const r = Math.min(w, h) * 0.28;
     this.zones = [
       {
         name: 'calm',
-        x: 2000,
-        y: 2000,
-        radius: 600,
+        x: w * 0.2,
+        y: h * 0.5,
+        radius: r,
         audioProfile: this.zoneProfiles.calm
       },
       {
         name: 'lab',
-        x: 1000,
-        y: 1000,
-        radius: 800,
+        x: w * 0.5,
+        y: h * 0.25,
+        radius: r,
         audioProfile: this.zoneProfiles.lab
       },
       {
         name: 'kitchen',
-        x: 3000,
-        y: 3000,
-        radius: 700,
+        x: w * 0.8,
+        y: h * 0.5,
+        radius: r,
         audioProfile: this.zoneProfiles.kitchen
       },
       {
         name: 'deep',
-        x: 2000,
-        y: 2000,
-        radius: 800,
+        x: w * 0.5,
+        y: h * 0.75,
+        radius: r,
         audioProfile: this.zoneProfiles.deep
       }
     ];

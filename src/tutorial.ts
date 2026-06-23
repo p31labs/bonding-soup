@@ -322,6 +322,7 @@ export class TutorialSystem {
 
     if (this.currentStep.nextStep) {
       this.completedSteps.add(this.currentStep.id);
+      this.saveProgress();
       this.showStep(this.currentStep.nextStep);
     }
   }
@@ -384,5 +385,5 @@ export class TutorialSystem {
 
 // Export for browser use
 if (typeof window !== 'undefined') {
-  (window as any).TutorialSystem = TutorialSystem;
+  window.TutorialSystem = TutorialSystem;
 }

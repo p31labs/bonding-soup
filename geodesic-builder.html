@@ -900,6 +900,7 @@
         });
         
         this.log(`Placed ${this.currentBlockType} at [${x}, ${y}, ${z}]`);
+        gbAudio.snap();
       }
       
       deleteBlockAt(e) {
@@ -1116,7 +1117,35 @@
     }
     
     // Initialize
-    const gbWorld = new GeodesicBuilder();
+    class AudioPool {
+  constructor() { this.ctx = null; }
+  ensure() {
+    if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (this.ctx.state === 'suspended') this.ctx.resume();
+  }
+  pop() { this.ensure(); this.tone(860, 'sine', 0.12); }
+  snap() { this.ensure(); this.tone(520, 'triangle', 0.18, 180); }
+  hum(vol = 0.0006) {
+    this.ensure();
+    const o = this.ctx.createOscillator();
+    const g = this.ctx.createGain();
+    o.type = 'sine'; o.frequency.value = 96; g.gain.value = vol;
+    o.connect(g); g.connect(this.ctx.destination); o.start();
+    this._humStop = () => { try { g.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.4); o.stop(this.ctx.currentTime + 0.42); } catch {} };
+  }
+  tone(freq, type, dur, slideTo) {
+    const o = this.ctx.createOscillator();
+    const g = this.ctx.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, this.ctx.currentTime);
+    if (slideTo) o.frequency.exponentialRampToValueAtTime(Math.max(1, slideTo), this.ctx.currentTime + dur);
+    g.gain.setValueAtTime(0.08, this.ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + dur);
+    o.connect(g); g.connect(this.ctx.destination); o.start(); o.stop(this.ctx.currentTime + dur);
+  }
+}
+const gbAudio = new AudioPool();
+
+const gbWorld = new GeodesicBuilder();
     
     // Tool buttons
     document.querySelectorAll('.gb-tool-btn').forEach(btn => {

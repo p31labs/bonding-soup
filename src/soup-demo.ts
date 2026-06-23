@@ -4,7 +4,7 @@
  */
 
 import { SoupEngine } from './soup';
-import { DEFAULT_SOUP_CONFIG } from './soupPhysics';
+import { DEFAULT_SOUP_CONFIG, type Atom, type Bond } from './soupPhysics';
 import { particleSystem } from './particles';
 
 // Logging function
@@ -254,7 +254,7 @@ async function initializeSynthesisDemo() {
 
 // Export for browser use
 if (typeof window !== 'undefined') {
-  (window as any).SoupDemo = {
+  window.SoupDemo = {
     soup,
     createWaterMolecule,
     createHydrocarbonMolecule,

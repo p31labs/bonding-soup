@@ -324,6 +324,8 @@ export class ParticleSystem {
         return this.createCombustionBurst(position);
       case 'acid_base':
         return this.createNeutralizationWave(position);
+      case 'ping':
+        return this.createSynthesisGlow(position); // Subtle ping indicator
       default:
         return this.createSynthesisGlow(position); // Default to glow
     }

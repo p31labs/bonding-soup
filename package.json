@@ -1,6 +1,7 @@
 {
   "name": "bonding-soup",
   "version": "0.1.0",
+  "private": true,
   "description": "C.A.R.S. (Collaborative Affective Realtime Sim) — home workspace; npm package name bonding-soup (legacy; see docs/CARS-NAMING.md)",
   "main": "dist/soup.js",
   "bin": {
@@ -368,6 +369,11 @@
     "reports:daemon:status": "node scripts/p31-reports-daemon.mjs --status",
     "reports:install-systemd": "node scripts/p31-reports-install-systemd.mjs",
     "reports:inbox": "node scripts/p31-reports-inbox.mjs",
+    "health:bridge": "node scripts/p31-health-bridge.mjs",
+    "health:bridge:summary": "node scripts/p31-health-bridge.mjs --summary",
+    "health:bridge:json": "node scripts/p31-health-bridge.mjs --json",
+    "health:log": "node scripts/p31-health-bridge.mjs --log",
+    "health:init": "node scripts/p31-health-bridge.mjs --init",
     "reports:from-glass": "node scripts/p31-reports-from-glass.mjs",
     "verify:reports-index": "node scripts/verify-reports-index.mjs",
     "verify:reports-automation": "node scripts/verify-reports-automation.mjs",
@@ -508,9 +514,9 @@
     "pdf-lib": "^1.17.1",
     "playwright": "^1.49.0",
     "qrcode": "^1.5.4",
-    "typescript": "^4.9.0",
-    "vitest": "^3.0.0",
-    "ws": "^8.14.0"
+    "typescript": "^6.0.3",
+    "vitest": "^4.0.0",
+    "ws": "^8.21.0"
   },
   "files": [
     "dist/**/*",

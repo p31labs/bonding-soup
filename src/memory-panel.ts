@@ -1,26 +1,32 @@
-/**
- * BONDING Memory Panel
- * UI for viewing and managing saved molecules
- */
+import type { Atom, Bond } from './soupPhysics';
+import type { SoupEngine } from './soup';
+
 interface Molecule {
   id: string;
   name: string;
   emotionalContext: string;
-  atoms: any[];
-  bonds: any[];
+  atoms: Atom[];
+  bonds: Bond[];
   personality: string;
   zone: string;
   creationTime: number;
   significance: number;
-  heritage?: any[];
+  heritage?: HeritageRecord[];
   generation?: number;
+}
+
+interface HeritageRecord {
+  parentId: string;
+  reactionType: string;
+  timestamp: number;
+  emotionalContext: string;
 }
 
 class MemoryPanel {
   private panelElement: HTMLElement | null = null;
   private isVisible = false;
 
-  constructor(private soup: any) {
+  constructor(private soup: SoupEngine) {
     this.createPanel();
   }
 
@@ -233,5 +239,5 @@ class MemoryPanel {
 
 // Export for browser use
 if (typeof window !== 'undefined') {
-  (window as any).MemoryPanel = MemoryPanel;
+  window.MemoryPanel = MemoryPanel;
 }

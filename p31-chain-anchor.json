@@ -79,8 +79,7 @@
       "solidity": "0.8.24",
       "role": "PPT vault holding DUNA/DAO ownership, GME shares, and USDC reserve.",
       "note": "Non-charitable, purpose-driven. No human beneficiaries. Van Camp shield."
-    }
-  ],
+    },
     {
       "name": "P31TransparencyAnchor",
       "source": "packages/p31-sovereign-chain/src/P31TransparencyAnchor.sol",

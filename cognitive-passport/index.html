@@ -55,6 +55,7 @@
   <link rel="stylesheet" href="/design-assets/starfield/p31-starfield.css" />
   <!-- ── End canonical stack ─────────────────────────────────────────── -->
   <script src="lib/p31-subject-prefs.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js" defer></script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -799,6 +800,7 @@
           <button type="button" class="p31-q-chip p31-q-chip--filter tab on" role="tab" aria-selected="true" aria-controls="out-md" data-panel="md">Markdown</button>
           <button type="button" class="p31-q-chip p31-q-chip--filter tab" role="tab" aria-selected="false" aria-controls="out-json" data-panel="json">JSON</button>
           <button type="button" class="p31-q-chip p31-q-chip--filter tab" role="tab" aria-selected="false" aria-controls="out-agent" data-panel="agent">Plain text</button>
+          <button type="button" class="p31-q-chip p31-q-chip--filter tab" role="tab" aria-selected="false" aria-controls="out-qr" data-panel="qr">QR Code</button>
         </div>
         <div class="out-panel on" id="out-md" role="tabpanel">
           <textarea id="outMd" readonly aria-label="Markdown output" placeholder="Your Markdown summary appears here as you type. Use it for emails, intake forms, or sharing with new clinicians."></textarea>
@@ -809,12 +811,23 @@
         <div class="out-panel" id="out-agent" role="tabpanel">
           <textarea id="outAgent" readonly aria-label="Agent block output" placeholder="Plain-text agent block appears here — paste into ChatGPT custom instructions, Claude project rules, or any assistant."></textarea>
         </div>
+        <div class="out-panel" id="out-qr" role="tabpanel">
+          <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+            <canvas id="qrCanvas" role="img" aria-label="QR code for this passport profile" style="border-radius:8px;width:180px;height:180px"></canvas>
+            <div style="display:flex;flex-direction:column;gap:8px;flex:1;min-width:160px">
+              <button type="button" class="p31-q-button p31-q-button--outlined" id="dlQrPng">Download QR (.png)</button>
+              <button type="button" class="p31-q-button p31-q-button--outlined" id="cpyQrUrl">Copy scan URL</button>
+            </div>
+          </div>
+          <p style="margin:8px 0 0;font-size:0.85em;opacity:0.7">Scan to open this passport profile on another device. The QR encodes audience, genesis hash, and key fingerprint — no passport data leaves your device.</p>
+        </div>
         <div class="cp-actions">
           <button type="button" class="p31-q-button p31-q-button--filled" data-p31-tone="phosphorus" id="cpyAgent">Copy for ChatGPT / Claude</button>
           <button type="button" class="p31-q-button p31-q-button--outlined" id="cpyMd">Copy Markdown</button>
           <button type="button" class="p31-q-button p31-q-button--outlined" id="cpyJson">Copy JSON</button>
           <button type="button" class="p31-q-button p31-q-button--outlined" id="dlJson">Download JSON (.json)</button>
           <button type="button" class="p31-q-button p31-q-button--outlined" id="dlMd">Download Markdown (.md)</button>
+          <button type="button" class="p31-q-button p31-q-button--outlined" id="btnLinkPasskey" data-p31-tone="phosphorus">Link Passkey</button>
         </div>
         <p class="export-note">Your data never leaves your device unless you copy or download it yourself.</p>
         <p id="genesis-readout" aria-live="polite"></p>
@@ -1192,6 +1205,7 @@
       document.getElementById("outMd").value = toMarkdown(f, data);
       document.getElementById("outAgent").value = toAgentBlock(f, data);
       setGenesisReadout(data);
+      try { generateQrCode(data); } catch (_) {}
       void import("/lib/p31-mesh-touches.js")
         .then((MT) => {
           try {
@@ -1291,6 +1305,109 @@
       flashConfirm(document.getElementById("dlJson"));
       setExportStatus("JSON downloaded.");
     });
+
+    // ── QR Code Export ───────────────────────────────────────────────────
+    function generateQrCode(data) {
+      const canvas = document.getElementById("qrCanvas");
+      if (!canvas || typeof QRCode === "undefined") {
+        canvas?.setAttribute("aria-label", "QR library not loaded");
+        return;
+      }
+      const aud = data.audienceProfile || "cursor-agent";
+      const hash = data.genesis?.hash_sha256?.slice(0, 16) || "";
+      const url = `${location.origin}/passport?profile=${encodeURIComponent(aud)}&hash=${hash}`;
+      canvas.setAttribute("data-qr-url", url);
+      const qr = QRCode(0, "M");
+      qr.addData(url);
+      qr.make();
+      const size = 180;
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext("2d");
+      const mod = qr.getModuleCount();
+      const s = size / mod;
+      ctx.fillStyle = "#0f1115";
+      ctx.fillRect(0, 0, size, size);
+      ctx.fillStyle = "#5DCAA5";
+      for (let r = 0; r < mod; r++) {
+        for (let c = 0; c < mod; c++) {
+          if (qr.isDark(r, c)) ctx.fillRect(Math.floor(c * s), Math.floor(r * s), Math.ceil(s), Math.ceil(s));
+        }
+      }
+    }
+
+    document.getElementById("dlQrPng")?.addEventListener("click", () => {
+      const canvas = document.getElementById("qrCanvas");
+      if (!canvas) return;
+      const a = document.createElement("a");
+      a.href = canvas.toDataURL("image/png");
+      a.download = "p31-passport-qr.png";
+      a.click();
+      flashConfirm(document.getElementById("dlQrPng"));
+      setExportStatus("QR downloaded.");
+    });
+
+    document.getElementById("cpyQrUrl")?.addEventListener("click", () => {
+      const canvas = document.getElementById("qrCanvas");
+      const url = canvas?.getAttribute("data-qr-url");
+      if (!url) return;
+      navigator.clipboard.writeText(url).then(
+        () => { flashConfirm(document.getElementById("cpyQrUrl")); setExportStatus("Scan URL copied."); },
+        () => {}
+      );
+    });
+
+    // ── Passkey Link ─────────────────────────────────────────────────────
+    document.getElementById("btnLinkPasskey")?.addEventListener("click", async () => {
+      const btn = document.getElementById("btnLinkPasskey");
+      const origText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = "Registering…";
+      try {
+        const rpId = location.hostname;
+        const rpName = "P31 Labs";
+        const userId = crypto.randomUUID();
+        const userName = document.getElementById("displayName")?.value?.trim() || "operator";
+        const beginResp = await fetch("/api/passkey/register-begin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ rpId, rpName, userId, userName }),
+        });
+        if (!beginResp.ok) { throw new Error("register-begin failed: " + beginResp.status); }
+        const options = await beginResp.json();
+        options.challenge = Uint8Array.from(atob(options.challenge.replace(/-/g, "+").replace(/_/g, "/")), c => c.charCodeAt(0)).buffer;
+        options.user.id = Uint8Array.from(atob(options.user.id.replace(/-/g, "+").replace(/_/g, "/")), c => c.charCodeAt(0)).buffer;
+        if (options.excludeCredentials) {
+          options.excludeCredentials = options.excludeCredentials.map(c => ({
+            ...c, id: Uint8Array.from(atob(c.id.replace(/-/g, "+").replace(/_/g, "/")), x => x.charCodeAt(0)).buffer,
+          }));
+        }
+        const cred = await navigator.credentials.create({ publicKey: options });
+        if (!cred) throw new Error("User cancelled passkey creation");
+        const finishResp = await fetch("/api/passkey/register-finish", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, userName, credential: cred.toJSON() }),
+        });
+        if (!finishResp.ok) { throw new Error("register-finish failed: " + finishResp.status); }
+        const result = await finishResp.json();
+        btn.textContent = "✓ Passkey linked";
+        setExportStatus("Passkey linked to " + (result.userId || userId));
+        localStorage.setItem("p31-passkey-userid", result.userId || userId);
+      } catch (e) {
+        btn.textContent = "✗ Failed — " + (e.message || "unknown");
+        setTimeout(() => { btn.textContent = origText; btn.disabled = false; }, 3000);
+      }
+    });
+
+    // Restore passkey button state if previously linked
+    (function restorePasskeyState() {
+      const uid = localStorage.getItem("p31-passkey-userid");
+      if (uid) {
+        const btn = document.getElementById("btnLinkPasskey");
+        if (btn) btn.textContent = "✓ Passkey linked";
+      }
+    })();
 
     const prefScreenComfortEl = document.getElementById("prefScreenComfort");
     if (prefScreenComfortEl) {

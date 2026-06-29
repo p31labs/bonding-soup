@@ -1,0 +1,73 @@
+name: Deploy P31 Sovereign Chain Contracts
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/p31-sovereign-chain/**"
+      - ".github/workflows/deploy-contracts.yml"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        type: choice
+        default: sepolia
+        options:
+          - sepolia
+
+concurrency:
+  group: deploy-contracts-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test contracts
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/p31-sovereign-chain
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          solidity_version: "0.8.24"
+
+      - name: Install dependencies
+        run: forge install --no-commit
+
+      - name: Run tests
+        run: forge test -vvv
+
+  deploy-sepolia:
+    name: Deploy to Sepolia
+    needs: test
+    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/p31-sovereign-chain
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          solidity_version: "0.8.24"
+
+      - name: Install dependencies
+        run: forge install --no-commit
+
+      - name: Deploy contracts
+        run: |
+          forge script script/DeployAll.s.sol:DeployAll \
+            --rpc-url ${{ secrets.SEPOLIA_RPC }} \
+            --private-key ${{ secrets.DEPLOYER_PRIVATE_KEY }} \
+            --broadcast \
+            --verify \
+            --etherscan-api-key ${{ secrets.ETHERSCAN_API_KEY }} \
+            --slow

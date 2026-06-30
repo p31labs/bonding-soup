@@ -52,10 +52,12 @@
       },
       "deadline": "2026-07-31",
       "portalOpens": "2026-05-15",
-      "status": "submission_ready",
+      "status": "submitted",
       "priority": "critical",
+      "submissionDate": "2026-06-13",
+      "decisionExpected": "2026-07-31",
       "contentPack": "andromeda/04_SOFTWARE/p31-forge/content/grants/asan.json",
-      "notes": "Hardware beta distribution grant. Operator is AuDHD + hypoparathyroidism — lived-experience narrative is the core. 501(c)(3) determination enables immediate eligibility. Portal opens May 15 — submit day one.",
+      "notes": "Submitted June 13, 2026. Decision expected by July 31. 500-word narrative expanded to 570 words (bonding-soup/docs/grants/payloads/asan-narrative.md). Operator is AuDHD + hypoparathyroidism — lived-experience narrative is the core. 501(c)(3) determination letter attached.",
       "budgetBreakdown": [
         { "item": "Provisional patents × 2 (HERALD + Node One)", "cost": 130 },
         { "item": "Copyright registration (group unpublished works)", "cost": 65 },
@@ -278,8 +280,8 @@
     "totalRequestedEUR": 15000,
     "nextDeadline": "2026-06-01",
     "statusBreakdown": {
-      "submission_ready": 4,
-      "submitted_awaiting_decision": 1,
+      "submission_ready": 3,
+      "submitted_awaiting_decision": 2,
       "draft_in_progress": 2,
       "contact_initiated_track_fy2027": 2,
       "research_phase": 1
@@ -295,11 +297,11 @@
       "status": "ready_to_submit"
     },
     {
-      "action": "Submit ASAN application (portal opens)",
-      "deadline": "2026-05-15",
-      "daysLeft": 11,
+      "action": "Track ASAN decision (submitted Jun 13)",
+      "deadline": "2026-07-31",
+      "daysLeft": 39,
       "priority": "critical",
-      "status": "awaiting_portal_open"
+      "status": "submitted_awaiting_decision"
     },
     {
       "action": "Submit Stimpunks application",

@@ -4,12 +4,15 @@
  * Integrates physics, personalities, reactions, and audio systems
  */
 
-import { SoupPhysics, Atom, Bond, DEFAULT_SOUP_CONFIG, PhysicsConfig } from './soupPhysics';
-import { PersonalitiesEngine } from './personalities';
-import { ReactionEngine, ReactionCandidate, ReactionEvent } from './reactions';
+import { SoupPhysics, DEFAULT_SOUP_CONFIG } from './soupPhysics';
+import type { Atom, Bond, PhysicsConfig } from './soupPhysics';
+import { PersonalitiesEngine, PersonalityType } from './personalities';
+import { ReactionEngine } from './reactions';
+import type { ReactionCandidate, ReactionEvent } from './reactions';
 import { SoundtrackEngine } from './soundtrack';
 import { particleSystem } from './particles';
-import { PersistenceLayer, SavedMolecule } from './persistence';
+import { PersistenceLayer } from './persistence';
+import type { SavedMolecule } from './persistence';
 
 export interface Zone {
   name: string;
@@ -201,7 +204,7 @@ export class SoupEngine {
     this.physics = new SoupPhysics(config);
     this.personalities = new PersonalitiesEngine();
     this.reactions = new ReactionEngine();
-    this.audio = new SoundtrackEngine();
+    this.audio = new SoundtrackEngine(config.width, config.height);
     this.persistence = new PersistenceLayer();
 
     this.networkPlay = networkPlay;
@@ -522,29 +525,32 @@ export class SoupEngine {
     return n;
   }
 
-  private handleMoleculeStateUpdate(data: any): void {
+  private handleMoleculeStateUpdate(data: unknown): void {
     if (data == null) return;
-    if (!Array.isArray(data) && data.molecules === undefined && !data.fullSnapshot) {
+    if (typeof data !== 'object') return;
+    const d = data as Record<string, unknown>;
+    if (!Array.isArray(data) && d.molecules === undefined && !d.fullSnapshot) {
       return;
     }
 
-    if (typeof data === "object" && !Array.isArray(data) && data.fullSnapshot) {
+    if (typeof data === "object" && !Array.isArray(data) && d.fullSnapshot) {
       this.ghostMolecules.clear();
     }
 
-    const molecules: any[] = Array.isArray(data) ? data : data.molecules ?? [];
+    const rawMolecules: unknown[] = Array.isArray(data) ? data : (d.molecules as unknown[]) ?? [];
     const { width: wmax, height: hmax } = this.physics.getWorldSize();
 
     let sawOtherClientMolecule = false;
 
-    molecules.forEach((moleculeData: any) => {
-      const { id, personality, element } = moleculeData;
+    rawMolecules.forEach((moleculeData: unknown) => {
+      const md = moleculeData as Record<string, unknown>;
+      const id = md.id, personality = md.personality, element = md.element;
       if (id == null || String(id).length > 200) {
         return;
       }
       const sid = String(id);
-      const x = SoupEngine.clampNetworkNumber(moleculeData.x, 0);
-      const y = SoupEngine.clampNetworkNumber(moleculeData.y, 0);
+      const x = SoupEngine.clampNetworkNumber(md.x, 0);
+      const y = SoupEngine.clampNetworkNumber(md.y, 0);
       const cx = Math.max(0, Math.min(wmax, x));
       const cy = Math.max(0, Math.min(hmax, y));
 
@@ -561,8 +567,8 @@ export class SoupEngine {
           interpolationProgress: 0,
           isInterpolating: false,
           lastUpdate: performance.now(),
-          element: element || "O",
-          personality: personality || "mediator"
+          element: String(element || "O"),
+          personality: String(personality || "mediator")
         };
         this.ghostMolecules.set(sid, ghost);
       } else {
@@ -574,8 +580,8 @@ export class SoupEngine {
         ghost.networkX = cx;
         ghost.networkY = cy;
         ghost.lastUpdate = performance.now();
-        ghost.element = element || ghost.element;
-        ghost.personality = personality || ghost.personality;
+        ghost.element = String(element || ghost.element);
+        ghost.personality = String(personality || ghost.personality);
 
         // Start interpolation
         ghost.interpolationProgress = 0;
@@ -602,15 +608,18 @@ export class SoupEngine {
   /**
    * Handle incoming ping events
    */
-  private handleIncomingPing(data: any): void {
-    const { targetId, emoji, position, senderId } = data;
+  private handleIncomingPing(data: Record<string, unknown>): void {
+    const targetId = typeof data.targetId === 'string' ? data.targetId : '';
+    const emoji = typeof data.emoji === 'string' ? data.emoji : '💫';
+    const position = data.position as { x: number; y: number } | undefined;
+    const senderId = data.senderId;
 
     // Add to incoming pings array
     const ping = {
       id: `ping_${Date.now()}_${Math.random()}`,
       targetId,
       emoji,
-      position,
+      position: position ?? { x: 0, y: 0 },
       createdAt: Date.now(),
       expiresAt: Date.now() + 10000 // 10 second lifetime
     };
@@ -618,7 +627,7 @@ export class SoupEngine {
     this.incomingPings.push(ping);
 
     // Trigger particle effect
-    if (particleSystem) {
+    if (particleSystem && position) {
       particleSystem.triggerReactionEffect('ping', position);
     }
 
@@ -626,7 +635,7 @@ export class SoupEngine {
     this.eventLog.push({
       id: `event_${Date.now()}`,
       type: 'ping',
-      actorId: senderId,
+      actorId: typeof senderId === 'string' ? senderId : '',
       targetId,
       message: `pinged ${targetId} with ${emoji}`,
       timestamp: Date.now()
@@ -649,7 +658,27 @@ export class SoupEngine {
   /**
    * Handle event log entries from other players
    */
-  private handleEventLog(data: any): void {
+  private handleEventLog(data: unknown): void {
+    const parseEvent = (raw: unknown): {
+      id?: string;
+      type?: string;
+      actorId?: string;
+      targetId?: string | null;
+      message?: string;
+      timestamp?: number;
+    } => {
+      if (!raw || typeof raw !== 'object') return {};
+      const e = raw as Record<string, unknown>;
+      return {
+        id: typeof e.id === 'string' ? e.id : undefined,
+        type: typeof e.type === 'string' ? e.type : undefined,
+        actorId: typeof e.actorId === 'string' ? e.actorId : undefined,
+        targetId: e.targetId == null ? null : typeof e.targetId === 'string' ? e.targetId : null,
+        message: typeof e.message === 'string' ? e.message : undefined,
+        timestamp: typeof e.timestamp === 'number' ? e.timestamp : undefined,
+      };
+    };
+
     const pushOne = (event: {
       id?: string;
       type?: string;
@@ -678,9 +707,9 @@ export class SoupEngine {
     };
 
     if (Array.isArray(data)) {
-      data.forEach((event) => pushOne(event));
+      data.forEach((raw) => pushOne(parseEvent(raw)));
     } else {
-      pushOne(data);
+      pushOne(parseEvent(data));
     }
 
     // Keep event log limited
@@ -692,7 +721,7 @@ export class SoupEngine {
   /**
    * Handle initial connection state from server
    */
-  private handleConnectionInit(data: any): void {
+  private handleConnectionInit(data: Record<string, unknown>): void {
     this.dbg("Received connection init from server:", data);
 
     if (data && typeof data.clientId === "string") {
@@ -701,7 +730,7 @@ export class SoupEngine {
 
     this.ghostMolecules.clear();
 
-    if (data.molecules && data.molecules.length > 0) {
+    if (data.molecules && Array.isArray(data.molecules) && data.molecules.length > 0) {
       this.handleMoleculeStateUpdate({
         fullSnapshot: true,
         molecules: data.molecules,
@@ -918,7 +947,7 @@ export class SoupEngine {
 
     // Assign personalities to atoms
     atoms.forEach(atom => {
-      this.personalities.assignPersonality(atom.id, personality as any);
+      this.personalities.assignPersonality(atom.id, personality as PersonalityType);
     });
 
     // Register with audio system
@@ -1043,6 +1072,9 @@ export class SoupEngine {
     // Advance the global 4-4-6 breath clock and emit to UI + audio
     this.tickBreath(deltaTime);
     this.tickCoherence();
+
+    // Update zone visual effects (breathing rhythms, lighting)
+    this.updateZoneEffects(deltaTime);
 
     // Send our own molecule state at 2Hz (if connected)
     this.sendMoleculeStatesIfDue(currentTime);
@@ -2038,7 +2070,7 @@ export class SoupEngine {
     const idMap = new Map<string, string>();
     const newAtoms: Atom[] = [];
     for (let i = 0; i < n; i++) {
-      const old = raw[i] as any;
+      const old = raw[i] as { element?: string; radius?: number; mass?: number; charge?: number; id?: string } | undefined;
       const el = old && old.element != null ? String(old.element) : 'C';
       const angle = (2 * Math.PI * i) / Math.max(n, 1);
       const x = center.x + Math.cos(angle) * ring;
@@ -2053,21 +2085,21 @@ export class SoupEngine {
         vy: 0,
         element: el,
         color: this.elementColor(el),
-        radius: typeof old.radius === 'number' ? old.radius : radius,
-        mass: typeof old.mass === 'number' ? old.mass : mass,
-        charge: typeof old.charge === 'number' ? old.charge : charge
+        radius: old && typeof old.radius === 'number' ? old.radius : radius,
+        mass: old && typeof old.mass === 'number' ? old.mass : mass,
+        charge: old && typeof old.charge === 'number' ? old.charge : charge
       };
       newAtoms.push(a);
       const oid = old && typeof old.id === 'string' ? old.id : `legacy_${i}`;
       idMap.set(oid, tid);
     }
 
-    const byId = (atomId: string) => newAtoms.find((at) => at.id === atomId);
+    const byId = (atomId: string): Atom | undefined => newAtoms.find((at) => at.id === atomId);
     const newBonds: Bond[] = [];
     if (Array.isArray(saved.bonds)) {
       for (const b of saved.bonds) {
         if (!b || typeof b !== 'object') continue;
-        const brec = b as { atom1?: any; atom2?: any; restLength?: number; strength?: number };
+        const brec = b as { atom1?: { id?: string }; atom2?: { id?: string }; restLength?: number; strength?: number };
         const o1 = brec.atom1 && typeof brec.atom1.id === 'string' ? brec.atom1.id : null;
         const o2 = brec.atom2 && typeof brec.atom2.id === 'string' ? brec.atom2.id : null;
         if (!o1 || !o2) continue;
@@ -2232,7 +2264,7 @@ export class SoupEngine {
         }
 
         // Store current breathing amplitude for rendering
-        (zone as any).currentBreathingAmplitude = currentAmplitude;
+        (zone as Zone & { currentBreathingAmplitude: number }).currentBreathingAmplitude = currentAmplitude;
       }
     });
   }
@@ -2249,8 +2281,8 @@ export class SoupEngine {
    */
   getZoneBreathingAmplitude(zoneName: string): number {
     const zone = this.zones.find(z => z.name === zoneName);
-    return zone && (zone as any).currentBreathingAmplitude ?
-           (zone as any).currentBreathingAmplitude : 0;
+    return zone && (zone as Zone & { currentBreathingAmplitude: number }).currentBreathingAmplitude ?
+           (zone as Zone & { currentBreathingAmplitude: number }).currentBreathingAmplitude : 0;
   }
 
   /**

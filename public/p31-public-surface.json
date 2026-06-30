@@ -1,0 +1,17 @@
+{
+  "schema": "p31.publicSurface/1.0.0",
+  "updated": "2026-06-16T07:30:00.000Z",
+  "org": {
+    "name": "P31 Labs, Inc.",
+    "ein": "42-1888158",
+    "status": "501(c)(3) pending",
+    "domain": "p31ca.org"
+  },
+  "surfaces": {
+    "technicalHub": "https://p31ca.org",
+    "bonding": "https://bonding.p31ca.org",
+    "fleetPortal": "https://p31ca.org/fleet-portal",
+    "glassBox": "https://p31ca.org/glass-box",
+    "visuals": "https://p31ca.org/visuals"
+  }
+}

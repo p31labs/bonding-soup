@@ -117,6 +117,7 @@ Design notes, WCD readiness, websocket spec, roadmap, affective-chemistry spec. 
 | Tweak **C.A.R.S.** physics, rehydration, WCD-33 client, **`soup.html`** | Root `src/`, `soup.html`, `wcd33-global-archive/` |
 | **Deploy** archive Worker | `wcd33-global-archive/DEPLOY.md` |
 | **SIMPLEX crew + SENTINEL**, Context resolution | `simplex-v7/` — **`DEPLOY.md`**, **`npm run verify:simplex`**. **`simplex-email/`**: inbound HERALD Email Worker — **`simplex-email/README.md`**, **`npm run verify:simplex-email`**. Automated CF bring-up (**D1/KV/queue/schema**): **`npm run simplex:bootstrap:apply`** (see **`DEPLOY.md`** §0); ship bar **`verify:simplex-bootstrap`** after **`verify:simplex-email`**. |
+| **Operator health** (spoons, calcium, sleep, trends) | `scripts/p31-health-bridge.mjs` — `npm run health:bridge`, `p31-health-config.json`, `~/.p31/health.jsonl` |
 | **Full** BONDING app / Vite / HUD / org integration | `andromeda/04_SOFTWARE/bonding` (or `frontend` as per that repo) |
 | **K₄ / cage / hubs** | `k4-cage`, `k4-hubs`, `t4-cage`, etc. under `andromeda/04_SOFTWARE/` |
 | **Spikes / proofs** | `spikes/`, `docs/technical-spikes-backlog.md` |

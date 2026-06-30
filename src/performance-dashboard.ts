@@ -40,7 +40,7 @@ export class PerformanceDashboard {
   /**
    * Update performance metrics
    */
-  updateMetrics(stats: any, soup: any): void {
+  updateMetrics(stats: { physics?: { fps?: number }; molecules?: number; reactionHistory?: number }, soup: unknown): void {
     const now = performance.now();
 
     if (now - this.lastUpdate >= this.updateInterval) {
@@ -48,7 +48,7 @@ export class PerformanceDashboard {
 
       // Collect current metrics
       this.metrics.fps.push(stats.physics?.fps || 0);
-      this.metrics.memory.push((performance as any).memory?.usedJSHeapSize / 1024 / 1024 || 0);
+      this.metrics.memory.push(((performance as Performance & { memory?: { usedJSHeapSize: number } }).memory?.usedJSHeapSize ?? 0) / 1024 / 1024);
       this.metrics.molecules.push(stats.molecules || 0);
       this.metrics.reactions.push(stats.reactionHistory || 0);
       this.metrics.networkLatency.push(Math.random() * 50 + 10); // Simulated latency
@@ -206,5 +206,5 @@ export class PerformanceDashboard {
 
 // Export for browser use
 if (typeof window !== 'undefined') {
-  (window as any).PerformanceDashboard = PerformanceDashboard;
+  window.PerformanceDashboard = PerformanceDashboard;
 }

@@ -1,0 +1,37 @@
+{
+  "schema": "p31.healthConfig/1.0.0",
+  "description": "Operator health thresholds and targets. Edit this file to adjust ranges. After edits: npm run health:bridge -- --init",
+  "updated": "2026-06-17",
+  "calcium": {
+    "criticalLow": 8.0,
+    "targetLow": 8.3,
+    "targetHigh": 9.0,
+    "criticalHigh": 9.5,
+    "unit": "mg/dL",
+    "note": "Hypoparathyroidism (E20.9). Critical limits from CLAUDE.md."
+  },
+  "spoons": {
+    "levelNames": {
+      "5": "full",
+      "4": "good",
+      "3": "moderate",
+      "2": "low",
+      "1": "depleted"
+    },
+    "deficitThreshold": 2,
+    "cautionThreshold": 3,
+    "note": "AuDHD spoon economy. 5=full, 1=depleted."
+  },
+  "sleep": {
+    "targetHours": 7,
+    "minimumHours": 5,
+    "note": "Minimum sleep before cognitive impairment increases sharply."
+  },
+  "medication": {
+    "calciumSupplementsDaily": true,
+    "note": "Calcitriol + calcium carbonate as prescribed."
+  },
+  "healthEventRetentionDays": 90,
+  "summaryPath": "~/.p31/health-summary.json",
+  "eventLogPath": "~/.p31/health.jsonl"
+}

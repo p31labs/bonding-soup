@@ -25,15 +25,12 @@ permissions:
 jobs:
   root-verify:
     name: P31 / root verify
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     env:
       NPM_CONFIG_PREFER_OFFLINE: "true"
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
 
       - uses: actions/setup-node@v4
         with:
@@ -52,7 +49,7 @@ jobs:
   triper-cert:
     name: P31 / TRIPER cert
     needs: root-verify
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
       NPM_CONFIG_PREFER_OFFLINE: "true"
@@ -81,7 +78,7 @@ jobs:
   p31-all:
     name: P31 / full stack
     needs: [root-verify, triper-cert]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # p31-all = validate:full + home doc-library Playwright + p31ca e2e (when present) + glass + SAST, etc.
     timeout-minutes: 60
     env:

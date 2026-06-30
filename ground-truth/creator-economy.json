@@ -1,0 +1,8 @@
+{
+  "schema": "p31.creatorEconomy/1.0.0",
+  "updated": "2026-06-16T07:30:00.000Z",
+  "platformFee": { "rate": 0, "description": "Zero-fee platform — creator retains 100%" },
+  "creatorShare": 1.0,
+  "roomAccess": "free",
+  "noticePeriodDays": 30
+}

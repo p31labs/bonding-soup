@@ -1,0 +1,12 @@
+{
+  "schema": "p31.meshConstants/1.0.0",
+  "updated": "2026-06-16T07:30:00.000Z",
+  "k4CageWorkerUrl": "https://k4-cage.trimtab-signal.workers.dev",
+  "k4PersonalWorkerUrl": "https://k4-personal.trimtab-signal.workers.dev",
+  "k4HubsWorkerUrl": "https://k4-hubs.trimtab-signal.workers.dev",
+  "agentHubWorkerUrl": "https://k4-agent-hub.trimtab-signal.workers.dev",
+  "orchestratorWorkerUrl": "https://orchestrator.trimtab-signal.workers.dev",
+  "geodesicRoomWorkerUrl": "https://geodesic-room.trimtab-signal.workers.dev",
+  "bondingRelayWorkerUrl": "https://bonding-relay.trimtab-signal.workers.dev",
+  "googleBridgeWorkerUrl": "https://google-bridge.trimtab-signal.workers.dev"
+}

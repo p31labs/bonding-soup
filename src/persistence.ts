@@ -3,12 +3,13 @@
  * Molecular heritage and global archive system
  */
 import { getBondingArchiveUrl } from './archiveConfig';
+import type { Atom, Bond } from './soupPhysics';
 
 export interface SavedMolecule {
   id: string;
   name: string;
-  atoms: any[];
-  bonds: any[];
+  atoms: Atom[];
+  bonds: Bond[];
   personality: string;
   creationTime: number;
   emotionalContext: string;
@@ -74,8 +75,8 @@ export class PersistenceLayer {
    */
   saveMolecule(moleculeData: {
     id: string;
-    atoms: any[];
-    bonds: any[];
+    atoms: Atom[];
+    bonds: Bond[];
     personality: string;
     zone: string;
     emotionalContext?: string;
@@ -214,11 +215,11 @@ export class PersistenceLayer {
   /**
    * Generate a meaningful name for a molecule
    */
-  private generateMoleculeName(moleculeData: any): string {
-    const elements = moleculeData.atoms.map((atom: any) => atom.element);
+  private generateMoleculeName(moleculeData: { atoms: Atom[]; personality?: string; zone?: string }): string {
+    const elements = moleculeData.atoms.map((atom: Atom) => atom.element);
     const uniqueElements = [...new Set(elements)];
-    const personality = moleculeData.personality;
-    const zone = moleculeData.zone;
+    const personality = moleculeData.personality || 'fuel';
+    const zone = moleculeData.zone || 'open';
 
     // Create meaningful names based on composition and context
     if (uniqueElements.includes('Ca') && uniqueElements.includes('P')) {
@@ -335,13 +336,16 @@ export class PersistenceLayer {
     return t;
   }
 
-  private tallyToPlaceholderAtoms(tally: Record<string, number>): { id: string; element: string; x: number; y: number }[] {
-    const atoms: { id: string; element: string; x: number; y: number }[] = [];
+  private tallyToPlaceholderAtoms(tally: Record<string, number>): Atom[] {
+    const atoms: Atom[] = [];
     let n = 0;
     for (const [el, c] of Object.entries(tally)) {
       const count = Math.min(Math.floor(c), 5000);
       for (let i = 0; i < count; i++) {
-        atoms.push({ id: `arch-${n++}`, element: el, x: 0, y: 0 });
+        atoms.push({
+          id: `arch-${n++}`, element: el, x: 0, y: 0,
+          vx: 0, vy: 0, color: '#888', radius: 4, mass: 1, charge: 0,
+        });
       }
     }
     return atoms;
@@ -517,5 +521,5 @@ export class PersistenceLayer {
 
 // Export for browser use
 if (typeof window !== 'undefined') {
-  (window as any).PersistenceLayer = PersistenceLayer;
+  window.PersistenceLayer = PersistenceLayer;
 }

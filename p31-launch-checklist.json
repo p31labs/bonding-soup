@@ -51,7 +51,8 @@
       "title": "SMART suite deployed to Base Sepolia; addresses in p31-chain-anchor.json",
       "kind": "on-chain",
       "critical": false,
-      "status": "pending"
+      "status": "met",
+      "note": "Deployed to Base Sepolia: 0x4384c856c0ccc9cb5a4adb148937ea557293543b"
     },
     {
       "id": "smart-suite-deployed-mainnet",

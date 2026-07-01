@@ -13,8 +13,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const p31ca = path.join(root, "andromeda", "04_SOFTWARE", "p31ca");
 
-if (!fs.existsSync(p31ca)) {
-  console.log("verify-p31ca-contracts: skip — no", path.relative(root, p31ca));
+if (!fs.existsSync(path.join(p31ca, "package.json"))) {
+  console.log("verify-p31ca-contracts: skip — no", path.relative(root, p31ca), "package.json");
   process.exit(0);
 }
 

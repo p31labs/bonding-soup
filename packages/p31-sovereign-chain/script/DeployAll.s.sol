@@ -4,6 +4,7 @@ pragma solidity ^0.8.24;
 import "forge-std/Script.sol";
 import "../src/LOVEToken.sol";
 import "../src/ProofOfCare.sol";
+import "../src/LOVESBT.sol";
 import "../src/PayrollStream.sol";
 import "../src/SlicingPieLedger.sol";
 import "../src/TrancheWaterfall.sol";
@@ -12,18 +13,21 @@ import "../src/PerpetualPurposeTrust.sol";
 /// @notice Deploy all 6 contracts and wire them together.
 contract DeployAll is Script {
     function run() external {
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        uint256 deployerPrivateKey = vm.envUint("DEPLOYER_PRIVATE_KEY");
         address deployer = vm.addr(deployerPrivateKey);
-
         vm.startBroadcast(deployerPrivateKey);
 
         // 1. Deploy L.O.V.E. Token
         LOVEToken love = new LOVEToken(deployer);
         console.log("LOVEToken deployed at:", address(love));
 
-        // 2. Deploy Proof of Care Oracle
-        ProofOfCare poc = new ProofOfCare(deployer);
+        // 2. Deploy Proof of Care Oracle (SBT address set later)
+        ProofOfCare poc = new ProofOfCare(deployer, address(love), address(0));
         console.log("ProofOfCare deployed at:", address(poc));
+
+        // 1b. Deploy LOVE-SBT
+        LOVESBT loveSBT = new LOVESBT(deployer, address(poc));
+        console.log("LOVESBT deployed at:", address(loveSBT));
 
         // 3. Deploy Payroll Stream
         PayrollStream payroll = new PayrollStream(deployer);
@@ -50,7 +54,8 @@ contract DeployAll is Script {
         console.log("LOVEToken: poolManager = TrancheWaterfall, careOracle = ProofOfCare");
 
         poc.setLoveToken(address(love));
-        console.log("ProofOfCare: loveToken = LOVEToken");
+        poc.setLoveSBT(address(loveSBT));
+        console.log("ProofOfCare: loveToken = LOVEToken, loveSBT = LOVESBT");
 
         pie.setPayrollStream(address(payroll));
         console.log("SlicingPieLedger: payrollStream = PayrollStream");
@@ -61,7 +66,7 @@ contract DeployAll is Script {
             address(love),
             address(ppt),
             address(0), // GME bridge — set after deploy
-            address(vm.envOr("USDC_ADDRESS", address(0))),
+            vm.envOr("USDC_ADDRESS", 0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238),
             0.2e18,     // 20% operating reserve
             1000e6      // $1000 sweep threshold (USDC 6 decimals)
         );
@@ -71,7 +76,7 @@ contract DeployAll is Script {
             address(love),
             address(waterfall),
             address(0), // GME bridge — set after deploy
-            address(vm.envOr("USDC_ADDRESS", address(0)))
+            vm.envOr("USDC_ADDRESS", 0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238)
         );
         console.log("PerpetualPurposeTrust configured");
 

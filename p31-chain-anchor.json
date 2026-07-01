@@ -4,126 +4,144 @@
   "sovereignLayersManifest": "p31-sovereign-layers.json",
   "contracts": [
     {
-      "name": "P31TransparencyAnchor",
-      "source": "packages/p31-sovereign-chain/src/P31TransparencyAnchor.sol",
-      "solidity": "0.8.24",
-      "role": "Append-only digest + URI commitments (manifest proofs).",
-      "note": "digest in anchor() is operator-chosen bytes32 (typically sha256 of UTF-8 JSON)."
-    },
-    {
-      "name": "P31ContentRoot",
-      "source": "packages/p31-sovereign-chain/src/P31ContentRoot.sol",
-      "solidity": "0.8.24",
-      "role": "Owner-managed key → CID map for IPFS/Arweave hub snapshots.",
-      "note": "Transfer owner to Safe multisig for production (see p31-sovereign-layers L10)."
-    },
-    {
-      "name": "P31ManifestRegistry",
-      "source": "packages/p31-sovereign-chain/src/P31ManifestRegistry.sol",
-      "solidity": "0.8.24",
-      "role": "SMART M — manifest id → latest digest + URI (permissionless publish).",
-      "note": "manifestId e.g. keccak256(bytes(schema string))."
-    },
-    {
-      "name": "P31AccessAllowlist",
-      "source": "packages/p31-sovereign-chain/src/P31AccessAllowlist.sol",
-      "solidity": "0.8.24",
-      "role": "SMART A — capability → address allowlist (owner).",
-      "note": "Use for gated hooks; rotate owner to multisig."
-    },
-    {
-      "name": "P31TreasuryConfig",
-      "source": "packages/p31-sovereign-chain/src/P31TreasuryConfig.sol",
-      "solidity": "0.8.24",
-      "role": "SMART T — Safe + USDC + chain id; lock after configure.",
-      "note": "Pairs with L8 on-chain payments in p31-sovereign-layers.json."
-    },
-    {
       "name": "LOVEToken",
       "source": "packages/p31-sovereign-chain/src/LOVEToken.sol",
       "solidity": "0.8.24",
       "role": "Soulbound ERC-20 with 50/50 sovereignty/performance pool split.",
-      "note": "No external transfer — mint/burn only. Architects can abdicate to ZERO_ADDRESS."
+      "note": "No external transfer — mint/burn only. Architects can abdicate to ZERO_ADDRESS.",
+      "networks": {
+        "base-sepolia": {
+          "address": "0x83307e54782661e220d3e34a4297590b91112924",
+          "deployTxHash": "0x2ea650bad588da5b5760505245f44aecc45e32773252d4d91d8d1475ddb7d03a"
+        }
+      }
     },
     {
       "name": "ProofOfCare",
       "source": "packages/p31-sovereign-chain/src/ProofOfCare.sol",
       "solidity": "0.8.24",
       "role": "Oracle contract computing care scores = sum(T_prox × Q_res) + tasks_verified.",
-      "note": "Authorized relay pushes HRV telemetry. Decay: -0.005/day after 7d grace, floor 0.1."
+      "note": "Authorized relay pushes HRV telemetry. Decay: -0.005/day after 7d grace, floor 0.1.",
+      "networks": {
+        "base-sepolia": {
+          "address": "0x4384c856c0ccc9cb5a4adb148937ea557293543b",
+          "deployTxHash": "0x92d5013229e993878888402fc46b451409a6fc643c63b0c41ba9b2846157051a"
+        }
+      }
+    },
+    {
+      "name": "LOVESBT",
+      "source": "packages/p31-sovereign-chain/src/LOVESBT.sol",
+      "solidity": "0.8.24",
+      "role": "Soulbound token representing verified care relationships.",
+      "networks": {
+        "base-sepolia": {
+          "address": "0x8dd8041f7e78decb2f3bb078d68da2e2f36f5636",
+          "deployTxHash": "0x5dd8a4a660060a2fa35ef449e4704316a5847a6c56a335ebfcd6cee21d576825"
+        }
+      }
     },
     {
       "name": "PayrollStream",
       "source": "packages/p31-sovereign-chain/src/PayrollStream.sol",
       "solidity": "0.8.24",
       "role": "Sablier-style closed-ended USDC streaming for operational payroll.",
-      "note": "Cancelable. Unstreamed tokens return to sender. Van Camp compliance."
+      "note": "Cancelable. Unstreamed tokens return to sender. Van Camp compliance.",
+      "networks": {
+        "base-sepolia": {
+          "address": "0x91ed0b6b940e5446933a89709d437d4345963100",
+          "deployTxHash": "0x625315c7ab2b7edafffbe3459c6d6af26a5fa1d0e09f96b909f41099a5f6900d"
+        }
+      }
     },
     {
       "name": "SlicingPieLedger",
       "source": "packages/p31-sovereign-chain/src/SlicingPieLedger.sol",
       "solidity": "0.8.24",
       "role": "Deferred compensation tracker with GHRR and risk multipliers.",
-      "note": "2× for time, 4× for cash. Segregated from L.O.V.E. tokens."
+      "note": "2× for time, 4× for cash. Segregated from L.O.V.E. tokens.",
+      "networks": {
+        "base-sepolia": {
+          "address": "0x6677562eb23caf699b510c96d8eae36f6f637bb5",
+          "deployTxHash": "0xde45afef20124f93f59cd6938a5740bd19118e2de7ed9f8aff1413a672f46e9b"
+        }
+      }
     },
     {
       "name": "TrancheWaterfall",
       "source": "packages/p31-sovereign-chain/src/TrancheWaterfall.sol",
       "solidity": "0.8.24",
       "role": "Three-tier distribution: (1) OpEx+payroll, (2) PPT sweep, (3) PoC dividends.",
-      "note": "Strict sequential waterfall. Tranche 1 must clear before Tranche 2/3."
+      "note": "Strict sequential waterfall. Tranche 1 must clear before Tranche 2/3.",
+      "networks": {
+        "base-sepolia": {
+          "address": "0x39014dbaa0b6cf6528823690090302aa407833b0",
+          "deployTxHash": "0x6bae22cd4cf5f2e49d7fd9a7d7c8b2f30334d63a22bdd50074c3841a5c555929"
+        }
+      }
     },
     {
       "name": "PerpetualPurposeTrust",
       "source": "packages/p31-sovereign-chain/src/PerpetualPurposeTrust.sol",
       "solidity": "0.8.24",
       "role": "PPT vault holding DUNA/DAO ownership, GME shares, and USDC reserve.",
-      "note": "Non-charitable, purpose-driven. No human beneficiaries. Van Camp shield."
+      "note": "Non-charitable, purpose-driven. No human beneficiaries. Van Camp shield.",
+      "networks": {
+        "base-sepolia": {
+          "address": "0x79e8d7be19a79398459bcd0475e09d7502004167",
+          "deployTxHash": "0x3bae01c68e407cee80b749f742f8b104a6afb2d64a59c896cc0b7cb954c7ae0f"
+        }
+      }
     },
     {
       "name": "P31TransparencyAnchor",
       "source": "packages/p31-sovereign-chain/src/P31TransparencyAnchor.sol",
       "solidity": "0.8.24",
       "role": "Append-only digest + URI commitments (manifest proofs).",
-      "note": "digest in anchor() is operator-chosen bytes32 (typically sha256 of UTF-8 JSON)."
+      "note": "digest in anchor() is operator-chosen bytes32 (typically sha256 of UTF-8 JSON).",
+      "networks": {}
     },
     {
       "name": "P31ContentRoot",
       "source": "packages/p31-sovereign-chain/src/P31ContentRoot.sol",
       "solidity": "0.8.24",
       "role": "Owner-managed key → CID map for IPFS/Arweave hub snapshots.",
-      "note": "Transfer owner to Safe multisig for production (see p31-sovereign-layers L10)."
+      "note": "Transfer owner to Safe multisig for production (see p31-sovereign-layers L10).",
+      "networks": {}
     },
     {
       "name": "P31ManifestRegistry",
       "source": "packages/p31-sovereign-chain/src/P31ManifestRegistry.sol",
       "solidity": "0.8.24",
       "role": "SMART M — manifest id → latest digest + URI (permissionless publish).",
-      "note": "manifestId e.g. keccak256(bytes(schema string))."
+      "note": "manifestId e.g. keccak256(bytes(schema string)).",
+      "networks": {}
     },
     {
       "name": "P31AccessAllowlist",
       "source": "packages/p31-sovereign-chain/src/P31AccessAllowlist.sol",
       "solidity": "0.8.24",
       "role": "SMART A — capability → address allowlist (owner).",
-      "note": "Use for gated hooks; rotate owner to multisig."
+      "note": "Use for gated hooks; rotate owner to multisig.",
+      "networks": {}
     },
     {
       "name": "P31TreasuryConfig",
       "source": "packages/p31-sovereign-chain/src/P31TreasuryConfig.sol",
       "solidity": "0.8.24",
       "role": "SMART T — Safe + USDC + chain id; lock after configure.",
-      "note": "Pairs with L8 on-chain payments in p31-sovereign-layers.json."
+      "note": "Pairs with L8 on-chain payments in p31-sovereign-layers.json.",
+      "networks": {}
     }
   ],
   "networks": [
     {
-      "chainId": 84532,
+      "chainId": 11155111,
       "name": "base-sepolia",
-      "registryAddress": null,
-      "deployTxHash": null,
+      "registryAddress": "0x4384c856c0ccc9cb5a4adb148937ea557293543b",
+      "deployTxHash": "0x92d5013229e993878888402fc46b451409a6fc643c63b0c41ba9b2846157051a",
       "explorer": "https://sepolia.basescan.org",
-      "note": "Testnet — set address after first deploy."
+      "note": "Testnet — 7 contracts deployed via DeployAll.s.sol (2026-06-12)."
     },
     {
       "chainId": 8453,

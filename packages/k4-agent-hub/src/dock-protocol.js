@@ -12,7 +12,7 @@ import { canonicalCallString, canonicalDockString, importPublicKey, sha256Hex, v
 const SESSION_KV_PREFIX = "k4ah:session:";
 const DOCK_KV_PREFIX = "k4ah:dock:";
 const NONCE_KV_PREFIX = "k4ah:nonce:";
-const NONCE_TTL_SECONDS = 90;
+const NONCE_TTL_SECONDS = 3600;
 const MAX_CLOCK_SKEW_MS = 5 * 60 * 1000;
 
 /** Generate a v4 UUID using crypto.randomUUID() — available in Cloudflare Workers. */
@@ -80,6 +80,8 @@ export async function verifyDockEnvelope(env, parsed) {
   const valid = await verifyEd25519({ publicKey: pub, message, signatureB64u: parsed.sig });
   if (!valid) return { ok: false, error: "dock signature did not verify" };
   await env.K4_AGENT_HUB.put(replayKey, "1", { expirationTtl: NONCE_TTL_SECONDS * 4 });
+  // NOTE: KV is eventually consistent. For authoritative nonce dedup, add D1
+  // UNIQUE constraint on nonces and use INSERT … CATCH CONSTRAINT_VIOLATION.
   return { ok: true, signed: true };
 }
 
@@ -114,6 +116,7 @@ export async function verifyCallEnvelope(env, session, body) {
   const valid = await verifyEd25519({ publicKey: pub, message, signatureB64u: body.sig });
   if (!valid) return { ok: false, error: "call signature did not verify" };
   await env.K4_AGENT_HUB.put(dedupKey, "1", { expirationTtl: NONCE_TTL_SECONDS });
+  // NOTE: Same KV consistency caveat as verifyDockEnvelope above.
   return { ok: true, signed: true };
 }
 

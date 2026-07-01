@@ -9,7 +9,7 @@
     "smartSuite": "SMART",
     "smartSuiteExpanded": "Sovereign · Manifest · Access · Root · Treasury"
   },
-  "count": 62,
+  "count": 60,
   "contracts": [
     {
       "id": "cognitive-passport-v1-1-overlay-schema",
@@ -206,17 +206,6 @@
         "verify:quantum-clock"
       ],
       "optional": false
-    },
-    {
-      "id": "bonding-atmosphere-routes-json",
-      "path": "andromeda/04_SOFTWARE/bonding/public/p31-atmosphere/p31-atmosphere-routes.json",
-      "role": "Bonding React cockpit fetch BASE + p31-atmosphere/*; kept in sync by npm run sync:atmosphere",
-      "schemas": [
-        "p31.atmosphereRoutes/1.0.0"
-      ],
-      "primarySchema": "p31.atmosphereRoutes/1.0.0",
-      "verifyHints": [],
-      "optional": true
     },
     {
       "id": "p31-atmosphere-preset-slice-json",
@@ -600,24 +589,6 @@
         "verify:subscriptions"
       ],
       "optional": false
-    },
-    {
-      "id": "p31-universal-canon",
-      "path": "andromeda/04_SOFTWARE/design-tokens/p31-universal-canon.json",
-      "role": "Colors, type scale, motion, focus — hub/org; mobileMeshFirst (touch, safe areas) in generated p31-style.css",
-      "schemas": [
-        "p31.universalCanon/1.0.0"
-      ],
-      "primarySchema": "p31.universalCanon/1.0.0",
-      "verifyHints": [
-        "verify:atmosphere-ramp",
-        "verify:p31-style",
-        "verify:quantum-material-u",
-        "verify:style-alignment (about pages); visual doctrine compliance is manual.",
-        "verify:style-alignment (from P31 home or p31ca/)",
-        "verify:doc-index (the wiring diagram is in the searchable doc library); verify:alignment (catches missing source rows when a new system is added without doc update). The PDF itself has no CI verifier — it is a print artifact derived from the markdown."
-      ],
-      "optional": true
     },
     {
       "id": "p31-verify-pulse",

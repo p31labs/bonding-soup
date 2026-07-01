@@ -46,6 +46,7 @@ contract LOVEToken {
     error Unauthorized();
     error ZeroAddress();
     error InvalidCareScore();
+    error InvalidInput();
 
     // ── Modifiers ────────────────────────────────────────────────────
     modifier onlyArchitect() { if (msg.sender != architect) revert Unauthorized(); _; }
@@ -134,6 +135,21 @@ contract LOVEToken {
         _pools[user].careScore = newScore;
         _pools[user].updatedAt = block.timestamp;
         emit CareScoreUpdated(user, newScore);
+    }
+
+    function mintCareReward(address to, uint256 amount) external onlyCareOracle {
+        if (to == address(0)) revert ZeroAddress();
+        if (amount == 0) revert InvalidInput();
+        _balance[to] += amount;
+        _totalSupply += amount;
+        PoolBalance storage p = _pools[to];
+        uint256 half = amount / 2;
+        p.totalEarned += amount;
+        p.sovereigntyPool += half;
+        p.performancePool += amount - half;
+        p.updatedAt = block.timestamp;
+        emit Transfer(address(0), to, amount);
+        emit Mint(to, half, amount - half);
     }
 
     // ── Admin ────────────────────────────────────────────────────────

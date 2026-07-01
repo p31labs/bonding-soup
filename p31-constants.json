@@ -52,12 +52,15 @@
     "ueiConfirmedDate": "2026-05-01",
     "entityRegistrationSubmittedDate": "2026-05-01",
     "status": "entity_registration_submitted",
-    "activationEstimate": "7–10 business days from submission",
+    "activationEstimate": "7\u201310 business days from submission",
     "note": "Full entity registration submitted. CAGE code assigned after activation. Annual renewal required. Mercury bank ACH on file."
   },
   "bonding": {
     "shippedDate": "2026-03-10",
-    "testBaseline": { "tests": 424, "suites": 32 },
+    "testBaseline": {
+      "tests": 424,
+      "suites": 32
+    },
     "publicUrl": "https://bonding.p31ca.org"
   },
   "physics": {
@@ -65,10 +68,10 @@
     "larmorLabel": "31P Larmor in Earth field (P31 canonical copy)"
   },
   "cognitivePassport": {
-    "longFormFilename": "P31 COGNITIVE PASSPORT — v5.md",
+    "longFormFilename": "P31 COGNITIVE PASSPORT \u2014 v5.md",
     "longFormEdition": "5.1",
     "jsonSchema": "p31.cognitivePassport/1.1.0",
-    "htmlGeneratorTitle": "P31 Cognitive Passport — Generator (v1)"
+    "htmlGeneratorTitle": "P31 Cognitive Passport \u2014 Generator (v1)"
   },
   "groundTruth": {
     "schema": "p31.ground-truth/1.0.0",
@@ -86,7 +89,7 @@
     "notes": "Production Worker count (operator snapshot); includes cf-edge-lab + tetra-hub when shipped; not auto-verified against Cloudflare API here."
   },
   "mesh": {
-    "_comment": "Canonical worker URLs for K₄ edge; keep in sync with k4-hubs PERSONAL_MESH_URL and mesh-start default. orchestrator + agent URLs: OrchestratorDashboard.astro, public/dev-workbench.html, src/data/p31-mesh-constants.json (from npm run apply:constants). passkeyApiBasePath: same-origin API mounted by Cloudflare Worker zone route p31ca.org/api/passkey/* (workers/passkey/wrangler.toml); static pages use fetch(passkeyApiBasePath + '/register-begin', …). edgeLabWorkerUrl: home packages/cf-edge-lab (Workers AI + request.cf + WS demo).",
+    "_comment": "Canonical worker URLs for K\u2084 edge; keep in sync with k4-hubs PERSONAL_MESH_URL and mesh-start default. orchestrator + agent URLs: OrchestratorDashboard.astro, public/dev-workbench.html, src/data/p31-mesh-constants.json (from npm run apply:constants). passkeyApiBasePath: same-origin API mounted by Cloudflare Worker zone route p31ca.org/api/passkey/* (workers/passkey/wrangler.toml); static pages use fetch(passkeyApiBasePath + '/register-begin', \u2026). edgeLabWorkerUrl: home packages/cf-edge-lab (Workers AI + request.cf + WS demo).",
     "k4PersonalWorkerUrl": "https://k4-personal.trimtab-signal.workers.dev",
     "k4CageWorkerUrl": "https://k4-cage.trimtab-signal.workers.dev",
     "k4HubsWorkerUrl": "https://k4-hubs.trimtab-signal.workers.dev",
@@ -109,7 +112,7 @@
     "orcid": "0009-0002-2492-9079",
     "zenodoPublicationCount": 22,
     "zenodoDraftCount": 2,
-    "researchSeriesCount": 22,
+    "researchSeriesCount": 20,
     "standalonePublicationCount": 2,
     "paperXiiStatus": "published",
     "zenodoSearchUrl": "https://zenodo.org/search?q=creators.name:%22Johnson%2C%20William%20R.%22&l=list&p=1&s=25&sort=newest",
@@ -153,7 +156,7 @@
         "id": "VI",
         "series": "VI",
         "doi": "10.5281/zenodo.19782979",
-        "title": "Topological History of Camden County: Institutional Capture and the K₄ Counter-Architecture",
+        "title": "Topological History of Camden County: Institutional Capture and the K\u2084 Counter-Architecture",
         "published": "2026-04-26"
       },
       {
@@ -195,7 +198,7 @@
         "id": "XII",
         "series": "XII",
         "doi": "10.5281/zenodo.19782969",
-        "title": "The Sovereign Stack: Open-Source Hardware–Software Architecture for Neurodivergent Assistive Technology",
+        "title": "The Sovereign Stack: Open-Source Hardware\u2013Software Architecture for Neurodivergent Assistive Technology",
         "published": "2026-04-26"
       },
       {
@@ -244,7 +247,7 @@
         "id": "XIX",
         "series": "XIX",
         "doi": "10.5281/zenodo.19782973",
-        "title": "The SOULSAFE Protocol: High-Reliability Engineering for Human–AI Cognitive Symbiosis",
+        "title": "The SOULSAFE Protocol: High-Reliability Engineering for Human\u2013AI Cognitive Symbiosis",
         "published": "2026-04-26"
       },
       {
@@ -271,8 +274,16 @@
     ]
   },
   "operations": {
-    "masterOpsManual": { "lines": 1445, "cwps": 11, "wcds": 41 },
-    "wcdBatch3": { "from": 26, "to": 32, "status": "closed" }
+    "masterOpsManual": {
+      "lines": 1445,
+      "cwps": 11,
+      "wcds": 41
+    },
+    "wcdBatch3": {
+      "from": 26,
+      "to": 32,
+      "status": "closed"
+    }
   },
   "documentation": {
     "canonicalNumbering": "docs/CANONICAL-NUMBERING.md",
@@ -299,11 +310,32 @@
       "low": "14d"
     },
     "bountyTiers": {
-      "critical": { "cvssMin": 9.0, "cvssMax": 10.0, "usd": 2500 },
-      "high":     { "cvssMin": 7.0, "cvssMax": 8.9,  "usd": 1000 },
-      "medium":   { "cvssMin": 4.0, "cvssMax": 6.9,  "usd": 500  },
-      "low":      { "cvssMin": 1.0, "cvssMax": 3.9,  "usd": 100  },
-      "egg":      { "cvssMin": null, "cvssMax": null, "usdMin": 50, "usdMax": 500 }
+      "critical": {
+        "cvssMin": 9.0,
+        "cvssMax": 10.0,
+        "usd": 2500
+      },
+      "high": {
+        "cvssMin": 7.0,
+        "cvssMax": 8.9,
+        "usd": 1000
+      },
+      "medium": {
+        "cvssMin": 4.0,
+        "cvssMax": 6.9,
+        "usd": 500
+      },
+      "low": {
+        "cvssMin": 1.0,
+        "cvssMax": 3.9,
+        "usd": 100
+      },
+      "egg": {
+        "cvssMin": null,
+        "cvssMax": null,
+        "usdMin": 50,
+        "usdMax": 500
+      }
     },
     "scope": {
       "inScope": [
@@ -358,7 +390,7 @@
       {
         "id": "zigbee2mqtt",
         "label": "Zigbee2MQTT",
-        "role": "Zigbee ↔ MQTT",
+        "role": "Zigbee \u2194 MQTT",
         "docsUrl": "https://www.zigbee2mqtt.io/",
         "license": "GPL-3.0"
       },
@@ -407,7 +439,7 @@
       {
         "id": "gadgetbridge",
         "label": "Gadgetbridge",
-        "role": "Android ↔ many wearables (no cloud required)",
+        "role": "Android \u2194 many wearables (no cloud required)",
         "docsUrl": "https://codeberg.org/Freeyourgadget/Gadgetbridge",
         "license": "GPL-3.0"
       },
@@ -444,7 +476,7 @@
       "grafanaBase": ""
     },
     "meshBridge": {
-      "k4PersonalIngest": "k4-personal Worker: see andromeda/04_SOFTWARE/k4-personal/README.md — /agent/:userId/*, optional bio/energy routes; post minimized events only.",
+      "k4PersonalIngest": "k4-personal Worker: see andromeda/04_SOFTWARE/k4-personal/README.md \u2014 /agent/:userId/*, optional bio/energy routes; post minimized events only.",
       "commandCenterEdge": "https://command-center.trimtab-signal.workers.dev",
       "trust": "No raw PHI on static p31ca pages. ETHICAL-STYLE-MAP + EDGE-SECURITY for consent and motion."
     }

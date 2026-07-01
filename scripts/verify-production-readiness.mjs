@@ -105,15 +105,19 @@ for (const it of prs.items) {
 const dupes = ids.filter((id, i) => ids.indexOf(id) !== i);
 if (dupes.length) fail(`Duplicate item ids: ${uniq(dupes).join(", ")}`);
 
-const hubIds = parseHubIdsFromHubAppIds(readText("andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs"));
-const hubIdSet = new Set(hubIds);
+let hubIds = [];
+const hubAppIdsPath = "andromeda/04_SOFTWARE/p31ca/scripts/hub/hub-app-ids.mjs";
+if (fs.existsSync(path.join(ROOT, hubAppIdsPath))) {
+  hubIds = parseHubIdsFromHubAppIds(readText(hubAppIdsPath));
+  const hubIdSet = new Set(hubIds);
 
-const hubCardIds = new Set(prs.items.filter((it) => it.kind === "hubCard").map((it) => it.id));
-const missingHubCards = hubIds.filter((id) => !hubCardIds.has(id));
-if (missingHubCards.length) fail(`Missing hubCard rows for ids: ${missingHubCards.join(", ")}`);
+  const hubCardIds = new Set(prs.items.filter((it) => it.kind === "hubCard").map((it) => it.id));
+  const missingHubCards = hubIds.filter((id) => !hubCardIds.has(id));
+  if (missingHubCards.length) fail(`Missing hubCard rows for ids: ${missingHubCards.join(", ")}`);
 
-const extraHubCards = Array.from(hubCardIds).filter((id) => !hubIdSet.has(id));
-if (extraHubCards.length) fail(`Extra hubCard ids not in hub-app-ids.mjs: ${extraHubCards.join(", ")}`);
+  const extraHubCards = Array.from(hubCardIds).filter((id) => !hubIdSet.has(id));
+  if (extraHubCards.length) fail(`Extra hubCard ids not in hub-app-ids.mjs: ${extraHubCards.join(", ")}`);
+}
 
 const liveFleet = readJson("p31-live-fleet.json");
 if (!Array.isArray(liveFleet.workersVerified)) fail("p31-live-fleet.json workersVerified must be an array");

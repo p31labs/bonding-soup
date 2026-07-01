@@ -459,6 +459,48 @@
       "rampId": "hub-lobby",
       "starfieldAOD": "on",
       "notes": "Hub registry card (hub-lobby) — synced by scripts/sync-atmosphere-hub-routes.mjs"
+    },
+    {
+      "surfaceId": "arcade-cards",
+      "rampId": "hub-lobby",
+      "starfieldAOD": "on",
+      "notes": "Hub registry card (hub-lobby) — synced by scripts/sync-atmosphere-hub-routes.mjs"
+    },
+    {
+      "surfaceId": "arcade-gridiron",
+      "rampId": "hub-lobby",
+      "starfieldAOD": "on",
+      "notes": "Hub registry card (hub-lobby) — synced by scripts/sync-atmosphere-hub-routes.mjs"
+    },
+    {
+      "surfaceId": "arcade-hub",
+      "rampId": "hub-lobby",
+      "starfieldAOD": "on",
+      "notes": "Hub registry card (hub-lobby) — synced by scripts/sync-atmosphere-hub-routes.mjs"
+    },
+    {
+      "surfaceId": "arcade-liquid-sculptor",
+      "rampId": "hub-lobby",
+      "starfieldAOD": "on",
+      "notes": "Hub registry card (hub-lobby) — synced by scripts/sync-atmosphere-hub-routes.mjs"
+    },
+    {
+      "surfaceId": "arcade-smallball",
+      "rampId": "hub-lobby",
+      "starfieldAOD": "on",
+      "notes": "Hub registry card (hub-lobby) — synced by scripts/sync-atmosphere-hub-routes.mjs"
+    },
+    {
+      "surfaceId": "arcade-strategy",
+      "rampId": "hub-lobby",
+      "starfieldAOD": "on",
+      "notes": "Hub registry card (hub-lobby) — synced by scripts/sync-atmosphere-hub-routes.mjs"
+    },
+    {
+      "surfaceId": "larmor",
+      "rampId": "hub-lobby",
+      "starfieldAOD": "on",
+      "notes": "Hub registry card (hub-lobby) — synced by scripts/sync-atmosphere-hub-routes.mjs"
     }
   ]
 }

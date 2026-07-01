@@ -93,7 +93,7 @@
     {
       "id": "k4-personal",
       "kind": "worker",
-      "label": "k4-personal (Personal K₄ Worker)",
+      "label": "k4-personal (Personal K\u2084 Worker)",
       "score": {
         "liveReachable": 10,
         "deployability": 10,
@@ -184,7 +184,7 @@
     {
       "id": "tetra-hub",
       "kind": "worker",
-      "label": "tetra-hub (K₄ trio read model)",
+      "label": "tetra-hub (K\u2084 trio read model)",
       "score": {
         "liveReachable": 10,
         "deployability": 9,
@@ -215,7 +215,7 @@
     {
       "id": "k4-agent-hub",
       "kind": "worker",
-      "label": "k4-agent-hub (K₄ agent worker tetrahedron)",
+      "label": "k4-agent-hub (K\u2084 agent worker tetrahedron)",
       "score": {
         "liveReachable": 10,
         "deployability": 9,
@@ -543,7 +543,7 @@
     {
       "id": "p31-ecosystem-bridge",
       "kind": "worker",
-      "label": "p31-ecosystem-bridge (Cross-site nervous system; CORS bridge phosphorus31.org ↔ p31ca.org)",
+      "label": "p31-ecosystem-bridge (Cross-site nervous system; CORS bridge phosphorus31.org \u2194 p31ca.org)",
       "score": {
         "liveReachable": 8,
         "deployability": 9,
@@ -654,7 +654,7 @@
         ]
       },
       "nextSteps": [
-        "Add a minimal e2e smoke for the shell (boot → load → settings)"
+        "Add a minimal e2e smoke for the shell (boot \u2192 load \u2192 settings)"
       ]
     },
     {
@@ -715,7 +715,7 @@
     {
       "id": "education",
       "kind": "hubCard",
-      "label": "Education (E0–E2 shipped; E3+ portal gated)",
+      "label": "Education (E0\u2013E2 shipped; E3+ portal gated)",
       "score": {
         "liveReachable": 8,
         "deployability": 7,
@@ -2253,7 +2253,7 @@
     {
       "id": "k4-agent-hubs",
       "kind": "hubCard",
-      "label": "K₄ Agent Hubs (FORGE · COUNSEL · SCHOLAR · SCRIBE)",
+      "label": "K\u2084 Agent Hubs (FORGE \u00b7 COUNSEL \u00b7 SCHOLAR \u00b7 SCRIBE)",
       "score": {
         "liveReachable": 8,
         "deployability": 7,
@@ -2278,9 +2278,191 @@
         ]
       },
       "nextSteps": [
-        "Deploy K₄ Agent Hubs Workers to production (FORGE · COUNSEL · SCHOLAR · SCRIBE)",
+        "Deploy K\u2084 Agent Hubs Workers to production (FORGE \u00b7 COUNSEL \u00b7 SCHOLAR \u00b7 SCRIBE)",
         "Add Playwright e2e smoke for /agents.html public face",
         "Publish /agents-about.html hub card page on p31ca.org"
+      ]
+    },
+    {
+      "id": "arcade-hub",
+      "kind": "hubCard",
+      "label": "Arcade Hub",
+      "score": {
+        "liveReachable": 1,
+        "deployability": 1,
+        "verificationHooks": 1,
+        "testingDepth": 0,
+        "contractsSchemas": 0,
+        "observability": 0,
+        "securityPosture": 3,
+        "operationalClarity": 1,
+        "uxCompleteness": 1,
+        "ephemeralizationAlignment": 2
+      },
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Verify shipped surface for arcade-hub and add production hooks"
+      ]
+    },
+    {
+      "id": "arcade-smallball",
+      "kind": "hubCard",
+      "label": "Arcade Smallball",
+      "score": {
+        "liveReachable": 1,
+        "deployability": 1,
+        "verificationHooks": 1,
+        "testingDepth": 0,
+        "contractsSchemas": 0,
+        "observability": 0,
+        "securityPosture": 3,
+        "operationalClarity": 1,
+        "uxCompleteness": 1,
+        "ephemeralizationAlignment": 2
+      },
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Verify shipped surface for arcade-smallball and add production hooks"
+      ]
+    },
+    {
+      "id": "arcade-gridiron",
+      "kind": "hubCard",
+      "label": "Arcade Gridiron",
+      "score": {
+        "liveReachable": 1,
+        "deployability": 1,
+        "verificationHooks": 1,
+        "testingDepth": 0,
+        "contractsSchemas": 0,
+        "observability": 0,
+        "securityPosture": 3,
+        "operationalClarity": 1,
+        "uxCompleteness": 1,
+        "ephemeralizationAlignment": 2
+      },
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Verify shipped surface for arcade-gridiron and add production hooks"
+      ]
+    },
+    {
+      "id": "arcade-strategy",
+      "kind": "hubCard",
+      "label": "Arcade Strategy",
+      "score": {
+        "liveReachable": 1,
+        "deployability": 1,
+        "verificationHooks": 1,
+        "testingDepth": 0,
+        "contractsSchemas": 0,
+        "observability": 0,
+        "securityPosture": 3,
+        "operationalClarity": 1,
+        "uxCompleteness": 1,
+        "ephemeralizationAlignment": 2
+      },
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Verify shipped surface for arcade-strategy and add production hooks"
+      ]
+    },
+    {
+      "id": "arcade-cards",
+      "kind": "hubCard",
+      "label": "Arcade Cards",
+      "score": {
+        "liveReachable": 1,
+        "deployability": 1,
+        "verificationHooks": 1,
+        "testingDepth": 0,
+        "contractsSchemas": 0,
+        "observability": 0,
+        "securityPosture": 3,
+        "operationalClarity": 1,
+        "uxCompleteness": 1,
+        "ephemeralizationAlignment": 2
+      },
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Verify shipped surface for arcade-cards and add production hooks"
+      ]
+    },
+    {
+      "id": "arcade-liquid-sculptor",
+      "kind": "hubCard",
+      "label": "Arcade Liquid Sculptor",
+      "score": {
+        "liveReachable": 1,
+        "deployability": 1,
+        "verificationHooks": 1,
+        "testingDepth": 0,
+        "contractsSchemas": 0,
+        "observability": 0,
+        "securityPosture": 3,
+        "operationalClarity": 1,
+        "uxCompleteness": 1,
+        "ephemeralizationAlignment": 2
+      },
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Verify shipped surface for arcade-liquid-sculptor and add production hooks"
+      ]
+    },
+    {
+      "id": "larmor",
+      "kind": "hubCard",
+      "label": "Larmor Pulse Demo",
+      "score": {
+        "liveReachable": 1,
+        "deployability": 1,
+        "verificationHooks": 1,
+        "testingDepth": 0,
+        "contractsSchemas": 0,
+        "observability": 0,
+        "securityPosture": 3,
+        "operationalClarity": 1,
+        "uxCompleteness": 1,
+        "ephemeralizationAlignment": 2
+      },
+      "proof": {
+        "canonicalSources": [
+          "andromeda/04_SOFTWARE/p31ca/scripts/hub/registry.mjs"
+        ],
+        "verifyCommands": []
+      },
+      "nextSteps": [
+        "Verify shipped surface for larmor and add production hooks"
       ]
     }
   ],
@@ -2299,6 +2481,6 @@
     "ungovernedWorkerIds": [
       "p31-buffer-api"
     ],
-    "note": "`verify-production-readiness` derives the governed SKU set automatically from these rules (workers + governed pages ids). Catalog hub cards remain out of governed gate until intentionally promoted. `ungovernedWorkerIds` lists pre-production workers that are catalogued in the fleet but not yet promoted to the governed gate — promote by removing the id here once deployment CI and test depth meet the bar."
+    "note": "`verify-production-readiness` derives the governed SKU set automatically from these rules (workers + governed pages ids). Catalog hub cards remain out of governed gate until intentionally promoted. `ungovernedWorkerIds` lists pre-production workers that are catalogued in the fleet but not yet promoted to the governed gate \u2014 promote by removing the id here once deployment CI and test depth meet the bar."
   }
 }

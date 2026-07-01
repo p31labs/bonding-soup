@@ -4,6 +4,7 @@ pragma solidity ^0.8.24;
 import "forge-std/Test.sol";
 import "../src/LOVEToken.sol";
 import "../src/ProofOfCare.sol";
+import "../src/LOVESBT.sol";
 import "../src/PayrollStream.sol";
 import "../src/SlicingPieLedger.sol";
 import "../src/TrancheWaterfall.sol";
@@ -12,6 +13,7 @@ import "../src/PerpetualPurposeTrust.sol";
 contract LOVEIntegrationTest is Test {
     LOVEToken love;
     ProofOfCare poc;
+    LOVESBT loveSBT;
     PayrollStream payroll;
     SlicingPieLedger pie;
     TrancheWaterfall waterfall;
@@ -23,7 +25,12 @@ contract LOVEIntegrationTest is Test {
 
     function setUp() public {
         love = new LOVEToken(architect);
-        poc = new ProofOfCare(architect);
+        poc = new ProofOfCare(architect, address(love), address(0));
+        loveSBT = new LOVESBT(architect, address(poc));
+
+        vm.prank(architect);
+        poc.setLoveSBT(address(loveSBT));
+
         payroll = new PayrollStream(architect);
         pie = new SlicingPieLedger(architect);
         waterfall = new TrancheWaterfall(architect);
@@ -33,7 +40,11 @@ contract LOVEIntegrationTest is Test {
         vm.prank(architect);
         love.setPoolManager(address(waterfall));
         vm.prank(architect);
+        love.setCareOracle(address(poc));
+        vm.prank(architect);
         poc.setLoveToken(address(love));
+        vm.prank(architect);
+        poc.setLoveSBT(address(loveSBT));
         vm.prank(architect);
         pie.setPayrollStream(address(payroll));
     }
@@ -59,13 +70,12 @@ contract LOVEIntegrationTest is Test {
     }
 
     function testCareScoreUpdate() public {
-        // Architect IS careOracle by default (constructor)
         vm.prank(architect);
         love.setPoolManager(architect);
         vm.prank(architect);
         love.mint(user1, 100 ether);
 
-        vm.prank(architect);
+        vm.prank(address(poc));
         love.updateCareScore(user1, 0.8e18);
 
         (,,,, uint256 avail,) = love.getPoolBalance(user1);
@@ -139,6 +149,58 @@ contract LOVEIntegrationTest is Test {
 
         uint256 decayed = poc.computeEffectiveScore(user1);
         assertTrue(decayed < initial, "Score should decay");
+    }
+
+    // ── ProofOfCare + SBT Integration Tests ─────────────────────────────
+    function testSBTMintedOnThresholdCross() public {
+        vm.prank(architect);
+        poc.setRelay(architect);
+
+        address[] memory users = new address[](1);
+        users[0] = user1;
+        uint256[] memory tProx = new uint256[](1);
+        tProx[0] = 500 ether;
+        uint256[] memory qRes = new uint256[](1);
+        qRes[0] = 1e18;
+        uint256[] memory tasks = new uint256[](1);
+        tasks[0] = 50;
+        bytes32[] memory roots = new bytes32[](1);
+        roots[0] = keccak256("sbt-threshold-test");
+
+        vm.prank(architect);
+        poc.submitCareProofs(users, tProx, qRes, tasks, roots);
+
+        uint256 score = poc.computeEffectiveScore(user1);
+        assertTrue(score >= poc.CARE_THRESHOLD(), "Score should cross threshold");
+
+        uint256[] memory sbtIds = loveSBT.getSBTs(user1);
+        assertGt(sbtIds.length, 0, "User should have at least one SBT");
+
+        (uint256 sbtScore,,,) = loveSBT.reputationData(sbtIds[0]);
+        assertEq(sbtScore, score);
+    }
+
+    function testLOVERewardMintedOnThreshold() public {
+        vm.prank(architect);
+        poc.setRelay(architect);
+
+        address[] memory users = new address[](1);
+        users[0] = user1;
+        uint256[] memory tProx = new uint256[](1);
+        tProx[0] = 500 ether;
+        uint256[] memory qRes = new uint256[](1);
+        qRes[0] = 1e18;
+        uint256[] memory tasks = new uint256[](1);
+        tasks[0] = 50;
+        bytes32[] memory roots = new bytes32[](1);
+        roots[0] = keccak256("reward-threshold-test");
+
+        vm.warp(block.timestamp + poc.REWARD_COOLDOWN() + 1);
+
+        vm.prank(architect);
+        poc.submitCareProofs(users, tProx, qRes, tasks, roots);
+
+        assertEq(love.balanceOf(user1), poc.REWARD_AMOUNT());
     }
 
     // ── PayrollStream Tests ───────────────────────────────────────────

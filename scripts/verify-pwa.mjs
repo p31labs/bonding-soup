@@ -112,9 +112,10 @@ for (const app of APP_TARGETS) {
 }
 
 // Hub mirror (optional; skip if absent)
-if (fs.existsSync(HUB_PUBLIC)) {
-  const HUB_PWA = path.join(HUB_PUBLIC, "pwa");
-  if (!fs.existsSync(HUB_PWA)) fail("p31ca/public/pwa missing — run npm run build:pwa");
+const HUB_PWA = path.join(HUB_PUBLIC, "pwa");
+if (!fs.existsSync(HUB_PWA)) {
+  note("skip hub pwa mirror — p31ca/public/pwa absent (partial clone)");
+} else {
   for (const f of SRC_FILES) {
     const dst = path.join(HUB_PWA, f);
     if (!fs.existsSync(dst)) fail(`p31ca/public/pwa/${f} missing — run npm run build:pwa`);

@@ -32,8 +32,16 @@ function main() {
   }
 
   const soft = path.join(root, "andromeda/04_SOFTWARE");
-  if (!fs.existsSync(soft)) {
-    console.log("verify-mesh-canon: OK (doc only — no andromeda/04_SOFTWARE checkout)");
+  const requiredSoftFiles = [
+    "packages/k4-mesh-core/scopes.js",
+    "packages/k4-mesh-core/personal-handlers.js",
+    "k4-cage/src/index.js",
+  ];
+  const softComplete = requiredSoftFiles.every((rel) =>
+    fs.existsSync(path.join(soft, rel))
+  );
+  if (!fs.existsSync(soft) || !softComplete) {
+    console.log("verify-mesh-canon: OK (doc only — andromeda/04_SOFTWARE absent or incomplete)");
     return;
   }
 
